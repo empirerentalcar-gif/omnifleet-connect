@@ -16,7 +16,7 @@ const Header = () => {
               <Car className="relative h-8 w-8 text-primary" />
             </div>
             <span className="font-display font-bold text-xl text-foreground">
-              Drive<span className="text-gradient">Hub</span>
+              Zuv<span className="text-gradient">io</span>
             </span>
           </a>
 

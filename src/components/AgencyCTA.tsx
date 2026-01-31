@@ -37,12 +37,12 @@ const AgencyCTA = () => {
               </div>
 
               <h2 className="font-display text-3xl md:text-5xl font-bold mb-6">
-                Grow your fleet with <span className="text-gradient">DriveHub</span>
+                Grow your fleet with <span className="text-gradient">Zuvio</span>
               </h2>
 
               <p className="text-lg text-muted-foreground mb-8 max-w-lg">
-                Join 2,500+ agencies already using DriveHub to maximize their fleet utilization 
-                and reach customers worldwide.
+                Join 2,500+ independent agencies already using Zuvio to maximize their fleet utilization 
+                and reach customers nationwide.
               </p>
 
               <div className="flex flex-col sm:flex-row gap-4">
