@@ -13,7 +13,7 @@ const Footer = () => {
                 <Car className="relative h-8 w-8 text-primary" />
               </div>
               <span className="font-display font-bold text-xl text-foreground">
-                Drive<span className="text-gradient">Hub</span>
+                Zuv<span className="text-gradient">io</span>
               </span>
             </a>
             <p className="text-muted-foreground mb-6 max-w-sm">
@@ -65,11 +65,11 @@ const Footer = () => {
             <ul className="space-y-3">
               <li className="flex items-center gap-3 text-muted-foreground">
                 <Mail className="h-4 w-4 text-primary" />
-                <span>support@drivehub.com</span>
+                <span>support@zuvio.com</span>
               </li>
               <li className="flex items-center gap-3 text-muted-foreground">
                 <Phone className="h-4 w-4 text-primary" />
-                <span>1-800-DRIVEHUB</span>
+                <span>1-800-ZUVIO</span>
               </li>
               <li className="flex items-start gap-3 text-muted-foreground">
                 <MapPin className="h-4 w-4 text-primary shrink-0 mt-1" />
@@ -82,7 +82,7 @@ const Footer = () => {
         {/* Bottom Bar */}
         <div className="border-t border-border mt-12 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
           <p className="text-sm text-muted-foreground">
-            © 2025 DriveHub. All rights reserved.
+            © 2025 Zuvio. All rights reserved.
           </p>
           <div className="flex gap-6 text-sm">
             <a href="#" className="text-muted-foreground hover:text-foreground transition-colors">Privacy Policy</a>
