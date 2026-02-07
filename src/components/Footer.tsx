@@ -1,4 +1,5 @@
-import { Car, Facebook, Twitter, Instagram, Linkedin, Mail, Phone, MapPin } from "lucide-react";
+import { Facebook, Twitter, Instagram, Linkedin, Mail, Phone, MapPin } from "lucide-react";
+import zuvioLogo from "@/assets/zuvio-logo.png";
 
 const Footer = () => {
   return (
@@ -7,14 +8,12 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-12">
           {/* Brand */}
           <div className="lg:col-span-2">
-            <a href="/" className="flex items-center gap-2 mb-6">
-              <div className="relative">
-                <div className="absolute inset-0 bg-primary/30 blur-lg rounded-full" />
-                <Car className="relative h-8 w-8 text-primary" />
-              </div>
-              <span className="font-display font-bold text-xl text-foreground">
-                Zuv<span className="text-gradient">io</span>
-              </span>
+            <a href="/" className="flex items-center mb-6">
+              <img 
+                src={zuvioLogo} 
+                alt="Zuvio" 
+                className="h-12 w-auto object-contain"
+              />
             </a>
             <p className="text-muted-foreground mb-6 max-w-sm">
               The world's largest multi-location car rental platform. 

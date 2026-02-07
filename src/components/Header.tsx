@@ -1,6 +1,7 @@
-import { Car, Menu, X } from "lucide-react";
+import { Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
+import zuvioLogo from "@/assets/zuvio-logo.png";
 
 const Header = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -10,14 +11,12 @@ const Header = () => {
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-16 md:h-20">
           {/* Logo */}
-          <a href="/" className="flex items-center gap-2 group">
-            <div className="relative">
-              <div className="absolute inset-0 bg-primary/30 blur-lg rounded-full group-hover:bg-primary/50 transition-colors" />
-              <Car className="relative h-8 w-8 text-primary" />
-            </div>
-            <span className="font-display font-bold text-xl text-foreground">
-              Zuv<span className="text-gradient">io</span>
-            </span>
+          <a href="/" className="flex items-center group">
+            <img 
+              src={zuvioLogo} 
+              alt="Zuvio" 
+              className="h-12 md:h-14 w-auto object-contain"
+            />
           </a>
 
           {/* Desktop Navigation */}
