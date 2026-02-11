@@ -4,6 +4,12 @@ import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useToast } from '@/hooks/use-toast';
+import { z } from 'zod';
+
+const signInSchema = z.object({
+  email: z.string().trim().email('Invalid email address').max(255, 'Email too long'),
+  password: z.string().min(1, 'Password is required').max(128, 'Password too long'),
+});
 
 const SignIn = () => {
   const [email, setEmail] = useState('');
@@ -16,12 +22,26 @@ const SignIn = () => {
     e.preventDefault();
     setLoading(true);
 
-    const { error } = await supabase.auth.signInWithPassword({ email, password });
+    const result = signInSchema.safeParse({ email, password });
+    if (!result.success) {
+      toast({
+        title: 'Validation error',
+        description: result.error.errors[0].message,
+        variant: 'destructive',
+      });
+      setLoading(false);
+      return;
+    }
+
+    const { error } = await supabase.auth.signInWithPassword({
+      email: result.data.email,
+      password: result.data.password,
+    });
 
     if (error) {
       toast({
         title: 'Sign in failed',
-        description: error.message,
+        description: 'Invalid email or password.',
         variant: 'destructive',
       });
     } else {

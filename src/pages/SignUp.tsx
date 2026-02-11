@@ -4,11 +4,26 @@ import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useToast } from '@/hooks/use-toast';
+import { z } from 'zod';
+
+const signUpSchema = z.object({
+  accessCode: z.string().trim().min(1, 'Access code is required').max(100, 'Access code too long'),
+  businessName: z.string().trim().min(1, 'Business name is required').max(200, 'Business name too long'),
+  email: z.string().trim().email('Invalid email address').max(255, 'Email too long'),
+  password: z
+    .string()
+    .min(8, 'Password must be at least 8 characters')
+    .max(128, 'Password too long')
+    .regex(/[A-Z]/, 'Password must contain an uppercase letter')
+    .regex(/[a-z]/, 'Password must contain a lowercase letter')
+    .regex(/[0-9]/, 'Password must contain a number'),
+});
 
 const SignUp = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [accessCode, setAccessCode] = useState('');
+  const [businessName, setBusinessName] = useState('');
   const [loading, setLoading] = useState(false);
   const { toast } = useToast();
 
@@ -16,42 +31,77 @@ const SignUp = () => {
     e.preventDefault();
     setLoading(true);
 
-    // Validate access code first
-    const { data: isValid, error: codeError } = await supabase.rpc('validate_access_code', {
-      code_to_check: accessCode,
-    });
-
-    if (codeError || !isValid) {
+    // Validate inputs with Zod
+    const result = signUpSchema.safeParse({ accessCode, businessName, email, password });
+    if (!result.success) {
       toast({
-        title: 'Invalid access code',
-        description: codeError?.message || 'The access code is invalid or expired.',
+        title: 'Validation error',
+        description: result.error.errors[0].message,
         variant: 'destructive',
       });
       setLoading(false);
       return;
     }
 
-    // Create account
-    const { error } = await supabase.auth.signUp({
-      email,
-      password,
+    const validated = result.data;
+
+    // Validate access code first
+    const { data: isValid, error: codeError } = await supabase.rpc('validate_access_code', {
+      code_to_check: validated.accessCode,
+    });
+
+    if (codeError || !isValid) {
+      toast({
+        title: 'Invalid access code',
+        description: 'The access code is invalid or expired.',
+        variant: 'destructive',
+      });
+      setLoading(false);
+      return;
+    }
+
+    // Create account with business_name in metadata (trigger will create profile)
+    const { data: signUpData, error } = await supabase.auth.signUp({
+      email: validated.email,
+      password: validated.password,
       options: {
         emailRedirectTo: window.location.origin,
+        data: {
+          business_name: validated.businessName,
+        },
       },
     });
 
     if (error) {
       toast({
         title: 'Sign up failed',
-        description: error.message,
+        description: 'Unable to create account. Please try again.',
         variant: 'destructive',
       });
-    } else {
-      toast({
-        title: 'Check your email',
-        description: 'We sent you a confirmation link to verify your account.',
-      });
+      setLoading(false);
+      return;
     }
+
+    // Redeem the access code if we have a user and profile
+    if (signUpData.user) {
+      const { data: profile } = await supabase
+        .from('profiles')
+        .select('id')
+        .eq('user_id', signUpData.user.id)
+        .single();
+
+      if (profile) {
+        await supabase.rpc('redeem_access_code', {
+          code_to_redeem: validated.accessCode,
+          user_profile_id: profile.id,
+        });
+      }
+    }
+
+    toast({
+      title: 'Check your email',
+      description: 'We sent you a confirmation link to verify your account.',
+    });
     setLoading(false);
   };
 
@@ -77,6 +127,20 @@ const SignUp = () => {
               onChange={(e) => setAccessCode(e.target.value)}
               required
               placeholder="Enter your access code"
+            />
+          </div>
+
+          <div>
+            <label htmlFor="business-name" className="block text-sm font-medium text-foreground mb-1">
+              Business Name
+            </label>
+            <Input
+              id="business-name"
+              type="text"
+              value={businessName}
+              onChange={(e) => setBusinessName(e.target.value)}
+              required
+              placeholder="Your rental business name"
             />
           </div>
 
@@ -107,6 +171,9 @@ const SignUp = () => {
               minLength={8}
               placeholder="••••••••"
             />
+            <p className="mt-1 text-xs text-muted-foreground">
+              Min 8 characters, with uppercase, lowercase, and a number
+            </p>
           </div>
 
           <Button type="submit" className="w-full" disabled={loading}>
