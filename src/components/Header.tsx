@@ -11,12 +11,15 @@ const Header = () => {
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-16 md:h-20">
           {/* Logo */}
-          <a href="/" className="flex items-center group">
+          <a href="/" className="flex items-center gap-3 group">
             <img 
               src={zuvioLogo} 
               alt="Zuvio" 
               className="h-12 md:h-14 w-auto object-contain"
             />
+            <span className="hidden sm:block text-[10px] md:text-xs text-muted-foreground font-medium tracking-wide leading-tight border-l border-border/50 pl-3">
+              Independent Rentals.<br />One Network.
+            </span>
           </a>
 
           {/* Desktop Navigation */}
