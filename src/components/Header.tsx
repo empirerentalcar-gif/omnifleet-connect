@@ -1,10 +1,19 @@
-import { Menu, X } from "lucide-react";
+import { Menu, X, LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "@/hooks/useAuth";
 import zuvioLogo from "@/assets/zuvio-logo.png";
 
 const Header = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const navigate = useNavigate();
+  const { user, loading, signOut } = useAuth();
+
+  const handleSignOut = async () => {
+    await signOut();
+    navigate('/');
+  };
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 glass-card border-b border-border/30">
@@ -40,12 +49,21 @@ const Header = () => {
 
           {/* Desktop Actions */}
           <div className="hidden md:flex items-center gap-3">
-            <Button variant="ghost" size="sm">
-              Sign In
-            </Button>
-            <Button variant="default" size="sm">
-              Get Started
-            </Button>
+            {!loading && user ? (
+              <Button variant="ghost" size="sm" onClick={handleSignOut}>
+                <LogOut className="h-4 w-4 mr-1" />
+                Sign Out
+              </Button>
+            ) : (
+              <>
+                <Button variant="ghost" size="sm" onClick={() => navigate('/signin')}>
+                  Sign In
+                </Button>
+                <Button variant="default" size="sm" onClick={() => navigate('/signup')}>
+                  Get Started
+                </Button>
+              </>
+            )}
           </div>
 
           {/* Mobile Menu Button */}
@@ -74,12 +92,21 @@ const Header = () => {
                 About
               </a>
               <div className="flex gap-3 pt-4 border-t border-border/30">
-                <Button variant="ghost" size="sm" className="flex-1">
-                  Sign In
-                </Button>
-                <Button variant="default" size="sm" className="flex-1">
-                  Get Started
-                </Button>
+                {!loading && user ? (
+                  <Button variant="ghost" size="sm" className="flex-1" onClick={handleSignOut}>
+                    <LogOut className="h-4 w-4 mr-1" />
+                    Sign Out
+                  </Button>
+                ) : (
+                  <>
+                    <Button variant="ghost" size="sm" className="flex-1" onClick={() => { navigate('/signin'); setMobileMenuOpen(false); }}>
+                      Sign In
+                    </Button>
+                    <Button variant="default" size="sm" className="flex-1" onClick={() => { navigate('/signup'); setMobileMenuOpen(false); }}>
+                      Get Started
+                    </Button>
+                  </>
+                )}
               </div>
             </nav>
           </div>
