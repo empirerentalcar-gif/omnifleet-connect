@@ -94,6 +94,33 @@ export type Database = {
         }
         Relationships: []
       }
+      rpc_rate_limits: {
+        Row: {
+          attempt_count: number | null
+          created_at: string | null
+          function_name: string
+          id: string
+          user_id: string | null
+          window_start: string | null
+        }
+        Insert: {
+          attempt_count?: number | null
+          created_at?: string | null
+          function_name: string
+          id?: string
+          user_id?: string | null
+          window_start?: string | null
+        }
+        Update: {
+          attempt_count?: number | null
+          created_at?: string | null
+          function_name?: string
+          id?: string
+          user_id?: string | null
+          window_start?: string | null
+        }
+        Relationships: []
+      }
       subscriptions: {
         Row: {
           created_at: string
@@ -217,6 +244,14 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      check_rate_limit: {
+        Args: {
+          func_name: string
+          max_attempts?: number
+          window_minutes?: number
+        }
+        Returns: boolean
+      }
       redeem_access_code: {
         Args: { code_to_redeem: string; user_profile_id: string }
         Returns: boolean
