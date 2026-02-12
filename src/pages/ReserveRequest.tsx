@@ -1,9 +1,11 @@
 import { useState } from "react";
 import { useParams, useSearchParams, useNavigate } from "react-router-dom";
-import { User, Phone, Calendar, Car, AlertCircle, ArrowRight } from "lucide-react";
+import { User, Phone, Calendar, Car, AlertCircle, ArrowRight, Mail } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
 
 const vehicleTypes = ["Compact", "Sedan", "SUV", "Truck", "Van", "Luxury"];
 
@@ -15,18 +17,35 @@ const ReserveRequest = () => {
 
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
+  const [email, setEmail] = useState("");
   const [pickupDate, setPickupDate] = useState("");
   const [dropoffDate, setDropoffDate] = useState("");
   const [vehicleType, setVehicleType] = useState("");
   const [submitting, setSubmitting] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setSubmitting(true);
-    // Simulate submission
-    setTimeout(() => {
+    try {
+      const { error } = await supabase.from("reservation_requests").insert({
+        profile_id: agencyId || null,
+        agency_name: agencyName,
+        customer_name: name.trim(),
+        customer_phone: phone.trim(),
+        customer_email: email.trim() || null,
+        pickup_date: pickupDate,
+        dropoff_date: dropoffDate,
+        vehicle_type: vehicleType,
+      });
+
+      if (error) throw error;
+
       navigate(`/reservation-confirmed?agency=${encodeURIComponent(agencyName)}`);
-    }, 1000);
+    } catch (err: any) {
+      console.error("Reservation error:", err);
+      toast.error("Failed to submit reservation. Please try again.");
+      setSubmitting(false);
+    }
   };
 
   const isValid = name.trim() && phone.trim() && pickupDate && dropoffDate && vehicleType;
@@ -47,89 +66,61 @@ const ReserveRequest = () => {
           <form onSubmit={handleSubmit} className="glass-card glow-border rounded-2xl p-6 md:p-8 space-y-6 animate-slide-up delay-100">
             {/* Name */}
             <div>
-              <label className="block text-xs font-medium text-muted-foreground mb-2 uppercase tracking-wider">
-                Full Name
-              </label>
+              <label className="block text-xs font-medium text-muted-foreground mb-2 uppercase tracking-wider">Full Name</label>
               <div className="relative">
                 <User className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-primary" />
-                <input
-                  type="text"
-                  placeholder="John Doe"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  required
-                  maxLength={100}
-                  className="w-full bg-secondary/50 border border-border rounded-xl pl-11 pr-4 py-3.5 text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all"
-                />
+                <input type="text" placeholder="John Doe" value={name} onChange={(e) => setName(e.target.value)} required maxLength={100}
+                  className="w-full bg-secondary/50 border border-border rounded-xl pl-11 pr-4 py-3.5 text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all" />
               </div>
             </div>
 
             {/* Phone */}
             <div>
-              <label className="block text-xs font-medium text-muted-foreground mb-2 uppercase tracking-wider">
-                Phone Number
-              </label>
+              <label className="block text-xs font-medium text-muted-foreground mb-2 uppercase tracking-wider">Phone Number</label>
               <div className="relative">
                 <Phone className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-primary" />
-                <input
-                  type="tel"
-                  placeholder="(555) 123-4567"
-                  value={phone}
-                  onChange={(e) => setPhone(e.target.value)}
-                  required
-                  maxLength={20}
-                  className="w-full bg-secondary/50 border border-border rounded-xl pl-11 pr-4 py-3.5 text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all"
-                />
+                <input type="tel" placeholder="(555) 123-4567" value={phone} onChange={(e) => setPhone(e.target.value)} required maxLength={20}
+                  className="w-full bg-secondary/50 border border-border rounded-xl pl-11 pr-4 py-3.5 text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all" />
+              </div>
+            </div>
+
+            {/* Email (optional — for notifications) */}
+            <div>
+              <label className="block text-xs font-medium text-muted-foreground mb-2 uppercase tracking-wider">Email <span className="text-muted-foreground/60">(optional, for updates)</span></label>
+              <div className="relative">
+                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-primary" />
+                <input type="email" placeholder="you@email.com" value={email} onChange={(e) => setEmail(e.target.value)} maxLength={100}
+                  className="w-full bg-secondary/50 border border-border rounded-xl pl-11 pr-4 py-3.5 text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all" />
               </div>
             </div>
 
             {/* Dates */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label className="block text-xs font-medium text-muted-foreground mb-2 uppercase tracking-wider">
-                  Pickup Date
-                </label>
+                <label className="block text-xs font-medium text-muted-foreground mb-2 uppercase tracking-wider">Pickup Date</label>
                 <div className="relative">
                   <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-primary" />
-                  <input
-                    type="date"
-                    value={pickupDate}
-                    onChange={(e) => setPickupDate(e.target.value)}
-                    required
-                    className="w-full bg-secondary/50 border border-border rounded-xl pl-11 pr-4 py-3.5 text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all"
-                  />
+                  <input type="date" value={pickupDate} onChange={(e) => setPickupDate(e.target.value)} required
+                    className="w-full bg-secondary/50 border border-border rounded-xl pl-11 pr-4 py-3.5 text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all" />
                 </div>
               </div>
               <div>
-                <label className="block text-xs font-medium text-muted-foreground mb-2 uppercase tracking-wider">
-                  Drop-off Date
-                </label>
+                <label className="block text-xs font-medium text-muted-foreground mb-2 uppercase tracking-wider">Drop-off Date</label>
                 <div className="relative">
                   <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-accent" />
-                  <input
-                    type="date"
-                    value={dropoffDate}
-                    onChange={(e) => setDropoffDate(e.target.value)}
-                    required
-                    className="w-full bg-secondary/50 border border-border rounded-xl pl-11 pr-4 py-3.5 text-foreground focus:outline-none focus:ring-2 focus:ring-accent/50 focus:border-accent transition-all"
-                  />
+                  <input type="date" value={dropoffDate} onChange={(e) => setDropoffDate(e.target.value)} required
+                    className="w-full bg-secondary/50 border border-border rounded-xl pl-11 pr-4 py-3.5 text-foreground focus:outline-none focus:ring-2 focus:ring-accent/50 focus:border-accent transition-all" />
                 </div>
               </div>
             </div>
 
             {/* Vehicle Type */}
             <div>
-              <label className="block text-xs font-medium text-muted-foreground mb-2 uppercase tracking-wider">
-                Vehicle Type
-              </label>
+              <label className="block text-xs font-medium text-muted-foreground mb-2 uppercase tracking-wider">Vehicle Type</label>
               <div className="relative">
                 <Car className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-primary" />
-                <select
-                  value={vehicleType}
-                  onChange={(e) => setVehicleType(e.target.value)}
-                  required
-                  className="w-full bg-secondary/50 border border-border rounded-xl pl-11 pr-4 py-3.5 text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all appearance-none"
-                >
+                <select value={vehicleType} onChange={(e) => setVehicleType(e.target.value)} required
+                  className="w-full bg-secondary/50 border border-border rounded-xl pl-11 pr-4 py-3.5 text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all appearance-none">
                   <option value="">Select a type...</option>
                   {vehicleTypes.map((t) => (
                     <option key={t} value={t}>{t}</option>
@@ -147,13 +138,7 @@ const ReserveRequest = () => {
               </p>
             </div>
 
-            <Button
-              type="submit"
-              variant="hero"
-              size="lg"
-              className="w-full group"
-              disabled={!isValid || submitting}
-            >
+            <Button type="submit" variant="hero" size="lg" className="w-full group" disabled={!isValid || submitting}>
               {submitting ? "Sending Request..." : "Submit Reservation Request"}
               <ArrowRight className="h-5 w-5 group-hover:translate-x-1 transition-transform" />
             </Button>

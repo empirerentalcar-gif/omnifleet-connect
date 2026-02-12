@@ -1,46 +1,129 @@
 import { useParams, useNavigate } from "react-router-dom";
-import { MapPin, Phone, Car, Banknote, Star, Shield, Clock, AlertCircle, User, ArrowRight } from "lucide-react";
+import { useState, useEffect } from "react";
+import { MapPin, Phone, Car, Banknote, Shield, Clock, AlertCircle, User, ArrowRight, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import { supabase } from "@/integrations/supabase/client";
 
-const agencyData: Record<string, {
-  name: string; city: string; state: string; phone: string; rating: number; reviews: number;
-  cashAccepted: boolean; startingPrice: number; story: string;
-  photos: string[]; vehicleCategories: { name: string; from: number }[];
-  requirements: string[]; deposit: string; cancellation: string;
-}> = {
-  "agency-1": {
-    name: "Metro Auto Rentals",
-    city: "Miami", state: "FL", phone: "(305) 555-0123",
-    rating: 4.8, reviews: 124, cashAccepted: true, startingPrice: 35,
-    story: "Founded in 2010 by Carlos & Maria, Metro Auto Rentals started with just 3 vehicles and a dream to provide honest, affordable car rentals to the Miami community. Today we serve hundreds of customers monthly while keeping our family values.",
-    photos: [
-      "https://images.unsplash.com/photo-1549317661-bd32c8ce0afe?w=800&h=500&fit=crop",
-      "https://images.unsplash.com/photo-1580273916550-e323be2ae537?w=800&h=500&fit=crop",
-      "https://images.unsplash.com/photo-1502877338535-766e1452684a?w=800&h=500&fit=crop",
-    ],
-    vehicleCategories: [
-      { name: "Compact", from: 35 }, { name: "Sedan", from: 45 },
-      { name: "SUV", from: 65 }, { name: "Van", from: 75 },
-    ],
-    requirements: [
-      "Valid driver's license (21+ years old)",
-      "Proof of insurance or purchase our coverage",
-      "Major credit/debit card or cash deposit",
-      "Utility bill or proof of local address",
-    ],
-    deposit: "$200 cash or card hold. Refunded upon vehicle return in good condition.",
-    cancellation: "All cancellations must be made by calling the agency directly. No online cancellations.",
-  },
-};
-
-const fallback = agencyData["agency-1"];
+interface AgencyData {
+  name: string;
+  city: string;
+  state: string;
+  phone: string;
+  cashAccepted: boolean;
+  startingPrice: number;
+  story: string;
+  photos: string[];
+  vehicleCategories: { name: string; from: number }[];
+  requirements: string[];
+  deposit: string;
+  cancellation: string;
+}
 
 const AgencyDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const agency = agencyData[id || ""] || { ...fallback, name: "Rental Agency" };
+  const [agency, setAgency] = useState<AgencyData | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchAgency();
+  }, [id]);
+
+  const fetchAgency = async () => {
+    if (!id) return;
+    setLoading(true);
+    try {
+      // Fetch vehicles for this profile/agency
+      const { data: vehicles, error } = await supabase
+        .from("available_vehicles_public")
+        .select("*")
+        .eq("profile_id", id);
+
+      if (error) throw error;
+
+      if (!vehicles || vehicles.length === 0) {
+        setAgency(null);
+        setLoading(false);
+        return;
+      }
+
+      // Build agency data from vehicles
+      const vehicleCats = new Map<string, number>();
+      const photos: string[] = [];
+      let minPrice = Infinity;
+      let city = "";
+      let state = "";
+
+      for (const v of vehicles) {
+        if (v.vehicle_type) {
+          const existing = vehicleCats.get(v.vehicle_type);
+          if (!existing || (v.daily_rate && v.daily_rate < existing)) {
+            vehicleCats.set(v.vehicle_type, v.daily_rate || 0);
+          }
+        }
+        if (v.daily_rate && v.daily_rate < minPrice) minPrice = v.daily_rate;
+        if (v.images) photos.push(...v.images);
+        if (v.location_city) city = v.location_city;
+        if (v.location_state) state = v.location_state;
+      }
+
+      setAgency({
+        name: "Local Rental Agency",
+        city,
+        state,
+        phone: "",
+        cashAccepted: false,
+        startingPrice: minPrice === Infinity ? 0 : minPrice,
+        story: "We're a local, independent rental agency committed to providing reliable vehicles and honest service to our community.",
+        photos: photos.length > 0 ? photos.slice(0, 3) : [
+          "https://images.unsplash.com/photo-1549317661-bd32c8ce0afe?w=800&h=500&fit=crop",
+        ],
+        vehicleCategories: Array.from(vehicleCats.entries()).map(([name, from]) => ({ name, from })),
+        requirements: [
+          "Valid driver's license (21+ years old)",
+          "Proof of insurance or purchase our coverage",
+          "Major credit/debit card or cash deposit",
+          "Utility bill or proof of local address",
+        ],
+        deposit: "$200 cash or card hold. Refunded upon vehicle return in good condition.",
+        cancellation: "All cancellations must be made by calling the agency directly. No online cancellations.",
+      });
+    } catch (err) {
+      console.error("Error fetching agency:", err);
+      setAgency(null);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-background">
+        <Header />
+        <main className="pt-24 pb-16 flex items-center justify-center">
+          <Loader2 className="h-10 w-10 text-primary animate-spin" />
+        </main>
+        <Footer />
+      </div>
+    );
+  }
+
+  if (!agency) {
+    return (
+      <div className="min-h-screen bg-background">
+        <Header />
+        <main className="pt-24 pb-16 text-center">
+          <Car className="h-16 w-16 text-muted-foreground/30 mx-auto mb-4" />
+          <h2 className="font-display text-2xl font-bold mb-2">Agency Not Found</h2>
+          <p className="text-muted-foreground mb-6">This agency doesn't have any available vehicles right now.</p>
+          <Button variant="hero" onClick={() => navigate("/search")}>Back to Search</Button>
+        </main>
+        <Footer />
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-background">
@@ -53,19 +136,20 @@ const AgencyDetail = () => {
             <div className="md:col-span-2 rounded-2xl overflow-hidden h-64 md:h-80">
               <img src={agency.photos[0]} alt={agency.name} className="w-full h-full object-cover" />
             </div>
-            <div className="grid grid-rows-2 gap-4">
-              {agency.photos.slice(1, 3).map((p, i) => (
-                <div key={i} className="rounded-2xl overflow-hidden">
-                  <img src={p} alt="" className="w-full h-full object-cover" />
-                </div>
-              ))}
-            </div>
+            {agency.photos.length > 1 && (
+              <div className="grid grid-rows-2 gap-4">
+                {agency.photos.slice(1, 3).map((p, i) => (
+                  <div key={i} className="rounded-2xl overflow-hidden">
+                    <img src={p} alt="" className="w-full h-full object-cover" />
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             {/* Left — Details */}
             <div className="lg:col-span-2 space-y-8">
-              {/* Header */}
               <div>
                 <div className="flex items-center gap-3 mb-2">
                   <h1 className="font-display text-3xl md:text-4xl font-bold">{agency.name}</h1>
@@ -76,9 +160,7 @@ const AgencyDetail = () => {
                   )}
                 </div>
                 <p className="text-muted-foreground flex items-center gap-2">
-                  <MapPin className="h-4 w-4" /> {agency.city}, {agency.state}
-                  <span className="mx-2">·</span>
-                  <Star className="h-4 w-4 text-yellow-400 fill-current" /> {agency.rating} ({agency.reviews} reviews)
+                  <MapPin className="h-4 w-4" /> {agency.city || "Location TBD"}{agency.state ? `, ${agency.state}` : ""}
                 </p>
               </div>
 
@@ -158,15 +240,17 @@ const AgencyDetail = () => {
                   <ArrowRight className="h-5 w-5 group-hover:translate-x-1 transition-transform" />
                 </Button>
 
-                <Button
-                  variant="outline"
-                  size="lg"
-                  className="w-full border-accent/30 hover:bg-accent/10"
-                  onClick={() => window.open(`tel:${agency.phone.replace(/\D/g, "")}`, "_self")}
-                >
-                  <Phone className="h-5 w-5" />
-                  Call Agency Now
-                </Button>
+                {agency.phone && (
+                  <Button
+                    variant="outline"
+                    size="lg"
+                    className="w-full border-accent/30 hover:bg-accent/10"
+                    onClick={() => window.open(`tel:${agency.phone.replace(/\D/g, "")}`, "_self")}
+                  >
+                    <Phone className="h-5 w-5" />
+                    Call Agency Now
+                  </Button>
+                )}
 
                 <div className="pt-4 border-t border-border/50 space-y-2 text-sm text-muted-foreground">
                   <p className="flex items-center gap-2"><Clock className="h-4 w-4 text-primary" /> Responds within 1 hour</p>
