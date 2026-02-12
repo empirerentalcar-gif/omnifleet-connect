@@ -115,7 +115,7 @@ Deno.serve(async (req) => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          from: "ZUVIO <onboarding@resend.dev>",
+          from: "ZUVIO <empirerentalcar@gmail.com>",
           to: [reservation.customer_email],
           subject,
           html: emailHtml,
