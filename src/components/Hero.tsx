@@ -55,7 +55,7 @@ const Hero = () => {
               variant="outline"
               size="lg"
               className="text-base border-accent/30 hover:bg-accent/10"
-              onClick={() => navigate("/owner-benefits")}
+              onClick={() => navigate("/pricing")}
             >
               <Building2 className="h-5 w-5 text-accent" />
               <span>Grow Your Rental Business</span>

@@ -14,6 +14,7 @@ import AgencyDetail from "./pages/AgencyDetail";
 import ReserveRequest from "./pages/ReserveRequest";
 import ReservationConfirmed from "./pages/ReservationConfirmed";
 import Pricing from "./pages/Pricing";
+import OwnerDashboard from "./pages/OwnerDashboard";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -36,6 +37,7 @@ const App = () => (
           <Route path="/agency/:id" element={<AgencyDetail />} />
           <Route path="/reserve/:agencyId" element={<ReserveRequest />} />
           <Route path="/reservation-confirmed" element={<ReservationConfirmed />} />
+          <Route path="/dashboard" element={<OwnerDashboard />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
