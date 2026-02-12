@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { supabase } from "@/integrations/supabase/client";
+import SEO from "@/components/SEO";
 
 interface AgencyData {
   name: string;
@@ -136,6 +137,12 @@ const AgencyDetail = () => {
   return (
     <div className="min-h-screen bg-background">
       <Header />
+
+      <SEO
+        title={`${agency.name} | Car Rental on ZUVIO`}
+        description={`Rent cars from ${agency.name} in ${agency.city || "your area"}${agency.state ? `, ${agency.state}` : ""}. Starting at $${agency.startingPrice}/day.${agency.cashAccepted ? " Cash accepted." : ""}`}
+        path={`/agency/${id}`}
+      />
 
       <main className="pt-24 pb-16">
         <div className="container mx-auto px-4">

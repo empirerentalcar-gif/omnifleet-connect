@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useToast } from '@/hooks/use-toast';
 import { z } from 'zod';
+import SEO from '@/components/SEO';
 
 const signInSchema = z.object({
   email: z.string().trim().email('Invalid email address').max(255, 'Email too long'),
@@ -52,6 +53,7 @@ const SignIn = () => {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-background px-4">
+      <SEO title="Sign In | ZUVIO" description="Sign in to your ZUVIO rental agency dashboard." path="/signin" noindex />
       <div className="w-full max-w-md space-y-8">
         <div className="text-center">
           <h1 className="text-2xl font-bold text-foreground">Sign In</h1>

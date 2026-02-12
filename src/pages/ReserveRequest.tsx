@@ -7,6 +7,7 @@ import Footer from "@/components/Footer";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { z } from "zod";
+import SEO from "@/components/SEO";
 
 const vehicleTypes = ["Compact", "Sedan", "SUV", "Truck", "Van", "Luxury"] as const;
 
@@ -79,6 +80,7 @@ const ReserveRequest = () => {
 
   return (
     <div className="min-h-screen bg-background">
+      <SEO title={`Reserve with ${agencyName} | ZUVIO`} description={`Request a car rental reservation with ${agencyName} through ZUVIO.`} path={`/reserve/${agencyId}`} noindex />
       <Header />
 
       <main className="pt-24 pb-16">

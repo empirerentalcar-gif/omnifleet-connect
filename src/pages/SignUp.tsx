@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useToast } from '@/hooks/use-toast';
 import { z } from 'zod';
+import SEO from '@/components/SEO';
 
 const signUpSchema = z.object({
   accessCode: z.string().trim().min(1, 'Access code is required').max(100, 'Access code too long'),
@@ -107,6 +108,7 @@ const SignUp = () => {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-background px-4">
+      <SEO title="Sign Up | ZUVIO" description="Create a ZUVIO account to list your independent car rental business." path="/signup" noindex />
       <div className="w-full max-w-md space-y-8">
         <div className="text-center">
           <h1 className="text-2xl font-bold text-foreground">Create Account</h1>

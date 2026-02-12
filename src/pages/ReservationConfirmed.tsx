@@ -3,6 +3,7 @@ import { CheckCircle, Phone, Mail, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import SEO from "@/components/SEO";
 
 const ReservationConfirmed = () => {
   const [searchParams] = useSearchParams();
@@ -11,6 +12,7 @@ const ReservationConfirmed = () => {
 
   return (
     <div className="min-h-screen bg-background">
+      <SEO title="Reservation Confirmed | ZUVIO" description="Your reservation request has been sent successfully." path="/reservation-confirmed" noindex />
       <Header />
 
       <main className="pt-24 pb-16">
