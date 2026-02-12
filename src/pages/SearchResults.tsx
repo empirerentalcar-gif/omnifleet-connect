@@ -4,6 +4,7 @@ import { MapPin, Calendar, Car, Filter, ArrowRight, Banknote, Loader2 } from "lu
 import { Button } from "@/components/ui/button";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import SEO from "@/components/SEO";
 import { supabase } from "@/integrations/supabase/client";
 
 const vehicleTypes = ["All", "Sedan", "SUV", "Truck", "Van", "Compact", "Luxury"];
@@ -100,6 +101,11 @@ const SearchResults = () => {
 
   return (
     <div className="min-h-screen bg-background">
+      <SEO
+        title="Search Car Rentals | ZUVIO"
+        description="Search independent car rental agencies near you. Filter by location, vehicle type, and cash-friendly options."
+        path="/search"
+      />
       <Header />
 
       <main className="pt-24 pb-16">

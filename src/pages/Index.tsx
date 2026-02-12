@@ -7,11 +7,16 @@ import TrustBadges from "@/components/TrustBadges";
 import AgencyCTA from "@/components/AgencyCTA";
 import OwnerFAQ from "@/components/OwnerFAQ";
 import Footer from "@/components/Footer";
+import SEO from "@/components/SEO";
 
 const Index = () => {
   return (
     <div className="min-h-screen bg-background">
-      <Header />
+      <SEO
+        title="ZUVIO | Independent Car Rentals Near You"
+        description="Find and book independent car rentals nationwide. Cash-friendly options available. Rental owners stay in full control with ZUVIO."
+        path="/"
+      />
       <Hero />
       <HowItWorks />
       <Comparison />
