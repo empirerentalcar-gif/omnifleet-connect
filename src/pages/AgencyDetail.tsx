@@ -10,7 +10,6 @@ interface AgencyData {
   name: string;
   city: string;
   state: string;
-  phone: string;
   cashAccepted: boolean;
   startingPrice: number;
   story: string;
@@ -57,7 +56,6 @@ const AgencyDetail = () => {
       // Pull agency info from first vehicle row (all share same profile)
       const first = vehicles[0] as any;
       const agencyName = first.business_name || "Local Rental Agency";
-      const agencyPhone = first.contact_phone || "";
       const cashAccepted = first.cash_accepted || false;
       const ownerStory = first.owner_story || "We're a local, independent rental agency committed to providing reliable vehicles and honest service to our community.";
       const depositInfo = first.deposit_info || "$200 cash or card hold. Refunded upon vehicle return in good condition.";
@@ -89,7 +87,6 @@ const AgencyDetail = () => {
         name: agencyName,
         city,
         state,
-        phone: agencyPhone,
         cashAccepted,
         startingPrice: minPrice === Infinity ? 0 : minPrice,
         story: ownerStory,
@@ -173,11 +170,6 @@ const AgencyDetail = () => {
                 <p className="text-muted-foreground flex items-center gap-2">
                   <MapPin className="h-4 w-4" /> {agency.city || "Location TBD"}{agency.state ? `, ${agency.state}` : ""}
                 </p>
-                {agency.phone && (
-                  <p className="text-muted-foreground flex items-center gap-2 mt-1">
-                    <Phone className="h-4 w-4" /> {agency.phone}
-                  </p>
-                )}
               </div>
 
               {/* Vehicle Categories */}
@@ -256,17 +248,6 @@ const AgencyDetail = () => {
                   <ArrowRight className="h-5 w-5 group-hover:translate-x-1 transition-transform" />
                 </Button>
 
-                {agency.phone && (
-                  <Button
-                    variant="outline"
-                    size="lg"
-                    className="w-full border-accent/30 hover:bg-accent/10"
-                    onClick={() => window.open(`tel:${agency.phone.replace(/\D/g, "")}`, "_self")}
-                  >
-                    <Phone className="h-5 w-5" />
-                    Call Agency Now
-                  </Button>
-                )}
                 <div className="pt-4 border-t border-border/50 space-y-2 text-sm text-muted-foreground">
                   <p className="flex items-center gap-2"><Clock className="h-4 w-4 text-primary" /> Responds within 1 hour</p>
                   <p className="flex items-center gap-2"><Shield className="h-4 w-4 text-accent" /> Verified ZUVIO partner</p>

@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
-import { MapPin, Phone, Calendar, Car, Filter, ArrowRight, Banknote, Loader2 } from "lucide-react";
+import { MapPin, Calendar, Car, Filter, ArrowRight, Banknote, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
@@ -15,7 +15,6 @@ interface Agency {
   startingPrice: number;
   city: string;
   state: string;
-  phone: string;
   vehicleTypes: string[];
   image: string | null;
 }
@@ -74,7 +73,6 @@ const SearchResults = () => {
             startingPrice: v.daily_rate || 0,
             city: v.location_city || "",
             state: v.location_state || "",
-            phone: (v as any).contact_phone || "",
             vehicleTypes: v.vehicle_type ? [v.vehicle_type] : [],
             image: v.images && v.images.length > 0 ? v.images[0] : null,
           });
@@ -275,17 +273,6 @@ const SearchResults = () => {
                           >
                             Request Reservation
                           </Button>
-                          {agency.phone && (
-                            <Button
-                              variant="outline"
-                              size="sm"
-                              className="border-accent/30 hover:bg-accent/10"
-                              onClick={() => window.open(`tel:${agency.phone.replace(/\D/g, "")}`, "_self")}
-                            >
-                              <Phone className="h-4 w-4" />
-                              Call Now
-                            </Button>
-                          )}
                         </div>
                       </div>
                     </div>
