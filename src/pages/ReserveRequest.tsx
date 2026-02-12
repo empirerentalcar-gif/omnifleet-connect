@@ -6,8 +6,20 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+import { z } from "zod";
 
-const vehicleTypes = ["Compact", "Sedan", "SUV", "Truck", "Van", "Luxury"];
+const vehicleTypes = ["Compact", "Sedan", "SUV", "Truck", "Van", "Luxury"] as const;
+
+const today = new Date().toISOString().split("T")[0];
+
+const reservationSchema = z.object({
+  customer_name: z.string().trim().min(1, "Name is required").max(100),
+  customer_phone: z.string().trim().min(1, "Phone is required").max(20).regex(/^[0-9()\-+\s.]+$/, "Invalid phone format"),
+  customer_email: z.union([z.literal(""), z.string().trim().email("Invalid email")]).transform(v => v || null),
+  pickup_date: z.string().min(1, "Pickup date is required"),
+  dropoff_date: z.string().min(1, "Drop-off date is required"),
+  vehicle_type: z.enum(vehicleTypes, { errorMap: () => ({ message: "Select a vehicle type" }) }),
+}).refine(d => d.dropoff_date > d.pickup_date, { message: "Drop-off must be after pickup", path: ["dropoff_date"] });
 
 const ReserveRequest = () => {
   const { agencyId } = useParams();
@@ -27,22 +39,37 @@ const ReserveRequest = () => {
     e.preventDefault();
     setSubmitting(true);
     try {
-      const { error } = await supabase.from("reservation_requests").insert({
-        profile_id: agencyId || null,
-        agency_name: agencyName,
-        customer_name: name.trim(),
-        customer_phone: phone.trim(),
-        customer_email: email.trim() || null,
+      const parsed = reservationSchema.safeParse({
+        customer_name: name,
+        customer_phone: phone,
+        customer_email: email,
         pickup_date: pickupDate,
         dropoff_date: dropoffDate,
         vehicle_type: vehicleType,
+      });
+
+      if (!parsed.success) {
+        const firstError = parsed.error.errors[0]?.message || "Invalid input";
+        toast.error(firstError);
+        setSubmitting(false);
+        return;
+      }
+
+      const { error } = await supabase.from("reservation_requests").insert({
+        profile_id: agencyId || null,
+        agency_name: agencyName,
+        customer_name: parsed.data.customer_name,
+        customer_phone: parsed.data.customer_phone,
+        customer_email: parsed.data.customer_email,
+        pickup_date: parsed.data.pickup_date,
+        dropoff_date: parsed.data.dropoff_date,
+        vehicle_type: parsed.data.vehicle_type,
       });
 
       if (error) throw error;
 
       navigate(`/reservation-confirmed?agency=${encodeURIComponent(agencyName)}`);
     } catch (err: any) {
-      console.error("Reservation error:", err);
       toast.error("Failed to submit reservation. Please try again.");
       setSubmitting(false);
     }
@@ -100,7 +127,7 @@ const ReserveRequest = () => {
                 <label className="block text-xs font-medium text-muted-foreground mb-2 uppercase tracking-wider">Pickup Date</label>
                 <div className="relative">
                   <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-primary" />
-                  <input type="date" value={pickupDate} onChange={(e) => setPickupDate(e.target.value)} required
+                  <input type="date" value={pickupDate} onChange={(e) => setPickupDate(e.target.value)} required min={today}
                     className="w-full bg-secondary/50 border border-border rounded-xl pl-11 pr-4 py-3.5 text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all" />
                 </div>
               </div>
