@@ -1,70 +1,24 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
-import { MapPin, Phone, Calendar, DollarSign, Car, Filter, Star, ArrowRight, Banknote } from "lucide-react";
+import { MapPin, Phone, Calendar, Car, Filter, ArrowRight, Banknote, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import { supabase } from "@/integrations/supabase/client";
 
 const vehicleTypes = ["All", "Sedan", "SUV", "Truck", "Van", "Compact", "Luxury"];
 
-const mockAgencies = [
-  {
-    id: "agency-1",
-    name: "Metro Auto Rentals",
-    cashAccepted: true,
-    startingPrice: 35,
-    distance: 1.2,
-    rating: 4.8,
-    reviews: 124,
-    city: "Miami",
-    state: "FL",
-    phone: "(305) 555-0123",
-    vehicleTypes: ["Sedan", "SUV", "Compact"],
-    image: "https://images.unsplash.com/photo-1549317661-bd32c8ce0afe?w=400&h=250&fit=crop",
-  },
-  {
-    id: "agency-2",
-    name: "SunCoast Car Hire",
-    cashAccepted: true,
-    startingPrice: 29,
-    distance: 2.5,
-    rating: 4.6,
-    reviews: 89,
-    city: "Miami",
-    state: "FL",
-    phone: "(305) 555-0456",
-    vehicleTypes: ["Sedan", "SUV", "Van", "Truck"],
-    image: "https://images.unsplash.com/photo-1580273916550-e323be2ae537?w=400&h=250&fit=crop",
-  },
-  {
-    id: "agency-3",
-    name: "Downtown Drive",
-    cashAccepted: false,
-    startingPrice: 42,
-    distance: 3.8,
-    rating: 4.9,
-    reviews: 201,
-    city: "Miami",
-    state: "FL",
-    phone: "(305) 555-0789",
-    vehicleTypes: ["Luxury", "SUV", "Sedan"],
-    image: "https://images.unsplash.com/photo-1502877338535-766e1452684a?w=400&h=250&fit=crop",
-  },
-  {
-    id: "agency-4",
-    name: "EZ Ride Rentals",
-    cashAccepted: true,
-    startingPrice: 25,
-    distance: 5.1,
-    rating: 4.4,
-    reviews: 56,
-    city: "Miami",
-    state: "FL",
-    phone: "(305) 555-1011",
-    vehicleTypes: ["Compact", "Sedan", "Van"],
-    image: "https://images.unsplash.com/photo-1489824904134-891ab64532f1?w=400&h=250&fit=crop",
-  },
-];
+interface Agency {
+  id: string;
+  name: string;
+  cashAccepted: boolean;
+  startingPrice: number;
+  city: string;
+  state: string;
+  phone: string;
+  vehicleTypes: string[];
+  image: string | null;
+}
 
 const SearchResults = () => {
   const [searchParams] = useSearchParams();
@@ -74,10 +28,89 @@ const SearchResults = () => {
   const [dropoffDate, setDropoffDate] = useState(searchParams.get("dropoff") || "");
   const [cashOnly, setCashOnly] = useState(false);
   const [vehicleType, setVehicleType] = useState("All");
+  const [agencies, setAgencies] = useState<Agency[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  const filtered = mockAgencies.filter((a) => {
+  useEffect(() => {
+    fetchAgencies();
+  }, []);
+
+  const fetchAgencies = async () => {
+    setLoading(true);
+    try {
+      // Get vehicles with profile_id from the public view
+      const { data: vehicles, error } = await supabase
+        .from("available_vehicles_public")
+        .select("*");
+
+      if (error) throw error;
+
+      if (!vehicles || vehicles.length === 0) {
+        setAgencies([]);
+        setLoading(false);
+        return;
+      }
+
+      // Group vehicles by profile_id to build agency listings
+      const profileIds = [...new Set(vehicles.map((v) => v.profile_id).filter(Boolean))];
+
+      // Fetch profiles for these agencies (using service-level view or public data)
+      // Since profiles are protected by RLS, we query vehicles grouped by profile
+      const agencyMap = new Map<string, Agency>();
+
+      for (const v of vehicles) {
+        if (!v.profile_id) continue;
+        const existing = agencyMap.get(v.profile_id);
+        if (existing) {
+          if (v.daily_rate && v.daily_rate < existing.startingPrice) {
+            existing.startingPrice = v.daily_rate;
+          }
+          if (v.vehicle_type && !existing.vehicleTypes.includes(v.vehicle_type)) {
+            existing.vehicleTypes.push(v.vehicle_type);
+          }
+          if (!existing.image && v.images && v.images.length > 0) {
+            existing.image = v.images[0];
+          }
+        } else {
+          agencyMap.set(v.profile_id, {
+            id: v.profile_id,
+            name: `Agency`, // Will be enriched below
+            cashAccepted: false,
+            startingPrice: v.daily_rate || 0,
+            city: v.location_city || "",
+            state: v.location_state || "",
+            phone: "",
+            vehicleTypes: v.vehicle_type ? [v.vehicle_type] : [],
+            image: v.images && v.images.length > 0 ? v.images[0] : null,
+          });
+        }
+      }
+
+      // Try to get profile info via an RPC or public columns
+      // Since profiles are RLS-protected, we'll create a lightweight approach
+      // by adding business_name to the vehicles view in future, for now use profile_id
+      // For now, we fetch what we can
+      const agencyList = Array.from(agencyMap.values()).map((a, i) => ({
+        ...a,
+        name: a.name === "Agency" ? `Local Agency ${i + 1}` : a.name,
+      }));
+
+      setAgencies(agencyList);
+    } catch (err) {
+      console.error("Error fetching agencies:", err);
+      setAgencies([]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const filtered = agencies.filter((a) => {
     if (cashOnly && !a.cashAccepted) return false;
     if (vehicleType !== "All" && !a.vehicleTypes.includes(vehicleType)) return false;
+    if (location.trim()) {
+      const loc = location.toLowerCase();
+      if (!a.city.toLowerCase().includes(loc) && !a.state.toLowerCase().includes(loc)) return false;
+    }
     return true;
   });
 
@@ -133,7 +166,7 @@ const SearchResults = () => {
                   />
                 </div>
               </div>
-              <Button variant="hero" size="lg" className="w-full group">
+              <Button variant="hero" size="lg" className="w-full group" onClick={fetchAgencies}>
                 <Car className="h-5 w-5" />
                 <span>View Available Agencies</span>
                 <ArrowRight className="h-5 w-5 group-hover:translate-x-1 transition-transform" />
@@ -177,103 +210,111 @@ const SearchResults = () => {
             </div>
           </div>
 
-          {/* Results Count */}
-          <div className="mb-6">
-            <h2 className="font-display text-2xl font-bold">
-              {filtered.length} {filtered.length === 1 ? "Agency" : "Agencies"} Found
-            </h2>
-            <p className="text-muted-foreground text-sm mt-1">
-              {location ? `Near ${location}` : "Showing all locations"}
-            </p>
-          </div>
-
-          {/* Agency Cards */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            {filtered.map((agency) => (
-              <div
-                key={agency.id}
-                className="glass-card glow-border rounded-2xl overflow-hidden group hover:shadow-glow transition-all duration-300"
-              >
-                <div className="flex flex-col sm:flex-row">
-                  <div className="sm:w-48 h-48 sm:h-auto overflow-hidden">
-                    <img
-                      src={agency.image}
-                      alt={agency.name}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                    />
-                  </div>
-                  <div className="flex-1 p-6">
-                    <div className="flex items-start justify-between mb-2">
-                      <div>
-                        <h3 className="font-display text-lg font-bold">{agency.name}</h3>
-                        <p className="text-sm text-muted-foreground flex items-center gap-1">
-                          <MapPin className="h-3 w-3" />
-                          {agency.city}, {agency.state} · {agency.distance} mi away
-                        </p>
-                      </div>
-                      {agency.cashAccepted && (
-                        <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-accent/15 text-accent text-xs font-semibold border border-accent/30">
-                          <Banknote className="h-3 w-3" />
-                          Cash OK
-                        </span>
-                      )}
-                    </div>
-
-                    <div className="flex items-center gap-3 mb-4 text-sm">
-                      <span className="flex items-center gap-1 text-yellow-400">
-                        <Star className="h-4 w-4 fill-current" />
-                        {agency.rating}
-                      </span>
-                      <span className="text-muted-foreground">({agency.reviews} reviews)</span>
-                    </div>
-
-                    <div className="flex items-baseline gap-1 mb-4">
-                      <span className="text-sm text-muted-foreground">From</span>
-                      <span className="font-display text-2xl font-bold text-primary">
-                        ${agency.startingPrice}
-                      </span>
-                      <span className="text-sm text-muted-foreground">/day</span>
-                    </div>
-
-                    <div className="flex flex-wrap gap-2 mb-4">
-                      {agency.vehicleTypes.map((vt) => (
-                        <span key={vt} className="px-2 py-1 rounded-lg bg-secondary text-xs text-muted-foreground">
-                          {vt}
-                        </span>
-                      ))}
-                    </div>
-
-                    <div className="flex gap-3">
-                      <Button
-                        variant="hero"
-                        size="sm"
-                        className="flex-1"
-                        onClick={() => navigate(`/agency/${agency.id}`)}
-                      >
-                        Request Reservation
-                      </Button>
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        className="border-accent/30 hover:bg-accent/10"
-                        onClick={() => window.open(`tel:${agency.phone.replace(/\D/g, "")}`, "_self")}
-                      >
-                        <Phone className="h-4 w-4" />
-                        Call Now
-                      </Button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-
-          {filtered.length === 0 && (
+          {/* Results */}
+          {loading ? (
             <div className="text-center py-16">
-              <Car className="h-16 w-16 text-muted-foreground/30 mx-auto mb-4" />
-              <h3 className="font-display text-xl font-bold mb-2">No agencies match your filters</h3>
-              <p className="text-muted-foreground">Try adjusting your filters or search a different location.</p>
+              <Loader2 className="h-10 w-10 text-primary animate-spin mx-auto mb-4" />
+              <p className="text-muted-foreground">Searching agencies...</p>
             </div>
+          ) : (
+            <>
+              <div className="mb-6">
+                <h2 className="font-display text-2xl font-bold">
+                  {filtered.length} {filtered.length === 1 ? "Agency" : "Agencies"} Found
+                </h2>
+                <p className="text-muted-foreground text-sm mt-1">
+                  {location ? `Near ${location}` : "Showing all locations"}
+                </p>
+              </div>
+
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                {filtered.map((agency) => (
+                  <div
+                    key={agency.id}
+                    className="glass-card glow-border rounded-2xl overflow-hidden group hover:shadow-glow transition-all duration-300"
+                  >
+                    <div className="flex flex-col sm:flex-row">
+                      <div className="sm:w-48 h-48 sm:h-auto overflow-hidden bg-secondary">
+                        {agency.image ? (
+                          <img
+                            src={agency.image}
+                            alt={agency.name}
+                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                          />
+                        ) : (
+                          <div className="w-full h-full flex items-center justify-center">
+                            <Car className="h-12 w-12 text-muted-foreground/30" />
+                          </div>
+                        )}
+                      </div>
+                      <div className="flex-1 p-6">
+                        <div className="flex items-start justify-between mb-2">
+                          <div>
+                            <h3 className="font-display text-lg font-bold">{agency.name}</h3>
+                            <p className="text-sm text-muted-foreground flex items-center gap-1">
+                              <MapPin className="h-3 w-3" />
+                              {agency.city || "Location TBD"}{agency.state ? `, ${agency.state}` : ""}
+                            </p>
+                          </div>
+                          {agency.cashAccepted && (
+                            <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-accent/15 text-accent text-xs font-semibold border border-accent/30">
+                              <Banknote className="h-3 w-3" />
+                              Cash OK
+                            </span>
+                          )}
+                        </div>
+
+                        <div className="flex items-baseline gap-1 mb-4">
+                          <span className="text-sm text-muted-foreground">From</span>
+                          <span className="font-display text-2xl font-bold text-primary">
+                            ${agency.startingPrice}
+                          </span>
+                          <span className="text-sm text-muted-foreground">/day</span>
+                        </div>
+
+                        <div className="flex flex-wrap gap-2 mb-4">
+                          {agency.vehicleTypes.map((vt) => (
+                            <span key={vt} className="px-2 py-1 rounded-lg bg-secondary text-xs text-muted-foreground">
+                              {vt}
+                            </span>
+                          ))}
+                        </div>
+
+                        <div className="flex gap-3">
+                          <Button
+                            variant="hero"
+                            size="sm"
+                            className="flex-1"
+                            onClick={() => navigate(`/agency/${agency.id}`)}
+                          >
+                            Request Reservation
+                          </Button>
+                          {agency.phone && (
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              className="border-accent/30 hover:bg-accent/10"
+                              onClick={() => window.open(`tel:${agency.phone.replace(/\D/g, "")}`, "_self")}
+                            >
+                              <Phone className="h-4 w-4" />
+                              Call Now
+                            </Button>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              {filtered.length === 0 && (
+                <div className="text-center py-16">
+                  <Car className="h-16 w-16 text-muted-foreground/30 mx-auto mb-4" />
+                  <h3 className="font-display text-xl font-bold mb-2">No agencies match your filters</h3>
+                  <p className="text-muted-foreground">Try adjusting your filters or search a different location.</p>
+                </div>
+              )}
+            </>
           )}
         </div>
       </main>
