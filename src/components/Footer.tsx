@@ -1,4 +1,5 @@
 import { Facebook, Twitter, Instagram, Linkedin, Mail, Phone, MapPin } from "lucide-react";
+import { Link } from "react-router-dom";
 import zuvioLogo from "@/assets/zuvio-logo.png";
 
 const Footer = () => {
@@ -8,53 +9,39 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-12">
           {/* Brand */}
           <div className="lg:col-span-2">
-            <a href="/" className="flex items-center mb-6">
-              <img 
-                src={zuvioLogo} 
-                alt="Zuvio" 
-                className="h-12 w-auto object-contain"
-              />
-            </a>
+            <Link to="/" className="flex items-center mb-6">
+              <img src={zuvioLogo} alt="Zuvio" className="h-12 w-auto object-contain" />
+            </Link>
             <p className="text-muted-foreground mb-6 max-w-sm">
-              The world's largest multi-location car rental platform. 
-              Connecting travelers with thousands of trusted agencies worldwide.
+              Connecting renters with trusted independent rental agencies nationwide. Cash-friendly options. Full owner control.
             </p>
             <div className="flex gap-4">
-              <a href="#" className="w-10 h-10 rounded-xl bg-secondary flex items-center justify-center text-muted-foreground hover:text-primary hover:bg-primary/10 transition-colors">
-                <Facebook className="h-5 w-5" />
-              </a>
-              <a href="#" className="w-10 h-10 rounded-xl bg-secondary flex items-center justify-center text-muted-foreground hover:text-primary hover:bg-primary/10 transition-colors">
-                <Twitter className="h-5 w-5" />
-              </a>
-              <a href="#" className="w-10 h-10 rounded-xl bg-secondary flex items-center justify-center text-muted-foreground hover:text-primary hover:bg-primary/10 transition-colors">
-                <Instagram className="h-5 w-5" />
-              </a>
-              <a href="#" className="w-10 h-10 rounded-xl bg-secondary flex items-center justify-center text-muted-foreground hover:text-primary hover:bg-primary/10 transition-colors">
-                <Linkedin className="h-5 w-5" />
-              </a>
+              {[Facebook, Twitter, Instagram, Linkedin].map((Icon, i) => (
+                <a key={i} href="#" className="w-10 h-10 rounded-xl bg-secondary flex items-center justify-center text-muted-foreground hover:text-primary hover:bg-primary/10 transition-colors">
+                  <Icon className="h-5 w-5" />
+                </a>
+              ))}
             </div>
           </div>
 
-          {/* Quick Links */}
+          {/* For Owners */}
           <div>
-            <h4 className="font-display font-bold mb-6">Quick Links</h4>
+            <h4 className="font-display font-bold mb-6">For Owners</h4>
             <ul className="space-y-3">
-              <li><a href="#" className="text-muted-foreground hover:text-foreground transition-colors">Browse Vehicles</a></li>
-              <li><a href="#" className="text-muted-foreground hover:text-foreground transition-colors">Locations</a></li>
-              <li><a href="#" className="text-muted-foreground hover:text-foreground transition-colors">Deals & Offers</a></li>
-              <li><a href="#" className="text-muted-foreground hover:text-foreground transition-colors">Long-term Rentals</a></li>
-              <li><a href="#" className="text-muted-foreground hover:text-foreground transition-colors">Corporate</a></li>
+              <li><Link to="/owner-benefits" className="text-muted-foreground hover:text-foreground transition-colors">Owner Benefits</Link></li>
+              <li><Link to="/signup" className="text-muted-foreground hover:text-foreground transition-colors">Join ZUVIO</Link></li>
+              <li><a href="#how-it-works" className="text-muted-foreground hover:text-foreground transition-colors">How It Works</a></li>
+              <li><a href="#owner-faq" className="text-muted-foreground hover:text-foreground transition-colors">Owner FAQs</a></li>
             </ul>
           </div>
 
-          {/* For Partners */}
+          {/* Resources */}
           <div>
-            <h4 className="font-display font-bold mb-6">For Partners</h4>
+            <h4 className="font-display font-bold mb-6">Resources</h4>
             <ul className="space-y-3">
-              <li><a href="#" className="text-muted-foreground hover:text-foreground transition-colors">Become a Partner</a></li>
-              <li><a href="#" className="text-muted-foreground hover:text-foreground transition-colors">Agency Dashboard</a></li>
-              <li><a href="#" className="text-muted-foreground hover:text-foreground transition-colors">API Documentation</a></li>
-              <li><a href="#" className="text-muted-foreground hover:text-foreground transition-colors">Success Stories</a></li>
+              <li><a href="#faq" className="text-muted-foreground hover:text-foreground transition-colors">FAQs</a></li>
+              <li><Link to="/privacy" className="text-muted-foreground hover:text-foreground transition-colors">Privacy Policy</Link></li>
+              <li><Link to="/terms" className="text-muted-foreground hover:text-foreground transition-colors">Terms of Service</Link></li>
             </ul>
           </div>
 
@@ -70,10 +57,6 @@ const Footer = () => {
                 <Phone className="h-4 w-4 text-primary" />
                 <span>1-800-ZUVIO</span>
               </li>
-              <li className="flex items-start gap-3 text-muted-foreground">
-                <MapPin className="h-4 w-4 text-primary shrink-0 mt-1" />
-                <span>100 Tech Hub Way, San Francisco, CA 94102</span>
-              </li>
             </ul>
           </div>
         </div>
@@ -84,9 +67,8 @@ const Footer = () => {
             © 2025 Zuvio. All rights reserved.
           </p>
           <div className="flex gap-6 text-sm">
-            <a href="/privacy" className="text-muted-foreground hover:text-foreground transition-colors">Privacy Policy</a>
-            <a href="/terms" className="text-muted-foreground hover:text-foreground transition-colors">Terms of Service</a>
-            <a href="#" className="text-muted-foreground hover:text-foreground transition-colors">Cookie Policy</a>
+            <Link to="/privacy" className="text-muted-foreground hover:text-foreground transition-colors">Privacy Policy</Link>
+            <Link to="/terms" className="text-muted-foreground hover:text-foreground transition-colors">Terms of Service</Link>
           </div>
         </div>
       </div>
