@@ -35,7 +35,6 @@ const AgencyDetail = () => {
     if (!id) return;
     setLoading(true);
     try {
-      // Fetch vehicles for this profile/agency
       const { data: vehicles, error } = await supabase
         .from("available_vehicles_public")
         .select("*")
@@ -49,12 +48,27 @@ const AgencyDetail = () => {
         return;
       }
 
-      // Build agency data from vehicles
       const vehicleCats = new Map<string, number>();
-      const photos: string[] = [];
+      const vehiclePhotos: string[] = [];
       let minPrice = Infinity;
       let city = "";
       let state = "";
+
+      // Pull agency info from first vehicle row (all share same profile)
+      const first = vehicles[0] as any;
+      const agencyName = first.business_name || "Local Rental Agency";
+      const agencyPhone = first.contact_phone || "";
+      const cashAccepted = first.cash_accepted || false;
+      const ownerStory = first.owner_story || "We're a local, independent rental agency committed to providing reliable vehicles and honest service to our community.";
+      const depositInfo = first.deposit_info || "$200 cash or card hold. Refunded upon vehicle return in good condition.";
+      const cancellationPolicy = first.cancellation_policy || "All cancellations must be made by calling the agency directly. No online cancellations.";
+      const requirements = first.requirements || [
+        "Valid driver's license (21+ years old)",
+        "Proof of insurance or purchase our coverage",
+        "Major credit/debit card or cash deposit",
+        "Utility bill or proof of local address",
+      ];
+      const agencyPhotos: string[] = first.agency_photos || [];
 
       for (const v of vehicles) {
         if (v.vehicle_type) {
@@ -64,31 +78,28 @@ const AgencyDetail = () => {
           }
         }
         if (v.daily_rate && v.daily_rate < minPrice) minPrice = v.daily_rate;
-        if (v.images) photos.push(...v.images);
+        if (v.images) vehiclePhotos.push(...v.images);
         if (v.location_city) city = v.location_city;
         if (v.location_state) state = v.location_state;
       }
 
+      const allPhotos = [...agencyPhotos, ...vehiclePhotos];
+
       setAgency({
-        name: "Local Rental Agency",
+        name: agencyName,
         city,
         state,
-        phone: "",
-        cashAccepted: false,
+        phone: agencyPhone,
+        cashAccepted,
         startingPrice: minPrice === Infinity ? 0 : minPrice,
-        story: "We're a local, independent rental agency committed to providing reliable vehicles and honest service to our community.",
-        photos: photos.length > 0 ? photos.slice(0, 3) : [
+        story: ownerStory,
+        photos: allPhotos.length > 0 ? allPhotos.slice(0, 3) : [
           "https://images.unsplash.com/photo-1549317661-bd32c8ce0afe?w=800&h=500&fit=crop",
         ],
         vehicleCategories: Array.from(vehicleCats.entries()).map(([name, from]) => ({ name, from })),
-        requirements: [
-          "Valid driver's license (21+ years old)",
-          "Proof of insurance or purchase our coverage",
-          "Major credit/debit card or cash deposit",
-          "Utility bill or proof of local address",
-        ],
-        deposit: "$200 cash or card hold. Refunded upon vehicle return in good condition.",
-        cancellation: "All cancellations must be made by calling the agency directly. No online cancellations.",
+        requirements: Array.isArray(requirements) ? requirements : [requirements],
+        deposit: depositInfo,
+        cancellation: cancellationPolicy,
       });
     } catch (err) {
       console.error("Error fetching agency:", err);
@@ -162,6 +173,11 @@ const AgencyDetail = () => {
                 <p className="text-muted-foreground flex items-center gap-2">
                   <MapPin className="h-4 w-4" /> {agency.city || "Location TBD"}{agency.state ? `, ${agency.state}` : ""}
                 </p>
+                {agency.phone && (
+                  <p className="text-muted-foreground flex items-center gap-2 mt-1">
+                    <Phone className="h-4 w-4" /> {agency.phone}
+                  </p>
+                )}
               </div>
 
               {/* Vehicle Categories */}
