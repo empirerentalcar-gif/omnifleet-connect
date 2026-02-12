@@ -6,6 +6,22 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import {
   Car,
   CalendarCheck,
@@ -14,6 +30,8 @@ import {
   XCircle,
   Plus,
   RefreshCw,
+  Pencil,
+  Trash2,
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
@@ -59,6 +77,20 @@ const statusColors: Record<string, string> = {
   declined: "bg-destructive/20 text-destructive border-destructive/30",
 };
 
+const vehicleTypes = ["Sedan", "SUV", "Truck", "Van", "Compact", "Luxury"];
+const vehicleStatuses = ["available", "rented", "maintenance", "inactive"];
+
+const emptyVehicle = {
+  make: "",
+  model: "",
+  year: new Date().getFullYear(),
+  vehicle_type: "Sedan",
+  daily_rate: 0,
+  status: "available",
+  location_city: "",
+  location_state: "",
+};
+
 const OwnerDashboard = () => {
   const { user, loading: authLoading } = useAuth();
   const navigate = useNavigate();
@@ -69,6 +101,12 @@ const OwnerDashboard = () => {
   const [vehicles, setVehicles] = useState<Vehicle[]>([]);
   const [loading, setLoading] = useState(true);
   const [updatingId, setUpdatingId] = useState<string | null>(null);
+
+  // Vehicle form state
+  const [vehicleDialogOpen, setVehicleDialogOpen] = useState(false);
+  const [editingVehicle, setEditingVehicle] = useState<Vehicle | null>(null);
+  const [vehicleForm, setVehicleForm] = useState(emptyVehicle);
+  const [savingVehicle, setSavingVehicle] = useState(false);
 
   useEffect(() => {
     if (!authLoading && !user) {
@@ -127,8 +165,101 @@ const OwnerDashboard = () => {
       setReservations((prev) =>
         prev.map((r) => (r.id === id ? { ...r, status: newStatus } : r))
       );
+
+      // Trigger email notification for status changes
+      if (["approved", "vehicle_ready"].includes(newStatus)) {
+        try {
+          await supabase.functions.invoke("send-reservation-email", {
+            body: { reservation_id: id, type: newStatus },
+          });
+        } catch (e) {
+          console.error("Email notification failed:", e);
+        }
+      }
     }
     setUpdatingId(null);
+  };
+
+  // Vehicle CRUD
+  const openAddVehicle = () => {
+    setEditingVehicle(null);
+    setVehicleForm(emptyVehicle);
+    setVehicleDialogOpen(true);
+  };
+
+  const openEditVehicle = (v: Vehicle) => {
+    setEditingVehicle(v);
+    setVehicleForm({
+      make: v.make,
+      model: v.model,
+      year: v.year,
+      vehicle_type: v.vehicle_type,
+      daily_rate: v.daily_rate,
+      status: v.status,
+      location_city: v.location_city || "",
+      location_state: v.location_state || "",
+    });
+    setVehicleDialogOpen(true);
+  };
+
+  const saveVehicle = async () => {
+    if (!profile) return;
+    setSavingVehicle(true);
+
+    if (editingVehicle) {
+      const { error } = await supabase
+        .from("vehicles")
+        .update({
+          make: vehicleForm.make,
+          model: vehicleForm.model,
+          year: vehicleForm.year,
+          vehicle_type: vehicleForm.vehicle_type,
+          daily_rate: vehicleForm.daily_rate,
+          status: vehicleForm.status as any,
+          location_city: vehicleForm.location_city || null,
+          location_state: vehicleForm.location_state || null,
+        })
+        .eq("id", editingVehicle.id);
+
+      if (error) {
+        toast({ title: "Error", description: error.message, variant: "destructive" });
+      } else {
+        toast({ title: "Vehicle updated" });
+        setVehicleDialogOpen(false);
+        fetchData();
+      }
+    } else {
+      const { error } = await supabase.from("vehicles").insert({
+        profile_id: profile.id,
+        make: vehicleForm.make,
+        model: vehicleForm.model,
+        year: vehicleForm.year,
+        vehicle_type: vehicleForm.vehicle_type,
+        daily_rate: vehicleForm.daily_rate,
+        status: vehicleForm.status as any,
+        location_city: vehicleForm.location_city || null,
+        location_state: vehicleForm.location_state || null,
+      });
+
+      if (error) {
+        toast({ title: "Error", description: error.message, variant: "destructive" });
+      } else {
+        toast({ title: "Vehicle added" });
+        setVehicleDialogOpen(false);
+        fetchData();
+      }
+    }
+    setSavingVehicle(false);
+  };
+
+  const deleteVehicle = async (id: string) => {
+    const { error } = await supabase.from("vehicles").delete().eq("id", id);
+    if (error) {
+      toast({ title: "Error", description: error.message, variant: "destructive" });
+    } else {
+      toast({ title: "Vehicle removed" });
+      setVehicles((prev) => prev.filter((v) => v.id !== id));
+    }
   };
 
   if (authLoading || loading) {
@@ -141,6 +272,7 @@ const OwnerDashboard = () => {
 
   const pending = reservations.filter((r) => r.status === "pending");
   const active = reservations.filter((r) => ["approved", "vehicle_ready"].includes(r.status));
+  const isFormValid = vehicleForm.make && vehicleForm.model && vehicleForm.year > 1900 && vehicleForm.daily_rate > 0;
 
   return (
     <div className="min-h-screen bg-background">
@@ -245,22 +377,104 @@ const OwnerDashboard = () => {
 
           {/* Vehicles */}
           <section>
-            <h2 className="text-xl font-bold mb-4 flex items-center gap-2">
-              <Car className="h-5 w-5 text-primary" />
-              My Vehicles
-            </h2>
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-xl font-bold flex items-center gap-2">
+                <Car className="h-5 w-5 text-primary" />
+                My Vehicles
+              </h2>
+              <Dialog open={vehicleDialogOpen} onOpenChange={setVehicleDialogOpen}>
+                <DialogTrigger asChild>
+                  <Button size="sm" onClick={openAddVehicle}>
+                    <Plus className="h-4 w-4 mr-1" />
+                    Add Vehicle
+                  </Button>
+                </DialogTrigger>
+                <DialogContent className="sm:max-w-md">
+                  <DialogHeader>
+                    <DialogTitle>{editingVehicle ? "Edit Vehicle" : "Add Vehicle"}</DialogTitle>
+                  </DialogHeader>
+                  <div className="space-y-4 pt-2">
+                    <div className="grid grid-cols-2 gap-3">
+                      <div>
+                        <Label>Make</Label>
+                        <Input value={vehicleForm.make} onChange={(e) => setVehicleForm({ ...vehicleForm, make: e.target.value })} placeholder="Toyota" />
+                      </div>
+                      <div>
+                        <Label>Model</Label>
+                        <Input value={vehicleForm.model} onChange={(e) => setVehicleForm({ ...vehicleForm, model: e.target.value })} placeholder="Camry" />
+                      </div>
+                    </div>
+                    <div className="grid grid-cols-2 gap-3">
+                      <div>
+                        <Label>Year</Label>
+                        <Input type="number" value={vehicleForm.year} onChange={(e) => setVehicleForm({ ...vehicleForm, year: parseInt(e.target.value) || 0 })} />
+                      </div>
+                      <div>
+                        <Label>Daily Rate ($)</Label>
+                        <Input type="number" value={vehicleForm.daily_rate} onChange={(e) => setVehicleForm({ ...vehicleForm, daily_rate: parseFloat(e.target.value) || 0 })} />
+                      </div>
+                    </div>
+                    <div className="grid grid-cols-2 gap-3">
+                      <div>
+                        <Label>Vehicle Type</Label>
+                        <Select value={vehicleForm.vehicle_type} onValueChange={(v) => setVehicleForm({ ...vehicleForm, vehicle_type: v })}>
+                          <SelectTrigger><SelectValue /></SelectTrigger>
+                          <SelectContent>
+                            {vehicleTypes.map((t) => <SelectItem key={t} value={t}>{t}</SelectItem>)}
+                          </SelectContent>
+                        </Select>
+                      </div>
+                      <div>
+                        <Label>Status</Label>
+                        <Select value={vehicleForm.status} onValueChange={(v) => setVehicleForm({ ...vehicleForm, status: v })}>
+                          <SelectTrigger><SelectValue /></SelectTrigger>
+                          <SelectContent>
+                            {vehicleStatuses.map((s) => <SelectItem key={s} value={s} className="capitalize">{s}</SelectItem>)}
+                          </SelectContent>
+                        </Select>
+                      </div>
+                    </div>
+                    <div className="grid grid-cols-2 gap-3">
+                      <div>
+                        <Label>City</Label>
+                        <Input value={vehicleForm.location_city} onChange={(e) => setVehicleForm({ ...vehicleForm, location_city: e.target.value })} placeholder="Miami" />
+                      </div>
+                      <div>
+                        <Label>State</Label>
+                        <Input value={vehicleForm.location_state} onChange={(e) => setVehicleForm({ ...vehicleForm, location_state: e.target.value })} placeholder="FL" />
+                      </div>
+                    </div>
+                    <Button className="w-full" onClick={saveVehicle} disabled={!isFormValid || savingVehicle}>
+                      {savingVehicle ? "Saving..." : editingVehicle ? "Update Vehicle" : "Add Vehicle"}
+                    </Button>
+                  </div>
+                </DialogContent>
+              </Dialog>
+            </div>
             {vehicles.length === 0 ? (
               <div className="glass-card rounded-xl p-8 text-center text-muted-foreground">
-                No vehicles added yet.
+                No vehicles added yet. Click "Add Vehicle" to list your first one.
               </div>
             ) : (
               <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
                 {vehicles.map((v) => (
-                  <div key={v.id} className="glass-card rounded-xl p-5">
-                    <p className="font-semibold">
-                      {v.year} {v.make} {v.model}
-                    </p>
-                    <p className="text-sm text-muted-foreground capitalize">{v.vehicle_type}</p>
+                  <div key={v.id} className="glass-card rounded-xl p-5 group">
+                    <div className="flex items-start justify-between">
+                      <div>
+                        <p className="font-semibold">
+                          {v.year} {v.make} {v.model}
+                        </p>
+                        <p className="text-sm text-muted-foreground capitalize">{v.vehicle_type}</p>
+                      </div>
+                      <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                        <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => openEditVehicle(v)}>
+                          <Pencil className="h-3.5 w-3.5" />
+                        </Button>
+                        <Button variant="ghost" size="icon" className="h-8 w-8 text-destructive hover:text-destructive" onClick={() => deleteVehicle(v.id)}>
+                          <Trash2 className="h-3.5 w-3.5" />
+                        </Button>
+                      </div>
+                    </div>
                     <div className="flex items-center justify-between mt-3">
                       <span className="text-primary font-bold">${v.daily_rate}/day</span>
                       <Badge

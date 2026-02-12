@@ -19,11 +19,36 @@ const subjects: Record<string, string> = {
 
 const bodyTemplates: Record<string, (r: any) => string> = {
   approved: (r) =>
-    `Hi ${r.customer_name},\n\nGreat news! Your reservation with ${r.agency_name} has been approved.\n\nDetails:\n- Pickup: ${r.pickup_date}\n- Drop-off: ${r.dropoff_date}\n- Vehicle Type: ${r.vehicle_type}\n\nThe agency will contact you at ${r.customer_phone} with any additional details.\n\nThank you for choosing ZUVIO!`,
+    `<div style="font-family:sans-serif;max-width:600px;margin:0 auto;padding:20px;">
+      <h2 style="color:#10b981;">✅ Reservation Approved</h2>
+      <p>Hi ${r.customer_name},</p>
+      <p>Great news! Your reservation with <strong>${r.agency_name}</strong> has been approved.</p>
+      <table style="width:100%;border-collapse:collapse;margin:16px 0;">
+        <tr><td style="padding:8px;border-bottom:1px solid #eee;color:#666;">Pickup</td><td style="padding:8px;border-bottom:1px solid #eee;font-weight:bold;">${r.pickup_date}</td></tr>
+        <tr><td style="padding:8px;border-bottom:1px solid #eee;color:#666;">Drop-off</td><td style="padding:8px;border-bottom:1px solid #eee;font-weight:bold;">${r.dropoff_date}</td></tr>
+        <tr><td style="padding:8px;border-bottom:1px solid #eee;color:#666;">Vehicle Type</td><td style="padding:8px;border-bottom:1px solid #eee;font-weight:bold;">${r.vehicle_type}</td></tr>
+      </table>
+      <p>The agency will contact you at <strong>${r.customer_phone}</strong> with any additional details.</p>
+      <p style="color:#888;font-size:12px;margin-top:24px;">— ZUVIO</p>
+    </div>`,
   vehicle_ready: (r) =>
-    `Hi ${r.customer_name},\n\nYour vehicle is ready for pickup at ${r.agency_name}!\n\nPlease bring the required documents and head to the agency location.\n\nPickup Date: ${r.pickup_date}\nVehicle Type: ${r.vehicle_type}\n\nThank you for choosing ZUVIO!`,
+    `<div style="font-family:sans-serif;max-width:600px;margin:0 auto;padding:20px;">
+      <h2 style="color:#10b981;">🚗 Vehicle Ready for Pickup</h2>
+      <p>Hi ${r.customer_name},</p>
+      <p>Your vehicle is ready for pickup at <strong>${r.agency_name}</strong>!</p>
+      <p>Please bring the required documents and head to the agency location.</p>
+      <p><strong>Pickup Date:</strong> ${r.pickup_date}<br/><strong>Vehicle Type:</strong> ${r.vehicle_type}</p>
+      <p style="color:#888;font-size:12px;margin-top:24px;">— ZUVIO</p>
+    </div>`,
   extension_approved: (r) =>
-    `Hi ${r.customer_name},\n\nYour rental extension with ${r.agency_name} has been approved.\n\nNew Drop-off Date: ${r.dropoff_date}\n\nIf you have questions, contact the agency directly.\n\nThank you for choosing ZUVIO!`,
+    `<div style="font-family:sans-serif;max-width:600px;margin:0 auto;padding:20px;">
+      <h2 style="color:#10b981;">📅 Extension Approved</h2>
+      <p>Hi ${r.customer_name},</p>
+      <p>Your rental extension with <strong>${r.agency_name}</strong> has been approved.</p>
+      <p><strong>New Drop-off Date:</strong> ${r.dropoff_date}</p>
+      <p>If you have questions, contact the agency directly.</p>
+      <p style="color:#888;font-size:12px;margin-top:24px;">— ZUVIO</p>
+    </div>`,
 };
 
 Deno.serve(async (req) => {
@@ -34,6 +59,7 @@ Deno.serve(async (req) => {
   try {
     const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
     const serviceRoleKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
+    const resendApiKey = Deno.env.get("RESEND_API_KEY");
     const supabase = createClient(supabaseUrl, serviceRoleKey);
 
     const { reservation_id, type } = (await req.json()) as EmailPayload;
@@ -45,7 +71,6 @@ Deno.serve(async (req) => {
       );
     }
 
-    // Fetch reservation
     const { data: reservation, error } = await supabase
       .from("reservation_requests")
       .select("*")
@@ -78,24 +103,61 @@ Deno.serve(async (req) => {
       .update({ status: statusMap[type] })
       .eq("id", reservation_id);
 
-    // Send email via Supabase Auth admin (using a simple log for now since
-    // full SMTP integration requires external service). In production, 
-    // integrate with Resend/SendGrid/etc.
-    const emailBody = bodyTemplates[type](reservation);
+    const emailHtml = bodyTemplates[type](reservation);
+    const subject = subjects[type];
 
-    console.log(`[EMAIL] To: ${reservation.customer_email}`);
-    console.log(`[EMAIL] Subject: ${subjects[type]}`);
-    console.log(`[EMAIL] Body: ${emailBody}`);
+    if (resendApiKey) {
+      // Send real email via Resend
+      const resendRes = await fetch("https://api.resend.com/emails", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${resendApiKey}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          from: "ZUVIO <onboarding@resend.dev>",
+          to: [reservation.customer_email],
+          subject,
+          html: emailHtml,
+        }),
+      });
 
-    return new Response(
-      JSON.stringify({
-        success: true,
-        message: `Email notification queued for ${type}`,
-        to: reservation.customer_email,
-        subject: subjects[type],
-      }),
-      { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-    );
+      const resendData = await resendRes.json();
+
+      if (!resendRes.ok) {
+        console.error("[EMAIL] Resend error:", resendData);
+        return new Response(
+          JSON.stringify({ error: "Failed to send email", details: resendData }),
+          { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        );
+      }
+
+      console.log(`[EMAIL] Sent via Resend to ${reservation.customer_email}`, resendData);
+
+      return new Response(
+        JSON.stringify({
+          success: true,
+          message: `Email sent to ${reservation.customer_email}`,
+          resend_id: resendData.id,
+        }),
+        { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    } else {
+      // Fallback: log only
+      console.log(`[EMAIL] No RESEND_API_KEY — logging only`);
+      console.log(`[EMAIL] To: ${reservation.customer_email}`);
+      console.log(`[EMAIL] Subject: ${subject}`);
+
+      return new Response(
+        JSON.stringify({
+          success: true,
+          message: `Email notification logged (no RESEND_API_KEY)`,
+          to: reservation.customer_email,
+          subject,
+        }),
+        { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
   } catch (err) {
     console.error("Error:", err);
     return new Response(

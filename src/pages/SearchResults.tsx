@@ -38,7 +38,6 @@ const SearchResults = () => {
   const fetchAgencies = async () => {
     setLoading(true);
     try {
-      // Get vehicles with profile_id from the public view
       const { data: vehicles, error } = await supabase
         .from("available_vehicles_public")
         .select("*");
@@ -52,10 +51,6 @@ const SearchResults = () => {
       }
 
       // Group vehicles by profile_id to build agency listings
-      const profileIds = [...new Set(vehicles.map((v) => v.profile_id).filter(Boolean))];
-
-      // Fetch profiles for these agencies (using service-level view or public data)
-      // Since profiles are protected by RLS, we query vehicles grouped by profile
       const agencyMap = new Map<string, Agency>();
 
       for (const v of vehicles) {
@@ -74,28 +69,19 @@ const SearchResults = () => {
         } else {
           agencyMap.set(v.profile_id, {
             id: v.profile_id,
-            name: `Agency`, // Will be enriched below
-            cashAccepted: false,
+            name: (v as any).business_name || "Local Agency",
+            cashAccepted: (v as any).cash_accepted || false,
             startingPrice: v.daily_rate || 0,
             city: v.location_city || "",
             state: v.location_state || "",
-            phone: "",
+            phone: (v as any).contact_phone || "",
             vehicleTypes: v.vehicle_type ? [v.vehicle_type] : [],
             image: v.images && v.images.length > 0 ? v.images[0] : null,
           });
         }
       }
 
-      // Try to get profile info via an RPC or public columns
-      // Since profiles are RLS-protected, we'll create a lightweight approach
-      // by adding business_name to the vehicles view in future, for now use profile_id
-      // For now, we fetch what we can
-      const agencyList = Array.from(agencyMap.values()).map((a, i) => ({
-        ...a,
-        name: a.name === "Agency" ? `Local Agency ${i + 1}` : a.name,
-      }));
-
-      setAgencies(agencyList);
+      setAgencies(Array.from(agencyMap.values()));
     } catch (err) {
       console.error("Error fetching agencies:", err);
       setAgencies([]);
