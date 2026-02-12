@@ -56,11 +56,17 @@ export type Database = {
         Row: {
           address: string | null
           business_name: string
+          cancellation_policy: string | null
+          cash_accepted: boolean
           city: string | null
           contact_email: string
           contact_phone: string | null
           created_at: string
+          deposit_info: string | null
           id: string
+          owner_story: string | null
+          photos: string[] | null
+          requirements: string[] | null
           state: string | null
           updated_at: string
           user_id: string
@@ -69,11 +75,17 @@ export type Database = {
         Insert: {
           address?: string | null
           business_name: string
+          cancellation_policy?: string | null
+          cash_accepted?: boolean
           city?: string | null
           contact_email: string
           contact_phone?: string | null
           created_at?: string
+          deposit_info?: string | null
           id?: string
+          owner_story?: string | null
+          photos?: string[] | null
+          requirements?: string[] | null
           state?: string | null
           updated_at?: string
           user_id: string
@@ -82,17 +94,79 @@ export type Database = {
         Update: {
           address?: string | null
           business_name?: string
+          cancellation_policy?: string | null
+          cash_accepted?: boolean
           city?: string | null
           contact_email?: string
           contact_phone?: string | null
           created_at?: string
+          deposit_info?: string | null
           id?: string
+          owner_story?: string | null
+          photos?: string[] | null
+          requirements?: string[] | null
           state?: string | null
           updated_at?: string
           user_id?: string
           zip_code?: string | null
         }
         Relationships: []
+      }
+      reservation_requests: {
+        Row: {
+          agency_name: string
+          created_at: string
+          customer_email: string | null
+          customer_name: string
+          customer_phone: string
+          dropoff_date: string
+          id: string
+          notes: string | null
+          pickup_date: string
+          profile_id: string | null
+          status: string
+          updated_at: string
+          vehicle_type: string
+        }
+        Insert: {
+          agency_name: string
+          created_at?: string
+          customer_email?: string | null
+          customer_name: string
+          customer_phone: string
+          dropoff_date: string
+          id?: string
+          notes?: string | null
+          pickup_date: string
+          profile_id?: string | null
+          status?: string
+          updated_at?: string
+          vehicle_type: string
+        }
+        Update: {
+          agency_name?: string
+          created_at?: string
+          customer_email?: string | null
+          customer_name?: string
+          customer_phone?: string
+          dropoff_date?: string
+          id?: string
+          notes?: string | null
+          pickup_date?: string
+          profile_id?: string | null
+          status?: string
+          updated_at?: string
+          vehicle_type?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "reservation_requests_profile_id_fkey"
+            columns: ["profile_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       rpc_rate_limits: {
         Row: {
@@ -253,6 +327,7 @@ export type Database = {
           location_state: string | null
           make: string | null
           model: string | null
+          profile_id: string | null
           seats: number | null
           transmission: string | null
           vehicle_type: string | null
@@ -269,6 +344,7 @@ export type Database = {
           location_state?: string | null
           make?: string | null
           model?: string | null
+          profile_id?: string | null
           seats?: number | null
           transmission?: string | null
           vehicle_type?: string | null
@@ -285,12 +361,21 @@ export type Database = {
           location_state?: string | null
           make?: string | null
           model?: string | null
+          profile_id?: string | null
           seats?: number | null
           transmission?: string | null
           vehicle_type?: string | null
           year?: number | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "vehicles_profile_id_fkey"
+            columns: ["profile_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
       }
     }
     Functions: {
