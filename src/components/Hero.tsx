@@ -29,15 +29,18 @@ const Hero = () => {
           </div>
           
           <h1 className="font-display text-4xl md:text-6xl lg:text-7xl font-bold mb-6 leading-tight">
-            Independent Car Rentals.
+            Independent Car Rentals
             <br />
-            <span className="text-gradient">One Powerful Network.</span>
+            <span className="text-gradient">Near You</span>
           </h1>
-          
-          <p className="text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto mb-10">
-            ZUVIO connects customers directly to trusted local rental agencies nationwide — including 
-            cash-friendly options — while owners stay fully in control.
-          </p>
+
+          <h2 className="text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto mb-4">
+            Find Cash-Friendly Local Rental Agencies
+          </h2>
+
+          <h2 className="text-base md:text-lg text-accent max-w-2xl mx-auto mb-10 font-medium">
+            Grow Your Rental Business with ZUVIO
+          </h2>
 
           {/* Dual CTAs */}
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
