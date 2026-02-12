@@ -53,10 +53,15 @@ const Header = () => {
           {/* Desktop Actions */}
           <div className="hidden md:flex items-center gap-3">
             {!loading && user ? (
-              <Button variant="ghost" size="sm" onClick={handleSignOut}>
-                <LogOut className="h-4 w-4 mr-1" />
-                Sign Out
-              </Button>
+              <>
+                <Button variant="ghost" size="sm" onClick={() => navigate('/dashboard')}>
+                  Dashboard
+                </Button>
+                <Button variant="ghost" size="sm" onClick={handleSignOut}>
+                  <LogOut className="h-4 w-4 mr-1" />
+                  Sign Out
+                </Button>
+              </>
             ) : (
               <>
                 <Button variant="ghost" size="sm" onClick={() => navigate('/signin')}>
@@ -99,10 +104,15 @@ const Header = () => {
               </a>
               <div className="flex gap-3 pt-4 border-t border-border/30">
                 {!loading && user ? (
-                  <Button variant="ghost" size="sm" className="flex-1" onClick={handleSignOut}>
-                    <LogOut className="h-4 w-4 mr-1" />
-                    Sign Out
-                  </Button>
+                  <>
+                    <Button variant="ghost" size="sm" className="flex-1" onClick={() => { navigate('/dashboard'); setMobileMenuOpen(false); }}>
+                      Dashboard
+                    </Button>
+                    <Button variant="ghost" size="sm" className="flex-1" onClick={handleSignOut}>
+                      <LogOut className="h-4 w-4 mr-1" />
+                      Sign Out
+                    </Button>
+                  </>
                 ) : (
                   <>
                     <Button variant="ghost" size="sm" className="flex-1" onClick={() => { navigate('/signin'); setMobileMenuOpen(false); }}>

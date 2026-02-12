@@ -39,7 +39,7 @@ const AgencyCTA = () => {
                 variant="outline"
                 size="lg"
                 className="text-base border-accent/30 hover:bg-accent/10 group"
-                onClick={() => navigate("/signup")}
+                onClick={() => navigate("/pricing")}
               >
                 <Building2 className="h-5 w-5 text-accent" />
                 <span>Join the Network</span>
