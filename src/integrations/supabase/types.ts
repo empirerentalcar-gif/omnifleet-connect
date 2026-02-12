@@ -317,7 +317,13 @@ export type Database = {
     Views: {
       available_vehicles_public: {
         Row: {
+          agency_photos: string[] | null
+          business_name: string | null
+          cancellation_policy: string | null
+          cash_accepted: boolean | null
+          contact_phone: string | null
           daily_rate: number | null
+          deposit_info: string | null
           description: string | null
           features: string[] | null
           fuel_type: string | null
@@ -327,45 +333,13 @@ export type Database = {
           location_state: string | null
           make: string | null
           model: string | null
+          owner_story: string | null
           profile_id: string | null
+          requirements: string[] | null
           seats: number | null
           transmission: string | null
           vehicle_type: string | null
           year: number | null
-        }
-        Insert: {
-          daily_rate?: number | null
-          description?: string | null
-          features?: string[] | null
-          fuel_type?: string | null
-          id?: string | null
-          images?: string[] | null
-          location_city?: string | null
-          location_state?: string | null
-          make?: string | null
-          model?: string | null
-          profile_id?: string | null
-          seats?: number | null
-          transmission?: string | null
-          vehicle_type?: string | null
-          year?: number | null
-        }
-        Update: {
-          daily_rate?: number | null
-          description?: string | null
-          features?: string[] | null
-          fuel_type?: string | null
-          id?: string | null
-          images?: string[] | null
-          location_city?: string | null
-          location_state?: string | null
-          make?: string | null
-          model?: string | null
-          profile_id?: string | null
-          seats?: number | null
-          transmission?: string | null
-          vehicle_type?: string | null
-          year?: number | null
         }
         Relationships: [
           {
