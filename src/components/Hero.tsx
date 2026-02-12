@@ -1,6 +1,11 @@
+import { Button } from "@/components/ui/button";
+import { ArrowRight, MapPin, Building2 } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import SearchPanel from "./SearchPanel";
 
 const Hero = () => {
+  const navigate = useNavigate();
+
   return (
     <section className="relative min-h-screen flex flex-col justify-center pt-20 pb-12 overflow-hidden">
       {/* Background Effects */}
@@ -27,15 +32,40 @@ const Hero = () => {
           </div>
           
           <h1 className="font-display text-4xl md:text-6xl lg:text-7xl font-bold mb-6 leading-tight">
-            Rent from <span className="text-gradient">thousands</span>
+            Find & Book <span className="text-gradient">Independent Car Rentals</span>
             <br />
-            of agencies, one platform
+            — All in One Place
           </h1>
           
-          <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-8">
-            Access 50,000+ vehicles across 2,500 partner agencies. 
-            Book instantly with real-time availability, flexible pickup and drop-off locations.
+          <p className="text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto mb-10">
+            ZUVIO connects customers directly to trusted local rental agencies — including 
+            cash-friendly options — with full owner control.
           </p>
+
+          {/* Dual CTAs */}
+          <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
+            <Button
+              variant="hero"
+              size="lg"
+              className="group text-base"
+              onClick={() => {
+                document.getElementById("featured-vehicles")?.scrollIntoView({ behavior: "smooth" });
+              }}
+            >
+              <MapPin className="h-5 w-5" />
+              <span>Find a Rental Near Me</span>
+              <ArrowRight className="h-5 w-5 group-hover:translate-x-1 transition-transform" />
+            </Button>
+            <Button
+              variant="outline"
+              size="lg"
+              className="text-base border-accent/30 hover:bg-accent/10"
+              onClick={() => navigate("/owner-benefits")}
+            >
+              <Building2 className="h-5 w-5 text-accent" />
+              <span>List Your Rental Agency</span>
+            </Button>
+          </div>
         </div>
 
         {/* Search Panel */}
