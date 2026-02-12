@@ -3,6 +3,7 @@ import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Check, ShieldCheck, Star, Users, Phone, DollarSign, Ban } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import SEO from "@/components/SEO";
 import {
   Accordion,
   AccordionContent,
@@ -62,6 +63,11 @@ const Pricing = () => {
 
   return (
     <div className="min-h-screen bg-background">
+      <SEO
+        title="Pricing | ZUVIO — Plans for Independent Rental Agencies"
+        description="Transparent pricing for independent car rental agencies. No hidden fees, no long-term contracts. Founding member plan at $79/month."
+        path="/pricing"
+      />
       <Header />
 
       {/* Hero */}

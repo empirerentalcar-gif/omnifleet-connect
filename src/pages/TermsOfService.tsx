@@ -1,9 +1,15 @@
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import SEO from "@/components/SEO";
 
 const TermsOfService = () => {
   return (
     <div className="min-h-screen bg-background">
+      <SEO
+        title="Terms of Service | ZUVIO"
+        description="Review ZUVIO's terms of service for renters and independent car rental agencies."
+        path="/terms"
+      />
       <Header />
       
       <main className="container mx-auto px-4 py-24">

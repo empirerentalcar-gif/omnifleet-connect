@@ -3,6 +3,7 @@ import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Globe, CalendarCheck, Clock, Phone, Megaphone, CheckCircle2, ShieldCheck } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import SEO from "@/components/SEO";
 
 const benefits = [
   {
@@ -84,6 +85,11 @@ const OwnerBenefits = () => {
 
   return (
     <div className="min-h-screen bg-background">
+      <SEO
+        title="Owner Benefits | ZUVIO — Grow Your Rental Business"
+        description="Discover how ZUVIO helps independent car rental owners gain visibility, manage reservations, and grow their business."
+        path="/owner-benefits"
+      />
       <Header />
 
       {/* Hero */}

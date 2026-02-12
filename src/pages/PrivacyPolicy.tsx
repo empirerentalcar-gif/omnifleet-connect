@@ -1,9 +1,15 @@
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import SEO from "@/components/SEO";
 
 const PrivacyPolicy = () => {
   return (
     <div className="min-h-screen bg-background">
+      <SEO
+        title="Privacy Policy | ZUVIO"
+        description="Read ZUVIO's privacy policy. Learn how we collect, use, and protect your personal information."
+        path="/privacy"
+      />
       <Header />
       
       <main className="container mx-auto px-4 py-24">
