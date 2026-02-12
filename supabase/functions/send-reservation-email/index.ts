@@ -60,6 +60,33 @@ Deno.serve(async (req) => {
     const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
     const serviceRoleKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
     const resendApiKey = Deno.env.get("RESEND_API_KEY");
+
+    // --- Authentication: require a valid JWT ---
+    const authHeader = req.headers.get("Authorization");
+    if (!authHeader?.startsWith("Bearer ")) {
+      return new Response(
+        JSON.stringify({ error: "Unauthorized" }),
+        { status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
+
+    const anonKey = Deno.env.get("SUPABASE_ANON_KEY")!;
+    const userClient = createClient(supabaseUrl, anonKey, {
+      global: { headers: { Authorization: authHeader } },
+    });
+
+    const token = authHeader.replace("Bearer ", "");
+    const { data: claimsData, error: claimsError } = await userClient.auth.getClaims(token);
+    if (claimsError || !claimsData?.claims) {
+      return new Response(
+        JSON.stringify({ error: "Unauthorized" }),
+        { status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
+
+    const userId = claimsData.claims.sub;
+
+    // Use service role client for data operations
     const supabase = createClient(supabaseUrl, serviceRoleKey);
 
     const { reservation_id, type } = (await req.json()) as EmailPayload;
@@ -81,6 +108,27 @@ Deno.serve(async (req) => {
       return new Response(
         JSON.stringify({ error: "Reservation not found" }),
         { status: 404, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
+
+    // --- Authorization: verify the caller owns this reservation's agency profile ---
+    if (reservation.profile_id) {
+      const { data: profile } = await supabase
+        .from("profiles")
+        .select("user_id")
+        .eq("id", reservation.profile_id)
+        .maybeSingle();
+
+      if (!profile || profile.user_id !== userId) {
+        return new Response(
+          JSON.stringify({ error: "Forbidden: you do not own this reservation" }),
+          { status: 403, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        );
+      }
+    } else {
+      return new Response(
+        JSON.stringify({ error: "Forbidden: reservation has no linked profile" }),
+        { status: 403, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
 
@@ -107,7 +155,6 @@ Deno.serve(async (req) => {
     const subject = subjects[type];
 
     if (resendApiKey) {
-      // Send real email via Resend
       const resendRes = await fetch("https://api.resend.com/emails", {
         method: "POST",
         headers: {
@@ -143,7 +190,6 @@ Deno.serve(async (req) => {
         { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     } else {
-      // Fallback: log only
       console.log(`[EMAIL] No RESEND_API_KEY — logging only`);
       console.log(`[EMAIL] To: ${reservation.customer_email}`);
       console.log(`[EMAIL] Subject: ${subject}`);
