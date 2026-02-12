@@ -9,6 +9,10 @@ import SignUp from "./pages/SignUp";
 import TermsOfService from "./pages/TermsOfService";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import OwnerBenefits from "./pages/OwnerBenefits";
+import SearchResults from "./pages/SearchResults";
+import AgencyDetail from "./pages/AgencyDetail";
+import ReserveRequest from "./pages/ReserveRequest";
+import ReservationConfirmed from "./pages/ReservationConfirmed";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -26,6 +30,10 @@ const App = () => (
           <Route path="/terms" element={<TermsOfService />} />
           <Route path="/privacy" element={<PrivacyPolicy />} />
           <Route path="/owner-benefits" element={<OwnerBenefits />} />
+          <Route path="/search" element={<SearchResults />} />
+          <Route path="/agency/:id" element={<AgencyDetail />} />
+          <Route path="/reserve/:agencyId" element={<ReserveRequest />} />
+          <Route path="/reservation-confirmed" element={<ReservationConfirmed />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

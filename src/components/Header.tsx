@@ -33,13 +33,13 @@ const Header = () => {
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center gap-8">
-            <a href="#" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
-              Browse Vehicles
+            <a href="/search" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
+              Find Rentals
             </a>
-            <a href="#" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
+            <a href="/search" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
               Locations
             </a>
-            <a href="#" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
+            <a href="/owner-benefits" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
               For Agencies
             </a>
             <a href="#" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
@@ -79,13 +79,13 @@ const Header = () => {
         {mobileMenuOpen && (
           <div className="md:hidden py-4 border-t border-border/30">
             <nav className="flex flex-col gap-4">
-              <a href="#" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
-                Browse Vehicles
+              <a href="/search" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
+                Find Rentals
               </a>
-              <a href="#" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
+              <a href="/search" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
                 Locations
               </a>
-              <a href="#" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
+              <a href="/owner-benefits" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
                 For Agencies
               </a>
               <a href="#" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">

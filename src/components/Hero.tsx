@@ -48,9 +48,7 @@ const Hero = () => {
               variant="hero"
               size="lg"
               className="group text-base"
-              onClick={() => {
-                document.getElementById("featured-vehicles")?.scrollIntoView({ behavior: "smooth" });
-              }}
+              onClick={() => navigate("/search")}
             >
               <MapPin className="h-5 w-5" />
               <span>Find a Rental Near Me</span>
