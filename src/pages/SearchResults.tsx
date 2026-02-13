@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
-import { MapPin, Calendar, Car, Filter, ArrowRight, Banknote, Loader2 } from "lucide-react";
+import { MapPin, Calendar, Car, Filter, ArrowRight, Banknote } from "lucide-react";
+import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
@@ -206,9 +207,28 @@ const SearchResults = () => {
 
           {/* Results */}
           {loading ? (
-            <div className="text-center py-16">
-              <Loader2 className="h-10 w-10 text-primary animate-spin mx-auto mb-4" />
-              <p className="text-muted-foreground">Searching agencies...</p>
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              {Array.from({ length: 4 }).map((_, i) => (
+                <div key={i} className="glass-card rounded-2xl overflow-hidden">
+                  <div className="flex flex-col sm:flex-row">
+                    <div className="sm:w-48 h-48 sm:h-auto">
+                      <Skeleton className="w-full h-full min-h-[192px]" />
+                    </div>
+                    <div className="flex-1 p-6 space-y-4">
+                      <div>
+                        <Skeleton className="h-5 w-40 mb-2" />
+                        <Skeleton className="h-3 w-28" />
+                      </div>
+                      <Skeleton className="h-8 w-24" />
+                      <div className="flex gap-2">
+                        <Skeleton className="h-6 w-16 rounded-lg" />
+                        <Skeleton className="h-6 w-16 rounded-lg" />
+                      </div>
+                      <Skeleton className="h-9 w-full rounded-xl" />
+                    </div>
+                  </div>
+                </div>
+              ))}
             </div>
           ) : (
             <>
