@@ -11,6 +11,26 @@
     <priority>0.9</priority>
   </url>
   <url>
+    <loc>https://zuvio.us/about</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://zuvio.us/how-it-works</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://zuvio.us/for-agencies</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://zuvio.us/faq</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>https://zuvio.us/pricing</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
@@ -21,12 +41,12 @@
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://zuvio.us/privacy-policy</loc>
+    <loc>https://zuvio.us/privacy</loc>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
   </url>
   <url>
-    <loc>https://zuvio.us/terms-of-service</loc>
+    <loc>https://zuvio.us/terms</loc>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
   </url>

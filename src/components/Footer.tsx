@@ -29,9 +29,9 @@ const Footer = () => {
             <h4 className="font-display font-bold mb-6">For Owners</h4>
             <ul className="space-y-3">
               <li><Link to="/owner-benefits" className="text-muted-foreground hover:text-foreground transition-colors">Owner Benefits</Link></li>
+              <li><Link to="/for-agencies" className="text-muted-foreground hover:text-foreground transition-colors">For Agencies</Link></li>
               <li><Link to="/signup" className="text-muted-foreground hover:text-foreground transition-colors">Join ZUVIO</Link></li>
-              <li><a href="#how-it-works" className="text-muted-foreground hover:text-foreground transition-colors">How It Works</a></li>
-              <li><a href="#owner-faq" className="text-muted-foreground hover:text-foreground transition-colors">Owner FAQs</a></li>
+              <li><Link to="/pricing" className="text-muted-foreground hover:text-foreground transition-colors">Pricing</Link></li>
             </ul>
           </div>
 
@@ -39,7 +39,9 @@ const Footer = () => {
           <div>
             <h4 className="font-display font-bold mb-6">Resources</h4>
             <ul className="space-y-3">
-              <li><a href="#faq" className="text-muted-foreground hover:text-foreground transition-colors">FAQs</a></li>
+              <li><Link to="/how-it-works" className="text-muted-foreground hover:text-foreground transition-colors">How It Works</Link></li>
+              <li><Link to="/faq" className="text-muted-foreground hover:text-foreground transition-colors">FAQs</Link></li>
+              <li><Link to="/about" className="text-muted-foreground hover:text-foreground transition-colors">About Us</Link></li>
               <li><Link to="/privacy" className="text-muted-foreground hover:text-foreground transition-colors">Privacy Policy</Link></li>
               <li><Link to="/terms" className="text-muted-foreground hover:text-foreground transition-colors">Terms of Service</Link></li>
             </ul>
@@ -51,7 +53,7 @@ const Footer = () => {
             <ul className="space-y-3">
               <li className="flex items-center gap-3 text-muted-foreground">
                 <Mail className="h-4 w-4 text-primary" />
-                <span>support@zuvio.com</span>
+                <span>team@zuvio.us</span>
               </li>
               <li className="flex items-center gap-3 text-muted-foreground">
                 <Phone className="h-4 w-4 text-primary" />
