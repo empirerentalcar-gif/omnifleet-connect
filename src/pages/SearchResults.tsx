@@ -230,6 +230,10 @@ const SearchResults = () => {
                             src={agency.image}
                             alt={agency.name}
                             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                            loading="lazy"
+                            decoding="async"
+                            width={192}
+                            height={192}
                           />
                         ) : (
                           <div className="w-full h-full flex items-center justify-center">

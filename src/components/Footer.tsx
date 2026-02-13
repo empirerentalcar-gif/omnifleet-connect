@@ -10,7 +10,7 @@ const Footer = () => {
           {/* Brand */}
           <div className="lg:col-span-2">
             <Link to="/" className="flex items-center mb-6">
-              <img src={zuvioLogo} alt="Zuvio" className="h-12 w-auto object-contain" />
+              <img src={zuvioLogo} alt="Zuvio" className="h-12 w-auto object-contain" width={160} height={48} loading="lazy" decoding="async" />
             </Link>
             <p className="text-muted-foreground mb-6 max-w-sm">
               Connecting renters with trusted independent rental agencies nationwide. Cash-friendly options. Full owner control.
