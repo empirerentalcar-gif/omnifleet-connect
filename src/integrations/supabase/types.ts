@@ -321,7 +321,6 @@ export type Database = {
           business_name: string | null
           cancellation_policy: string | null
           cash_accepted: boolean | null
-          contact_phone: string | null
           daily_rate: number | null
           deposit_info: string | null
           description: string | null
