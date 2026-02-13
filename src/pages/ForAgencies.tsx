@@ -37,6 +37,14 @@ const ForAgencies = () => {
         description="Grow your independent car rental business with ZUVIO. Connect with customers nationwide, increase bookings, and join a network designed for independent agencies."
         path="/for-agencies"
       />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({
+        "@context": "https://schema.org",
+        "@type": "WebPage",
+        "name": "For Agencies — ZUVIO",
+        "description": "Grow your independent car rental business with ZUVIO.",
+        "url": "https://zuvio.us/for-agencies",
+        "isPartOf": { "@type": "WebSite", "name": "ZUVIO", "url": "https://zuvio.us" }
+      }) }} />
       <Header />
 
       {/* Hero */}

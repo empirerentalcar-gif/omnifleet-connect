@@ -36,14 +36,17 @@ const Header = () => {
             <a href="/search" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
               Find Rentals
             </a>
-            <a href="/search" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
-              Locations
+            <a href="/how-it-works" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
+              How It Works
             </a>
-            <a href="/owner-benefits" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
+            <a href="/for-agencies" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
               For Agencies
             </a>
             <a href="/pricing" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
               Pricing
+            </a>
+            <a href="/faq" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
+              FAQ
             </a>
             <a href="/about" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
               About
@@ -90,14 +93,17 @@ const Header = () => {
               <a href="/search" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
                 Find Rentals
               </a>
-              <a href="/search" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
-                Locations
+              <a href="/how-it-works" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
+                How It Works
               </a>
-              <a href="/owner-benefits" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
+              <a href="/for-agencies" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
                 For Agencies
               </a>
               <a href="/pricing" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
                 Pricing
+              </a>
+              <a href="/faq" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
+                FAQ
               </a>
               <a href="/about" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
                 About

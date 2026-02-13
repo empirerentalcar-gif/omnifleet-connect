@@ -37,6 +37,16 @@ const About = () => {
         description="Learn about ZUVIO's mission to connect independent car rental agencies with customers nationwide. Discover our story, values, and commitment to supporting local businesses."
         path="/about"
       />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        "name": "ZUVIO",
+        "url": "https://zuvio.us",
+        "logo": "https://zuvio.us/og-image.jpg",
+        "description": "Empowering independent car rental agencies and connecting them with customers who value local service and flexibility.",
+        "email": "team@zuvio.us",
+        "sameAs": []
+      }) }} />
       <Header />
 
       {/* Hero */}

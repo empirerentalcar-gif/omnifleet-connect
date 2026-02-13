@@ -13,4 +13,4 @@ Allow: /
 User-agent: *
 Allow: /
 
-Sitemap: https://zuvio.us/sitemap.xml
+Sitemap: https://www.zuvio.us/sitemap.xml
