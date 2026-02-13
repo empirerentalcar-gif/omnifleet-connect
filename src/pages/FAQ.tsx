@@ -49,6 +49,15 @@ const FAQ = () => {
         description="Get answers to frequently asked questions about ZUVIO. Learn about booking rentals, cash payments, agency partnerships, pricing, and how our independent car rental network works."
         path="/faq"
       />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": Object.values(faqData).flat().map(item => ({
+          "@type": "Question",
+          "name": item.q,
+          "acceptedAnswer": { "@type": "Answer", "text": item.a }
+        }))
+      }) }} />
       <Header />
 
       {/* Hero */}

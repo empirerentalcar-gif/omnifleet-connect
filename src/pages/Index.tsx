@@ -17,6 +17,18 @@ const Index = () => {
         description="Find and book independent car rentals nationwide. Cash-friendly options available. Rental owners stay in full control with ZUVIO."
         path="/"
       />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "name": "ZUVIO",
+        "url": "https://zuvio.us",
+        "description": "Find and book independent car rentals nationwide.",
+        "potentialAction": {
+          "@type": "SearchAction",
+          "target": "https://zuvio.us/search?q={search_term_string}",
+          "query-input": "required name=search_term_string"
+        }
+      }) }} />
       <Hero />
       <HowItWorks />
       <Comparison />

@@ -42,6 +42,18 @@ const HowItWorksPage = () => {
         description="Learn how to rent a car from independent agencies on ZUVIO. Simple 3-step process: search local rentals, compare options, and book with flexible terms including cash payments."
         path="/how-it-works"
       />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({
+        "@context": "https://schema.org",
+        "@type": "HowTo",
+        "name": "How to Rent a Car on ZUVIO",
+        "description": "Simple 3-step process to rent from independent agencies.",
+        "step": steps.map((s, i) => ({
+          "@type": "HowToStep",
+          "position": i + 1,
+          "name": s.title,
+          "text": s.desc
+        }))
+      }) }} />
       <Header />
 
       {/* Hero */}
