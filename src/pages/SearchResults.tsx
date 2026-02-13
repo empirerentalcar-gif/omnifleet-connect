@@ -110,7 +110,10 @@ const SearchResults = () => {
 
       <main className="pt-24 pb-16">
         <div className="container mx-auto px-4">
-          <h1 className="sr-only">Search Car Rentals</h1>
+          {/* Visible h1 as immediate LCP candidate */}
+          <h1 className="font-display text-3xl md:text-4xl font-bold mb-6">
+            Search Car Rentals
+          </h1>
           {/* Search Bar */}
           <div className="glass-card glow-border rounded-2xl p-6 mb-8">
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
