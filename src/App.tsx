@@ -4,25 +4,34 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { HelmetProvider } from "react-helmet-async";
+import { lazy, Suspense } from "react";
 import Index from "./pages/Index";
-import SignIn from "./pages/SignIn";
-import SignUp from "./pages/SignUp";
-import TermsOfService from "./pages/TermsOfService";
-import PrivacyPolicy from "./pages/PrivacyPolicy";
-import OwnerBenefits from "./pages/OwnerBenefits";
-import SearchResults from "./pages/SearchResults";
-import AgencyDetail from "./pages/AgencyDetail";
-import ReserveRequest from "./pages/ReserveRequest";
-import ReservationConfirmed from "./pages/ReservationConfirmed";
-import Pricing from "./pages/Pricing";
-import OwnerDashboard from "./pages/OwnerDashboard";
-import NotFound from "./pages/NotFound";
-import About from "./pages/About";
-import FAQ from "./pages/FAQ";
-import ForAgencies from "./pages/ForAgencies";
-import HowItWorksPage from "./pages/HowItWorksPage";
+
+// Lazy-load non-critical routes to reduce initial JS bundle
+const SignIn = lazy(() => import("./pages/SignIn"));
+const SignUp = lazy(() => import("./pages/SignUp"));
+const TermsOfService = lazy(() => import("./pages/TermsOfService"));
+const PrivacyPolicy = lazy(() => import("./pages/PrivacyPolicy"));
+const OwnerBenefits = lazy(() => import("./pages/OwnerBenefits"));
+const SearchResults = lazy(() => import("./pages/SearchResults"));
+const AgencyDetail = lazy(() => import("./pages/AgencyDetail"));
+const ReserveRequest = lazy(() => import("./pages/ReserveRequest"));
+const ReservationConfirmed = lazy(() => import("./pages/ReservationConfirmed"));
+const Pricing = lazy(() => import("./pages/Pricing"));
+const OwnerDashboard = lazy(() => import("./pages/OwnerDashboard"));
+const NotFound = lazy(() => import("./pages/NotFound"));
+const About = lazy(() => import("./pages/About"));
+const FAQ = lazy(() => import("./pages/FAQ"));
+const ForAgencies = lazy(() => import("./pages/ForAgencies"));
+const HowItWorksPage = lazy(() => import("./pages/HowItWorksPage"));
 
 const queryClient = new QueryClient();
+
+const LazyFallback = () => (
+  <div className="min-h-screen bg-background flex items-center justify-center">
+    <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin" />
+  </div>
+);
 
 const App = () => (
   <HelmetProvider>
@@ -31,26 +40,28 @@ const App = () => (
       <Toaster />
       <Sonner />
       <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Index />} />
-          <Route path="/signin" element={<SignIn />} />
-          <Route path="/signup" element={<SignUp />} />
-          <Route path="/terms" element={<TermsOfService />} />
-          <Route path="/privacy" element={<PrivacyPolicy />} />
-          <Route path="/owner-benefits" element={<OwnerBenefits />} />
-          <Route path="/pricing" element={<Pricing />} />
-          <Route path="/search" element={<SearchResults />} />
-          <Route path="/agency/:id" element={<AgencyDetail />} />
-          <Route path="/reserve/:agencyId" element={<ReserveRequest />} />
-          <Route path="/reservation-confirmed" element={<ReservationConfirmed />} />
-          <Route path="/dashboard" element={<OwnerDashboard />} />
-          <Route path="/about" element={<About />} />
-          <Route path="/faq" element={<FAQ />} />
-          <Route path="/for-agencies" element={<ForAgencies />} />
-          <Route path="/how-it-works" element={<HowItWorksPage />} />
-          {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-          <Route path="*" element={<NotFound />} />
-        </Routes>
+        <Suspense fallback={<LazyFallback />}>
+          <Routes>
+            <Route path="/" element={<Index />} />
+            <Route path="/signin" element={<SignIn />} />
+            <Route path="/signup" element={<SignUp />} />
+            <Route path="/terms" element={<TermsOfService />} />
+            <Route path="/privacy" element={<PrivacyPolicy />} />
+            <Route path="/owner-benefits" element={<OwnerBenefits />} />
+            <Route path="/pricing" element={<Pricing />} />
+            <Route path="/search" element={<SearchResults />} />
+            <Route path="/agency/:id" element={<AgencyDetail />} />
+            <Route path="/reserve/:agencyId" element={<ReserveRequest />} />
+            <Route path="/reservation-confirmed" element={<ReservationConfirmed />} />
+            <Route path="/dashboard" element={<OwnerDashboard />} />
+            <Route path="/about" element={<About />} />
+            <Route path="/faq" element={<FAQ />} />
+            <Route path="/for-agencies" element={<ForAgencies />} />
+            <Route path="/how-it-works" element={<HowItWorksPage />} />
+            {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </Suspense>
       </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>
