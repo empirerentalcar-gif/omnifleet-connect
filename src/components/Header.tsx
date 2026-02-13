@@ -25,6 +25,10 @@ const Header = () => {
               src={zuvioLogo} 
               alt="Zuvio" 
               className="h-12 md:h-14 w-auto object-contain"
+              width={160}
+              height={56}
+              loading="eager"
+              decoding="async"
             />
             <span className="hidden sm:block text-[10px] md:text-xs text-muted-foreground font-medium tracking-wide leading-tight border-l border-border/50 pl-3">
               Independent Rentals.<br />One Network.
