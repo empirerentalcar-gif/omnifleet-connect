@@ -16,8 +16,13 @@ const Footer = () => {
               Connecting renters with trusted independent rental agencies nationwide. Cash-friendly options. Full owner control.
             </p>
             <div className="flex gap-4">
-              {[Facebook, Twitter, Instagram, Linkedin].map((Icon, i) => (
-                <a key={i} href="#" className="w-10 h-10 rounded-xl bg-secondary flex items-center justify-center text-muted-foreground hover:text-primary hover:bg-primary/10 transition-colors">
+              {[
+                { Icon: Facebook, label: "Follow ZUVIO on Facebook" },
+                { Icon: Twitter, label: "Follow ZUVIO on Twitter" },
+                { Icon: Instagram, label: "Follow ZUVIO on Instagram" },
+                { Icon: Linkedin, label: "Follow ZUVIO on LinkedIn" },
+              ].map(({ Icon, label }, i) => (
+                <a key={i} href="#" aria-label={label} className="w-10 h-10 rounded-xl bg-secondary flex items-center justify-center text-muted-foreground hover:text-primary hover:bg-primary/10 transition-colors">
                   <Icon className="h-5 w-5" />
                 </a>
               ))}
@@ -26,7 +31,7 @@ const Footer = () => {
 
           {/* For Owners */}
           <div>
-            <h4 className="font-display font-bold mb-6">For Owners</h4>
+            <h3 className="font-display font-bold mb-6">For Owners</h3>
             <ul className="space-y-3">
               <li><Link to="/owner-benefits" className="text-muted-foreground hover:text-foreground transition-colors">Owner Benefits</Link></li>
               <li><Link to="/for-agencies" className="text-muted-foreground hover:text-foreground transition-colors">For Agencies</Link></li>
@@ -37,7 +42,7 @@ const Footer = () => {
 
           {/* Resources */}
           <div>
-            <h4 className="font-display font-bold mb-6">Resources</h4>
+            <h3 className="font-display font-bold mb-6">Resources</h3>
             <ul className="space-y-3">
               <li><Link to="/how-it-works" className="text-muted-foreground hover:text-foreground transition-colors">How It Works</Link></li>
               <li><Link to="/faq" className="text-muted-foreground hover:text-foreground transition-colors">FAQs</Link></li>
@@ -49,7 +54,7 @@ const Footer = () => {
 
           {/* Contact */}
           <div>
-            <h4 className="font-display font-bold mb-6">Contact</h4>
+            <h3 className="font-display font-bold mb-6">Contact</h3>
             <ul className="space-y-3">
               <li className="flex items-center gap-3 text-muted-foreground">
                 <Mail className="h-4 w-4 text-primary" />

@@ -110,6 +110,7 @@ const SearchResults = () => {
 
       <main className="pt-24 pb-16">
         <div className="container mx-auto px-4">
+          <h1 className="sr-only">Search Car Rentals</h1>
           {/* Search Bar */}
           <div className="glass-card glow-border rounded-2xl p-6 mb-8">
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
@@ -209,7 +210,7 @@ const SearchResults = () => {
           ) : (
             <>
               <div className="mb-6">
-                <h2 className="font-display text-2xl font-bold">
+                <h2 className="font-display text-2xl font-bold" aria-live="polite">
                   {filtered.length} {filtered.length === 1 ? "Agency" : "Agencies"} Found
                 </h2>
                 <p className="text-muted-foreground text-sm mt-1">
@@ -292,8 +293,8 @@ const SearchResults = () => {
 
               {filtered.length === 0 && (
                 <div className="text-center py-16">
-                  <Car className="h-16 w-16 text-muted-foreground/30 mx-auto mb-4" />
-                  <h3 className="font-display text-xl font-bold mb-2">No agencies match your filters</h3>
+                   <Car className="h-16 w-16 text-muted-foreground/30 mx-auto mb-4" />
+                  <p className="font-display text-xl font-bold mb-2">No agencies match your filters</p>
                   <p className="text-muted-foreground">Try adjusting your filters or search a different location.</p>
                 </div>
               )}
