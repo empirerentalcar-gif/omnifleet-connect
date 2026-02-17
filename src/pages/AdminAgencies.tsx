@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowLeft, Search, Pencil, Save, X } from 'lucide-react';
+import { ArrowLeft, Search, Pencil, Save, X, ChevronLeft, ChevronRight } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAdmin } from '@/hooks/useAdmin';
 import { Button } from '@/components/ui/button';
@@ -36,6 +36,8 @@ const AdminAgencies = () => {
   const [agencies, setAgencies] = useState<Agency[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
+  const [page, setPage] = useState(1);
+  const PAGE_SIZE = 10;
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editData, setEditData] = useState<Partial<Agency>>({});
   const [deactivateTarget, setDeactivateTarget] = useState<Agency | null>(null);
@@ -124,6 +126,13 @@ const AdminAgencies = () => {
     );
   });
 
+  const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
+  const currentPage = Math.min(page, totalPages);
+  const paginated = filtered.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE);
+
+  // Reset page when search changes
+  useEffect(() => { setPage(1); }, [search]);
+
   if (adminLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-background">
@@ -163,6 +172,7 @@ const AdminAgencies = () => {
             ))}
           </div>
         ) : (
+          <>
           <div className="rounded-lg border overflow-auto">
             <Table>
               <TableHeader>
@@ -186,7 +196,7 @@ const AdminAgencies = () => {
                     </TableCell>
                   </TableRow>
                 ) : (
-                  filtered.map((agency) => (
+                  paginated.map((agency) => (
                     <TableRow key={agency.id}>
                       <TableCell className="font-medium">
                         {editingId === agency.id ? (
@@ -280,6 +290,33 @@ const AdminAgencies = () => {
               </TableBody>
             </Table>
           </div>
+
+          {filtered.length > PAGE_SIZE && (
+            <div className="flex items-center justify-between pt-4">
+              <p className="text-sm text-muted-foreground">
+                Showing {(currentPage - 1) * PAGE_SIZE + 1}–{Math.min(currentPage * PAGE_SIZE, filtered.length)} of {filtered.length}
+              </p>
+              <div className="flex gap-2">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  disabled={currentPage <= 1}
+                  onClick={() => setPage((p) => p - 1)}
+                >
+                  <ChevronLeft className="h-4 w-4 mr-1" /> Previous
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  disabled={currentPage >= totalPages}
+                  onClick={() => setPage((p) => p + 1)}
+                >
+                  Next <ChevronRight className="h-4 w-4 ml-1" />
+                </Button>
+              </div>
+            </div>
+          )}
+          </>
         )}
       </main>
 
