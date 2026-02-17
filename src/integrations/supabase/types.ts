@@ -52,6 +52,54 @@ export type Database = {
           },
         ]
       }
+      agencies: {
+        Row: {
+          active: boolean
+          address: string | null
+          agency_name: string
+          approved: boolean
+          city: string | null
+          created_at: string
+          email: string | null
+          id: string
+          owner_user_id: string | null
+          phone: string | null
+          state: string | null
+          updated_at: string
+          zip: string | null
+        }
+        Insert: {
+          active?: boolean
+          address?: string | null
+          agency_name: string
+          approved?: boolean
+          city?: string | null
+          created_at?: string
+          email?: string | null
+          id?: string
+          owner_user_id?: string | null
+          phone?: string | null
+          state?: string | null
+          updated_at?: string
+          zip?: string | null
+        }
+        Update: {
+          active?: boolean
+          address?: string | null
+          agency_name?: string
+          approved?: boolean
+          city?: string | null
+          created_at?: string
+          email?: string | null
+          id?: string
+          owner_user_id?: string | null
+          phone?: string | null
+          state?: string | null
+          updated_at?: string
+          zip?: string | null
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           address: string | null
@@ -242,6 +290,27 @@ export type Database = {
           },
         ]
       }
+      user_roles: {
+        Row: {
+          created_at: string
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
       vehicles: {
         Row: {
           created_at: string
@@ -360,6 +429,13 @@ export type Database = {
         }
         Returns: boolean
       }
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
       redeem_access_code: {
         Args: { code_to_redeem: string; user_profile_id: string }
         Returns: boolean
@@ -370,6 +446,7 @@ export type Database = {
       }
     }
     Enums: {
+      app_role: "admin" | "user"
       subscription_status: "active" | "pending" | "cancelled" | "expired"
       subscription_tier: "weekly" | "monthly" | "yearly"
       vehicle_status: "available" | "rented" | "maintenance" | "inactive"
@@ -500,6 +577,7 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
+      app_role: ["admin", "user"],
       subscription_status: ["active", "pending", "cancelled", "expired"],
       subscription_tier: ["weekly", "monthly", "yearly"],
       vehicle_status: ["available", "rented", "maintenance", "inactive"],
