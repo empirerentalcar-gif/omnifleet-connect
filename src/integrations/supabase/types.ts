@@ -421,6 +421,7 @@ export type Database = {
       }
     }
     Functions: {
+      bootstrap_first_admin: { Args: never; Returns: boolean }
       check_rate_limit: {
         Args: {
           func_name: string
