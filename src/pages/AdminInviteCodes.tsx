@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowLeft, Search, Pencil, Plus, Save, X, ChevronLeft, ChevronRight, RefreshCw } from 'lucide-react';
+import { ArrowLeft, Search, Pencil, Plus, ChevronLeft, ChevronRight, RefreshCw, ArrowUp, ArrowDown, ArrowUpDown, Download } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAdmin } from '@/hooks/useAdmin';
 import { Button } from '@/components/ui/button';
@@ -34,6 +34,9 @@ interface InviteCode {
   created_at: string;
 }
 
+type SortKey = 'code' | 'city' | 'max_uses' | 'uses_count' | 'active' | 'expires_at' | 'created_at';
+type SortDir = 'asc' | 'desc';
+
 const generateCode = () => {
   const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
   let code = '';
@@ -48,6 +51,8 @@ const AdminInviteCodes = () => {
   const [search, setSearch] = useState('');
   const [page, setPage] = useState(1);
   const PAGE_SIZE = 10;
+  const [sortKey, setSortKey] = useState<SortKey>('created_at');
+  const [sortDir, setSortDir] = useState<SortDir>('desc');
 
   // Create modal
   const [createOpen, setCreateOpen] = useState(false);
@@ -140,16 +145,69 @@ const AdminInviteCodes = () => {
     fetchCodes();
   };
 
+  const toggleSort = (key: SortKey) => {
+    if (sortKey === key) {
+      setSortDir(d => d === 'asc' ? 'desc' : 'asc');
+    } else {
+      setSortKey(key);
+      setSortDir('asc');
+    }
+  };
+
+  const SortIcon = ({ column }: { column: SortKey }) => {
+    if (sortKey !== column) return <ArrowUpDown className="h-3 w-3 ml-1 opacity-40" />;
+    return sortDir === 'asc' ? <ArrowUp className="h-3 w-3 ml-1" /> : <ArrowDown className="h-3 w-3 ml-1" />;
+  };
+
   const filtered = codes.filter((c) => {
     const q = search.toLowerCase();
     return c.code.toLowerCase().includes(q) || (c.city && c.city.toLowerCase().includes(q));
   });
 
-  const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
+  const sorted = [...filtered].sort((a, b) => {
+    const dir = sortDir === 'asc' ? 1 : -1;
+    switch (sortKey) {
+      case 'code': return dir * a.code.localeCompare(b.code);
+      case 'city': return dir * (a.city || '').localeCompare(b.city || '');
+      case 'max_uses': return dir * (a.max_uses - b.max_uses);
+      case 'uses_count': return dir * (a.uses_count - b.uses_count);
+      case 'active': return dir * (Number(a.active) - Number(b.active));
+      case 'expires_at': {
+        const ta = a.expires_at ? new Date(a.expires_at).getTime() : 0;
+        const tb = b.expires_at ? new Date(b.expires_at).getTime() : 0;
+        return dir * (ta - tb);
+      }
+      case 'created_at': return dir * (new Date(a.created_at).getTime() - new Date(b.created_at).getTime());
+      default: return 0;
+    }
+  });
+
+  const totalPages = Math.max(1, Math.ceil(sorted.length / PAGE_SIZE));
   const currentPage = Math.min(page, totalPages);
-  const paginated = filtered.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE);
+  const paginated = sorted.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE);
 
   useEffect(() => { setPage(1); }, [search]);
+
+  const exportCSV = () => {
+    const headers = ['Code', 'City', 'Max Uses', 'Uses Count', 'Active', 'Expires At', 'Created At'];
+    const rows = sorted.map(c => [
+      c.code,
+      c.city || '',
+      String(c.max_uses),
+      String(c.uses_count),
+      String(c.active),
+      c.expires_at ? format(new Date(c.expires_at), 'yyyy-MM-dd') : 'Never',
+      format(new Date(c.created_at), 'yyyy-MM-dd'),
+    ]);
+    const csv = [headers, ...rows].map(r => r.map(v => `"${v.replace(/"/g, '""')}"`).join(',')).join('\n');
+    const blob = new Blob([csv], { type: 'text/csv' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `invite_codes_export_${format(new Date(), 'yyyy-MM-dd')}.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
+  };
 
   if (adminLoading) {
     return (
@@ -181,9 +239,14 @@ const AdminInviteCodes = () => {
               className="pl-10"
             />
           </div>
-          <Button onClick={() => { setNewCode({ code: '', city: '', max_uses: 25, expires_at: undefined }); setCreateOpen(true); }}>
-            <Plus className="h-4 w-4 mr-2" /> Create New Code
-          </Button>
+          <div className="flex gap-2">
+            <Button variant="outline" onClick={exportCSV}>
+              <Download className="h-4 w-4 mr-2" /> Export CSV
+            </Button>
+            <Button onClick={() => { setNewCode({ code: '', city: '', max_uses: 25, expires_at: undefined }); setCreateOpen(true); }}>
+              <Plus className="h-4 w-4 mr-2" /> Create New Code
+            </Button>
+          </div>
         </div>
 
         {loading ? (
@@ -198,18 +261,32 @@ const AdminInviteCodes = () => {
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead>Code</TableHead>
-                    <TableHead>City</TableHead>
-                    <TableHead>Max Uses</TableHead>
-                    <TableHead>Uses Count</TableHead>
-                    <TableHead>Active</TableHead>
-                    <TableHead>Expires At</TableHead>
-                    <TableHead>Created</TableHead>
+                    <TableHead className="cursor-pointer select-none" onClick={() => toggleSort('code')}>
+                      <span className="inline-flex items-center">Code <SortIcon column="code" /></span>
+                    </TableHead>
+                    <TableHead className="cursor-pointer select-none" onClick={() => toggleSort('city')}>
+                      <span className="inline-flex items-center">City <SortIcon column="city" /></span>
+                    </TableHead>
+                    <TableHead className="cursor-pointer select-none" onClick={() => toggleSort('max_uses')}>
+                      <span className="inline-flex items-center">Max Uses <SortIcon column="max_uses" /></span>
+                    </TableHead>
+                    <TableHead className="cursor-pointer select-none" onClick={() => toggleSort('uses_count')}>
+                      <span className="inline-flex items-center">Uses Count <SortIcon column="uses_count" /></span>
+                    </TableHead>
+                    <TableHead className="cursor-pointer select-none" onClick={() => toggleSort('active')}>
+                      <span className="inline-flex items-center">Active <SortIcon column="active" /></span>
+                    </TableHead>
+                    <TableHead className="cursor-pointer select-none" onClick={() => toggleSort('expires_at')}>
+                      <span className="inline-flex items-center">Expires At <SortIcon column="expires_at" /></span>
+                    </TableHead>
+                    <TableHead className="cursor-pointer select-none" onClick={() => toggleSort('created_at')}>
+                      <span className="inline-flex items-center">Created <SortIcon column="created_at" /></span>
+                    </TableHead>
                     <TableHead className="text-right">Actions</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {filtered.length === 0 ? (
+                  {sorted.length === 0 ? (
                     <TableRow>
                       <TableCell colSpan={8} className="text-center py-8 text-muted-foreground">
                         No invite codes found.
@@ -255,10 +332,10 @@ const AdminInviteCodes = () => {
               </Table>
             </div>
 
-            {filtered.length > PAGE_SIZE && (
+            {sorted.length > PAGE_SIZE && (
               <div className="flex items-center justify-between pt-4">
                 <p className="text-sm text-muted-foreground">
-                  Showing {(currentPage - 1) * PAGE_SIZE + 1}–{Math.min(currentPage * PAGE_SIZE, filtered.length)} of {filtered.length}
+                  Showing {(currentPage - 1) * PAGE_SIZE + 1}–{Math.min(currentPage * PAGE_SIZE, sorted.length)} of {sorted.length}
                 </p>
                 <div className="flex gap-2">
                   <Button variant="outline" size="sm" disabled={currentPage <= 1} onClick={() => setPage((p) => p - 1)}>
