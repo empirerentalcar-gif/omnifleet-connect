@@ -1,4 +1,4 @@
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+// notify-new-agency edge function
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -12,9 +12,24 @@ Deno.serve(async (req) => {
   }
 
   try {
-    const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
-    const serviceRoleKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
     const resendApiKey = Deno.env.get("RESEND_API_KEY");
+    const adminEmail = Deno.env.get("ADMIN_NOTIFICATION_EMAIL");
+
+    if (!resendApiKey) {
+      console.log("[NOTIFY] No RESEND_API_KEY configured");
+      return new Response(
+        JSON.stringify({ error: "Email service not configured" }),
+        { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
+
+    if (!adminEmail) {
+      console.log("[NOTIFY] No ADMIN_NOTIFICATION_EMAIL configured");
+      return new Response(
+        JSON.stringify({ error: "Admin email not configured" }),
+        { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
 
     const { agency } = await req.json();
 
@@ -22,39 +37,6 @@ Deno.serve(async (req) => {
       return new Response(
         JSON.stringify({ error: "Missing agency data" }),
         { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-      );
-    }
-
-    const supabase = createClient(supabaseUrl, serviceRoleKey);
-
-    // Get all admin user IDs
-    const { data: adminRoles, error: rolesError } = await supabase
-      .from("user_roles")
-      .select("user_id")
-      .eq("role", "admin");
-
-    if (rolesError || !adminRoles?.length) {
-      console.log("[NOTIFY] No admins found or error:", rolesError);
-      return new Response(
-        JSON.stringify({ success: true, message: "No admins to notify" }),
-        { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-      );
-    }
-
-    // Get admin emails from auth
-    const adminEmails: string[] = [];
-    for (const role of adminRoles) {
-      const { data: userData } = await supabase.auth.admin.getUserById(role.user_id);
-      if (userData?.user?.email) {
-        adminEmails.push(userData.user.email);
-      }
-    }
-
-    if (adminEmails.length === 0) {
-      console.log("[NOTIFY] No admin emails found");
-      return new Response(
-        JSON.stringify({ success: true, message: "No admin emails found" }),
-        { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
 
@@ -83,44 +65,34 @@ Deno.serve(async (req) => {
       </div>
     `;
 
-    if (resendApiKey) {
-      const resendRes = await fetch("https://api.resend.com/emails", {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${resendApiKey}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          from: "ZUVIO <noreply@zuvio.us>",
-          to: adminEmails,
-          subject,
-          html,
-        }),
-      });
+    const resendRes = await fetch("https://api.resend.com/emails", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${resendApiKey}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        from: "ZUVIO <noreply@zuvio.us>",
+        to: [adminEmail],
+        subject,
+        html,
+      }),
+    });
 
-      const resendData = await resendRes.json();
-      if (!resendRes.ok) {
-        console.error("[NOTIFY] Resend error:", resendData);
-        return new Response(
-          JSON.stringify({ error: "Failed to send email", details: resendData }),
-          { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-        );
-      }
-
-      console.log(`[NOTIFY] Sent to ${adminEmails.join(", ")}`, resendData);
+    const resendData = await resendRes.json();
+    if (!resendRes.ok) {
+      console.error("[NOTIFY] Resend error:", resendData);
       return new Response(
-        JSON.stringify({ success: true, sent_to: adminEmails }),
-        { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-      );
-    } else {
-      console.log(`[NOTIFY] No RESEND_API_KEY — logging only`);
-      console.log(`[NOTIFY] Would send to: ${adminEmails.join(", ")}`);
-      console.log(`[NOTIFY] Subject: ${subject}`);
-      return new Response(
-        JSON.stringify({ success: true, message: "Email logged (no RESEND_API_KEY)", to: adminEmails }),
-        { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        JSON.stringify({ error: "Failed to send email", details: resendData }),
+        { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
+
+    console.log(`[NOTIFY] Sent to ${adminEmail}`, resendData);
+    return new Response(
+      JSON.stringify({ success: true, sent_to: adminEmail }),
+      { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+    );
   } catch (err) {
     console.error("Error:", err);
     return new Response(
