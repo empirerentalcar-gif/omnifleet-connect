@@ -100,6 +100,42 @@ export type Database = {
         }
         Relationships: []
       }
+      invite_codes: {
+        Row: {
+          active: boolean
+          city: string | null
+          code: string
+          created_at: string
+          expires_at: string | null
+          id: string
+          max_uses: number
+          updated_at: string
+          uses_count: number
+        }
+        Insert: {
+          active?: boolean
+          city?: string | null
+          code: string
+          created_at?: string
+          expires_at?: string | null
+          id?: string
+          max_uses?: number
+          updated_at?: string
+          uses_count?: number
+        }
+        Update: {
+          active?: boolean
+          city?: string | null
+          code?: string
+          created_at?: string
+          expires_at?: string | null
+          id?: string
+          max_uses?: number
+          updated_at?: string
+          uses_count?: number
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           address: string | null
