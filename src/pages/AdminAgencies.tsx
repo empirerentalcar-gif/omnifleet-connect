@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowLeft, Search, Pencil, Save, X, ChevronLeft, ChevronRight } from 'lucide-react';
+import { ArrowLeft, Search, Pencil, Save, X, ChevronLeft, ChevronRight, ArrowUp, ArrowDown, ArrowUpDown, Download } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAdmin } from '@/hooks/useAdmin';
 import { Button } from '@/components/ui/button';
@@ -29,7 +29,11 @@ interface Agency {
   approved: boolean;
   active: boolean;
   created_at: string;
+  owner_user_id: string | null;
 }
+
+type SortKey = 'agency_name' | 'city' | 'approved' | 'active' | 'created_at';
+type SortDir = 'asc' | 'desc';
 
 const AdminAgencies = () => {
   const { isAdmin, loading: adminLoading } = useAdmin();
@@ -41,6 +45,8 @@ const AdminAgencies = () => {
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editData, setEditData] = useState<Partial<Agency>>({});
   const [deactivateTarget, setDeactivateTarget] = useState<Agency | null>(null);
+  const [sortKey, setSortKey] = useState<SortKey>('created_at');
+  const [sortDir, setSortDir] = useState<SortDir>('desc');
 
   const fetchAgencies = async () => {
     const { data, error } = await supabase
@@ -61,7 +67,6 @@ const AdminAgencies = () => {
   }, [isAdmin]);
 
   const handleToggle = async (agency: Agency, field: 'approved' | 'active', value: boolean) => {
-    // Confirmation for deactivation
     if (field === 'active' && !value) {
       setDeactivateTarget(agency);
       return;
@@ -118,6 +123,20 @@ const AdminAgencies = () => {
     fetchAgencies();
   };
 
+  const toggleSort = (key: SortKey) => {
+    if (sortKey === key) {
+      setSortDir(d => d === 'asc' ? 'desc' : 'asc');
+    } else {
+      setSortKey(key);
+      setSortDir('asc');
+    }
+  };
+
+  const SortIcon = ({ column }: { column: SortKey }) => {
+    if (sortKey !== column) return <ArrowUpDown className="h-3 w-3 ml-1 opacity-40" />;
+    return sortDir === 'asc' ? <ArrowUp className="h-3 w-3 ml-1" /> : <ArrowDown className="h-3 w-3 ml-1" />;
+  };
+
   const filtered = agencies.filter((a) => {
     const q = search.toLowerCase();
     return (
@@ -126,12 +145,46 @@ const AdminAgencies = () => {
     );
   });
 
-  const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
-  const currentPage = Math.min(page, totalPages);
-  const paginated = filtered.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE);
+  const sorted = [...filtered].sort((a, b) => {
+    const dir = sortDir === 'asc' ? 1 : -1;
+    switch (sortKey) {
+      case 'agency_name': return dir * a.agency_name.localeCompare(b.agency_name);
+      case 'city': return dir * (a.city || '').localeCompare(b.city || '');
+      case 'approved': return dir * (Number(a.approved) - Number(b.approved));
+      case 'active': return dir * (Number(a.active) - Number(b.active));
+      case 'created_at': return dir * (new Date(a.created_at).getTime() - new Date(b.created_at).getTime());
+      default: return 0;
+    }
+  });
 
-  // Reset page when search changes
+  const totalPages = Math.max(1, Math.ceil(sorted.length / PAGE_SIZE));
+  const currentPage = Math.min(page, totalPages);
+  const paginated = sorted.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE);
+
   useEffect(() => { setPage(1); }, [search]);
+
+  const exportCSV = () => {
+    const headers = ['Agency Name', 'City', 'State', 'Phone', 'Email', 'Approved', 'Active', 'Created At', 'Owner User ID'];
+    const rows = sorted.map(a => [
+      a.agency_name,
+      a.city || '',
+      a.state || '',
+      a.phone || '',
+      a.email || '',
+      String(a.approved),
+      String(a.active),
+      format(new Date(a.created_at), 'yyyy-MM-dd'),
+      a.owner_user_id || '',
+    ]);
+    const csv = [headers, ...rows].map(r => r.map(v => `"${v.replace(/"/g, '""')}"`).join(',')).join('\n');
+    const blob = new Blob([csv], { type: 'text/csv' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `agencies_export_${format(new Date(), 'yyyy-MM-dd')}.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
+  };
 
   if (adminLoading) {
     return (
@@ -153,18 +206,21 @@ const AdminAgencies = () => {
       </header>
 
       <main className="container mx-auto px-4 py-8 space-y-6">
-        {/* Search */}
-        <div className="relative max-w-md">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-          <Input
-            placeholder="Search by name or city..."
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            className="pl-10"
-          />
+        <div className="flex items-center justify-between gap-4 flex-wrap">
+          <div className="relative max-w-md flex-1">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+            <Input
+              placeholder="Search by name or city..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              className="pl-10"
+            />
+          </div>
+          <Button variant="outline" onClick={exportCSV}>
+            <Download className="h-4 w-4 mr-2" /> Export CSV
+          </Button>
         </div>
 
-        {/* Table */}
         {loading ? (
           <div className="space-y-3">
             {Array.from({ length: 5 }).map((_, i) => (
@@ -177,19 +233,29 @@ const AdminAgencies = () => {
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>Agency Name</TableHead>
-                  <TableHead>City</TableHead>
+                  <TableHead className="cursor-pointer select-none" onClick={() => toggleSort('agency_name')}>
+                    <span className="inline-flex items-center">Agency Name <SortIcon column="agency_name" /></span>
+                  </TableHead>
+                  <TableHead className="cursor-pointer select-none" onClick={() => toggleSort('city')}>
+                    <span className="inline-flex items-center">City <SortIcon column="city" /></span>
+                  </TableHead>
                   <TableHead>State</TableHead>
                   <TableHead>Phone</TableHead>
                   <TableHead>Email</TableHead>
-                  <TableHead>Approved</TableHead>
-                  <TableHead>Active</TableHead>
-                  <TableHead>Created</TableHead>
+                  <TableHead className="cursor-pointer select-none" onClick={() => toggleSort('approved')}>
+                    <span className="inline-flex items-center">Approved <SortIcon column="approved" /></span>
+                  </TableHead>
+                  <TableHead className="cursor-pointer select-none" onClick={() => toggleSort('active')}>
+                    <span className="inline-flex items-center">Active <SortIcon column="active" /></span>
+                  </TableHead>
+                  <TableHead className="cursor-pointer select-none" onClick={() => toggleSort('created_at')}>
+                    <span className="inline-flex items-center">Created <SortIcon column="created_at" /></span>
+                  </TableHead>
                   <TableHead className="text-right">Actions</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {filtered.length === 0 ? (
+                {sorted.length === 0 ? (
                   <TableRow>
                     <TableCell colSpan={9} className="text-center py-8 text-muted-foreground">
                       No agencies found.
@@ -291,10 +357,10 @@ const AdminAgencies = () => {
             </Table>
           </div>
 
-          {filtered.length > PAGE_SIZE && (
+          {sorted.length > PAGE_SIZE && (
             <div className="flex items-center justify-between pt-4">
               <p className="text-sm text-muted-foreground">
-                Showing {(currentPage - 1) * PAGE_SIZE + 1}–{Math.min(currentPage * PAGE_SIZE, filtered.length)} of {filtered.length}
+                Showing {(currentPage - 1) * PAGE_SIZE + 1}–{Math.min(currentPage * PAGE_SIZE, sorted.length)} of {sorted.length}
               </p>
               <div className="flex gap-2">
                 <Button
@@ -320,7 +386,6 @@ const AdminAgencies = () => {
         )}
       </main>
 
-      {/* Deactivation Confirmation */}
       <AlertDialog open={!!deactivateTarget} onOpenChange={() => setDeactivateTarget(null)}>
         <AlertDialogContent>
           <AlertDialogHeader>
