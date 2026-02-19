@@ -1,10 +1,12 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowLeft, Search, Pencil, Save, X, ChevronLeft, ChevronRight, ArrowUp, ArrowDown, ArrowUpDown, Download } from 'lucide-react';
+import { ArrowLeft, Search, Pencil, Save, X, ChevronLeft, ChevronRight, ArrowUp, ArrowDown, ArrowUpDown, Download, MessageSquare, Send } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAdmin } from '@/hooks/useAdmin';
+import { useAuth } from '@/hooks/useAuth';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
 import { Switch } from '@/components/ui/switch';
 import { Skeleton } from '@/components/ui/skeleton';
 import {
@@ -14,6 +16,9 @@ import {
   AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
   AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
+import {
+  Collapsible, CollapsibleContent, CollapsibleTrigger,
+} from '@/components/ui/collapsible';
 import { toast } from '@/hooks/use-toast';
 import { format } from 'date-fns';
 
@@ -32,11 +37,21 @@ interface Agency {
   owner_user_id: string | null;
 }
 
+interface AgencyNote {
+  id: string;
+  agency_id: string;
+  admin_user_id: string;
+  admin_email: string;
+  note_text: string;
+  created_at: string;
+}
+
 type SortKey = 'agency_name' | 'city' | 'approved' | 'active' | 'created_at';
 type SortDir = 'asc' | 'desc';
 
 const AdminAgencies = () => {
   const { isAdmin, loading: adminLoading } = useAdmin();
+  const { user } = useAuth();
   const [agencies, setAgencies] = useState<Agency[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
@@ -47,6 +62,12 @@ const AdminAgencies = () => {
   const [deactivateTarget, setDeactivateTarget] = useState<Agency | null>(null);
   const [sortKey, setSortKey] = useState<SortKey>('created_at');
   const [sortDir, setSortDir] = useState<SortDir>('desc');
+
+  // Notes state
+  const [expandedNotes, setExpandedNotes] = useState<string | null>(null);
+  const [notesMap, setNotesMap] = useState<Record<string, AgencyNote[]>>({});
+  const [newNoteText, setNewNoteText] = useState('');
+  const [addingNote, setAddingNote] = useState(false);
 
   const fetchAgencies = async () => {
     const { data, error } = await supabase
@@ -60,6 +81,56 @@ const AdminAgencies = () => {
     }
     setAgencies(data || []);
     setLoading(false);
+  };
+
+  const fetchNotesForAgency = async (agencyId: string) => {
+    const { data, error } = await supabase
+      .from('agency_notes')
+      .select('*')
+      .eq('agency_id', agencyId)
+      .order('created_at', { ascending: false });
+
+    if (error) {
+      toast({ title: 'Error loading notes', description: error.message, variant: 'destructive' });
+      return;
+    }
+    setNotesMap(prev => ({ ...prev, [agencyId]: (data || []) as AgencyNote[] }));
+  };
+
+  const addNote = async (agencyId: string) => {
+    if (!newNoteText.trim() || !user) return;
+    setAddingNote(true);
+
+    const { error } = await supabase
+      .from('agency_notes')
+      .insert({
+        agency_id: agencyId,
+        admin_user_id: user.id,
+        admin_email: user.email || 'unknown',
+        note_text: newNoteText.trim(),
+      });
+
+    if (error) {
+      toast({ title: 'Error adding note', description: error.message, variant: 'destructive' });
+    } else {
+      toast({ title: 'Note added' });
+      setNewNoteText('');
+      await fetchNotesForAgency(agencyId);
+    }
+    setAddingNote(false);
+  };
+
+  const toggleNotes = async (agencyId: string) => {
+    if (expandedNotes === agencyId) {
+      setExpandedNotes(null);
+      setNewNoteText('');
+    } else {
+      setExpandedNotes(agencyId);
+      setNewNoteText('');
+      if (!notesMap[agencyId]) {
+        await fetchNotesForAgency(agencyId);
+      }
+    }
   };
 
   useEffect(() => {
@@ -263,94 +334,156 @@ const AdminAgencies = () => {
                   </TableRow>
                 ) : (
                   paginated.map((agency) => (
-                    <TableRow key={agency.id}>
-                      <TableCell className="font-medium">
-                        {editingId === agency.id ? (
-                          <Input
-                            value={editData.agency_name || ''}
-                            onChange={(e) => setEditData({ ...editData, agency_name: e.target.value })}
-                            className="h-8 w-40"
-                          />
-                        ) : (
-                          agency.agency_name
-                        )}
-                      </TableCell>
-                      <TableCell>
-                        {editingId === agency.id ? (
-                          <Input
-                            value={editData.city || ''}
-                            onChange={(e) => setEditData({ ...editData, city: e.target.value })}
-                            className="h-8 w-28"
-                          />
-                        ) : (
-                          agency.city || '—'
-                        )}
-                      </TableCell>
-                      <TableCell>
-                        {editingId === agency.id ? (
-                          <Input
-                            value={editData.state || ''}
-                            onChange={(e) => setEditData({ ...editData, state: e.target.value })}
-                            className="h-8 w-20"
-                          />
-                        ) : (
-                          agency.state || '—'
-                        )}
-                      </TableCell>
-                      <TableCell>
-                        {editingId === agency.id ? (
-                          <Input
-                            value={editData.phone || ''}
-                            onChange={(e) => setEditData({ ...editData, phone: e.target.value })}
-                            className="h-8 w-32"
-                          />
-                        ) : (
-                          agency.phone || '—'
-                        )}
-                      </TableCell>
-                      <TableCell>
-                        {editingId === agency.id ? (
-                          <Input
-                            value={editData.email || ''}
-                            onChange={(e) => setEditData({ ...editData, email: e.target.value })}
-                            className="h-8 w-40"
-                          />
-                        ) : (
-                          agency.email || '—'
-                        )}
-                      </TableCell>
-                      <TableCell>
-                        <Switch
-                          checked={agency.approved}
-                          onCheckedChange={(v) => handleToggle(agency, 'approved', v)}
-                        />
-                      </TableCell>
-                      <TableCell>
-                        <Switch
-                          checked={agency.active}
-                          onCheckedChange={(v) => handleToggle(agency, 'active', v)}
-                        />
-                      </TableCell>
-                      <TableCell className="whitespace-nowrap">
-                        {format(new Date(agency.created_at), 'MMM d, yyyy')}
-                      </TableCell>
-                      <TableCell className="text-right">
-                        {editingId === agency.id ? (
-                          <div className="flex gap-1 justify-end">
-                            <Button size="icon" variant="ghost" onClick={saveEdit}>
-                              <Save className="h-4 w-4" />
-                            </Button>
-                            <Button size="icon" variant="ghost" onClick={() => setEditingId(null)}>
-                              <X className="h-4 w-4" />
-                            </Button>
-                          </div>
-                        ) : (
-                          <Button size="icon" variant="ghost" onClick={() => startEdit(agency)}>
-                            <Pencil className="h-4 w-4" />
-                          </Button>
-                        )}
-                      </TableCell>
-                    </TableRow>
+                    <Collapsible key={agency.id} open={expandedNotes === agency.id} asChild>
+                      <>
+                        <TableRow>
+                          <TableCell className="font-medium">
+                            {editingId === agency.id ? (
+                              <Input
+                                value={editData.agency_name || ''}
+                                onChange={(e) => setEditData({ ...editData, agency_name: e.target.value })}
+                                className="h-8 w-40"
+                              />
+                            ) : (
+                              agency.agency_name
+                            )}
+                          </TableCell>
+                          <TableCell>
+                            {editingId === agency.id ? (
+                              <Input
+                                value={editData.city || ''}
+                                onChange={(e) => setEditData({ ...editData, city: e.target.value })}
+                                className="h-8 w-28"
+                              />
+                            ) : (
+                              agency.city || '—'
+                            )}
+                          </TableCell>
+                          <TableCell>
+                            {editingId === agency.id ? (
+                              <Input
+                                value={editData.state || ''}
+                                onChange={(e) => setEditData({ ...editData, state: e.target.value })}
+                                className="h-8 w-20"
+                              />
+                            ) : (
+                              agency.state || '—'
+                            )}
+                          </TableCell>
+                          <TableCell>
+                            {editingId === agency.id ? (
+                              <Input
+                                value={editData.phone || ''}
+                                onChange={(e) => setEditData({ ...editData, phone: e.target.value })}
+                                className="h-8 w-32"
+                              />
+                            ) : (
+                              agency.phone || '—'
+                            )}
+                          </TableCell>
+                          <TableCell>
+                            {editingId === agency.id ? (
+                              <Input
+                                value={editData.email || ''}
+                                onChange={(e) => setEditData({ ...editData, email: e.target.value })}
+                                className="h-8 w-40"
+                              />
+                            ) : (
+                              agency.email || '—'
+                            )}
+                          </TableCell>
+                          <TableCell>
+                            <Switch
+                              checked={agency.approved}
+                              onCheckedChange={(v) => handleToggle(agency, 'approved', v)}
+                            />
+                          </TableCell>
+                          <TableCell>
+                            <Switch
+                              checked={agency.active}
+                              onCheckedChange={(v) => handleToggle(agency, 'active', v)}
+                            />
+                          </TableCell>
+                          <TableCell className="whitespace-nowrap">
+                            {format(new Date(agency.created_at), 'MMM d, yyyy')}
+                          </TableCell>
+                          <TableCell className="text-right">
+                            <div className="flex gap-1 justify-end">
+                              {editingId === agency.id ? (
+                                <>
+                                  <Button size="icon" variant="ghost" onClick={saveEdit}>
+                                    <Save className="h-4 w-4" />
+                                  </Button>
+                                  <Button size="icon" variant="ghost" onClick={() => setEditingId(null)}>
+                                    <X className="h-4 w-4" />
+                                  </Button>
+                                </>
+                              ) : (
+                                <Button size="icon" variant="ghost" onClick={() => startEdit(agency)}>
+                                  <Pencil className="h-4 w-4" />
+                                </Button>
+                              )}
+                              <CollapsibleTrigger asChild>
+                                <Button
+                                  size="icon"
+                                  variant={expandedNotes === agency.id ? 'secondary' : 'ghost'}
+                                  onClick={() => toggleNotes(agency.id)}
+                                  title="Notes"
+                                >
+                                  <MessageSquare className="h-4 w-4" />
+                                </Button>
+                              </CollapsibleTrigger>
+                            </div>
+                          </TableCell>
+                        </TableRow>
+                        <CollapsibleContent asChild>
+                          <tr>
+                            <td colSpan={9} className="bg-muted/30 px-6 py-4 border-b">
+                              <div className="space-y-4 max-w-2xl">
+                                <h4 className="text-sm font-semibold text-foreground">Internal Notes</h4>
+
+                                {/* Add note form */}
+                                <div className="flex gap-2">
+                                  <Textarea
+                                    placeholder="Add a note about this agency..."
+                                    value={newNoteText}
+                                    onChange={(e) => setNewNoteText(e.target.value)}
+                                    className="min-h-[60px] text-sm"
+                                  />
+                                  <Button
+                                    size="sm"
+                                    onClick={() => addNote(agency.id)}
+                                    disabled={!newNoteText.trim() || addingNote}
+                                    className="self-end"
+                                  >
+                                    <Send className="h-4 w-4 mr-1" /> Add
+                                  </Button>
+                                </div>
+
+                                {/* Existing notes */}
+                                {notesMap[agency.id]?.length ? (
+                                  <div className="space-y-2">
+                                    {notesMap[agency.id].map((note) => (
+                                      <div key={note.id} className="rounded-md border bg-card p-3 text-sm">
+                                        <div className="flex items-center justify-between mb-1">
+                                          <span className="font-medium text-foreground">{note.admin_email}</span>
+                                          <span className="text-xs text-muted-foreground">
+                                            {format(new Date(note.created_at), 'MMM d, yyyy h:mm a')}
+                                          </span>
+                                        </div>
+                                        <p className="text-muted-foreground whitespace-pre-wrap">{note.note_text}</p>
+                                      </div>
+                                    ))}
+                                  </div>
+                                ) : (
+                                  <p className="text-sm text-muted-foreground italic">No notes yet.</p>
+                                )}
+                              </div>
+                            </td>
+                          </tr>
+                        </CollapsibleContent>
+                      </>
+                    </Collapsible>
                   ))
                 )}
               </TableBody>

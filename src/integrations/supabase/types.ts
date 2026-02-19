@@ -100,6 +100,41 @@ export type Database = {
         }
         Relationships: []
       }
+      agency_notes: {
+        Row: {
+          admin_email: string
+          admin_user_id: string
+          agency_id: string
+          created_at: string
+          id: string
+          note_text: string
+        }
+        Insert: {
+          admin_email: string
+          admin_user_id: string
+          agency_id: string
+          created_at?: string
+          id?: string
+          note_text: string
+        }
+        Update: {
+          admin_email?: string
+          admin_user_id?: string
+          agency_id?: string
+          created_at?: string
+          id?: string
+          note_text?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "agency_notes_agency_id_fkey"
+            columns: ["agency_id"]
+            isOneToOne: false
+            referencedRelation: "agencies"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       invite_codes: {
         Row: {
           active: boolean
