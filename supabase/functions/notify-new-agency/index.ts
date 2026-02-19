@@ -72,7 +72,7 @@ Deno.serve(async (req) => {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        from: "ZUVIO <noreply@zuvio.us>",
+        from: "ZUVIO <onboarding@resend.dev>",
         to: [adminEmail],
         subject,
         html,
