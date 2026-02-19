@@ -97,6 +97,22 @@ const SignUp = () => {
           user_profile_id: profile.id,
         });
       }
+
+      // Notify admin of new agency signup (fire-and-forget)
+      try {
+        await supabase.functions.invoke('notify-new-agency', {
+          body: {
+            agency: {
+              id: signUpData.user.id,
+              agency_name: validated.businessName,
+              email: validated.email,
+              created_at: new Date().toISOString(),
+            },
+          },
+        });
+      } catch (notifyErr) {
+        console.error('Admin notification failed (non-blocking):', notifyErr);
+      }
     }
 
     toast({
