@@ -32,31 +32,31 @@ const bodyTemplates: Record<string, (r: any) => string> = {
   approved: (r) =>
     `<div style="font-family:sans-serif;max-width:600px;margin:0 auto;padding:20px;">
       <h2 style="color:#10b981;">✅ Reservation Approved</h2>
-      <p>Hi ${r.customer_name},</p>
-      <p>Great news! Your reservation with <strong>${r.agency_name}</strong> has been approved.</p>
+      <p>Hi ${escapeHtml(r.customer_name)},</p>
+      <p>Great news! Your reservation with <strong>${escapeHtml(r.agency_name)}</strong> has been approved.</p>
       <table style="width:100%;border-collapse:collapse;margin:16px 0;">
-        <tr><td style="padding:8px;border-bottom:1px solid #eee;color:#666;">Pickup</td><td style="padding:8px;border-bottom:1px solid #eee;font-weight:bold;">${r.pickup_date}</td></tr>
-        <tr><td style="padding:8px;border-bottom:1px solid #eee;color:#666;">Drop-off</td><td style="padding:8px;border-bottom:1px solid #eee;font-weight:bold;">${r.dropoff_date}</td></tr>
-        <tr><td style="padding:8px;border-bottom:1px solid #eee;color:#666;">Vehicle Type</td><td style="padding:8px;border-bottom:1px solid #eee;font-weight:bold;">${r.vehicle_type}</td></tr>
+        <tr><td style="padding:8px;border-bottom:1px solid #eee;color:#666;">Pickup</td><td style="padding:8px;border-bottom:1px solid #eee;font-weight:bold;">${escapeHtml(r.pickup_date)}</td></tr>
+        <tr><td style="padding:8px;border-bottom:1px solid #eee;color:#666;">Drop-off</td><td style="padding:8px;border-bottom:1px solid #eee;font-weight:bold;">${escapeHtml(r.dropoff_date)}</td></tr>
+        <tr><td style="padding:8px;border-bottom:1px solid #eee;color:#666;">Vehicle Type</td><td style="padding:8px;border-bottom:1px solid #eee;font-weight:bold;">${escapeHtml(r.vehicle_type)}</td></tr>
       </table>
-      <p>The agency will contact you at <strong>${r.customer_phone}</strong> with any additional details.</p>
+      <p>The agency will contact you at <strong>${escapeHtml(r.customer_phone)}</strong> with any additional details.</p>
       <p style="color:#888;font-size:12px;margin-top:24px;">— ZUVIO</p>
     </div>`,
   vehicle_ready: (r) =>
     `<div style="font-family:sans-serif;max-width:600px;margin:0 auto;padding:20px;">
       <h2 style="color:#10b981;">🚗 Vehicle Ready for Pickup</h2>
-      <p>Hi ${r.customer_name},</p>
-      <p>Your vehicle is ready for pickup at <strong>${r.agency_name}</strong>!</p>
+      <p>Hi ${escapeHtml(r.customer_name)},</p>
+      <p>Your vehicle is ready for pickup at <strong>${escapeHtml(r.agency_name)}</strong>!</p>
       <p>Please bring the required documents and head to the agency location.</p>
-      <p><strong>Pickup Date:</strong> ${r.pickup_date}<br/><strong>Vehicle Type:</strong> ${r.vehicle_type}</p>
+      <p><strong>Pickup Date:</strong> ${escapeHtml(r.pickup_date)}<br/><strong>Vehicle Type:</strong> ${escapeHtml(r.vehicle_type)}</p>
       <p style="color:#888;font-size:12px;margin-top:24px;">— ZUVIO</p>
     </div>`,
   extension_approved: (r) =>
     `<div style="font-family:sans-serif;max-width:600px;margin:0 auto;padding:20px;">
       <h2 style="color:#10b981;">📅 Extension Approved</h2>
-      <p>Hi ${r.customer_name},</p>
-      <p>Your rental extension with <strong>${r.agency_name}</strong> has been approved.</p>
-      <p><strong>New Drop-off Date:</strong> ${r.dropoff_date}</p>
+      <p>Hi ${escapeHtml(r.customer_name)},</p>
+      <p>Your rental extension with <strong>${escapeHtml(r.agency_name)}</strong> has been approved.</p>
+      <p><strong>New Drop-off Date:</strong> ${escapeHtml(r.dropoff_date)}</p>
       <p>If you have questions, contact the agency directly.</p>
       <p style="color:#888;font-size:12px;margin-top:24px;">— ZUVIO</p>
     </div>`,
