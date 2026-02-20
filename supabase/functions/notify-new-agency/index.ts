@@ -5,6 +5,16 @@ const corsHeaders = {
   "Access-Control-Allow-Headers":
     "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
 };
+function escapeHtml(text: string): string {
+  const map: Record<string, string> = {
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    '"': '&quot;',
+    "'": '&#039;',
+  };
+  return String(text || '').replace(/[&<>"']/g, (m) => map[m]);
+}
 
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") {
@@ -45,18 +55,18 @@ Deno.serve(async (req) => {
       : "N/A";
 
     const appUrl = "https://zuvio-website.lovable.app";
-    const subject = `New Agency Signup - ${agency.agency_name}`;
+    const subject = `New Agency Signup - ${escapeHtml(agency.agency_name)}`;
     const html = `
       <div style="font-family:sans-serif;max-width:600px;margin:0 auto;padding:20px;">
         <h2 style="color:#3b82f6;">🏢 New Agency Signup</h2>
         <p>A new agency has registered on ZUVIO:</p>
         <table style="width:100%;border-collapse:collapse;margin:16px 0;">
-          <tr><td style="padding:8px;border-bottom:1px solid #eee;color:#666;">Agency Name</td><td style="padding:8px;border-bottom:1px solid #eee;font-weight:bold;">${agency.agency_name}</td></tr>
-          <tr><td style="padding:8px;border-bottom:1px solid #eee;color:#666;">City</td><td style="padding:8px;border-bottom:1px solid #eee;">${agency.city || "—"}</td></tr>
-          <tr><td style="padding:8px;border-bottom:1px solid #eee;color:#666;">State</td><td style="padding:8px;border-bottom:1px solid #eee;">${agency.state || "—"}</td></tr>
-          <tr><td style="padding:8px;border-bottom:1px solid #eee;color:#666;">Phone</td><td style="padding:8px;border-bottom:1px solid #eee;">${agency.phone || "—"}</td></tr>
-          <tr><td style="padding:8px;border-bottom:1px solid #eee;color:#666;">Email</td><td style="padding:8px;border-bottom:1px solid #eee;">${agency.email || "—"}</td></tr>
-          <tr><td style="padding:8px;border-bottom:1px solid #eee;color:#666;">Created At</td><td style="padding:8px;border-bottom:1px solid #eee;">${createdAt}</td></tr>
+          <tr><td style="padding:8px;border-bottom:1px solid #eee;color:#666;">Agency Name</td><td style="padding:8px;border-bottom:1px solid #eee;font-weight:bold;">${escapeHtml(agency.agency_name)}</td></tr>
+          <tr><td style="padding:8px;border-bottom:1px solid #eee;color:#666;">City</td><td style="padding:8px;border-bottom:1px solid #eee;">${escapeHtml(agency.city || "—")}</td></tr>
+          <tr><td style="padding:8px;border-bottom:1px solid #eee;color:#666;">State</td><td style="padding:8px;border-bottom:1px solid #eee;">${escapeHtml(agency.state || "—")}</td></tr>
+          <tr><td style="padding:8px;border-bottom:1px solid #eee;color:#666;">Phone</td><td style="padding:8px;border-bottom:1px solid #eee;">${escapeHtml(agency.phone || "—")}</td></tr>
+          <tr><td style="padding:8px;border-bottom:1px solid #eee;color:#666;">Email</td><td style="padding:8px;border-bottom:1px solid #eee;">${escapeHtml(agency.email || "—")}</td></tr>
+          <tr><td style="padding:8px;border-bottom:1px solid #eee;color:#666;">Created At</td><td style="padding:8px;border-bottom:1px solid #eee;">${escapeHtml(createdAt)}</td></tr>
         </table>
         <a href="${appUrl}/admin/agencies" style="display:inline-block;background:#3b82f6;color:#fff;padding:12px 24px;border-radius:8px;text-decoration:none;font-weight:bold;margin-top:8px;">
           Review & Approve Agency
