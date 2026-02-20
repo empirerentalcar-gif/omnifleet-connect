@@ -11,6 +11,17 @@ interface EmailPayload {
   type: "approved" | "vehicle_ready" | "extension_approved";
 }
 
+function escapeHtml(text: string): string {
+  const map: Record<string, string> = {
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    '"': '&quot;',
+    "'": '&#039;',
+  };
+  return text.replace(/[&<>"']/g, (m) => map[m]);
+}
+
 const subjects: Record<string, string> = {
   approved: "Your Reservation Has Been Approved!",
   vehicle_ready: "Your Vehicle Is Ready for Pickup!",
