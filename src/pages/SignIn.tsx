@@ -7,6 +7,11 @@ import { useToast } from '@/hooks/use-toast';
 import { z } from 'zod';
 import SEO from '@/components/SEO';
 
+const checkIsAdmin = async (userId: string): Promise<boolean> => {
+  const { data } = await supabase.rpc('has_role', { _user_id: userId, _role: 'admin' });
+  return !!data;
+};
+
 const signInSchema = z.object({
   email: z.string().trim().email('Invalid email address').max(255, 'Email too long'),
   password: z.string().min(1, 'Password is required').max(128, 'Password too long'),
@@ -45,10 +50,17 @@ const SignIn = () => {
         description: 'Invalid email or password.',
         variant: 'destructive',
       });
+      setLoading(false);
     } else {
-      navigate('/');
+      // Check if user is admin and redirect accordingly
+      const { data: { user: signedInUser } } = await supabase.auth.getUser();
+      if (signedInUser && await checkIsAdmin(signedInUser.id)) {
+        navigate('/admin');
+      } else {
+        navigate('/dashboard');
+      }
+      setLoading(false);
     }
-    setLoading(false);
   };
 
   return (

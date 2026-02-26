@@ -98,12 +98,20 @@ const AdminDashboard = () => {
     <div className="min-h-screen bg-background">
       <header className="border-b bg-card">
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-          <h1 className="text-2xl font-bold">ZUVIO Admin</h1>
-          <Link to="/admin/agencies">
-            <Button variant="outline" size="sm">
-              Manage Agencies <ArrowRight className="ml-2 h-4 w-4" />
-            </Button>
-          </Link>
+          <div>
+            <h1 className="text-2xl font-bold">Platform Administration</h1>
+            <p className="text-sm text-muted-foreground">Zuvio Admin Dashboard</p>
+          </div>
+          <div className="flex gap-2">
+            <Link to="/admin/agencies">
+              <Button variant="outline" size="sm">
+                Manage Agencies <ArrowRight className="ml-2 h-4 w-4" />
+              </Button>
+            </Link>
+            <Link to="/">
+              <Button variant="ghost" size="sm">Back to Site</Button>
+            </Link>
+          </div>
         </div>
       </header>
 

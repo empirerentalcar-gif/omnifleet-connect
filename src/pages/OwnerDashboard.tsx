@@ -110,9 +110,17 @@ const OwnerDashboard = () => {
   const [savingVehicle, setSavingVehicle] = useState(false);
 
   useEffect(() => {
-    if (!authLoading && !user) {
+    if (authLoading) return;
+    if (!user) {
       navigate("/signin");
+      return;
     }
+    // Redirect admins away from agency dashboard
+    const checkAdmin = async () => {
+      const { data } = await supabase.rpc('has_role', { _user_id: user.id, _role: 'admin' });
+      if (data) navigate('/admin', { replace: true });
+    };
+    checkAdmin();
   }, [authLoading, user, navigate]);
 
   const fetchData = async () => {
