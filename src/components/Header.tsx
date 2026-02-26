@@ -1,14 +1,16 @@
-import { Menu, X, LogOut } from "lucide-react";
+import { Menu, X, LogOut, Shield } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
+import { useUserRole } from "@/hooks/useUserRole";
 import zuvioLogo from "@/assets/zuvio-logo.png";
 
 const Header = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const navigate = useNavigate();
   const { user, loading, signOut } = useAuth();
+  const { isAdmin } = useUserRole();
 
   const handleSignOut = async () => {
     await signOut();
@@ -61,9 +63,17 @@ const Header = () => {
           <div className="hidden md:flex items-center gap-3">
             {!loading && user ? (
               <>
-                <Button variant="ghost" size="sm" onClick={() => navigate('/dashboard')}>
-                  Dashboard
-                </Button>
+                {isAdmin && (
+                  <Button variant="ghost" size="sm" onClick={() => navigate('/admin')}>
+                    <Shield className="h-4 w-4 mr-1" />
+                    Admin
+                  </Button>
+                )}
+                {!isAdmin && (
+                  <Button variant="ghost" size="sm" onClick={() => navigate('/dashboard')}>
+                    Dashboard
+                  </Button>
+                )}
                 <Button variant="ghost" size="sm" onClick={handleSignOut}>
                   <LogOut className="h-4 w-4 mr-1" />
                   Sign Out
@@ -115,9 +125,17 @@ const Header = () => {
               <div className="flex gap-3 pt-4 border-t border-border/30">
                 {!loading && user ? (
                   <>
-                    <Button variant="ghost" size="sm" className="flex-1" onClick={() => { navigate('/dashboard'); setMobileMenuOpen(false); }}>
-                      Dashboard
-                    </Button>
+                    {isAdmin && (
+                      <Button variant="ghost" size="sm" className="flex-1" onClick={() => { navigate('/admin'); setMobileMenuOpen(false); }}>
+                        <Shield className="h-4 w-4 mr-1" />
+                        Admin
+                      </Button>
+                    )}
+                    {!isAdmin && (
+                      <Button variant="ghost" size="sm" className="flex-1" onClick={() => { navigate('/dashboard'); setMobileMenuOpen(false); }}>
+                        Dashboard
+                      </Button>
+                    )}
                     <Button variant="ghost" size="sm" className="flex-1" onClick={handleSignOut}>
                       <LogOut className="h-4 w-4 mr-1" />
                       Sign Out
