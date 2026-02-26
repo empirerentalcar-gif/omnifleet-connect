@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Building2, CheckCircle, Clock, XCircle, ArrowRight } from 'lucide-react';
+import { Building2, CheckCircle, Clock, XCircle, ArrowRight, KeyRound } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAdmin } from '@/hooks/useAdmin';
 import { Button } from '@/components/ui/button';
@@ -103,6 +103,11 @@ const AdminDashboard = () => {
             <p className="text-sm text-muted-foreground">Zuvio Admin Dashboard</p>
           </div>
           <div className="flex gap-2">
+            <Link to="/admin/invite-codes">
+              <Button variant="outline" size="sm">
+                <KeyRound className="mr-2 h-4 w-4" /> Manage Invite Codes
+              </Button>
+            </Link>
             <Link to="/admin/agencies">
               <Button variant="outline" size="sm">
                 Manage Agencies <ArrowRight className="ml-2 h-4 w-4" />
