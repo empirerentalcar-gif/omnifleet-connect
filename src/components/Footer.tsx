@@ -62,7 +62,7 @@ const Footer = () => {
               </li>
               <li className="flex items-center gap-3 text-muted-foreground">
                 <Phone className="h-4 w-4 text-primary" />
-                <span>1-800-ZUVIO</span>
+                <span>(725) 239-2300</span>
               </li>
             </ul>
           </div>
