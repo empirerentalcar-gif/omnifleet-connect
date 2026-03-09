@@ -142,9 +142,28 @@ const SignUp = () => {
       <div className="w-full max-w-md space-y-8">
         <div className="text-center">
           <h1 className="text-2xl font-bold text-foreground">Create Account</h1>
-          <p className="mt-2 text-sm text-muted-foreground">
-            Join the Zuvio network
-          </p>
+          {foundingCount !== null && foundingCount < 50 ? (
+            <div className="mt-3 space-y-2">
+              <div className="flex items-center justify-center gap-2">
+                <Crown className="h-5 w-5 text-amber-500" />
+                <span className="font-semibold text-amber-600">Founding Member Program</span>
+              </div>
+              <p className="text-sm text-muted-foreground">
+                First 2 months FREE — Limited to 50 agencies
+              </p>
+              <Badge variant="secondary" className="text-sm">
+                {50 - foundingCount} spots remaining
+              </Badge>
+            </div>
+          ) : foundingCount !== null ? (
+            <p className="mt-2 text-sm text-muted-foreground">
+              Join the Zuvio network
+            </p>
+          ) : (
+            <p className="mt-2 text-sm text-muted-foreground">
+              Join the Zuvio network
+            </p>
+          )}
         </div>
 
         <form onSubmit={handleSignUp} className="space-y-4">
