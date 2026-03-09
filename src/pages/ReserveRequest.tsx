@@ -162,6 +162,20 @@ const ReserveRequest = () => {
               </div>
             </div>
 
+            {/* Additional Notes */}
+            <div>
+              <label className="block text-xs font-medium text-muted-foreground mb-2 uppercase tracking-wider">Additional Notes <span className="text-muted-foreground/60">(optional)</span></label>
+              <textarea
+                placeholder="Any special requests, preferences, or questions..."
+                value={notes}
+                onChange={(e) => setNotes(e.target.value)}
+                maxLength={500}
+                rows={3}
+                className="w-full bg-secondary/50 border border-border rounded-xl px-4 py-3.5 text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all resize-none"
+              />
+              <p className="text-xs text-muted-foreground/60 mt-1 text-right">{notes.length}/500</p>
+            </div>
+
             {/* Cancellation Notice */}
             <div className="flex items-start gap-3 p-4 rounded-xl bg-destructive/5 border border-destructive/20">
               <AlertCircle className="h-5 w-5 text-destructive shrink-0 mt-0.5" />
