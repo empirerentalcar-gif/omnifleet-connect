@@ -49,6 +49,7 @@ const ReserveRequest = () => {
         pickup_date: pickupDate,
         dropoff_date: dropoffDate,
         vehicle_type: vehicleType,
+        notes,
       });
 
       if (!parsed.success) {
