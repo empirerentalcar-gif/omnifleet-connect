@@ -486,6 +486,35 @@ const AdminAgencies = () => {
                             )}
                           </TableCell>
                           <TableCell>
+                            {editingId === agency.id ? (
+                              <Select
+                                value={
+                                  (editData.owner_user_id as string | undefined) ?? OWNER_UNASSIGNED
+                                }
+                                onValueChange={(v) =>
+                                  setEditData({ ...editData, owner_user_id: v })
+                                }
+                              >
+                                <SelectTrigger className="h-8 w-56">
+                                  <SelectValue placeholder="Unassigned" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                  <SelectItem value={OWNER_UNASSIGNED}>Unassigned</SelectItem>
+                                  {profileOptions.map((p) => (
+                                    <SelectItem key={p.user_id} value={p.user_id}>
+                                      {p.business_name} — {p.contact_email}
+                                    </SelectItem>
+                                  ))}
+                                </SelectContent>
+                              </Select>
+                            ) : agency.owner_user_id ? (
+                              profilesByUserId.get(agency.owner_user_id)?.business_name ||
+                              `${agency.owner_user_id.slice(0, 8)}…`
+                            ) : (
+                              '—'
+                            )}
+                          </TableCell>
+                          <TableCell>
                             <Switch
                               checked={agency.approved}
                               onCheckedChange={(v) => handleToggle(agency, 'approved', v)}
