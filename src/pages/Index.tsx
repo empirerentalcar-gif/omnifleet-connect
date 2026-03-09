@@ -5,7 +5,7 @@ import Comparison from "@/components/Comparison";
 import PopularDestinations from "@/components/PopularDestinations";
 import OwnerCTA from "@/components/OwnerCTA";
 import TrustBadges from "@/components/TrustBadges";
-import OwnerFAQ from "@/components/OwnerFAQ";
+import AgencyCTA from "@/components/AgencyCTA";
 import Footer from "@/components/Footer";
 import SEO from "@/components/SEO";
 
