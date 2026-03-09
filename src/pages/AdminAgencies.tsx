@@ -15,6 +15,7 @@ import {
   MessageSquare,
   Send,
   AlertTriangle,
+  UserPlus,
 } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { Badge } from '@/components/ui/badge';
