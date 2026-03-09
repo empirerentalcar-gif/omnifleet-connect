@@ -440,7 +440,19 @@ const AdminAgencies = () => {
                                 className="h-8 w-40"
                               />
                             ) : (
-                              agency.agency_name
+                              <div className="flex items-center gap-2">
+                                {agency.agency_name}
+                                {agency.approved && !agency.owner_user_id && (
+                                  <Badge
+                                    variant="destructive"
+                                    className="flex items-center gap-1 text-xs whitespace-nowrap"
+                                    title="Approved but no owner assigned — vehicles won't appear in search"
+                                  >
+                                    <AlertTriangle className="h-3 w-3" />
+                                    No Owner
+                                  </Badge>
+                                )}
+                              </div>
                             )}
                           </TableCell>
                           <TableCell>
