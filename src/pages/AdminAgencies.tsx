@@ -89,6 +89,8 @@ type ProfileOption = {
 type SortKey = 'agency_name' | 'city' | 'approved' | 'active' | 'created_at';
 type SortDir = 'asc' | 'desc';
 
+const OWNER_UNASSIGNED = '__unassigned__';
+
 const AdminAgencies = () => {
   const { isAdmin, loading: adminLoading } = useAdmin();
   const { user } = useAuth();
