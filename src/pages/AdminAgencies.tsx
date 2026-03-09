@@ -245,14 +245,19 @@ const AdminAgencies = () => {
       city: agency.city,
       state: agency.state,
       zip: agency.zip,
+      owner_user_id: agency.owner_user_id ?? OWNER_UNASSIGNED,
     });
   };
 
   const saveEdit = async () => {
     if (!editingId) return;
+
+    const payload: Record<string, unknown> = { ...editData };
+    if (payload.owner_user_id === OWNER_UNASSIGNED) payload.owner_user_id = null;
+
     const { error } = await supabase
       .from('agencies')
-      .update(editData)
+      .update(payload)
       .eq('id', editingId);
 
     if (error) {
