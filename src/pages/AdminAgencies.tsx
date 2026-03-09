@@ -500,6 +500,7 @@ const AdminAgencies = () => {
     let matchesTrial = true;
     if (trialFilter === 'trial') matchesTrial = a.subscription_status === 'trial';
     else if (trialFilter === 'active') matchesTrial = a.subscription_status === 'active';
+    else if (trialFilter === 'payment_required') matchesTrial = a.subscription_status === 'payment_required';
     else if (trialFilter === 'expired') matchesTrial = a.subscription_status === 'expired';
     else if (trialFilter === 'founding') matchesTrial = a.is_founding_member;
     return matchesSearch && matchesCity && matchesTrial;
