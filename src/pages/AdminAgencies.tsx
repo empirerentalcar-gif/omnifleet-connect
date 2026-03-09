@@ -85,6 +85,7 @@ interface Agency {
   trial_start_date: string | null;
   trial_end_date: string | null;
   is_founding_member: boolean;
+  founding_member_number: number | null;
   subscription_status: string;
 }
 
