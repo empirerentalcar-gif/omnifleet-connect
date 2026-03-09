@@ -14,8 +14,10 @@ import {
   Download,
   MessageSquare,
   Send,
+  AlertTriangle,
 } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
+import { Badge } from '@/components/ui/badge';
 import { useAdmin } from '@/hooks/useAdmin';
 import { useAuth } from '@/hooks/useAuth';
 import { Button } from '@/components/ui/button';
