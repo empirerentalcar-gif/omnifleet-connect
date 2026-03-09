@@ -568,10 +568,16 @@ const AdminAgencies = () => {
                                 </SelectContent>
                               </Select>
                             ) : agency.owner_user_id ? (
-                              profilesByUserId.get(agency.owner_user_id)?.business_name ||
-                              `${agency.owner_user_id.slice(0, 8)}…`
+                              <div className="flex items-center gap-2">
+                                <span>{profilesByUserId.get(agency.owner_user_id)?.business_name || `${agency.owner_user_id.slice(0, 8)}…`}</span>
+                                <Button size="sm" variant="ghost" className="h-6 px-2 text-xs" onClick={() => openAssignDialog(agency)}>
+                                  Change
+                                </Button>
+                              </div>
                             ) : (
-                              '—'
+                              <Button size="sm" variant="outline" className="h-7 gap-1 text-xs" onClick={() => openAssignDialog(agency)}>
+                                <UserPlus className="h-3 w-3" /> Assign
+                              </Button>
                             )}
                           </TableCell>
                           <TableCell>
