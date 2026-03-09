@@ -137,6 +137,24 @@ const OwnerDashboard = () => {
     if (profileData) {
       setProfile(profileData);
 
+      // Fetch trial info from agencies
+      const { data: agencyData } = await supabase
+        .from('agencies')
+        .select('subscription_status, trial_end_date, is_founding_member')
+        .eq('owner_user_id', user.id)
+        .single();
+
+      if (agencyData) {
+        const daysLeft = agencyData.trial_end_date
+          ? Math.ceil((new Date(agencyData.trial_end_date).getTime() - Date.now()) / (1000 * 60 * 60 * 24))
+          : null;
+        setTrialInfo({
+          status: agencyData.subscription_status || 'trial',
+          daysLeft,
+          isFoundingMember: agencyData.is_founding_member || false,
+        });
+      }
+
       const [resResult, vehResult] = await Promise.all([
         supabase
           .from("reservation_requests")
