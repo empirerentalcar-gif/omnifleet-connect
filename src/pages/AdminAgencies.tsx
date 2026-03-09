@@ -150,6 +150,7 @@ const AdminAgencies = () => {
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
   const [cityFilter, setCityFilter] = useState<string>('all');
+  const [trialFilter, setTrialFilter] = useState<string>('all');
 
   // Compute unique cities from agencies data
   const uniqueCities = useMemo(() => {
