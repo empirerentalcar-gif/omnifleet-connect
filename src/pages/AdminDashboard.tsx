@@ -23,6 +23,9 @@ interface Agency {
   active: boolean;
   created_at: string;
   owner_user_id: string | null;
+  is_founding_member: boolean;
+  subscription_status: string;
+  trial_end_date: string | null;
 }
 
 interface KPIs {
