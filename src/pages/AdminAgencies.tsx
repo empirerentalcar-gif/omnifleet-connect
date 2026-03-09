@@ -93,6 +93,11 @@ const AdminAgencies = () => {
   const { isAdmin, loading: adminLoading } = useAdmin();
   const { user } = useAuth();
   const [agencies, setAgencies] = useState<Agency[]>([]);
+  const [profileOptions, setProfileOptions] = useState<ProfileOption[]>([]);
+  const profilesByUserId = useMemo(() => {
+    return new Map(profileOptions.map((p) => [p.user_id, p] as const));
+  }, [profileOptions]);
+
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
   const [page, setPage] = useState(1);
