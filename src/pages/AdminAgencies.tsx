@@ -80,6 +80,12 @@ interface AgencyNote {
   created_at: string;
 }
 
+type ProfileOption = {
+  user_id: string;
+  business_name: string;
+  contact_email: string;
+};
+
 type SortKey = 'agency_name' | 'city' | 'approved' | 'active' | 'created_at';
 type SortDir = 'asc' | 'desc';
 
