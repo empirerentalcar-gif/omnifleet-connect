@@ -20,6 +20,7 @@ const reservationSchema = z.object({
   pickup_date: z.string().min(1, "Pickup date is required"),
   dropoff_date: z.string().min(1, "Drop-off date is required"),
   vehicle_type: z.enum(vehicleTypes, { errorMap: () => ({ message: "Select a vehicle type" }) }),
+  notes: z.string().max(500).optional().transform(v => v?.trim() || null),
 }).refine(d => d.dropoff_date > d.pickup_date, { message: "Drop-off must be after pickup", path: ["dropoff_date"] });
 
 const ReserveRequest = () => {
