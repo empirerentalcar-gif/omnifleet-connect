@@ -411,7 +411,7 @@ const OwnerDashboard = () => {
             )}
           </section>
 
-          {/* All Reservations */}
+          {/* All Reservations Table */}
           <section className="mb-12">
             <h2 className="text-xl font-bold mb-4">All Reservations</h2>
             {reservations.length === 0 ? (
@@ -419,25 +419,125 @@ const OwnerDashboard = () => {
                 No reservations yet. They'll appear here when customers submit requests.
               </div>
             ) : (
-              <div className="space-y-3">
-                {reservations.map((r) => (
-                  <ReservationCard
-                    key={r.id}
-                    reservation={r}
-                    updatingId={updatingId}
-                    onApprove={
-                      r.status === "pending" ? () => updateStatus(r.id, "approved") : undefined
-                    }
-                    onDecline={
-                      r.status === "pending" ? () => updateStatus(r.id, "declined") : undefined
-                    }
-                    onMarkReady={
-                      r.status === "approved"
-                        ? () => updateStatus(r.id, "vehicle_ready")
-                        : undefined
-                    }
-                  />
-                ))}
+              <div className="glass-card rounded-xl overflow-hidden">
+                {/* Status filter tabs */}
+                <div className="flex gap-2 p-4 border-b border-border/50 overflow-x-auto">
+                  {[
+                    { key: "all", label: "All", count: reservations.length },
+                    { key: "pending", label: "Pending", count: reservations.filter(r => r.status === "pending").length },
+                    { key: "approved", label: "Approved", count: reservations.filter(r => r.status === "approved").length },
+                    { key: "vehicle_ready", label: "Ready", count: reservations.filter(r => r.status === "vehicle_ready").length },
+                    { key: "declined", label: "Declined", count: reservations.filter(r => r.status === "declined").length },
+                  ].map((tab) => (
+                    <button
+                      key={tab.key}
+                      onClick={() => setStatusFilter(tab.key)}
+                      className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors whitespace-nowrap ${
+                        statusFilter === tab.key
+                          ? "bg-primary text-primary-foreground"
+                          : "bg-secondary/50 text-muted-foreground hover:bg-secondary"
+                      }`}
+                    >
+                      {tab.label} ({tab.count})
+                    </button>
+                  ))}
+                </div>
+                
+                {/* Table */}
+                <div className="overflow-x-auto">
+                  <table className="w-full text-sm">
+                    <thead className="bg-secondary/30">
+                      <tr>
+                        <th className="px-4 py-3 text-left font-medium text-muted-foreground">Customer</th>
+                        <th className="px-4 py-3 text-left font-medium text-muted-foreground">Vehicle</th>
+                        <th className="px-4 py-3 text-left font-medium text-muted-foreground">Dates</th>
+                        <th className="px-4 py-3 text-left font-medium text-muted-foreground">Status</th>
+                        <th className="px-4 py-3 text-left font-medium text-muted-foreground">Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-border/50">
+                      {reservations
+                        .filter(r => statusFilter === "all" || r.status === statusFilter)
+                        .map((r) => (
+                        <tr key={r.id} className="hover:bg-secondary/20 transition-colors">
+                          <td className="px-4 py-3">
+                            <div>
+                              <p className="font-medium">{r.customer_name}</p>
+                              <p className="text-xs text-muted-foreground">📞 {r.customer_phone}</p>
+                              {r.customer_email && (
+                                <p className="text-xs text-muted-foreground">✉ {r.customer_email}</p>
+                              )}
+                            </div>
+                          </td>
+                          <td className="px-4 py-3">
+                            <p className="font-medium">{r.vehicle_type}</p>
+                            {r.notes && (
+                              <p className="text-xs text-muted-foreground italic max-w-[200px] truncate" title={r.notes}>
+                                "{r.notes}"
+                              </p>
+                            )}
+                          </td>
+                          <td className="px-4 py-3">
+                            <p className="text-xs">{r.pickup_date}</p>
+                            <p className="text-xs text-muted-foreground">to {r.dropoff_date}</p>
+                          </td>
+                          <td className="px-4 py-3">
+                            <Badge className={statusColors[r.status] || "bg-secondary text-muted-foreground"}>
+                              {r.status.replace("_", " ")}
+                            </Badge>
+                          </td>
+                          <td className="px-4 py-3">
+                            <div className="flex gap-1">
+                              {r.status === "pending" && (
+                                <>
+                                  <Button
+                                    size="sm"
+                                    variant="ghost"
+                                    className="h-8 px-2 text-primary hover:text-primary"
+                                    onClick={() => updateStatus(r.id, "approved")}
+                                    disabled={updatingId === r.id}
+                                  >
+                                    <CheckCircle2 className="h-4 w-4" />
+                                  </Button>
+                                  <Button
+                                    size="sm"
+                                    variant="ghost"
+                                    className="h-8 px-2 text-destructive hover:text-destructive"
+                                    onClick={() => updateStatus(r.id, "declined")}
+                                    disabled={updatingId === r.id}
+                                  >
+                                    <XCircle className="h-4 w-4" />
+                                  </Button>
+                                </>
+                              )}
+                              {r.status === "approved" && (
+                                <Button
+                                  size="sm"
+                                  variant="ghost"
+                                  className="h-8 px-2 text-accent hover:text-accent"
+                                  onClick={() => updateStatus(r.id, "vehicle_ready")}
+                                  disabled={updatingId === r.id}
+                                >
+                                  <Car className="h-4 w-4 mr-1" />
+                                  Ready
+                                </Button>
+                              )}
+                              {(r.status === "vehicle_ready" || r.status === "declined") && (
+                                <span className="text-xs text-muted-foreground">—</span>
+                              )}
+                            </div>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+                
+                {reservations.filter(r => statusFilter === "all" || r.status === statusFilter).length === 0 && (
+                  <div className="p-8 text-center text-muted-foreground">
+                    No {statusFilter === "all" ? "" : statusFilter.replace("_", " ")} reservations found.
+                  </div>
+                )}
               </div>
             )}
           </section>
