@@ -1,23 +1,25 @@
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, MapPin, Building2 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import CitySelector from "@/components/CitySelector";
 
 const Hero = () => {
   const navigate = useNavigate();
+  const [city, setCity] = useState("");
 
   return (
     <section className="relative min-h-screen flex flex-col justify-center pt-20 pb-12 overflow-hidden">
-      {/* Background Effects */}
       <div className="absolute inset-0 bg-gradient-hero" />
       <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-primary/10 rounded-full blur-3xl animate-pulse-glow" />
       <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-accent/10 rounded-full blur-3xl animate-pulse-glow delay-500" />
-      
-      <div 
+
+      <div
         className="absolute inset-0 opacity-5"
         style={{
           backgroundImage: `linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px),
                            linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px)`,
-          backgroundSize: '50px 50px'
+          backgroundSize: '50px 50px',
         }}
       />
 
@@ -27,7 +29,7 @@ const Hero = () => {
             <span className="w-2 h-2 bg-accent rounded-full animate-pulse" />
             <span className="text-sm text-muted-foreground">Connecting renters to independent agencies nationwide</span>
           </div>
-          
+
           <h1 className="font-display text-4xl md:text-6xl lg:text-7xl font-bold mb-6 leading-tight">
             Independent Car Rentals
             <br />
@@ -38,22 +40,28 @@ const Hero = () => {
             Find Cash-Friendly Local Rental Agencies
           </h2>
 
-          <h2 className="text-base md:text-lg text-accent max-w-2xl mx-auto mb-10 font-medium">
+          <h2 className="text-base md:text-lg text-accent max-w-2xl mx-auto mb-8 font-medium">
             Grow Your Rental Business with ZUVIO
           </h2>
 
-          {/* Dual CTAs */}
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+          <div className="max-w-xl mx-auto glass-card rounded-2xl p-5 mb-8 border border-border/60 text-left">
+            <label className="block text-xs font-medium text-muted-foreground mb-2 uppercase tracking-wider">
+              Choose your destination city
+            </label>
+            <CitySelector value={city} onChange={setCity} placeholder="Select a major city or type your own" />
             <Button
               variant="hero"
               size="lg"
-              className="group text-base"
-              onClick={() => navigate("/search")}
+              className="w-full mt-3 group text-base"
+              onClick={() => navigate(`/search${city.trim() ? `?location=${encodeURIComponent(city.trim())}` : ''}`)}
             >
               <MapPin className="h-5 w-5" />
-              <span>Find a Rental Near You</span>
+              <span>Find Rentals in This City</span>
               <ArrowRight className="h-5 w-5 group-hover:translate-x-1 transition-transform" />
             </Button>
+          </div>
+
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button
               variant="outline"
               size="lg"
