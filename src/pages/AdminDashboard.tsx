@@ -157,6 +157,7 @@ const AdminDashboard = () => {
     { label: 'Pending Approvals', value: kpis.pending, icon: Clock, color: 'text-amber-500' },
     { label: 'Active & Approved', value: kpis.activeApproved, icon: CheckCircle, color: 'text-emerald-500' },
     { label: 'Inactive', value: kpis.inactive, icon: XCircle, color: 'text-destructive' },
+    { label: 'Total Vehicles Listed', value: kpis.totalVehicles, icon: Car, color: 'text-primary' },
     { label: 'Cities w/ Active Agencies', value: citiesWithActiveAgencies, icon: MapPin, color: 'text-primary' },
   ];
 
