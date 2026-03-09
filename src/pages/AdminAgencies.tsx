@@ -193,10 +193,21 @@ const AdminAgencies = () => {
   };
 
   useEffect(() => {
-    if (isAdmin) fetchAgencies();
+    if (!isAdmin) return;
+    fetchAgencies();
+    fetchProfiles();
   }, [isAdmin]);
 
   const handleToggle = async (agency: Agency, field: 'approved' | 'active', value: boolean) => {
+    if (field === 'approved' && value && !agency.owner_user_id) {
+      toast({
+        title: 'Assign an owner first',
+        description: 'Set the agency owner (account) before approving so its vehicles can appear in search.',
+        variant: 'destructive',
+      });
+      return;
+    }
+
     if (field === 'active' && !value) {
       setDeactivateTarget(agency);
       return;
