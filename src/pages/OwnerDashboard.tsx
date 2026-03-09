@@ -631,9 +631,20 @@ const OwnerDashboard = () => {
                   </table>
                 </div>
                 
-                {reservations.filter(r => statusFilter === "all" || r.status === statusFilter).length === 0 && (
+                {reservations.filter(r => {
+                  if (statusFilter !== "all" && r.status !== statusFilter) return false;
+                  const pickupDate = new Date(r.pickup_date);
+                  if (dateFrom && pickupDate < dateFrom) return false;
+                  if (dateTo) {
+                    const toEndOfDay = new Date(dateTo);
+                    toEndOfDay.setHours(23, 59, 59, 999);
+                    if (pickupDate > toEndOfDay) return false;
+                  }
+                  return true;
+                }).length === 0 && (
                   <div className="p-8 text-center text-muted-foreground">
-                    No {statusFilter === "all" ? "" : statusFilter.replace("_", " ")} reservations found.
+                    No {statusFilter === "all" ? "" : statusFilter.replace("_", " ")} reservations found
+                    {(dateFrom || dateTo) && " in the selected date range"}.
                   </div>
                 )}
               </div>
