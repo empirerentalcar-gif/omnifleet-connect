@@ -82,6 +82,10 @@ interface Agency {
   active: boolean;
   created_at: string;
   owner_user_id: string | null;
+  trial_start_date: string | null;
+  trial_end_date: string | null;
+  is_founding_member: boolean;
+  subscription_status: string;
 }
 
 interface AgencyNote {
