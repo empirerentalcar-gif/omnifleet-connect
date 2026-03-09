@@ -1,6 +1,20 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowLeft, Search, Pencil, Save, X, ChevronLeft, ChevronRight, ArrowUp, ArrowDown, ArrowUpDown, Download, MessageSquare, Send } from 'lucide-react';
+import {
+  ArrowLeft,
+  Search,
+  Pencil,
+  Save,
+  X,
+  ChevronLeft,
+  ChevronRight,
+  ArrowUp,
+  ArrowDown,
+  ArrowUpDown,
+  Download,
+  MessageSquare,
+  Send,
+} from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAdmin } from '@/hooks/useAdmin';
 import { useAuth } from '@/hooks/useAuth';
@@ -8,16 +22,36 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Switch } from '@/components/ui/switch';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import { Skeleton } from '@/components/ui/skeleton';
 import {
-  Table, TableBody, TableCell, TableHead, TableHeader, TableRow,
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
 } from '@/components/ui/table';
 import {
-  AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
-  AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle,
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
 import {
-  Collapsible, CollapsibleContent, CollapsibleTrigger,
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
 } from '@/components/ui/collapsible';
 import { toast } from '@/hooks/use-toast';
 import { format } from 'date-fns';
@@ -46,13 +80,26 @@ interface AgencyNote {
   created_at: string;
 }
 
+type ProfileOption = {
+  user_id: string;
+  business_name: string;
+  contact_email: string;
+};
+
 type SortKey = 'agency_name' | 'city' | 'approved' | 'active' | 'created_at';
 type SortDir = 'asc' | 'desc';
+
+const OWNER_UNASSIGNED = '__unassigned__';
 
 const AdminAgencies = () => {
   const { isAdmin, loading: adminLoading } = useAdmin();
   const { user } = useAuth();
   const [agencies, setAgencies] = useState<Agency[]>([]);
+  const [profileOptions, setProfileOptions] = useState<ProfileOption[]>([]);
+  const profilesByUserId = useMemo(() => {
+    return new Map(profileOptions.map((p) => [p.user_id, p] as const));
+  }, [profileOptions]);
+
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
   const [page, setPage] = useState(1);
@@ -81,6 +128,20 @@ const AdminAgencies = () => {
     }
     setAgencies(data || []);
     setLoading(false);
+  };
+
+  const fetchProfiles = async () => {
+    const { data, error } = await supabase
+      .from('profiles')
+      .select('user_id, business_name, contact_email')
+      .order('business_name', { ascending: true });
+
+    if (error) {
+      toast({ title: 'Error', description: error.message, variant: 'destructive' });
+      return;
+    }
+
+    setProfileOptions((data || []) as ProfileOption[]);
   };
 
   const fetchNotesForAgency = async (agencyId: string) => {
@@ -134,10 +195,21 @@ const AdminAgencies = () => {
   };
 
   useEffect(() => {
-    if (isAdmin) fetchAgencies();
+    if (!isAdmin) return;
+    fetchAgencies();
+    fetchProfiles();
   }, [isAdmin]);
 
   const handleToggle = async (agency: Agency, field: 'approved' | 'active', value: boolean) => {
+    if (field === 'approved' && value && !agency.owner_user_id) {
+      toast({
+        title: 'Assign an owner first',
+        description: 'Set the agency owner (account) before approving so its vehicles can appear in search.',
+        variant: 'destructive',
+      });
+      return;
+    }
+
     if (field === 'active' && !value) {
       setDeactivateTarget(agency);
       return;
@@ -175,14 +247,19 @@ const AdminAgencies = () => {
       city: agency.city,
       state: agency.state,
       zip: agency.zip,
+      owner_user_id: agency.owner_user_id ?? OWNER_UNASSIGNED,
     });
   };
 
   const saveEdit = async () => {
     if (!editingId) return;
+
+    const payload: Record<string, unknown> = { ...editData };
+    if (payload.owner_user_id === OWNER_UNASSIGNED) payload.owner_user_id = null;
+
     const { error } = await supabase
       .from('agencies')
-      .update(editData)
+      .update(payload)
       .eq('id', editingId);
 
     if (error) {
@@ -313,14 +390,30 @@ const AdminAgencies = () => {
                   <TableHead>State</TableHead>
                   <TableHead>Phone</TableHead>
                   <TableHead>Email</TableHead>
-                  <TableHead className="cursor-pointer select-none" onClick={() => toggleSort('approved')}>
-                    <span className="inline-flex items-center">Approved <SortIcon column="approved" /></span>
+                  <TableHead>Owner</TableHead>
+                  <TableHead
+                    className="cursor-pointer select-none"
+                    onClick={() => toggleSort('approved')}
+                  >
+                    <span className="inline-flex items-center">
+                      Approved <SortIcon column="approved" />
+                    </span>
                   </TableHead>
-                  <TableHead className="cursor-pointer select-none" onClick={() => toggleSort('active')}>
-                    <span className="inline-flex items-center">Active <SortIcon column="active" /></span>
+                  <TableHead
+                    className="cursor-pointer select-none"
+                    onClick={() => toggleSort('active')}
+                  >
+                    <span className="inline-flex items-center">
+                      Active <SortIcon column="active" />
+                    </span>
                   </TableHead>
-                  <TableHead className="cursor-pointer select-none" onClick={() => toggleSort('created_at')}>
-                    <span className="inline-flex items-center">Created <SortIcon column="created_at" /></span>
+                  <TableHead
+                    className="cursor-pointer select-none"
+                    onClick={() => toggleSort('created_at')}
+                  >
+                    <span className="inline-flex items-center">
+                      Created <SortIcon column="created_at" />
+                    </span>
                   </TableHead>
                   <TableHead className="text-right">Actions</TableHead>
                 </TableRow>
@@ -328,7 +421,7 @@ const AdminAgencies = () => {
               <TableBody>
                 {sorted.length === 0 ? (
                   <TableRow>
-                    <TableCell colSpan={9} className="text-center py-8 text-muted-foreground">
+                    <TableCell colSpan={10} className="text-center py-8 text-muted-foreground">
                       No agencies found.
                     </TableCell>
                   </TableRow>
@@ -393,6 +486,35 @@ const AdminAgencies = () => {
                             )}
                           </TableCell>
                           <TableCell>
+                            {editingId === agency.id ? (
+                              <Select
+                                value={
+                                  (editData.owner_user_id as string | undefined) ?? OWNER_UNASSIGNED
+                                }
+                                onValueChange={(v) =>
+                                  setEditData({ ...editData, owner_user_id: v })
+                                }
+                              >
+                                <SelectTrigger className="h-8 w-56">
+                                  <SelectValue placeholder="Unassigned" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                  <SelectItem value={OWNER_UNASSIGNED}>Unassigned</SelectItem>
+                                  {profileOptions.map((p) => (
+                                    <SelectItem key={p.user_id} value={p.user_id}>
+                                      {p.business_name} — {p.contact_email}
+                                    </SelectItem>
+                                  ))}
+                                </SelectContent>
+                              </Select>
+                            ) : agency.owner_user_id ? (
+                              profilesByUserId.get(agency.owner_user_id)?.business_name ||
+                              `${agency.owner_user_id.slice(0, 8)}…`
+                            ) : (
+                              '—'
+                            )}
+                          </TableCell>
+                          <TableCell>
                             <Switch
                               checked={agency.approved}
                               onCheckedChange={(v) => handleToggle(agency, 'approved', v)}
@@ -438,7 +560,7 @@ const AdminAgencies = () => {
                         </TableRow>
                         <CollapsibleContent asChild>
                           <tr>
-                            <td colSpan={9} className="bg-muted/30 px-6 py-4 border-b">
+                            <td colSpan={10} className="bg-muted/30 px-6 py-4 border-b">
                               <div className="space-y-4 max-w-2xl">
                                 <h4 className="text-sm font-semibold text-foreground">Internal Notes</h4>
 
