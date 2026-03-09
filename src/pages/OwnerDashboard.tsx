@@ -103,6 +103,7 @@ const OwnerDashboard = () => {
   const [loading, setLoading] = useState(true);
   const [trialInfo, setTrialInfo] = useState<{ status: string; daysLeft: number | null; isFoundingMember: boolean; foundingNumber: number | null } | null>(null);
   const [updatingId, setUpdatingId] = useState<string | null>(null);
+  const [statusFilter, setStatusFilter] = useState("all");
 
   // Vehicle form state
   const [vehicleDialogOpen, setVehicleDialogOpen] = useState(false);
