@@ -140,7 +140,7 @@ const OwnerDashboard = () => {
       // Fetch trial info from agencies
       const { data: agencyData } = await supabase
         .from('agencies')
-        .select('subscription_status, trial_end_date, is_founding_member')
+        .select('subscription_status, trial_end_date, is_founding_member, founding_member_number')
         .eq('owner_user_id', user.id)
         .single();
 
@@ -152,6 +152,7 @@ const OwnerDashboard = () => {
           status: agencyData.subscription_status || 'trial',
           daysLeft,
           isFoundingMember: agencyData.is_founding_member || false,
+          foundingNumber: agencyData.founding_member_number || null,
         });
       }
 
