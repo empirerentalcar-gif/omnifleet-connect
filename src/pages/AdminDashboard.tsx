@@ -34,6 +34,8 @@ interface KPIs {
   activeApproved: number;
   inactive: number;
   totalVehicles: number;
+  foundingMembers: number;
+  activeTrial: number;
 }
 
 const AdminDashboard = () => {
