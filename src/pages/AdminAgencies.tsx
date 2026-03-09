@@ -816,7 +816,7 @@ const AdminAgencies = () => {
                         </TableRow>
                         <CollapsibleContent asChild>
                           <tr>
-                            <td colSpan={10} className="bg-muted/30 px-6 py-4 border-b">
+                            <td colSpan={11} className="bg-muted/30 px-6 py-4 border-b">
                               <div className="space-y-4 max-w-2xl">
                                 <h4 className="text-sm font-semibold text-foreground">Internal Notes</h4>
 
