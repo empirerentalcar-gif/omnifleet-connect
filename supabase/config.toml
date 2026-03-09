@@ -1,4 +1,4 @@
 project_id = "mtrzzdrobjjxppunqtaa"
 
 [functions.notify-new-agency]
-verify_jwt = false
+verify_jwt = true
