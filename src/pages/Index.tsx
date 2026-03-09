@@ -2,6 +2,7 @@ import Header from "@/components/Header";
 import Hero from "@/components/Hero";
 import HowItWorks from "@/components/HowItWorks";
 import Comparison from "@/components/Comparison";
+import PopularDestinations from "@/components/PopularDestinations";
 import OwnerCTA from "@/components/OwnerCTA";
 import TrustBadges from "@/components/TrustBadges";
 import AgencyCTA from "@/components/AgencyCTA";
@@ -30,6 +31,7 @@ const Index = () => {
         }
       }) }} />
       <Hero />
+      <PopularDestinations />
       <HowItWorks />
       <Comparison />
       <OwnerCTA />

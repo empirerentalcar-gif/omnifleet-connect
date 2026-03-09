@@ -7,6 +7,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import SEO from "@/components/SEO";
 import { supabase } from "@/integrations/supabase/client";
+import CitySelector from "@/components/CitySelector";
 
 const vehicleTypes = ["All", "Sedan", "SUV", "Truck", "Van", "Compact", "Luxury"];
 
@@ -51,7 +52,6 @@ const SearchResults = () => {
         return;
       }
 
-      // Group vehicles by profile_id to build agency listings
       const agencyMap = new Map<string, Agency>();
 
       for (const v of vehicles) {
@@ -111,27 +111,18 @@ const SearchResults = () => {
 
       <main className="pt-24 pb-16">
         <div className="container mx-auto px-4">
-          {/* Visible h1 as immediate LCP candidate */}
-          <h1 className="font-display text-3xl md:text-4xl font-bold mb-6">
-            Search Car Rentals
-          </h1>
-          {/* Search Bar */}
+          <h1 className="font-display text-3xl md:text-4xl font-bold mb-6">Search Car Rentals</h1>
           <div className="glass-card glow-border rounded-2xl p-6 mb-8">
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
               <div>
                 <label className="block text-xs font-medium text-muted-foreground mb-2 uppercase tracking-wider">
                   City / ZIP Code
                 </label>
-                <div className="relative">
-                  <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-primary" />
-                  <input
-                    type="text"
-                    placeholder="Enter city or ZIP..."
-                    value={location}
-                    onChange={(e) => setLocation(e.target.value)}
-                    className="w-full bg-secondary/50 border border-border rounded-xl pl-11 pr-4 py-3.5 text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all"
-                  />
-                </div>
+                <CitySelector
+                  value={location}
+                  onChange={setLocation}
+                  placeholder="Select a city or enter custom"
+                />
               </div>
               <div>
                 <label className="block text-xs font-medium text-muted-foreground mb-2 uppercase tracking-wider">
@@ -168,7 +159,6 @@ const SearchResults = () => {
               </Button>
             </div>
 
-            {/* Filters */}
             <div className="mt-6 pt-6 border-t border-border/50 flex flex-wrap items-center gap-4">
               <div className="flex items-center gap-2">
                 <Filter className="h-4 w-4 text-muted-foreground" />
@@ -205,7 +195,6 @@ const SearchResults = () => {
             </div>
           </div>
 
-          {/* Results */}
           {loading ? (
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               {Array.from({ length: 4 }).map((_, i) => (
@@ -284,9 +273,7 @@ const SearchResults = () => {
 
                         <div className="flex items-baseline gap-1 mb-4">
                           <span className="text-sm text-muted-foreground">From</span>
-                          <span className="font-display text-2xl font-bold text-primary">
-                            ${agency.startingPrice}
-                          </span>
+                          <span className="font-display text-2xl font-bold text-primary">${agency.startingPrice}</span>
                           <span className="text-sm text-muted-foreground">/day</span>
                         </div>
 
@@ -316,7 +303,7 @@ const SearchResults = () => {
 
               {filtered.length === 0 && (
                 <div className="text-center py-16">
-                   <Car className="h-16 w-16 text-muted-foreground/30 mx-auto mb-4" />
+                  <Car className="h-16 w-16 text-muted-foreground/30 mx-auto mb-4" />
                   <p className="font-display text-xl font-bold mb-2">No agencies match your filters</p>
                   <p className="text-muted-foreground">Try adjusting your filters or search a different location.</p>
                 </div>
