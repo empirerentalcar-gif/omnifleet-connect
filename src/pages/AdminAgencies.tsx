@@ -15,6 +15,7 @@ import {
   MessageSquare,
   Send,
   AlertTriangle,
+  UserPlus,
 } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { Badge } from '@/components/ui/badge';
@@ -50,6 +51,14 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
 import {
   Collapsible,
   CollapsibleContent,
@@ -117,6 +126,43 @@ const AdminAgencies = () => {
   const [notesMap, setNotesMap] = useState<Record<string, AgencyNote[]>>({});
   const [newNoteText, setNewNoteText] = useState('');
   const [addingNote, setAddingNote] = useState(false);
+
+  // Assign-owner dialog state
+  const [assignTarget, setAssignTarget] = useState<Agency | null>(null);
+  const [assignSearch, setAssignSearch] = useState('');
+  const [assignSelected, setAssignSelected] = useState<ProfileOption | null>(null);
+  const [assigning, setAssigning] = useState(false);
+
+  const assignFilteredProfiles = useMemo(() => {
+    if (!assignSearch.trim()) return profileOptions.slice(0, 20);
+    const q = assignSearch.toLowerCase();
+    return profileOptions
+      .filter(p => p.business_name.toLowerCase().includes(q) || p.contact_email.toLowerCase().includes(q))
+      .slice(0, 20);
+  }, [profileOptions, assignSearch]);
+
+  const openAssignDialog = (agency: Agency) => {
+    setAssignTarget(agency);
+    setAssignSearch('');
+    setAssignSelected(null);
+  };
+
+  const confirmAssignOwner = async () => {
+    if (!assignTarget || !assignSelected) return;
+    setAssigning(true);
+    const { error } = await supabase.rpc('assign_agency_owner', {
+      _agency_id: assignTarget.id,
+      _owner_user_id: assignSelected.user_id,
+    });
+    if (error) {
+      toast({ title: 'Error assigning owner', description: error.message, variant: 'destructive' });
+    } else {
+      toast({ title: 'Owner assigned', description: `${assignSelected.business_name} is now the owner of ${assignTarget.agency_name}.` });
+      fetchAgencies();
+    }
+    setAssigning(false);
+    setAssignTarget(null);
+  };
 
   const fetchAgencies = async () => {
     const { data, error } = await supabase
@@ -522,10 +568,16 @@ const AdminAgencies = () => {
                                 </SelectContent>
                               </Select>
                             ) : agency.owner_user_id ? (
-                              profilesByUserId.get(agency.owner_user_id)?.business_name ||
-                              `${agency.owner_user_id.slice(0, 8)}…`
+                              <div className="flex items-center gap-2">
+                                <span>{profilesByUserId.get(agency.owner_user_id)?.business_name || `${agency.owner_user_id.slice(0, 8)}…`}</span>
+                                <Button size="sm" variant="ghost" className="h-6 px-2 text-xs" onClick={() => openAssignDialog(agency)}>
+                                  Change
+                                </Button>
+                              </div>
                             ) : (
-                              '—'
+                              <Button size="sm" variant="outline" className="h-7 gap-1 text-xs" onClick={() => openAssignDialog(agency)}>
+                                <UserPlus className="h-3 w-3" /> Assign
+                              </Button>
                             )}
                           </TableCell>
                           <TableCell>
@@ -669,6 +721,55 @@ const AdminAgencies = () => {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+
+      {/* Assign Owner Dialog */}
+      <Dialog open={!!assignTarget} onOpenChange={(open) => !open && setAssignTarget(null)}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>Assign Owner</DialogTitle>
+            <DialogDescription>
+              Search for a user profile to assign as the owner of <strong>{assignTarget?.agency_name}</strong>.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-3">
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              <Input
+                placeholder="Search by name or email..."
+                value={assignSearch}
+                onChange={(e) => setAssignSearch(e.target.value)}
+                className="pl-10"
+                autoFocus
+              />
+            </div>
+            <div className="max-h-56 overflow-y-auto rounded-md border">
+              {assignFilteredProfiles.length === 0 ? (
+                <p className="text-sm text-muted-foreground p-3 text-center">No profiles found.</p>
+              ) : (
+                assignFilteredProfiles.map((p) => (
+                  <button
+                    key={p.user_id}
+                    type="button"
+                    onClick={() => setAssignSelected(p)}
+                    className={`w-full text-left px-3 py-2 text-sm hover:bg-accent transition-colors ${
+                      assignSelected?.user_id === p.user_id ? 'bg-accent font-medium' : ''
+                    }`}
+                  >
+                    <div className="font-medium text-foreground">{p.business_name}</div>
+                    <div className="text-xs text-muted-foreground">{p.contact_email}</div>
+                  </button>
+                ))
+              )}
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setAssignTarget(null)}>Cancel</Button>
+            <Button onClick={confirmAssignOwner} disabled={!assignSelected || assigning}>
+              {assigning ? 'Assigning…' : 'Confirm'}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };

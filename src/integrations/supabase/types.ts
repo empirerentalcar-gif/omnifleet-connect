@@ -539,6 +539,10 @@ export type Database = {
       }
     }
     Functions: {
+      assign_agency_owner: {
+        Args: { _agency_id: string; _owner_user_id: string }
+        Returns: undefined
+      }
       bootstrap_first_admin: { Args: never; Returns: boolean }
       check_rate_limit: {
         Args: {
