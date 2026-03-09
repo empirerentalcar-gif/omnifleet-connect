@@ -779,11 +779,24 @@ const AdminAgencies = () => {
               )}
             </div>
           </div>
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setAssignTarget(null)}>Cancel</Button>
-            <Button onClick={confirmAssignOwner} disabled={!assignSelected || assigning}>
-              {assigning ? 'Assigning…' : 'Confirm'}
-            </Button>
+          <DialogFooter className="flex-col-reverse sm:flex-row sm:justify-between gap-2">
+            <div className="flex gap-2">
+              {assignTarget?.owner_user_id && (
+                <Button
+                  variant="destructive"
+                  onClick={confirmUnassignOwner}
+                  disabled={assigning}
+                >
+                  {assigning ? 'Removing…' : 'Remove Owner'}
+                </Button>
+              )}
+            </div>
+            <div className="flex gap-2">
+              <Button variant="outline" onClick={() => setAssignTarget(null)}>Cancel</Button>
+              <Button onClick={confirmAssignOwner} disabled={!assignSelected || assigning}>
+                {assigning ? 'Assigning…' : 'Confirm'}
+              </Button>
+            </div>
           </DialogFooter>
         </DialogContent>
       </Dialog>
