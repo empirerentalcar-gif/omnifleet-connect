@@ -1,6 +1,6 @@
 import { useEffect, useState, useMemo } from 'react';
 import { Link } from 'react-router-dom';
-import { Building2, CheckCircle, Clock, XCircle, ArrowRight, KeyRound, MapPin, Car, Crown } from 'lucide-react';
+import { Building2, CheckCircle, Clock, XCircle, ArrowRight, KeyRound, MapPin, Car, Crown, AlertTriangle } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAdmin } from '@/hooks/useAdmin';
 import { Button } from '@/components/ui/button';
