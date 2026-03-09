@@ -1,6 +1,6 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import { Link } from 'react-router-dom';
-import { Building2, CheckCircle, Clock, XCircle, ArrowRight, KeyRound } from 'lucide-react';
+import { Building2, CheckCircle, Clock, XCircle, ArrowRight, KeyRound, MapPin } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAdmin } from '@/hooks/useAdmin';
 import { Button } from '@/components/ui/button';
@@ -36,6 +36,24 @@ const AdminDashboard = () => {
   const [agencies, setAgencies] = useState<Agency[]>([]);
   const [kpis, setKPIs] = useState<KPIs>({ total: 0, pending: 0, activeApproved: 0, inactive: 0 });
   const [loading, setLoading] = useState(true);
+
+  // City breakdown
+  const cityBreakdown = useMemo(() => {
+    const map: Record<string, number> = {};
+    agencies.forEach((a) => {
+      const city = a.city || 'Unknown';
+      map[city] = (map[city] || 0) + 1;
+    });
+    return Object.entries(map).sort((a, b) => b[1] - a[1]);
+  }, [agencies]);
+
+  const citiesWithActiveAgencies = useMemo(() => {
+    const set = new Set<string>();
+    agencies.forEach((a) => {
+      if (a.approved && a.active && a.city) set.add(a.city);
+    });
+    return set.size;
+  }, [agencies]);
 
   const fetchData = async () => {
     const { data, error } = await supabase
@@ -92,6 +110,7 @@ const AdminDashboard = () => {
     { label: 'Pending Approvals', value: kpis.pending, icon: Clock, color: 'text-amber-500' },
     { label: 'Active & Approved', value: kpis.activeApproved, icon: CheckCircle, color: 'text-emerald-500' },
     { label: 'Inactive', value: kpis.inactive, icon: XCircle, color: 'text-destructive' },
+    { label: 'Cities w/ Active Agencies', value: citiesWithActiveAgencies, icon: MapPin, color: 'text-primary' },
   ];
 
   return (
@@ -122,7 +141,7 @@ const AdminDashboard = () => {
 
       <main className="container mx-auto px-4 py-8 space-y-8">
         {/* KPI Cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
           {kpiCards.map((kpi) => (
             <Card key={kpi.label}>
               <CardHeader className="flex flex-row items-center justify-between pb-2">
@@ -138,6 +157,31 @@ const AdminDashboard = () => {
               </CardContent>
             </Card>
           ))}
+        </div>
+
+        {/* City Breakdown */}
+        <div>
+          <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
+            <MapPin className="h-5 w-5 text-primary" /> Agencies by City
+          </h2>
+          {loading ? (
+            <div className="space-y-3">
+              {Array.from({ length: 3 }).map((_, i) => (
+                <Skeleton key={i} className="h-10 w-full" />
+              ))}
+            </div>
+          ) : cityBreakdown.length === 0 ? (
+            <p className="text-muted-foreground">No agencies yet.</p>
+          ) : (
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3">
+              {cityBreakdown.map(([city, count]) => (
+                <Card key={city} className="p-3">
+                  <p className="font-medium text-sm truncate">{city}</p>
+                  <p className="text-2xl font-bold text-primary">{count}</p>
+                </Card>
+              ))}
+            </div>
+          )}
         </div>
 
         {/* Pending Agencies */}
