@@ -636,6 +636,9 @@ const AdminAgencies = () => {
                       Active <SortIcon column="active" />
                     </span>
                   </TableHead>
+                  <TableHead className="cursor-pointer select-none" onClick={() => toggleSort('subscription_status')}>
+                    <span className="inline-flex items-center">Trial <SortIcon column="subscription_status" /></span>
+                  </TableHead>
                   <TableHead
                     className="cursor-pointer select-none"
                     onClick={() => toggleSort('created_at')}
