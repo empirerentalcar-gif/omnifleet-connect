@@ -82,6 +82,10 @@ interface Agency {
   active: boolean;
   created_at: string;
   owner_user_id: string | null;
+  trial_start_date: string | null;
+  trial_end_date: string | null;
+  is_founding_member: boolean;
+  subscription_status: string;
 }
 
 interface AgencyNote {
@@ -99,7 +103,36 @@ type ProfileOption = {
   contact_email: string;
 };
 
-type SortKey = 'agency_name' | 'city' | 'approved' | 'active' | 'created_at';
+type SortKey = 'agency_name' | 'city' | 'approved' | 'active' | 'created_at' | 'subscription_status';
+
+const getTrialDaysLeft = (endDate: string | null): number | null => {
+  if (!endDate) return null;
+  const diff = Math.ceil((new Date(endDate).getTime() - Date.now()) / (1000 * 60 * 60 * 24));
+  return diff;
+};
+
+const TrialBadge = ({ agency }: { agency: Agency }) => {
+  const status = agency.subscription_status;
+  if (status === 'active') {
+    return agency.is_founding_member
+      ? <Badge className="bg-amber-500 text-white border-0">Founding Member</Badge>
+      : <Badge variant="default">Active</Badge>;
+  }
+  if (status === 'trial') {
+    const daysLeft = getTrialDaysLeft(agency.trial_end_date);
+    if (daysLeft !== null && daysLeft <= 0) {
+      return <Badge variant="destructive">Trial Expired</Badge>;
+    }
+    return (
+      <Badge variant="secondary" className="whitespace-nowrap">
+        Trial{daysLeft !== null ? ` - ${daysLeft}d left` : ''}
+      </Badge>
+    );
+  }
+  if (status === 'expired') return <Badge variant="destructive">Expired</Badge>;
+  if (status === 'cancelled') return <Badge variant="outline">Cancelled</Badge>;
+  return <Badge variant="outline">{status}</Badge>;
+};
 type SortDir = 'asc' | 'desc';
 
 const OWNER_UNASSIGNED = '__unassigned__';
@@ -117,6 +150,7 @@ const AdminAgencies = () => {
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
   const [cityFilter, setCityFilter] = useState<string>('all');
+  const [trialFilter, setTrialFilter] = useState<string>('all');
 
   // Compute unique cities from agencies data
   const uniqueCities = useMemo(() => {
@@ -453,7 +487,12 @@ const AdminAgencies = () => {
       a.agency_name.toLowerCase().includes(q) ||
       (a.city && a.city.toLowerCase().includes(q));
     const matchesCity = cityFilter === 'all' || (a.city || '').toLowerCase() === cityFilter.toLowerCase();
-    return matchesSearch && matchesCity;
+    let matchesTrial = true;
+    if (trialFilter === 'trial') matchesTrial = a.subscription_status === 'trial';
+    else if (trialFilter === 'active') matchesTrial = a.subscription_status === 'active';
+    else if (trialFilter === 'expired') matchesTrial = a.subscription_status === 'expired';
+    else if (trialFilter === 'founding') matchesTrial = a.is_founding_member;
+    return matchesSearch && matchesCity && matchesTrial;
   });
 
   const sorted = [...filtered].sort((a, b) => {
@@ -464,6 +503,7 @@ const AdminAgencies = () => {
       case 'approved': return dir * (Number(a.approved) - Number(b.approved));
       case 'active': return dir * (Number(a.active) - Number(b.active));
       case 'created_at': return dir * (new Date(a.created_at).getTime() - new Date(b.created_at).getTime());
+      case 'subscription_status': return dir * a.subscription_status.localeCompare(b.subscription_status);
       default: return 0;
     }
   });
@@ -472,7 +512,7 @@ const AdminAgencies = () => {
   const currentPage = Math.min(page, totalPages);
   const paginated = sorted.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE);
 
-  useEffect(() => { setPage(1); }, [search, cityFilter]);
+  useEffect(() => { setPage(1); }, [search, cityFilter, trialFilter]);
 
   const exportCSV = () => {
     const headers = ['Agency Name', 'City', 'State', 'Phone', 'Email', 'Approved', 'Active', 'Created At', 'Owner User ID'];
@@ -540,6 +580,18 @@ const AdminAgencies = () => {
                 ))}
               </SelectContent>
             </Select>
+            <Select value={trialFilter} onValueChange={setTrialFilter}>
+              <SelectTrigger className="w-[180px]">
+                <SelectValue placeholder="Trial status" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Statuses</SelectItem>
+                <SelectItem value="trial">Active Trial</SelectItem>
+                <SelectItem value="active">Paid / Active</SelectItem>
+                <SelectItem value="expired">Expired</SelectItem>
+                <SelectItem value="founding">Founding Members</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
           <Button variant="outline" onClick={exportCSV}>
             <Download className="h-4 w-4 mr-2" /> Export CSV
@@ -584,6 +636,9 @@ const AdminAgencies = () => {
                       Active <SortIcon column="active" />
                     </span>
                   </TableHead>
+                  <TableHead className="cursor-pointer select-none" onClick={() => toggleSort('subscription_status')}>
+                    <span className="inline-flex items-center">Trial <SortIcon column="subscription_status" /></span>
+                  </TableHead>
                   <TableHead
                     className="cursor-pointer select-none"
                     onClick={() => toggleSort('created_at')}
@@ -598,7 +653,7 @@ const AdminAgencies = () => {
               <TableBody>
                 {sorted.length === 0 ? (
                   <TableRow>
-                    <TableCell colSpan={10} className="text-center py-8 text-muted-foreground">
+                    <TableCell colSpan={11} className="text-center py-8 text-muted-foreground">
                       No agencies found.
                     </TableCell>
                   </TableRow>
@@ -726,6 +781,7 @@ const AdminAgencies = () => {
                               onCheckedChange={(v) => handleToggle(agency, 'active', v)}
                             />
                           </TableCell>
+                          <TableCell><TrialBadge agency={agency} /></TableCell>
                           <TableCell className="whitespace-nowrap">
                             {format(new Date(agency.created_at), 'MMM d, yyyy')}
                           </TableCell>
@@ -760,7 +816,7 @@ const AdminAgencies = () => {
                         </TableRow>
                         <CollapsibleContent asChild>
                           <tr>
-                            <td colSpan={10} className="bg-muted/30 px-6 py-4 border-b">
+                            <td colSpan={11} className="bg-muted/30 px-6 py-4 border-b">
                               <div className="space-y-4 max-w-2xl">
                                 <h4 className="text-sm font-semibold text-foreground">Internal Notes</h4>
 

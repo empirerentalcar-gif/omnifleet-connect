@@ -1,6 +1,6 @@
 import { useEffect, useState, useMemo } from 'react';
 import { Link } from 'react-router-dom';
-import { Building2, CheckCircle, Clock, XCircle, ArrowRight, KeyRound, MapPin, Car } from 'lucide-react';
+import { Building2, CheckCircle, Clock, XCircle, ArrowRight, KeyRound, MapPin, Car, Crown } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAdmin } from '@/hooks/useAdmin';
 import { Button } from '@/components/ui/button';
@@ -23,6 +23,9 @@ interface Agency {
   active: boolean;
   created_at: string;
   owner_user_id: string | null;
+  is_founding_member: boolean;
+  subscription_status: string;
+  trial_end_date: string | null;
 }
 
 interface KPIs {
@@ -31,12 +34,14 @@ interface KPIs {
   activeApproved: number;
   inactive: number;
   totalVehicles: number;
+  foundingMembers: number;
+  activeTrial: number;
 }
 
 const AdminDashboard = () => {
   const { isAdmin, loading: adminLoading } = useAdmin();
   const [agencies, setAgencies] = useState<Agency[]>([]);
-  const [kpis, setKPIs] = useState<KPIs>({ total: 0, pending: 0, activeApproved: 0, inactive: 0, totalVehicles: 0 });
+  const [kpis, setKPIs] = useState<KPIs>({ total: 0, pending: 0, activeApproved: 0, inactive: 0, totalVehicles: 0, foundingMembers: 0, activeTrial: 0 });
   const [loading, setLoading] = useState(true);
 
   // City breakdown
@@ -100,6 +105,8 @@ const AdminDashboard = () => {
       activeApproved: all.filter((a) => a.approved && a.active).length,
       inactive: all.filter((a) => !a.active).length,
       totalVehicles,
+      foundingMembers: all.filter((a) => a.is_founding_member).length,
+      activeTrial: all.filter((a) => a.subscription_status === 'trial').length,
     });
     setLoading(false);
   };
@@ -156,9 +163,11 @@ const AdminDashboard = () => {
     { label: 'Total Agencies', value: kpis.total, icon: Building2, color: 'text-primary' },
     { label: 'Pending Approvals', value: kpis.pending, icon: Clock, color: 'text-amber-500' },
     { label: 'Active & Approved', value: kpis.activeApproved, icon: CheckCircle, color: 'text-emerald-500' },
+    { label: 'Founding Members', value: `${kpis.foundingMembers}/50`, icon: Crown, color: 'text-amber-500' },
+    { label: 'Active Trials', value: kpis.activeTrial, icon: Clock, color: 'text-primary' },
+    { label: 'Total Vehicles', value: kpis.totalVehicles, icon: Car, color: 'text-primary' },
+    { label: 'Cities w/ Agencies', value: citiesWithActiveAgencies, icon: MapPin, color: 'text-primary' },
     { label: 'Inactive', value: kpis.inactive, icon: XCircle, color: 'text-destructive' },
-    { label: 'Total Vehicles Listed', value: kpis.totalVehicles, icon: Car, color: 'text-primary' },
-    { label: 'Cities w/ Active Agencies', value: citiesWithActiveAgencies, icon: MapPin, color: 'text-primary' },
   ];
 
   return (
@@ -189,7 +198,7 @@ const AdminDashboard = () => {
 
       <main className="container mx-auto px-4 py-8 space-y-8">
         {/* KPI Cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-4 gap-4">
           {kpiCards.map((kpi) => (
             <Card key={kpi.label}>
               <CardHeader className="flex flex-row items-center justify-between pb-2">

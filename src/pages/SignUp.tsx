@@ -1,11 +1,13 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/hooks/use-toast';
 import { z } from 'zod';
 import SEO from '@/components/SEO';
+import { Crown } from 'lucide-react';
 
 const signUpSchema = z.object({
   accessCode: z.string().trim().min(1, 'Access code is required').max(100, 'Access code too long'),
@@ -26,7 +28,19 @@ const SignUp = () => {
   const [accessCode, setAccessCode] = useState('');
   const [businessName, setBusinessName] = useState('');
   const [loading, setLoading] = useState(false);
+  const [foundingCount, setFoundingCount] = useState<number | null>(null);
   const { toast } = useToast();
+
+  useEffect(() => {
+    const fetchFoundingCount = async () => {
+      const { count } = await supabase
+        .from('agencies')
+        .select('*', { count: 'exact', head: true })
+        .eq('is_founding_member', true);
+      setFoundingCount(count ?? 0);
+    };
+    fetchFoundingCount();
+  }, []);
 
   const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -128,9 +142,28 @@ const SignUp = () => {
       <div className="w-full max-w-md space-y-8">
         <div className="text-center">
           <h1 className="text-2xl font-bold text-foreground">Create Account</h1>
-          <p className="mt-2 text-sm text-muted-foreground">
-            Join the Zuvio network
-          </p>
+          {foundingCount !== null && foundingCount < 50 ? (
+            <div className="mt-3 space-y-2">
+              <div className="flex items-center justify-center gap-2">
+                <Crown className="h-5 w-5 text-amber-500" />
+                <span className="font-semibold text-amber-600">Founding Member Program</span>
+              </div>
+              <p className="text-sm text-muted-foreground">
+                First 2 months FREE — Limited to 50 agencies
+              </p>
+              <Badge variant="secondary" className="text-sm">
+                {50 - foundingCount} spots remaining
+              </Badge>
+            </div>
+          ) : foundingCount !== null ? (
+            <p className="mt-2 text-sm text-muted-foreground">
+              Join the Zuvio network
+            </p>
+          ) : (
+            <p className="mt-2 text-sm text-muted-foreground">
+              Join the Zuvio network
+            </p>
+          )}
         </div>
 
         <form onSubmit={handleSignUp} className="space-y-4">

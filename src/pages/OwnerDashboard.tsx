@@ -101,6 +101,7 @@ const OwnerDashboard = () => {
   const [reservations, setReservations] = useState<Reservation[]>([]);
   const [vehicles, setVehicles] = useState<Vehicle[]>([]);
   const [loading, setLoading] = useState(true);
+  const [trialInfo, setTrialInfo] = useState<{ status: string; daysLeft: number | null; isFoundingMember: boolean } | null>(null);
   const [updatingId, setUpdatingId] = useState<string | null>(null);
 
   // Vehicle form state
@@ -135,6 +136,24 @@ const OwnerDashboard = () => {
 
     if (profileData) {
       setProfile(profileData);
+
+      // Fetch trial info from agencies
+      const { data: agencyData } = await supabase
+        .from('agencies')
+        .select('subscription_status, trial_end_date, is_founding_member')
+        .eq('owner_user_id', user.id)
+        .single();
+
+      if (agencyData) {
+        const daysLeft = agencyData.trial_end_date
+          ? Math.ceil((new Date(agencyData.trial_end_date).getTime() - Date.now()) / (1000 * 60 * 60 * 24))
+          : null;
+        setTrialInfo({
+          status: agencyData.subscription_status || 'trial',
+          daysLeft,
+          isFoundingMember: agencyData.is_founding_member || false,
+        });
+      }
 
       const [resResult, vehResult] = await Promise.all([
         supabase
@@ -290,6 +309,31 @@ const OwnerDashboard = () => {
 
       <main className="pt-24 pb-16">
         <div className="container mx-auto px-4 max-w-6xl">
+          {/* Trial Banner */}
+          {trialInfo && (trialInfo.status === 'expired' || (trialInfo.status === 'trial' && trialInfo.daysLeft !== null && trialInfo.daysLeft <= 15)) && (
+            <div className={`rounded-lg p-4 mb-6 border ${
+              trialInfo.status === 'expired' 
+                ? 'bg-destructive/10 border-destructive/30 text-destructive' 
+                : trialInfo.daysLeft !== null && trialInfo.daysLeft <= 5
+                  ? 'bg-amber-500/10 border-amber-500/30 text-amber-600'
+                  : 'bg-primary/10 border-primary/30 text-primary'
+            }`}>
+              {trialInfo.status === 'expired' ? (
+                <div>
+                  <p className="font-bold text-lg">Your trial has ended</p>
+                  <p className="text-sm mt-1">Your vehicles are hidden from public search. Subscribe to make them visible again.</p>
+                  <p className="text-sm mt-1 font-medium">Founding Member pricing: $79/month — locked in forever.</p>
+                </div>
+              ) : (
+                <div>
+                  <p className="font-bold">{trialInfo.daysLeft} days left in your free trial</p>
+                  <p className="text-sm mt-1">
+                    {trialInfo.isFoundingMember ? 'As a Founding Member, subscribe to lock in $79/month forever.' : 'Subscribe before your trial ends to keep your vehicles visible.'}
+                  </p>
+                </div>
+              )}
+            </div>
+          )}
           {/* Header */}
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-10">
             <div>
