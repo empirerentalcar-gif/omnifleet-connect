@@ -127,6 +127,43 @@ const AdminAgencies = () => {
   const [newNoteText, setNewNoteText] = useState('');
   const [addingNote, setAddingNote] = useState(false);
 
+  // Assign-owner dialog state
+  const [assignTarget, setAssignTarget] = useState<Agency | null>(null);
+  const [assignSearch, setAssignSearch] = useState('');
+  const [assignSelected, setAssignSelected] = useState<ProfileOption | null>(null);
+  const [assigning, setAssigning] = useState(false);
+
+  const assignFilteredProfiles = useMemo(() => {
+    if (!assignSearch.trim()) return profileOptions.slice(0, 20);
+    const q = assignSearch.toLowerCase();
+    return profileOptions
+      .filter(p => p.business_name.toLowerCase().includes(q) || p.contact_email.toLowerCase().includes(q))
+      .slice(0, 20);
+  }, [profileOptions, assignSearch]);
+
+  const openAssignDialog = (agency: Agency) => {
+    setAssignTarget(agency);
+    setAssignSearch('');
+    setAssignSelected(null);
+  };
+
+  const confirmAssignOwner = async () => {
+    if (!assignTarget || !assignSelected) return;
+    setAssigning(true);
+    const { error } = await supabase.rpc('assign_agency_owner', {
+      _agency_id: assignTarget.id,
+      _owner_user_id: assignSelected.user_id,
+    });
+    if (error) {
+      toast({ title: 'Error assigning owner', description: error.message, variant: 'destructive' });
+    } else {
+      toast({ title: 'Owner assigned', description: `${assignSelected.business_name} is now the owner of ${assignTarget.agency_name}.` });
+      fetchAgencies();
+    }
+    setAssigning(false);
+    setAssignTarget(null);
+  };
+
   const fetchAgencies = async () => {
     const { data, error } = await supabase
       .from('agencies')
