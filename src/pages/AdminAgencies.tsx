@@ -108,6 +108,7 @@ const AdminAgencies = () => {
   const { isAdmin, loading: adminLoading } = useAdmin();
   const { user } = useAuth();
   const [agencies, setAgencies] = useState<Agency[]>([]);
+  const [vehicleCounts, setVehicleCounts] = useState<Record<string, number>>({});
   const [profileOptions, setProfileOptions] = useState<ProfileOption[]>([]);
   const profilesByUserId = useMemo(() => {
     return new Map(profileOptions.map((p) => [p.user_id, p] as const));
@@ -227,6 +228,48 @@ const AdminAgencies = () => {
       return;
     }
     setAgencies(data || []);
+    
+    // Fetch vehicle counts per agency (via profile's owner_user_id)
+    if (data && data.length > 0) {
+      const ownerIds = data.map(a => a.owner_user_id).filter(Boolean) as string[];
+      if (ownerIds.length > 0) {
+        // Get profiles for these owner user_ids
+        const { data: profiles } = await supabase
+          .from('profiles')
+          .select('id, user_id')
+          .in('user_id', ownerIds);
+        
+        if (profiles && profiles.length > 0) {
+          const profileIds = profiles.map(p => p.id);
+          const { data: vehicles } = await supabase
+            .from('vehicles')
+            .select('profile_id')
+            .in('profile_id', profileIds);
+          
+          // Count vehicles per profile_id, then map to agency via owner_user_id
+          const profileToCount: Record<string, number> = {};
+          (vehicles || []).forEach(v => {
+            profileToCount[v.profile_id] = (profileToCount[v.profile_id] || 0) + 1;
+          });
+          
+          // Map owner_user_id -> profile_id
+          const userToProfile = new Map(profiles.map(p => [p.user_id, p.id]));
+          
+          // Build agency -> vehicle count
+          const counts: Record<string, number> = {};
+          data.forEach(agency => {
+            if (agency.owner_user_id) {
+              const profileId = userToProfile.get(agency.owner_user_id);
+              counts[agency.id] = profileId ? (profileToCount[profileId] || 0) : 0;
+            } else {
+              counts[agency.id] = 0;
+            }
+          });
+          setVehicleCounts(counts);
+        }
+      }
+    }
+    
     setLoading(false);
   };
 
@@ -314,26 +357,45 @@ const AdminAgencies = () => {
       setDeactivateTarget(agency);
       return;
     }
-    await performToggle(agency.id, field, value);
+    await performToggle(agency, field, value);
   };
 
-  const performToggle = async (id: string, field: string, value: boolean) => {
+  const performToggle = async (agency: Agency, field: string, value: boolean) => {
     const { error } = await supabase
       .from('agencies')
       .update({ [field]: value })
-      .eq('id', id);
+      .eq('id', agency.id);
 
     if (error) {
       toast({ title: 'Error', description: error.message, variant: 'destructive' });
       return;
     }
     toast({ title: `Agency ${field} updated` });
+    
+    // Send approval email if approving an agency
+    if (field === 'approved' && value && agency.email) {
+      try {
+        await supabase.functions.invoke('send-agency-approval', {
+          body: {
+            agency: {
+              agency_name: agency.agency_name,
+              email: agency.email,
+            },
+          },
+        });
+        toast({ title: 'Approval email sent', description: `Email sent to ${agency.email}` });
+      } catch (emailErr) {
+        console.error('Approval email failed:', emailErr);
+        toast({ title: 'Note: Email not sent', description: 'Agency approved but email notification failed.', variant: 'destructive' });
+      }
+    }
+    
     fetchAgencies();
   };
 
   const confirmDeactivate = async () => {
     if (!deactivateTarget) return;
-    await performToggle(deactivateTarget.id, 'active', false);
+    await performToggle(deactivateTarget, 'active', false);
     setDeactivateTarget(null);
   };
 
@@ -553,18 +615,23 @@ const AdminAgencies = () => {
                                 className="h-8 w-40"
                               />
                             ) : (
-                              <div className="flex items-center gap-2">
-                                {agency.agency_name}
-                                {agency.approved && !agency.owner_user_id && (
-                                  <Badge
-                                    variant="destructive"
-                                    className="flex items-center gap-1 text-xs whitespace-nowrap"
-                                    title="Approved but no owner assigned — vehicles won't appear in search"
-                                  >
-                                    <AlertTriangle className="h-3 w-3" />
-                                    No Owner
-                                  </Badge>
-                                )}
+                              <div className="flex flex-col">
+                                <div className="flex items-center gap-2">
+                                  {agency.agency_name}
+                                  {agency.approved && !agency.owner_user_id && (
+                                    <Badge
+                                      variant="destructive"
+                                      className="flex items-center gap-1 text-xs whitespace-nowrap"
+                                      title="Approved but no owner assigned — vehicles won't appear in search"
+                                    >
+                                      <AlertTriangle className="h-3 w-3" />
+                                      No Owner
+                                    </Badge>
+                                  )}
+                                </div>
+                                <span className="text-xs text-muted-foreground">
+                                  ({vehicleCounts[agency.id] ?? 0} vehicles)
+                                </span>
                               </div>
                             )}
                           </TableCell>

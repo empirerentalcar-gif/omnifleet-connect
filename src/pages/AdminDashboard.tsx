@@ -1,6 +1,6 @@
 import { useEffect, useState, useMemo } from 'react';
 import { Link } from 'react-router-dom';
-import { Building2, CheckCircle, Clock, XCircle, ArrowRight, KeyRound, MapPin } from 'lucide-react';
+import { Building2, CheckCircle, Clock, XCircle, ArrowRight, KeyRound, MapPin, Car } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAdmin } from '@/hooks/useAdmin';
 import { Button } from '@/components/ui/button';
@@ -22,6 +22,7 @@ interface Agency {
   approved: boolean;
   active: boolean;
   created_at: string;
+  owner_user_id: string | null;
 }
 
 interface KPIs {
@@ -29,12 +30,13 @@ interface KPIs {
   pending: number;
   activeApproved: number;
   inactive: number;
+  totalVehicles: number;
 }
 
 const AdminDashboard = () => {
   const { isAdmin, loading: adminLoading } = useAdmin();
   const [agencies, setAgencies] = useState<Agency[]>([]);
-  const [kpis, setKPIs] = useState<KPIs>({ total: 0, pending: 0, activeApproved: 0, inactive: 0 });
+  const [kpis, setKPIs] = useState<KPIs>({ total: 0, pending: 0, activeApproved: 0, inactive: 0, totalVehicles: 0 });
   const [loading, setLoading] = useState(true);
 
   // City breakdown
@@ -66,13 +68,38 @@ const AdminDashboard = () => {
       return;
     }
 
-    const all = data || [];
+    const all = (data || []) as Agency[];
     setAgencies(all);
+    
+    // Fetch total vehicle count from approved agencies
+    let totalVehicles = 0;
+    const approvedOwnerIds = all
+      .filter(a => a.approved && a.active && a.owner_user_id)
+      .map(a => a.owner_user_id) as string[];
+    
+    if (approvedOwnerIds.length > 0) {
+      const { data: profiles } = await supabase
+        .from('profiles')
+        .select('id')
+        .in('user_id', approvedOwnerIds);
+      
+      if (profiles && profiles.length > 0) {
+        const profileIds = profiles.map(p => p.id);
+        const { count } = await supabase
+          .from('vehicles')
+          .select('*', { count: 'exact', head: true })
+          .in('profile_id', profileIds);
+        
+        totalVehicles = count || 0;
+      }
+    }
+    
     setKPIs({
       total: all.length,
       pending: all.filter((a) => !a.approved).length,
       activeApproved: all.filter((a) => a.approved && a.active).length,
       inactive: all.filter((a) => !a.active).length,
+      totalVehicles,
     });
     setLoading(false);
   };
@@ -82,6 +109,8 @@ const AdminDashboard = () => {
   }, [isAdmin]);
 
   const handleApprove = async (id: string) => {
+    const agency = agencies.find(a => a.id === id);
+    
     const { error } = await supabase
       .from('agencies')
       .update({ approved: true })
@@ -92,6 +121,24 @@ const AdminDashboard = () => {
       return;
     }
     toast({ title: 'Agency approved' });
+    
+    // Send approval email
+    if (agency?.email) {
+      try {
+        await supabase.functions.invoke('send-agency-approval', {
+          body: {
+            agency: {
+              agency_name: agency.agency_name,
+              email: agency.email,
+            },
+          },
+        });
+        toast({ title: 'Approval email sent', description: `Email sent to ${agency.email}` });
+      } catch (emailErr) {
+        console.error('Approval email failed:', emailErr);
+      }
+    }
+    
     fetchData();
   };
 
@@ -110,6 +157,7 @@ const AdminDashboard = () => {
     { label: 'Pending Approvals', value: kpis.pending, icon: Clock, color: 'text-amber-500' },
     { label: 'Active & Approved', value: kpis.activeApproved, icon: CheckCircle, color: 'text-emerald-500' },
     { label: 'Inactive', value: kpis.inactive, icon: XCircle, color: 'text-destructive' },
+    { label: 'Total Vehicles Listed', value: kpis.totalVehicles, icon: Car, color: 'text-primary' },
     { label: 'Cities w/ Active Agencies', value: citiesWithActiveAgencies, icon: MapPin, color: 'text-primary' },
   ];
 
@@ -141,7 +189,7 @@ const AdminDashboard = () => {
 
       <main className="container mx-auto px-4 py-8 space-y-8">
         {/* KPI Cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4">
           {kpiCards.map((kpi) => (
             <Card key={kpi.label}>
               <CardHeader className="flex flex-row items-center justify-between pb-2">
