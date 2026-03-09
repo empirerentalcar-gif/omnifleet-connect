@@ -598,6 +598,7 @@ const AdminAgencies = () => {
                 <SelectItem value="all">All Statuses</SelectItem>
                 <SelectItem value="trial">Active Trial</SelectItem>
                 <SelectItem value="active">Paid / Active</SelectItem>
+                <SelectItem value="payment_required">Payment Required</SelectItem>
                 <SelectItem value="expired">Expired</SelectItem>
                 <SelectItem value="founding">Founding Members</SelectItem>
               </SelectContent>
