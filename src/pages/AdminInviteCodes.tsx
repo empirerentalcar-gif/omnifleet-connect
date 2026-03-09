@@ -373,10 +373,11 @@ const AdminInviteCodes = () => {
             </div>
             <div className="space-y-2">
               <Label>City (optional)</Label>
-              <Input
+              <CitySelector
                 value={newCode.city}
-                onChange={(e) => setNewCode({ ...newCode, city: e.target.value })}
-                placeholder="e.g. Miami"
+                onChange={(val) => setNewCode({ ...newCode, city: val })}
+                placeholder="Select a city or type custom"
+                allowCustom
               />
             </div>
             <div className="space-y-2">
