@@ -109,6 +109,7 @@ const AdminDashboard = () => {
       totalVehicles,
       foundingMembers: all.filter((a) => a.is_founding_member).length,
       activeTrial: all.filter((a) => a.subscription_status === 'trial').length,
+      paymentRequired: all.filter((a) => a.subscription_status === 'payment_required').length,
     });
     setLoading(false);
   };
