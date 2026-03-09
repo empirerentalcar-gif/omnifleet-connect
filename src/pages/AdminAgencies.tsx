@@ -16,6 +16,7 @@ import {
   Send,
   AlertTriangle,
   UserPlus,
+  Filter,
 } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { Badge } from '@/components/ui/badge';
@@ -66,6 +67,7 @@ import {
 } from '@/components/ui/collapsible';
 import { toast } from '@/hooks/use-toast';
 import { format } from 'date-fns';
+import { MAJOR_CITIES } from '@/lib/city-data';
 
 interface Agency {
   id: string;
