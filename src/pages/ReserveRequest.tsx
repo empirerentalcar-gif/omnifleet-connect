@@ -68,6 +68,7 @@ const ReserveRequest = () => {
         pickup_date: parsed.data.pickup_date,
         dropoff_date: parsed.data.dropoff_date,
         vehicle_type: parsed.data.vehicle_type,
+        notes: parsed.data.notes,
       });
 
       if (error) throw error;
