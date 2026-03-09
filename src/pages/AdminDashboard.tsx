@@ -41,7 +41,7 @@ interface KPIs {
 const AdminDashboard = () => {
   const { isAdmin, loading: adminLoading } = useAdmin();
   const [agencies, setAgencies] = useState<Agency[]>([]);
-  const [kpis, setKPIs] = useState<KPIs>({ total: 0, pending: 0, activeApproved: 0, inactive: 0, totalVehicles: 0 });
+  const [kpis, setKPIs] = useState<KPIs>({ total: 0, pending: 0, activeApproved: 0, inactive: 0, totalVehicles: 0, foundingMembers: 0, activeTrial: 0 });
   const [loading, setLoading] = useState(true);
 
   // City breakdown
