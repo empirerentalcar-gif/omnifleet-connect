@@ -2,3 +2,6 @@ project_id = "mtrzzdrobjjxppunqtaa"
 
 [functions.notify-new-agency]
 verify_jwt = true
+
+[functions.notify-new-reservation]
+verify_jwt = false
