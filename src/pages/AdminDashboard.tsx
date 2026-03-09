@@ -105,6 +105,8 @@ const AdminDashboard = () => {
       activeApproved: all.filter((a) => a.approved && a.active).length,
       inactive: all.filter((a) => !a.active).length,
       totalVehicles,
+      foundingMembers: all.filter((a) => a.is_founding_member).length,
+      activeTrial: all.filter((a) => a.subscription_status === 'trial').length,
     });
     setLoading(false);
   };
