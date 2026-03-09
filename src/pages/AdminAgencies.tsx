@@ -164,6 +164,23 @@ const AdminAgencies = () => {
     setAssignTarget(null);
   };
 
+  const confirmUnassignOwner = async () => {
+    if (!assignTarget) return;
+    setAssigning(true);
+    const { error } = await supabase.rpc('assign_agency_owner', {
+      _agency_id: assignTarget.id,
+      _owner_user_id: null,
+    });
+    if (error) {
+      toast({ title: 'Error removing owner', description: error.message, variant: 'destructive' });
+    } else {
+      toast({ title: 'Owner removed', description: `${assignTarget.agency_name} no longer has an assigned owner.` });
+      fetchAgencies();
+    }
+    setAssigning(false);
+    setAssignTarget(null);
+  };
+
   const fetchAgencies = async () => {
     const { data, error } = await supabase
       .from('agencies')
