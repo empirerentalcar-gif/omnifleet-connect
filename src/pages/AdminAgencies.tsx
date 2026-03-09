@@ -103,7 +103,36 @@ type ProfileOption = {
   contact_email: string;
 };
 
-type SortKey = 'agency_name' | 'city' | 'approved' | 'active' | 'created_at';
+type SortKey = 'agency_name' | 'city' | 'approved' | 'active' | 'created_at' | 'subscription_status';
+
+const getTrialDaysLeft = (endDate: string | null): number | null => {
+  if (!endDate) return null;
+  const diff = Math.ceil((new Date(endDate).getTime() - Date.now()) / (1000 * 60 * 60 * 24));
+  return diff;
+};
+
+const TrialBadge = ({ agency }: { agency: Agency }) => {
+  const status = agency.subscription_status;
+  if (status === 'active') {
+    return agency.is_founding_member
+      ? <Badge className="bg-amber-500 text-white border-0">Founding Member</Badge>
+      : <Badge variant="default">Active</Badge>;
+  }
+  if (status === 'trial') {
+    const daysLeft = getTrialDaysLeft(agency.trial_end_date);
+    if (daysLeft !== null && daysLeft <= 0) {
+      return <Badge variant="destructive">Trial Expired</Badge>;
+    }
+    return (
+      <Badge variant="secondary" className="whitespace-nowrap">
+        Trial{daysLeft !== null ? ` - ${daysLeft}d left` : ''}
+      </Badge>
+    );
+  }
+  if (status === 'expired') return <Badge variant="destructive">Expired</Badge>;
+  if (status === 'cancelled') return <Badge variant="outline">Cancelled</Badge>;
+  return <Badge variant="outline">{status}</Badge>;
+};
 type SortDir = 'asc' | 'desc';
 
 const OWNER_UNASSIGNED = '__unassigned__';
