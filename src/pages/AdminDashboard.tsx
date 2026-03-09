@@ -163,9 +163,11 @@ const AdminDashboard = () => {
     { label: 'Total Agencies', value: kpis.total, icon: Building2, color: 'text-primary' },
     { label: 'Pending Approvals', value: kpis.pending, icon: Clock, color: 'text-amber-500' },
     { label: 'Active & Approved', value: kpis.activeApproved, icon: CheckCircle, color: 'text-emerald-500' },
+    { label: 'Founding Members', value: `${kpis.foundingMembers}/50`, icon: Crown, color: 'text-amber-500' },
+    { label: 'Active Trials', value: kpis.activeTrial, icon: Clock, color: 'text-primary' },
+    { label: 'Total Vehicles', value: kpis.totalVehicles, icon: Car, color: 'text-primary' },
+    { label: 'Cities w/ Agencies', value: citiesWithActiveAgencies, icon: MapPin, color: 'text-primary' },
     { label: 'Inactive', value: kpis.inactive, icon: XCircle, color: 'text-destructive' },
-    { label: 'Total Vehicles Listed', value: kpis.totalVehicles, icon: Car, color: 'text-primary' },
-    { label: 'Cities w/ Active Agencies', value: citiesWithActiveAgencies, icon: MapPin, color: 'text-primary' },
   ];
 
   return (
