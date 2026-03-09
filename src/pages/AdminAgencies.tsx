@@ -228,6 +228,48 @@ const AdminAgencies = () => {
       return;
     }
     setAgencies(data || []);
+    
+    // Fetch vehicle counts per agency (via profile's owner_user_id)
+    if (data && data.length > 0) {
+      const ownerIds = data.map(a => a.owner_user_id).filter(Boolean) as string[];
+      if (ownerIds.length > 0) {
+        // Get profiles for these owner user_ids
+        const { data: profiles } = await supabase
+          .from('profiles')
+          .select('id, user_id')
+          .in('user_id', ownerIds);
+        
+        if (profiles && profiles.length > 0) {
+          const profileIds = profiles.map(p => p.id);
+          const { data: vehicles } = await supabase
+            .from('vehicles')
+            .select('profile_id')
+            .in('profile_id', profileIds);
+          
+          // Count vehicles per profile_id, then map to agency via owner_user_id
+          const profileToCount: Record<string, number> = {};
+          (vehicles || []).forEach(v => {
+            profileToCount[v.profile_id] = (profileToCount[v.profile_id] || 0) + 1;
+          });
+          
+          // Map owner_user_id -> profile_id
+          const userToProfile = new Map(profiles.map(p => [p.user_id, p.id]));
+          
+          // Build agency -> vehicle count
+          const counts: Record<string, number> = {};
+          data.forEach(agency => {
+            if (agency.owner_user_id) {
+              const profileId = userToProfile.get(agency.owner_user_id);
+              counts[agency.id] = profileId ? (profileToCount[profileId] || 0) : 0;
+            } else {
+              counts[agency.id] = 0;
+            }
+          });
+          setVehicleCounts(counts);
+        }
+      }
+    }
+    
     setLoading(false);
   };
 
