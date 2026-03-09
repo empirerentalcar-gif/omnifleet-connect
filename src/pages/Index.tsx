@@ -8,6 +8,7 @@ import TrustBadges from "@/components/TrustBadges";
 import AgencyCTA from "@/components/AgencyCTA";
 import OwnerFAQ from "@/components/OwnerFAQ";
 import Footer from "@/components/Footer";
+import SEO from "@/components/SEO";
 
 const Index = () => {
   return (
