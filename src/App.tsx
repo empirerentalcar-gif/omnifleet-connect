@@ -29,6 +29,7 @@ const AdminAgenciesPage = lazy(() => import("./pages/AdminAgencies"));
 const AdminSetupPage = lazy(() => import("./pages/AdminSetup"));
 const AdminInviteCodesPage = lazy(() => import("./pages/AdminInviteCodes"));
 const CityLanding = lazy(() => import("./pages/CityLanding"));
+const Cities = lazy(() => import("./pages/Cities"));
 
 const queryClient = new QueryClient();
 
