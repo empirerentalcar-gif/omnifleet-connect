@@ -128,6 +128,20 @@ const AdminAgencies = () => {
     setLoading(false);
   };
 
+  const fetchProfiles = async () => {
+    const { data, error } = await supabase
+      .from('profiles')
+      .select('user_id, business_name, contact_email')
+      .order('business_name', { ascending: true });
+
+    if (error) {
+      toast({ title: 'Error', description: error.message, variant: 'destructive' });
+      return;
+    }
+
+    setProfileOptions((data || []) as ProfileOption[]);
+  };
+
   const fetchNotesForAgency = async (agencyId: string) => {
     const { data, error } = await supabase
       .from('agency_notes')
