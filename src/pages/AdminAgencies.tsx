@@ -387,10 +387,11 @@ const AdminAgencies = () => {
 
   const filtered = agencies.filter((a) => {
     const q = search.toLowerCase();
-    return (
+    const matchesSearch =
       a.agency_name.toLowerCase().includes(q) ||
-      (a.city && a.city.toLowerCase().includes(q))
-    );
+      (a.city && a.city.toLowerCase().includes(q));
+    const matchesCity = cityFilter === 'all' || (a.city || '').toLowerCase() === cityFilter.toLowerCase();
+    return matchesSearch && matchesCity;
   });
 
   const sorted = [...filtered].sort((a, b) => {
