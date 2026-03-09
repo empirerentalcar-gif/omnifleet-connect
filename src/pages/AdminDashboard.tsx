@@ -24,6 +24,7 @@ interface Agency {
   created_at: string;
   owner_user_id: string | null;
   is_founding_member: boolean;
+  founding_member_number: number | null;
   subscription_status: string;
   trial_end_date: string | null;
 }
