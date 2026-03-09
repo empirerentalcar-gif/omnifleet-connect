@@ -1,6 +1,6 @@
 import { useEffect, useState, useMemo } from 'react';
 import { Link } from 'react-router-dom';
-import { Building2, CheckCircle, Clock, XCircle, ArrowRight, KeyRound, MapPin, Car, Crown } from 'lucide-react';
+import { Building2, CheckCircle, Clock, XCircle, ArrowRight, KeyRound, MapPin, Car, Crown, AlertTriangle } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAdmin } from '@/hooks/useAdmin';
 import { Button } from '@/components/ui/button';
@@ -24,6 +24,7 @@ interface Agency {
   created_at: string;
   owner_user_id: string | null;
   is_founding_member: boolean;
+  founding_member_number: number | null;
   subscription_status: string;
   trial_end_date: string | null;
 }
@@ -36,12 +37,13 @@ interface KPIs {
   totalVehicles: number;
   foundingMembers: number;
   activeTrial: number;
+  paymentRequired: number;
 }
 
 const AdminDashboard = () => {
   const { isAdmin, loading: adminLoading } = useAdmin();
   const [agencies, setAgencies] = useState<Agency[]>([]);
-  const [kpis, setKPIs] = useState<KPIs>({ total: 0, pending: 0, activeApproved: 0, inactive: 0, totalVehicles: 0, foundingMembers: 0, activeTrial: 0 });
+  const [kpis, setKPIs] = useState<KPIs>({ total: 0, pending: 0, activeApproved: 0, inactive: 0, totalVehicles: 0, foundingMembers: 0, activeTrial: 0, paymentRequired: 0 });
   const [loading, setLoading] = useState(true);
 
   // City breakdown
@@ -107,6 +109,7 @@ const AdminDashboard = () => {
       totalVehicles,
       foundingMembers: all.filter((a) => a.is_founding_member).length,
       activeTrial: all.filter((a) => a.subscription_status === 'trial').length,
+      paymentRequired: all.filter((a) => a.subscription_status === 'payment_required').length,
     });
     setLoading(false);
   };
@@ -163,11 +166,11 @@ const AdminDashboard = () => {
     { label: 'Total Agencies', value: kpis.total, icon: Building2, color: 'text-primary' },
     { label: 'Pending Approvals', value: kpis.pending, icon: Clock, color: 'text-amber-500' },
     { label: 'Active & Approved', value: kpis.activeApproved, icon: CheckCircle, color: 'text-emerald-500' },
-    { label: 'Founding Members', value: `${kpis.foundingMembers}/50`, icon: Crown, color: 'text-amber-500' },
+    { label: 'Founding Members', value: `${kpis.foundingMembers}/50 (${50 - kpis.foundingMembers} left)`, icon: Crown, color: 'text-amber-500' },
     { label: 'Active Trials', value: kpis.activeTrial, icon: Clock, color: 'text-primary' },
+    { label: 'Payment Required', value: kpis.paymentRequired, icon: AlertTriangle, color: 'text-destructive' },
     { label: 'Total Vehicles', value: kpis.totalVehicles, icon: Car, color: 'text-primary' },
     { label: 'Cities w/ Agencies', value: citiesWithActiveAgencies, icon: MapPin, color: 'text-primary' },
-    { label: 'Inactive', value: kpis.inactive, icon: XCircle, color: 'text-destructive' },
   ];
 
   return (

@@ -61,12 +61,13 @@ export type Database = {
           city: string | null
           created_at: string
           email: string | null
+          founding_member_number: number | null
           id: string
           is_founding_member: boolean
           owner_user_id: string | null
           phone: string | null
           state: string | null
-          subscription_status: Database["public"]["Enums"]["agency_subscription_status"]
+          subscription_status: string
           trial_end_date: string | null
           trial_start_date: string | null
           updated_at: string
@@ -80,12 +81,13 @@ export type Database = {
           city?: string | null
           created_at?: string
           email?: string | null
+          founding_member_number?: number | null
           id?: string
           is_founding_member?: boolean
           owner_user_id?: string | null
           phone?: string | null
           state?: string | null
-          subscription_status?: Database["public"]["Enums"]["agency_subscription_status"]
+          subscription_status?: string
           trial_end_date?: string | null
           trial_start_date?: string | null
           updated_at?: string
@@ -99,12 +101,13 @@ export type Database = {
           city?: string | null
           created_at?: string
           email?: string | null
+          founding_member_number?: number | null
           id?: string
           is_founding_member?: boolean
           owner_user_id?: string | null
           phone?: string | null
           state?: string | null
-          subscription_status?: Database["public"]["Enums"]["agency_subscription_status"]
+          subscription_status?: string
           trial_end_date?: string | null
           trial_start_date?: string | null
           updated_at?: string

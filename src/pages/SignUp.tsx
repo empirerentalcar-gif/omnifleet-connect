@@ -149,20 +149,26 @@ const SignUp = () => {
                 <span className="font-semibold text-amber-600">Founding Member Program</span>
               </div>
               <p className="text-sm text-muted-foreground">
-                First 2 months FREE — Limited to 50 agencies
+                60 days FREE + exclusive pricing locked forever
               </p>
-              <Badge variant="secondary" className="text-sm">
-                {50 - foundingCount} spots remaining
-              </Badge>
+              <div className="flex flex-col items-center gap-1">
+                <Badge variant="secondary" className="text-sm">
+                  Only {50 - foundingCount} of 50 spots left
+                </Badge>
+                <p className="text-xs text-muted-foreground">
+                  After trial: <strong>$25/month + 3% commission</strong> (locked forever)
+                </p>
+              </div>
             </div>
-          ) : foundingCount !== null ? (
-            <p className="mt-2 text-sm text-muted-foreground">
-              Join the Zuvio network
-            </p>
           ) : (
-            <p className="mt-2 text-sm text-muted-foreground">
-              Join the Zuvio network
-            </p>
+            <div className="mt-3 space-y-2">
+              <p className="text-sm text-muted-foreground">
+                Start your <strong>30-day FREE trial</strong>
+              </p>
+              <p className="text-xs text-muted-foreground">
+                After trial: $49/month + 5% commission
+              </p>
+            </div>
           )}
         </div>
 
