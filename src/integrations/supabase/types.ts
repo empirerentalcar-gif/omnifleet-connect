@@ -508,6 +508,10 @@ export type Database = {
         }
         Returns: boolean
       }
+      profile_has_approved_agency: {
+        Args: { _profile_id: string }
+        Returns: boolean
+      }
       redeem_access_code: {
         Args: { code_to_redeem: string; user_profile_id: string }
         Returns: boolean
