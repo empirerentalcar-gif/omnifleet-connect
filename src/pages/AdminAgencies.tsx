@@ -167,16 +167,40 @@ const AdminAgencies = () => {
   const confirmUnassignOwner = async () => {
     if (!assignTarget) return;
     setAssigning(true);
+    const wasApproved = assignTarget.approved;
+
     const { error } = await supabase.rpc('assign_agency_owner', {
       _agency_id: assignTarget.id,
       _owner_user_id: null,
     });
     if (error) {
       toast({ title: 'Error removing owner', description: error.message, variant: 'destructive' });
+      setAssigning(false);
+      setAssignTarget(null);
+      return;
+    }
+
+    // If the agency was approved, automatically unapprove it
+    if (wasApproved) {
+      const { error: unapproveError } = await supabase
+        .from('agencies')
+        .update({ approved: false })
+        .eq('id', assignTarget.id);
+
+      if (unapproveError) {
+        toast({ title: 'Error unapproving agency', description: unapproveError.message, variant: 'destructive' });
+      } else {
+        toast({
+          title: 'Owner removed — agency unapproved',
+          description: `${assignTarget.agency_name} has been unapproved. Assign a new owner before re-approving so vehicles appear in search.`,
+          variant: 'destructive',
+        });
+      }
     } else {
       toast({ title: 'Owner removed', description: `${assignTarget.agency_name} no longer has an assigned owner.` });
-      fetchAgencies();
     }
+
+    fetchAgencies();
     setAssigning(false);
     setAssignTarget(null);
   };
