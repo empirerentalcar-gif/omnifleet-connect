@@ -20,6 +20,7 @@ const reservationSchema = z.object({
   pickup_date: z.string().min(1, "Pickup date is required"),
   dropoff_date: z.string().min(1, "Drop-off date is required"),
   vehicle_type: z.enum(vehicleTypes, { errorMap: () => ({ message: "Select a vehicle type" }) }),
+  notes: z.string().max(500).optional().transform(v => v?.trim() || null),
 }).refine(d => d.dropoff_date > d.pickup_date, { message: "Drop-off must be after pickup", path: ["dropoff_date"] });
 
 const ReserveRequest = () => {
@@ -34,6 +35,7 @@ const ReserveRequest = () => {
   const [pickupDate, setPickupDate] = useState("");
   const [dropoffDate, setDropoffDate] = useState("");
   const [vehicleType, setVehicleType] = useState("");
+  const [notes, setNotes] = useState("");
   const [submitting, setSubmitting] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -47,6 +49,7 @@ const ReserveRequest = () => {
         pickup_date: pickupDate,
         dropoff_date: dropoffDate,
         vehicle_type: vehicleType,
+        notes,
       });
 
       if (!parsed.success) {
@@ -65,6 +68,7 @@ const ReserveRequest = () => {
         pickup_date: parsed.data.pickup_date,
         dropoff_date: parsed.data.dropoff_date,
         vehicle_type: parsed.data.vehicle_type,
+        notes: parsed.data.notes,
       });
 
       if (error) throw error;
@@ -156,6 +160,20 @@ const ReserveRequest = () => {
                   ))}
                 </select>
               </div>
+            </div>
+
+            {/* Additional Notes */}
+            <div>
+              <label className="block text-xs font-medium text-muted-foreground mb-2 uppercase tracking-wider">Additional Notes <span className="text-muted-foreground/60">(optional)</span></label>
+              <textarea
+                placeholder="Any special requests, preferences, or questions..."
+                value={notes}
+                onChange={(e) => setNotes(e.target.value)}
+                maxLength={500}
+                rows={3}
+                className="w-full bg-secondary/50 border border-border rounded-xl px-4 py-3.5 text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all resize-none"
+              />
+              <p className="text-xs text-muted-foreground/60 mt-1 text-right">{notes.length}/500</p>
             </div>
 
             {/* Cancellation Notice */}
