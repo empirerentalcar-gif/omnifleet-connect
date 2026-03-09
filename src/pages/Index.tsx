@@ -7,7 +7,7 @@ import OwnerCTA from "@/components/OwnerCTA";
 import TrustBadges from "@/components/TrustBadges";
 import AgencyCTA from "@/components/AgencyCTA";
 import OwnerFAQ from "@/components/OwnerFAQ";
-import SEO from "@/components/SEO";
+import Footer from "@/components/Footer";
 
 const Index = () => {
   return (
