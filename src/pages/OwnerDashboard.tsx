@@ -311,25 +311,37 @@ const OwnerDashboard = () => {
       <main className="pt-24 pb-16">
         <div className="container mx-auto px-4 max-w-6xl">
           {/* Trial Banner */}
-          {trialInfo && (trialInfo.status === 'expired' || (trialInfo.status === 'trial' && trialInfo.daysLeft !== null && trialInfo.daysLeft <= 15)) && (
+          {trialInfo && (
+            trialInfo.status === 'payment_required' ||
+            trialInfo.status === 'expired' ||
+            (trialInfo.status === 'trial' && trialInfo.daysLeft !== null && trialInfo.daysLeft <= (trialInfo.isFoundingMember ? 15 : 7))
+          ) && (
             <div className={`rounded-lg p-4 mb-6 border ${
-              trialInfo.status === 'expired' 
+              trialInfo.status === 'payment_required' || trialInfo.status === 'expired'
                 ? 'bg-destructive/10 border-destructive/30 text-destructive' 
                 : trialInfo.daysLeft !== null && trialInfo.daysLeft <= 5
                   ? 'bg-amber-500/10 border-amber-500/30 text-amber-600'
                   : 'bg-primary/10 border-primary/30 text-primary'
             }`}>
-              {trialInfo.status === 'expired' ? (
+              {trialInfo.status === 'payment_required' || trialInfo.status === 'expired' ? (
                 <div>
-                  <p className="font-bold text-lg">Your trial has ended</p>
+                  <p className="font-bold text-lg">Your trial has ended — Subscribe to continue</p>
                   <p className="text-sm mt-1">Your vehicles are hidden from public search. Subscribe to make them visible again.</p>
-                  <p className="text-sm mt-1 font-medium">Founding Member pricing: $79/month — locked in forever.</p>
+                  <p className="text-sm mt-2 font-medium">
+                    {trialInfo.isFoundingMember
+                      ? `Founding Member #${trialInfo.foundingNumber} pricing: $25/month + 3% commission — locked in forever.`
+                      : 'Standard pricing: $49/month + 5% commission.'}
+                  </p>
                 </div>
               ) : (
                 <div>
-                  <p className="font-bold">{trialInfo.daysLeft} days left in your free trial</p>
+                  <p className="font-bold">
+                    {trialInfo.daysLeft} days left in your {trialInfo.isFoundingMember ? '60-day founding member' : '30-day'} trial
+                  </p>
                   <p className="text-sm mt-1">
-                    {trialInfo.isFoundingMember ? 'As a Founding Member, subscribe to lock in $79/month forever.' : 'Subscribe before your trial ends to keep your vehicles visible.'}
+                    {trialInfo.isFoundingMember
+                      ? `As Founding Member #${trialInfo.foundingNumber}, subscribe to lock in $25/month + 3% forever.`
+                      : 'Subscribe before your trial ends to keep your vehicles visible. $49/month + 5% commission.'}
                   </p>
                 </div>
               )}

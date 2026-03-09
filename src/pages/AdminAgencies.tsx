@@ -114,22 +114,31 @@ const getTrialDaysLeft = (endDate: string | null): number | null => {
 
 const TrialBadge = ({ agency }: { agency: Agency }) => {
   const status = agency.subscription_status;
+  const daysLeft = getTrialDaysLeft(agency.trial_end_date);
+
   if (status === 'active') {
     return agency.is_founding_member
-      ? <Badge className="bg-amber-500 text-white border-0">Founding Member</Badge>
+      ? <Badge className="bg-amber-500/20 text-amber-600 border-amber-500/30 whitespace-nowrap">Founding Member #{agency.founding_member_number}</Badge>
       : <Badge variant="default">Active</Badge>;
   }
   if (status === 'trial') {
-    const daysLeft = getTrialDaysLeft(agency.trial_end_date);
-    if (daysLeft !== null && daysLeft <= 0) {
+    const isEndingSoon = daysLeft !== null && daysLeft <= 7;
+    const isExpired = daysLeft !== null && daysLeft <= 0;
+    if (isExpired) {
       return <Badge variant="destructive">Trial Expired</Badge>;
     }
+    const prefix = agency.is_founding_member ? `FM #${agency.founding_member_number}` : 'Trial';
     return (
-      <Badge variant="secondary" className="whitespace-nowrap">
-        Trial{daysLeft !== null ? ` - ${daysLeft}d left` : ''}
+      <Badge className={`whitespace-nowrap ${
+        isEndingSoon
+          ? 'bg-amber-500/20 text-amber-600 border-amber-500/30'
+          : 'bg-emerald-500/20 text-emerald-600 border-emerald-500/30'
+      }`}>
+        {prefix}{daysLeft !== null ? ` — ${daysLeft}d left` : ''}
       </Badge>
     );
   }
+  if (status === 'payment_required') return <Badge variant="destructive">Payment Required</Badge>;
   if (status === 'expired') return <Badge variant="destructive">Expired</Badge>;
   if (status === 'cancelled') return <Badge variant="outline">Cancelled</Badge>;
   return <Badge variant="outline">{status}</Badge>;
