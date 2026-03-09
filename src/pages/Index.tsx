@@ -30,6 +30,7 @@ const Index = () => {
         }
       }) }} />
       <Hero />
+      <PopularDestinations />
       <HowItWorks />
       <Comparison />
       <OwnerCTA />
