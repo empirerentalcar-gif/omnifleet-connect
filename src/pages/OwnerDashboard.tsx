@@ -9,6 +9,12 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Calendar } from "@/components/ui/calendar";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import {
   Dialog,
   DialogContent,
@@ -26,6 +32,7 @@ import {
 import {
   Car,
   CalendarCheck,
+  CalendarIcon,
   Clock,
   CheckCircle2,
   XCircle,
@@ -33,8 +40,11 @@ import {
   RefreshCw,
   Pencil,
   Trash2,
+  X,
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { format } from "date-fns";
+import { cn } from "@/lib/utils";
 
 type Reservation = {
   id: string;
@@ -104,6 +114,8 @@ const OwnerDashboard = () => {
   const [trialInfo, setTrialInfo] = useState<{ status: string; daysLeft: number | null; isFoundingMember: boolean; foundingNumber: number | null } | null>(null);
   const [updatingId, setUpdatingId] = useState<string | null>(null);
   const [statusFilter, setStatusFilter] = useState("all");
+  const [dateFrom, setDateFrom] = useState<Date | undefined>(undefined);
+  const [dateTo, setDateTo] = useState<Date | undefined>(undefined);
 
   // Vehicle form state
   const [vehicleDialogOpen, setVehicleDialogOpen] = useState(false);
@@ -421,27 +433,98 @@ const OwnerDashboard = () => {
               </div>
             ) : (
               <div className="glass-card rounded-xl overflow-hidden">
-                {/* Status filter tabs */}
-                <div className="flex gap-2 p-4 border-b border-border/50 overflow-x-auto">
-                  {[
-                    { key: "all", label: "All", count: reservations.length },
-                    { key: "pending", label: "Pending", count: reservations.filter(r => r.status === "pending").length },
-                    { key: "approved", label: "Approved", count: reservations.filter(r => r.status === "approved").length },
-                    { key: "vehicle_ready", label: "Ready", count: reservations.filter(r => r.status === "vehicle_ready").length },
-                    { key: "declined", label: "Declined", count: reservations.filter(r => r.status === "declined").length },
-                  ].map((tab) => (
-                    <button
-                      key={tab.key}
-                      onClick={() => setStatusFilter(tab.key)}
-                      className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors whitespace-nowrap ${
-                        statusFilter === tab.key
-                          ? "bg-primary text-primary-foreground"
-                          : "bg-secondary/50 text-muted-foreground hover:bg-secondary"
-                      }`}
-                    >
-                      {tab.label} ({tab.count})
-                    </button>
-                  ))}
+                {/* Filters */}
+                <div className="p-4 border-b border-border/50 space-y-3">
+                  {/* Status filter tabs */}
+                  <div className="flex gap-2 overflow-x-auto">
+                    {[
+                      { key: "all", label: "All", count: reservations.length },
+                      { key: "pending", label: "Pending", count: reservations.filter(r => r.status === "pending").length },
+                      { key: "approved", label: "Approved", count: reservations.filter(r => r.status === "approved").length },
+                      { key: "vehicle_ready", label: "Ready", count: reservations.filter(r => r.status === "vehicle_ready").length },
+                      { key: "declined", label: "Declined", count: reservations.filter(r => r.status === "declined").length },
+                    ].map((tab) => (
+                      <button
+                        key={tab.key}
+                        onClick={() => setStatusFilter(tab.key)}
+                        className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors whitespace-nowrap ${
+                          statusFilter === tab.key
+                            ? "bg-primary text-primary-foreground"
+                            : "bg-secondary/50 text-muted-foreground hover:bg-secondary"
+                        }`}
+                      >
+                        {tab.label} ({tab.count})
+                      </button>
+                    ))}
+                  </div>
+                  
+                  {/* Date range filter */}
+                  <div className="flex flex-wrap items-center gap-2">
+                    <span className="text-sm text-muted-foreground">Filter by pickup date:</span>
+                    <Popover>
+                      <PopoverTrigger asChild>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          className={cn(
+                            "w-[140px] justify-start text-left font-normal",
+                            !dateFrom && "text-muted-foreground"
+                          )}
+                        >
+                          <CalendarIcon className="mr-2 h-4 w-4" />
+                          {dateFrom ? format(dateFrom, "MMM d, yyyy") : "From"}
+                        </Button>
+                      </PopoverTrigger>
+                      <PopoverContent className="w-auto p-0" align="start">
+                        <Calendar
+                          mode="single"
+                          selected={dateFrom}
+                          onSelect={setDateFrom}
+                          initialFocus
+                          className={cn("p-3 pointer-events-auto")}
+                        />
+                      </PopoverContent>
+                    </Popover>
+                    <span className="text-muted-foreground">–</span>
+                    <Popover>
+                      <PopoverTrigger asChild>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          className={cn(
+                            "w-[140px] justify-start text-left font-normal",
+                            !dateTo && "text-muted-foreground"
+                          )}
+                        >
+                          <CalendarIcon className="mr-2 h-4 w-4" />
+                          {dateTo ? format(dateTo, "MMM d, yyyy") : "To"}
+                        </Button>
+                      </PopoverTrigger>
+                      <PopoverContent className="w-auto p-0" align="start">
+                        <Calendar
+                          mode="single"
+                          selected={dateTo}
+                          onSelect={setDateTo}
+                          initialFocus
+                          className={cn("p-3 pointer-events-auto")}
+                        />
+                      </PopoverContent>
+                    </Popover>
+                    {(dateFrom || dateTo) && (
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => {
+                          setDateFrom(undefined);
+                          setDateTo(undefined);
+                        }}
+                        className="h-8 px-2 text-muted-foreground hover:text-foreground"
+                      >
+                        <X className="h-4 w-4 mr-1" />
+                        Clear
+                      </Button>
+                    )}
+                  </div>
                 </div>
                 
                 {/* Table */}
@@ -458,7 +541,21 @@ const OwnerDashboard = () => {
                     </thead>
                     <tbody className="divide-y divide-border/50">
                       {reservations
-                        .filter(r => statusFilter === "all" || r.status === statusFilter)
+                        .filter(r => {
+                          // Status filter
+                          if (statusFilter !== "all" && r.status !== statusFilter) return false;
+                          
+                          // Date range filter (by pickup_date)
+                          const pickupDate = new Date(r.pickup_date);
+                          if (dateFrom && pickupDate < dateFrom) return false;
+                          if (dateTo) {
+                            const toEndOfDay = new Date(dateTo);
+                            toEndOfDay.setHours(23, 59, 59, 999);
+                            if (pickupDate > toEndOfDay) return false;
+                          }
+                          
+                          return true;
+                        })
                         .map((r) => (
                         <tr key={r.id} className="hover:bg-secondary/20 transition-colors">
                           <td className="px-4 py-3">
@@ -534,9 +631,20 @@ const OwnerDashboard = () => {
                   </table>
                 </div>
                 
-                {reservations.filter(r => statusFilter === "all" || r.status === statusFilter).length === 0 && (
+                {reservations.filter(r => {
+                  if (statusFilter !== "all" && r.status !== statusFilter) return false;
+                  const pickupDate = new Date(r.pickup_date);
+                  if (dateFrom && pickupDate < dateFrom) return false;
+                  if (dateTo) {
+                    const toEndOfDay = new Date(dateTo);
+                    toEndOfDay.setHours(23, 59, 59, 999);
+                    if (pickupDate > toEndOfDay) return false;
+                  }
+                  return true;
+                }).length === 0 && (
                   <div className="p-8 text-center text-muted-foreground">
-                    No {statusFilter === "all" ? "" : statusFilter.replace("_", " ")} reservations found.
+                    No {statusFilter === "all" ? "" : statusFilter.replace("_", " ")} reservations found
+                    {(dateFrom || dateTo) && " in the selected date range"}.
                   </div>
                 )}
               </div>
