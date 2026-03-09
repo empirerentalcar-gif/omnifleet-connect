@@ -164,6 +164,23 @@ const AdminAgencies = () => {
     setAssignTarget(null);
   };
 
+  const confirmUnassignOwner = async () => {
+    if (!assignTarget) return;
+    setAssigning(true);
+    const { error } = await supabase.rpc('assign_agency_owner', {
+      _agency_id: assignTarget.id,
+      _owner_user_id: null,
+    });
+    if (error) {
+      toast({ title: 'Error removing owner', description: error.message, variant: 'destructive' });
+    } else {
+      toast({ title: 'Owner removed', description: `${assignTarget.agency_name} no longer has an assigned owner.` });
+      fetchAgencies();
+    }
+    setAssigning(false);
+    setAssignTarget(null);
+  };
+
   const fetchAgencies = async () => {
     const { data, error } = await supabase
       .from('agencies')
@@ -762,11 +779,24 @@ const AdminAgencies = () => {
               )}
             </div>
           </div>
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setAssignTarget(null)}>Cancel</Button>
-            <Button onClick={confirmAssignOwner} disabled={!assignSelected || assigning}>
-              {assigning ? 'Assigning…' : 'Confirm'}
-            </Button>
+          <DialogFooter className="flex-col-reverse sm:flex-row sm:justify-between gap-2">
+            <div className="flex gap-2">
+              {assignTarget?.owner_user_id && (
+                <Button
+                  variant="destructive"
+                  onClick={confirmUnassignOwner}
+                  disabled={assigning}
+                >
+                  {assigning ? 'Removing…' : 'Remove Owner'}
+                </Button>
+              )}
+            </div>
+            <div className="flex gap-2">
+              <Button variant="outline" onClick={() => setAssignTarget(null)}>Cancel</Button>
+              <Button onClick={confirmAssignOwner} disabled={!assignSelected || assigning}>
+                {assigning ? 'Assigning…' : 'Confirm'}
+              </Button>
+            </div>
           </DialogFooter>
         </DialogContent>
       </Dialog>
