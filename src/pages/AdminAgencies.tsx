@@ -16,6 +16,7 @@ import {
   Send,
   AlertTriangle,
   UserPlus,
+  Filter,
 } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { Badge } from '@/components/ui/badge';
@@ -66,6 +67,7 @@ import {
 } from '@/components/ui/collapsible';
 import { toast } from '@/hooks/use-toast';
 import { format } from 'date-fns';
+import { MAJOR_CITIES } from '@/lib/city-data';
 
 interface Agency {
   id: string;
@@ -113,6 +115,15 @@ const AdminAgencies = () => {
 
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
+  const [cityFilter, setCityFilter] = useState<string>('all');
+
+  // Compute unique cities from agencies data
+  const uniqueCities = useMemo(() => {
+    const cities = agencies
+      .map(a => a.city)
+      .filter((c): c is string => Boolean(c));
+    return Array.from(new Set(cities)).sort();
+  }, [agencies]);
   const [page, setPage] = useState(1);
   const PAGE_SIZE = 10;
   const [editingId, setEditingId] = useState<string | null>(null);
@@ -376,10 +387,11 @@ const AdminAgencies = () => {
 
   const filtered = agencies.filter((a) => {
     const q = search.toLowerCase();
-    return (
+    const matchesSearch =
       a.agency_name.toLowerCase().includes(q) ||
-      (a.city && a.city.toLowerCase().includes(q))
-    );
+      (a.city && a.city.toLowerCase().includes(q));
+    const matchesCity = cityFilter === 'all' || (a.city || '').toLowerCase() === cityFilter.toLowerCase();
+    return matchesSearch && matchesCity;
   });
 
   const sorted = [...filtered].sort((a, b) => {
@@ -398,7 +410,7 @@ const AdminAgencies = () => {
   const currentPage = Math.min(page, totalPages);
   const paginated = sorted.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE);
 
-  useEffect(() => { setPage(1); }, [search]);
+  useEffect(() => { setPage(1); }, [search, cityFilter]);
 
   const exportCSV = () => {
     const headers = ['Agency Name', 'City', 'State', 'Phone', 'Email', 'Approved', 'Active', 'Created At', 'Owner User ID'];
@@ -444,14 +456,28 @@ const AdminAgencies = () => {
 
       <main className="container mx-auto px-4 py-8 space-y-6">
         <div className="flex items-center justify-between gap-4 flex-wrap">
-          <div className="relative max-w-md flex-1">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-            <Input
-              placeholder="Search by name or city..."
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              className="pl-10"
-            />
+          <div className="flex items-center gap-3 flex-1 flex-wrap">
+            <div className="relative max-w-md flex-1 min-w-[200px]">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              <Input
+                placeholder="Search by name or city..."
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                className="pl-10"
+              />
+            </div>
+            <Select value={cityFilter} onValueChange={setCityFilter}>
+              <SelectTrigger className="w-[200px]">
+                <Filter className="h-4 w-4 mr-2" />
+                <SelectValue placeholder="Filter by city" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Cities</SelectItem>
+                {uniqueCities.map((city) => (
+                  <SelectItem key={city} value={city}>{city}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
           <Button variant="outline" onClick={exportCSV}>
             <Download className="h-4 w-4 mr-2" /> Export CSV

@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowLeft, Search, Pencil, Plus, ChevronLeft, ChevronRight, RefreshCw, ArrowUp, ArrowDown, ArrowUpDown, Download } from 'lucide-react';
+import { ArrowLeft, Search, Pencil, Plus, ChevronLeft, ChevronRight, RefreshCw, ArrowUp, ArrowDown, ArrowUpDown, Download, CalendarIcon } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAdmin } from '@/hooks/useAdmin';
 import { Button } from '@/components/ui/button';
@@ -20,9 +20,8 @@ import {
 import { Calendar } from '@/components/ui/calendar';
 import { toast } from '@/hooks/use-toast';
 import { format } from 'date-fns';
-import { CalendarIcon } from 'lucide-react';
 import { cn } from '@/lib/utils';
-
+import CitySelector from '@/components/CitySelector';
 interface InviteCode {
   id: string;
   code: string;
@@ -374,10 +373,11 @@ const AdminInviteCodes = () => {
             </div>
             <div className="space-y-2">
               <Label>City (optional)</Label>
-              <Input
+              <CitySelector
                 value={newCode.city}
-                onChange={(e) => setNewCode({ ...newCode, city: e.target.value })}
-                placeholder="e.g. Miami"
+                onChange={(val) => setNewCode({ ...newCode, city: val })}
+                placeholder="Select a city or type custom"
+                allowCustom
               />
             </div>
             <div className="space-y-2">
