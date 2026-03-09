@@ -108,6 +108,7 @@ const AdminAgencies = () => {
   const { isAdmin, loading: adminLoading } = useAdmin();
   const { user } = useAuth();
   const [agencies, setAgencies] = useState<Agency[]>([]);
+  const [vehicleCounts, setVehicleCounts] = useState<Record<string, number>>({});
   const [profileOptions, setProfileOptions] = useState<ProfileOption[]>([]);
   const profilesByUserId = useMemo(() => {
     return new Map(profileOptions.map((p) => [p.user_id, p] as const));
