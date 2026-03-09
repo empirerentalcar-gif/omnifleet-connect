@@ -135,6 +135,53 @@ export type Database = {
           },
         ]
       }
+      agency_public_profiles: {
+        Row: {
+          business_name: string
+          cancellation_policy: string | null
+          cash_accepted: boolean
+          created_at: string
+          deposit_info: string | null
+          owner_story: string | null
+          photos: string[] | null
+          profile_id: string
+          requirements: string[] | null
+          updated_at: string
+        }
+        Insert: {
+          business_name: string
+          cancellation_policy?: string | null
+          cash_accepted?: boolean
+          created_at?: string
+          deposit_info?: string | null
+          owner_story?: string | null
+          photos?: string[] | null
+          profile_id: string
+          requirements?: string[] | null
+          updated_at?: string
+        }
+        Update: {
+          business_name?: string
+          cancellation_policy?: string | null
+          cash_accepted?: boolean
+          created_at?: string
+          deposit_info?: string | null
+          owner_story?: string | null
+          photos?: string[] | null
+          profile_id?: string
+          requirements?: string[] | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "agency_public_profiles_profile_id_fkey"
+            columns: ["profile_id"]
+            isOneToOne: true
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       invite_codes: {
         Row: {
           active: boolean
