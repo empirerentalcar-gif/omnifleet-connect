@@ -580,6 +580,18 @@ const AdminAgencies = () => {
                 ))}
               </SelectContent>
             </Select>
+            <Select value={trialFilter} onValueChange={setTrialFilter}>
+              <SelectTrigger className="w-[180px]">
+                <SelectValue placeholder="Trial status" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Statuses</SelectItem>
+                <SelectItem value="trial">Active Trial</SelectItem>
+                <SelectItem value="active">Paid / Active</SelectItem>
+                <SelectItem value="expired">Expired</SelectItem>
+                <SelectItem value="founding">Founding Members</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
           <Button variant="outline" onClick={exportCSV}>
             <Download className="h-4 w-4 mr-2" /> Export CSV
