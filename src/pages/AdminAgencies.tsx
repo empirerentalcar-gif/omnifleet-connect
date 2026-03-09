@@ -781,6 +781,7 @@ const AdminAgencies = () => {
                               onCheckedChange={(v) => handleToggle(agency, 'active', v)}
                             />
                           </TableCell>
+                          <TableCell><TrialBadge agency={agency} /></TableCell>
                           <TableCell className="whitespace-nowrap">
                             {format(new Date(agency.created_at), 'MMM d, yyyy')}
                           </TableCell>
