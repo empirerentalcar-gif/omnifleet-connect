@@ -6,7 +6,7 @@ import PopularDestinations from "@/components/PopularDestinations";
 import OwnerCTA from "@/components/OwnerCTA";
 import TrustBadges from "@/components/TrustBadges";
 import AgencyCTA from "@/components/AgencyCTA";
-import Footer from "@/components/Footer";
+import OwnerFAQ from "@/components/OwnerFAQ";
 import SEO from "@/components/SEO";
 
 const Index = () => {
