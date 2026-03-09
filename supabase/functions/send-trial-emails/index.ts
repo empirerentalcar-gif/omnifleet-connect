@@ -8,7 +8,7 @@ const corsHeaders = {
 };
 
 const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY");
-const FROM_EMAIL = "noreply@zuvio.us";
+const FROM_EMAIL = "team@zuvio.us";
 
 interface Agency {
   id: string;
@@ -17,6 +17,8 @@ interface Agency {
   trial_start_date: string | null;
   trial_end_date: string | null;
   subscription_status: string;
+  is_founding_member: boolean;
+  founding_member_number: number | null;
 }
 
 const sendEmail = async (to: string, subject: string, html: string) => {
@@ -34,41 +36,109 @@ const sendEmail = async (to: string, subject: string, html: string) => {
   return res.ok;
 };
 
-const welcomeEmail = (name: string) => `
-<div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-  <h1 style="color: #1a1a1a;">Welcome to Zuvio, ${name}! 🎉</h1>
-  <p>You've been accepted as a <strong>Founding Member</strong> — one of the first 50 agencies on Zuvio.</p>
-  <p>Here's what you get:</p>
-  <ul>
-    <li><strong>60 days FREE</strong> — no credit card required</li>
-    <li>Full access to list vehicles, receive reservations, and grow your business</li>
-    <li>Locked-in Founding Member pricing when you subscribe</li>
-  </ul>
-  <p>Your trial ends in 60 days. We'll remind you before it expires.</p>
-  <p><a href="https://zuvio.us/dashboard" style="display:inline-block;background:#f97316;color:#fff;padding:12px 24px;border-radius:6px;text-decoration:none;font-weight:bold;">Go to Your Dashboard</a></p>
-  <p style="color: #666; font-size: 14px;">— The Zuvio Team</p>
+const foundingWelcomeEmail = (name: string, number: number) => `
+<div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
+  <h1 style="color: #1a1a1a;">🎉 Welcome, Founding Member #${number}!</h1>
+  <p>Congratulations <strong>${name}</strong> — you're officially Founding Member <strong>#${number} of 50</strong> on Zuvio.</p>
+  
+  <div style="background: #fff8f0; border: 1px solid #f97316; border-radius: 8px; padding: 16px; margin: 20px 0;">
+    <h3 style="margin-top: 0; color: #f97316;">Your Founding Member Benefits</h3>
+    <ul style="margin: 0; padding-left: 20px;">
+      <li><strong>60 days completely FREE</strong> — no credit card required</li>
+      <li>After trial: <strong>$25/month + 3% commission</strong> (locked in forever)</li>
+      <li>Full access to list vehicles, receive reservations, and grow your business</li>
+      <li>Priority support and early access to new features</li>
+    </ul>
+  </div>
+
+  <h3>How to Get Started:</h3>
+  <ol>
+    <li>Log into your dashboard and complete your agency profile</li>
+    <li>Upload your vehicles with photos and pricing</li>
+    <li>Optimize your listings — detailed descriptions get more bookings</li>
+    <li>Start receiving reservation requests from customers</li>
+  </ol>
+
+  <p><a href="https://zuvio.us/dashboard" style="display:inline-block;background:#f97316;color:#fff;padding:14px 28px;border-radius:8px;text-decoration:none;font-weight:bold;font-size:16px;">Go to Your Dashboard →</a></p>
+  
+  <p style="color: #666; font-size: 14px; margin-top: 30px;">Your trial ends in 60 days. We'll remind you before it expires.<br/>— The Zuvio Team</p>
 </div>`;
 
-const reminderEmail = (name: string, daysLeft: number) => `
-<div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-  <h1 style="color: #1a1a1a;">${daysLeft <= 5 ? '⚠️' : '⏰'} ${daysLeft} days left in your trial</h1>
+const standardWelcomeEmail = (name: string) => `
+<div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
+  <h1 style="color: #1a1a1a;">Welcome to Zuvio, ${name}! 🚗</h1>
+  <p>Your <strong>30-day free trial</strong> starts now. Here's everything you need to know.</p>
+  
+  <div style="background: #f0f4ff; border: 1px solid #3b82f6; border-radius: 8px; padding: 16px; margin: 20px 0;">
+    <h3 style="margin-top: 0; color: #3b82f6;">Your Trial Details</h3>
+    <ul style="margin: 0; padding-left: 20px;">
+      <li><strong>30 days free</strong> — full access, no restrictions</li>
+      <li>After trial: <strong>$49/month + 5% commission</strong></li>
+      <li>List unlimited vehicles and receive reservation requests</li>
+    </ul>
+  </div>
+
+  <h3>Maximize Your Trial:</h3>
+  <ol>
+    <li>Complete your agency profile with photos and your story</li>
+    <li>Upload all your available vehicles</li>
+    <li>Add detailed descriptions and competitive pricing</li>
+    <li>Respond quickly to reservation requests</li>
+  </ol>
+
+  <p><a href="https://zuvio.us/dashboard" style="display:inline-block;background:#3b82f6;color:#fff;padding:14px 28px;border-radius:8px;text-decoration:none;font-weight:bold;font-size:16px;">Go to Your Dashboard →</a></p>
+  
+  <p style="color: #666; font-size: 14px; margin-top: 30px;">Your trial ends in 30 days. We'll remind you before it expires.<br/>— The Zuvio Team</p>
+</div>`;
+
+const trialEndingEmail = (name: string, daysLeft: number, isFounding: boolean, number: number | null) => `
+<div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
+  <h1 style="color: #1a1a1a;">${daysLeft <= 5 ? '⚠️' : '⏰'} Your Zuvio trial ends in ${daysLeft} days</h1>
   <p>Hi ${name},</p>
-  <p>Your Zuvio Founding Member trial ${daysLeft <= 5 ? '<strong>expires very soon</strong>' : 'is ending soon'}.</p>
-  <p>After your trial ends, your vehicles will be hidden from search until you subscribe.</p>
-  <p><strong>Founding Member pricing: $79/month</strong> — locked in forever.</p>
-  <p><a href="https://zuvio.us/dashboard" style="display:inline-block;background:#f97316;color:#fff;padding:12px 24px;border-radius:6px;text-decoration:none;font-weight:bold;">Subscribe Now</a></p>
-  <p style="color: #666; font-size: 14px;">— The Zuvio Team</p>
+  <p>Your ${isFounding ? `Founding Member` : ''} trial ${daysLeft <= 5 ? '<strong>expires very soon</strong>' : 'is ending soon'}.</p>
+  
+  <div style="background: ${daysLeft <= 5 ? '#fef2f2' : '#fff8f0'}; border: 1px solid ${daysLeft <= 5 ? '#ef4444' : '#f97316'}; border-radius: 8px; padding: 16px; margin: 20px 0;">
+    <p style="margin: 0;"><strong>After your trial ends:</strong></p>
+    <ul style="margin: 8px 0 0; padding-left: 20px;">
+      <li>Your vehicles will be hidden from public search</li>
+      <li>Your agency data and listings are preserved</li>
+      <li>Subscribe anytime to restore visibility</li>
+    </ul>
+  </div>
+
+  <p><strong>Your pricing: ${isFounding ? `$25/month + 3% commission (Founding Member #${number} exclusive rate)` : '$49/month + 5% commission'}</strong></p>
+  
+  <p><a href="https://zuvio.us/dashboard" style="display:inline-block;background:#f97316;color:#fff;padding:14px 28px;border-radius:8px;text-decoration:none;font-weight:bold;font-size:16px;">Subscribe Now →</a></p>
+  
+  <p style="color: #666; font-size: 14px; margin-top: 30px;">— The Zuvio Team</p>
 </div>`;
 
-const expiredEmail = (name: string) => `
-<div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+const trialEndedEmail = (name: string, isFounding: boolean, number: number | null) => `
+<div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
   <h1 style="color: #1a1a1a;">Your trial has ended</h1>
   <p>Hi ${name},</p>
-  <p>Your 60-day Founding Member trial has expired. Your vehicles are now <strong>hidden from public search</strong>.</p>
-  <p>Don't worry — your data is safe. Subscribe to make your listings visible again.</p>
-  <p><strong>Founding Member pricing: $79/month</strong> — this rate is only available to you.</p>
-  <p><a href="https://zuvio.us/dashboard" style="display:inline-block;background:#f97316;color:#fff;padding:12px 24px;border-radius:6px;text-decoration:none;font-weight:bold;">Subscribe & Go Live</a></p>
-  <p style="color: #666; font-size: 14px;">— The Zuvio Team</p>
+  <p>Your ${isFounding ? `60-day Founding Member` : '30-day'} trial period is complete.</p>
+  
+  <div style="background: #fef2f2; border: 1px solid #ef4444; border-radius: 8px; padding: 16px; margin: 20px 0;">
+    <p style="margin: 0;"><strong>What's changed:</strong></p>
+    <ul style="margin: 8px 0 0; padding-left: 20px;">
+      <li>Your vehicles are now <strong>hidden from public search</strong></li>
+      <li>Your agency data and listings are <strong>safe and preserved</strong></li>
+      <li>Subscribe to restore visibility instantly</li>
+    </ul>
+  </div>
+
+  <div style="background: #f0fdf4; border: 1px solid #22c55e; border-radius: 8px; padding: 16px; margin: 20px 0;">
+    <p style="margin: 0;"><strong>Your pricing${isFounding ? ` (Founding Member #${number})` : ''}:</strong></p>
+    <p style="font-size: 20px; font-weight: bold; margin: 8px 0 0; color: #16a34a;">
+      ${isFounding ? '$25/month + 3% commission' : '$49/month + 5% commission'}
+    </p>
+    ${isFounding ? '<p style="margin: 4px 0 0; font-size: 14px; color: #666;">This exclusive rate is locked in forever as a Founding Member.</p>' : ''}
+  </div>
+
+  <p><a href="https://zuvio.us/dashboard" style="display:inline-block;background:#f97316;color:#fff;padding:14px 28px;border-radius:8px;text-decoration:none;font-weight:bold;font-size:16px;">Subscribe & Go Live →</a></p>
+  
+  <p style="color: #666; font-size: 14px; margin-top: 30px;">Questions? Reply to this email — we're here to help.<br/>— The Zuvio Team</p>
 </div>`;
 
 serve(async (req) => {
@@ -88,7 +158,7 @@ serve(async (req) => {
     // Get all agencies on trial
     const { data: agencies, error } = await supabase
       .from("agencies")
-      .select("id, agency_name, email, trial_start_date, trial_end_date, subscription_status")
+      .select("id, agency_name, email, trial_start_date, trial_end_date, subscription_status, is_founding_member, founding_member_number")
       .eq("subscription_status", "trial")
       .not("email", "is", null)
       .not("trial_end_date", "is", null);
@@ -106,33 +176,53 @@ serve(async (req) => {
       const endDate = new Date(agency.trial_end_date);
       const daysSinceStart = Math.floor((today.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24));
       const daysLeft = Math.ceil((endDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
+      const isFounding = agency.is_founding_member;
+      const fmNum = agency.founding_member_number;
 
       // Day 1: Welcome email
       if (daysSinceStart === 0) {
-        await sendEmail(agency.email, "Welcome to Zuvio — Your 60-Day Trial Starts Now!", welcomeEmail(agency.agency_name));
+        if (isFounding && fmNum) {
+          await sendEmail(agency.email, `Welcome, Founding Member #${fmNum}! Your 60-Day Trial Starts Now`, foundingWelcomeEmail(agency.agency_name, fmNum));
+        } else {
+          await sendEmail(agency.email, "Welcome to Zuvio — Your 30-Day Trial Starts Now", standardWelcomeEmail(agency.agency_name));
+        }
         sent++;
       }
-      // Day 45 (15 days left)
-      else if (daysLeft === 15) {
-        await sendEmail(agency.email, "15 days left in your Zuvio trial", reminderEmail(agency.agency_name, 15));
+      // Founding: Day 45 (15 days left) / Standard: Day 23 (7 days left)
+      else if ((isFounding && daysLeft === 15) || (!isFounding && daysLeft === 7)) {
+        await sendEmail(
+          agency.email,
+          `Your Zuvio trial ends in ${daysLeft} days`,
+          trialEndingEmail(agency.agency_name, daysLeft, isFounding, fmNum)
+        );
         sent++;
       }
-      // Day 55 (5 days left)
+      // 5 days left (both tiers)
       else if (daysLeft === 5) {
-        await sendEmail(agency.email, "⚠️ 5 days left — Subscribe to stay live on Zuvio", reminderEmail(agency.agency_name, 5));
+        await sendEmail(
+          agency.email,
+          `⚠️ 5 days left — Subscribe to stay live on Zuvio`,
+          trialEndingEmail(agency.agency_name, 5, isFounding, fmNum)
+        );
         sent++;
       }
-      // Day 60 (expired)
+      // Trial ended
       else if (daysLeft <= 0) {
-        await sendEmail(agency.email, "Your Zuvio trial has ended — Subscribe to go live", expiredEmail(agency.agency_name));
-        // Mark as expired
+        await sendEmail(
+          agency.email,
+          "Your trial has ended — Subscribe to continue on Zuvio",
+          trialEndedEmail(agency.agency_name, isFounding, fmNum)
+        );
+        // Mark as payment_required
         await supabase
           .from("agencies")
-          .update({ subscription_status: "expired" })
+          .update({ subscription_status: "payment_required" })
           .eq("id", agency.id);
         sent++;
       }
     }
+
+    console.log(`[TRIAL-EMAILS] Processed ${(agencies || []).length} agencies, sent ${sent} emails`);
 
     return new Response(JSON.stringify({ success: true, emailsSent: sent }), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
