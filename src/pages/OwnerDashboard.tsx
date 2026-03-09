@@ -9,6 +9,12 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Calendar } from "@/components/ui/calendar";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import {
   Dialog,
   DialogContent,
@@ -26,6 +32,7 @@ import {
 import {
   Car,
   CalendarCheck,
+  CalendarIcon,
   Clock,
   CheckCircle2,
   XCircle,
@@ -33,8 +40,11 @@ import {
   RefreshCw,
   Pencil,
   Trash2,
+  X,
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { format } from "date-fns";
+import { cn } from "@/lib/utils";
 
 type Reservation = {
   id: string;
