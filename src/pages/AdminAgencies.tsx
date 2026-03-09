@@ -395,7 +395,7 @@ const AdminAgencies = () => {
 
   const confirmDeactivate = async () => {
     if (!deactivateTarget) return;
-    await performToggle(deactivateTarget.id, 'active', false);
+    await performToggle(deactivateTarget, 'active', false);
     setDeactivateTarget(null);
   };
 
