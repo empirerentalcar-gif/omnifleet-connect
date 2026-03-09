@@ -503,6 +503,7 @@ const AdminAgencies = () => {
       case 'approved': return dir * (Number(a.approved) - Number(b.approved));
       case 'active': return dir * (Number(a.active) - Number(b.active));
       case 'created_at': return dir * (new Date(a.created_at).getTime() - new Date(b.created_at).getTime());
+      case 'subscription_status': return dir * a.subscription_status.localeCompare(b.subscription_status);
       default: return 0;
     }
   });
