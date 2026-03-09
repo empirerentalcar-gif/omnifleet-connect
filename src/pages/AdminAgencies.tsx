@@ -487,7 +487,12 @@ const AdminAgencies = () => {
       a.agency_name.toLowerCase().includes(q) ||
       (a.city && a.city.toLowerCase().includes(q));
     const matchesCity = cityFilter === 'all' || (a.city || '').toLowerCase() === cityFilter.toLowerCase();
-    return matchesSearch && matchesCity;
+    let matchesTrial = true;
+    if (trialFilter === 'trial') matchesTrial = a.subscription_status === 'trial';
+    else if (trialFilter === 'active') matchesTrial = a.subscription_status === 'active';
+    else if (trialFilter === 'expired') matchesTrial = a.subscription_status === 'expired';
+    else if (trialFilter === 'founding') matchesTrial = a.is_founding_member;
+    return matchesSearch && matchesCity && matchesTrial;
   });
 
   const sorted = [...filtered].sort((a, b) => {
