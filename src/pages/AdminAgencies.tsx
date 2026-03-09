@@ -390,14 +390,30 @@ const AdminAgencies = () => {
                   <TableHead>State</TableHead>
                   <TableHead>Phone</TableHead>
                   <TableHead>Email</TableHead>
-                  <TableHead className="cursor-pointer select-none" onClick={() => toggleSort('approved')}>
-                    <span className="inline-flex items-center">Approved <SortIcon column="approved" /></span>
+                  <TableHead>Owner</TableHead>
+                  <TableHead
+                    className="cursor-pointer select-none"
+                    onClick={() => toggleSort('approved')}
+                  >
+                    <span className="inline-flex items-center">
+                      Approved <SortIcon column="approved" />
+                    </span>
                   </TableHead>
-                  <TableHead className="cursor-pointer select-none" onClick={() => toggleSort('active')}>
-                    <span className="inline-flex items-center">Active <SortIcon column="active" /></span>
+                  <TableHead
+                    className="cursor-pointer select-none"
+                    onClick={() => toggleSort('active')}
+                  >
+                    <span className="inline-flex items-center">
+                      Active <SortIcon column="active" />
+                    </span>
                   </TableHead>
-                  <TableHead className="cursor-pointer select-none" onClick={() => toggleSort('created_at')}>
-                    <span className="inline-flex items-center">Created <SortIcon column="created_at" /></span>
+                  <TableHead
+                    className="cursor-pointer select-none"
+                    onClick={() => toggleSort('created_at')}
+                  >
+                    <span className="inline-flex items-center">
+                      Created <SortIcon column="created_at" />
+                    </span>
                   </TableHead>
                   <TableHead className="text-right">Actions</TableHead>
                 </TableRow>
@@ -405,7 +421,7 @@ const AdminAgencies = () => {
               <TableBody>
                 {sorted.length === 0 ? (
                   <TableRow>
-                    <TableCell colSpan={9} className="text-center py-8 text-muted-foreground">
+                    <TableCell colSpan={10} className="text-center py-8 text-muted-foreground">
                       No agencies found.
                     </TableCell>
                   </TableRow>
