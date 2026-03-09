@@ -28,7 +28,19 @@ const SignUp = () => {
   const [accessCode, setAccessCode] = useState('');
   const [businessName, setBusinessName] = useState('');
   const [loading, setLoading] = useState(false);
+  const [foundingCount, setFoundingCount] = useState<number | null>(null);
   const { toast } = useToast();
+
+  useEffect(() => {
+    const fetchFoundingCount = async () => {
+      const { count } = await supabase
+        .from('agencies')
+        .select('*', { count: 'exact', head: true })
+        .eq('is_founding_member', true);
+      setFoundingCount(count ?? 0);
+    };
+    fetchFoundingCount();
+  }, []);
 
   const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
