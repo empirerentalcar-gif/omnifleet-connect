@@ -357,20 +357,39 @@ const AdminAgencies = () => {
       setDeactivateTarget(agency);
       return;
     }
-    await performToggle(agency.id, field, value);
+    await performToggle(agency, field, value);
   };
 
-  const performToggle = async (id: string, field: string, value: boolean) => {
+  const performToggle = async (agency: Agency, field: string, value: boolean) => {
     const { error } = await supabase
       .from('agencies')
       .update({ [field]: value })
-      .eq('id', id);
+      .eq('id', agency.id);
 
     if (error) {
       toast({ title: 'Error', description: error.message, variant: 'destructive' });
       return;
     }
     toast({ title: `Agency ${field} updated` });
+    
+    // Send approval email if approving an agency
+    if (field === 'approved' && value && agency.email) {
+      try {
+        await supabase.functions.invoke('send-agency-approval', {
+          body: {
+            agency: {
+              agency_name: agency.agency_name,
+              email: agency.email,
+            },
+          },
+        });
+        toast({ title: 'Approval email sent', description: `Email sent to ${agency.email}` });
+      } catch (emailErr) {
+        console.error('Approval email failed:', emailErr);
+        toast({ title: 'Note: Email not sent', description: 'Agency approved but email notification failed.', variant: 'destructive' });
+      }
+    }
+    
     fetchAgencies();
   };
 
