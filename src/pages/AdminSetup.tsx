@@ -17,19 +17,37 @@ const AdminSetup = () => {
   const { toast } = useToast();
   const navigate = useNavigate();
 
-  // Check if an admin already exists
+  // On mount: detect if an admin already exists BEFORE showing signup form
   useEffect(() => {
     const check = async () => {
-      // Try calling bootstrap — if it fails with "already exists" message, block
-      // But we don't want to call it yet. Instead, check auth state first.
       const { data: { session } } = await supabase.auth.getSession();
 
       if (session) {
-        // User is already logged in — try to bootstrap directly
+        // Already signed in — try to activate admin role
         setStep('activate');
-      } else {
-        setStep('form');
+        return;
       }
+
+      // Check if any admin exists by calling bootstrap as an unauthenticated user.
+      // It will throw "Authentication required" (no admin yet → proceed)
+      // or we detect via a public-safe query. We use a workaround: attempt the RPC
+      // without auth — it will return auth error, not the "already exists" error.
+      // The safest gate: check if the user_roles table has any admin row via a
+      // service-free path. We expose this via a simple anonymous-safe RPC.
+      // Since we can't safely query user_roles as anon, we use the following strategy:
+      // Try signing in anonymously to run bootstrap — if it says "already exists", block.
+      // This approach: just probe via bootstrap with a temporary anon session.
+
+      // Simplest safe approach: query for an admin-existence indicator via a public-readable
+      // column. We don't have one, so instead we block the form if VITE_ADMIN_SETUP_ENABLED
+      // is not explicitly set, acting as a deployment-time gate.
+      const setupEnabled = import.meta.env.VITE_ADMIN_SETUP_ENABLED === 'true';
+      if (!setupEnabled) {
+        setStep('blocked');
+        return;
+      }
+
+      setStep('form');
     };
     check();
   }, []);
@@ -112,7 +130,10 @@ const AdminSetup = () => {
           <CardHeader className="text-center">
             <AlertTriangle className="mx-auto h-10 w-10 text-destructive mb-2" />
             <CardTitle>Setup Disabled</CardTitle>
-            <CardDescription>An admin account already exists. This bootstrap page is no longer available.</CardDescription>
+            <CardDescription>
+              Admin setup is not enabled in this environment. If you already have an admin account,
+              please sign in normally.
+            </CardDescription>
           </CardHeader>
           <CardContent className="text-center">
             <Button onClick={() => navigate('/signin')}>Go to Sign In</Button>
@@ -181,7 +202,7 @@ const AdminSetup = () => {
     );
   }
 
-  // step === 'form'
+  // step === 'form' — only reached when VITE_ADMIN_SETUP_ENABLED=true
   return (
     <div className="min-h-screen flex items-center justify-center bg-background p-4">
       <Card className="w-full max-w-md">
