@@ -5,10 +5,8 @@ import { Card, CardContent } from '@/components/ui/card';
 import { supabase } from '@/integrations/supabase/client';
 import { FEATURED_CITY_SLUGS, MAJOR_CITIES, normalizeCity } from '@/lib/city-data';
 
-type AgencyRow = {
+type PublicAgency = {
   city: string | null;
-  approved: boolean;
-  active: boolean;
 };
 
 const cityVisuals: Record<string, string> = {
@@ -23,16 +21,12 @@ const cityVisuals: Record<string, string> = {
 };
 
 const PopularDestinations = () => {
-  const [agencyRows, setAgencyRows] = useState<AgencyRow[]>([]);
+  const [agencyRows, setAgencyRows] = useState<PublicAgency[]>([]);
 
   useEffect(() => {
     const fetchCounts = async () => {
-      const { data } = await supabase
-        .from('agencies')
-        .select('city, approved, active')
-        .eq('approved', true)
-        .eq('active', true);
-      setAgencyRows((data as AgencyRow[]) || []);
+      const { data } = await supabase.rpc('get_public_agencies');
+      setAgencyRows((data as PublicAgency[]) || []);
     };
 
     fetchCounts();

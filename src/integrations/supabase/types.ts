@@ -567,6 +567,16 @@ export type Database = {
         }
         Returns: boolean
       }
+      get_founding_member_count: { Args: never; Returns: number }
+      get_public_agencies: {
+        Args: never
+        Returns: {
+          agency_name: string
+          city: string
+          id: string
+          state: string
+        }[]
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
