@@ -148,6 +148,13 @@ export type Database = {
             referencedRelation: "agencies"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "agency_notes_agency_id_fkey"
+            columns: ["agency_id"]
+            isOneToOne: false
+            referencedRelation: "agencies_public_view"
+            referencedColumns: ["id"]
+          },
         ]
       }
       agency_public_profiles: {
@@ -517,6 +524,39 @@ export type Database = {
       }
     }
     Views: {
+      agencies_public_view: {
+        Row: {
+          active: boolean | null
+          agency_name: string | null
+          approved: boolean | null
+          city: string | null
+          email: string | null
+          id: string | null
+          phone: string | null
+          state: string | null
+        }
+        Insert: {
+          active?: boolean | null
+          agency_name?: string | null
+          approved?: boolean | null
+          city?: string | null
+          email?: string | null
+          id?: string | null
+          phone?: string | null
+          state?: string | null
+        }
+        Update: {
+          active?: boolean | null
+          agency_name?: string | null
+          approved?: boolean | null
+          city?: string | null
+          email?: string | null
+          id?: string | null
+          phone?: string | null
+          state?: string | null
+        }
+        Relationships: []
+      }
       available_vehicles_public: {
         Row: {
           agency_photos: string[] | null
@@ -567,6 +607,7 @@ export type Database = {
         }
         Returns: boolean
       }
+      get_founding_member_count: { Args: never; Returns: number }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
