@@ -21,14 +21,12 @@ const cityVisuals: Record<string, string> = {
 };
 
 const PopularDestinations = () => {
-  const [agencyRows, setAgencyRows] = useState<AgencyRow[]>([]);
+  const [agencyRows, setAgencyRows] = useState<PublicAgency[]>([]);
 
   useEffect(() => {
     const fetchCounts = async () => {
-      const { data } = await supabase
-        .from('agencies_public_view' as any)
-        .select('city');
-      setAgencyRows((data as AgencyRow[]) || []);
+      const { data } = await supabase.rpc('get_public_agencies');
+      setAgencyRows((data as PublicAgency[]) || []);
     };
 
     fetchCounts();
