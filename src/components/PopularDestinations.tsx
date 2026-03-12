@@ -5,10 +5,8 @@ import { Card, CardContent } from '@/components/ui/card';
 import { supabase } from '@/integrations/supabase/client';
 import { FEATURED_CITY_SLUGS, MAJOR_CITIES, normalizeCity } from '@/lib/city-data';
 
-type AgencyRow = {
+type PublicAgency = {
   city: string | null;
-  approved: boolean;
-  active: boolean;
 };
 
 const cityVisuals: Record<string, string> = {
