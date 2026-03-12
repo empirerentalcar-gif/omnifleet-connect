@@ -28,10 +28,8 @@ const PopularDestinations = () => {
   useEffect(() => {
     const fetchCounts = async () => {
       const { data } = await supabase
-        .from('agencies')
-        .select('city, approved, active')
-        .eq('approved', true)
-        .eq('active', true);
+        .from('agencies_public_view' as any)
+        .select('city');
       setAgencyRows((data as AgencyRow[]) || []);
     };
 

@@ -33,11 +33,8 @@ const SignUp = () => {
 
   useEffect(() => {
     const fetchFoundingCount = async () => {
-      const { count } = await supabase
-        .from('agencies')
-        .select('*', { count: 'exact', head: true })
-        .eq('is_founding_member', true);
-      setFoundingCount(count ?? 0);
+      const { data } = await supabase.rpc('get_founding_member_count');
+      setFoundingCount(typeof data === 'number' ? data : 0);
     };
     fetchFoundingCount();
   }, []);
