@@ -245,6 +245,9 @@ const AdminDashboard = () => {
           )}
         </div>
 
+        {/* Reservations */}
+        <AdminReservations />
+
         {/* Pending Agencies */}
         <div>
           <h2 className="text-xl font-semibold mb-4">Pending Approvals</h2>
