@@ -44,7 +44,7 @@ const SignUp = () => {
     setLoading(true);
 
     // Validate inputs with Zod
-    const result = signUpSchema.safeParse({ accessCode, businessName, email, password });
+    const result = signUpSchema.safeParse({ registrationCode, businessName, email, password });
     if (!result.success) {
       toast({
         title: 'Validation error',
@@ -56,16 +56,28 @@ const SignUp = () => {
     }
 
     const validated = result.data;
+    let codeType: 'access' | 'invite' | null = null;
 
-    // Validate access code first
-    const { data: isValid, error: codeError } = await supabase.rpc('validate_access_code', {
-      code_to_check: validated.accessCode,
+    // Try invite code first
+    const { data: isInviteValid } = await supabase.rpc('validate_invite_code', {
+      code_to_check: validated.registrationCode,
     });
+    if (isInviteValid) {
+      codeType = 'invite';
+    } else {
+      // Try access code
+      const { data: isAccessValid } = await supabase.rpc('validate_access_code', {
+        code_to_check: validated.registrationCode,
+      });
+      if (isAccessValid) {
+        codeType = 'access';
+      }
+    }
 
-    if (codeError || !isValid) {
+    if (!codeType) {
       toast({
-        title: 'Invalid access code',
-        description: 'The access code is invalid or expired.',
+        title: 'Invalid registration code',
+        description: 'The code you entered is invalid or expired.',
         variant: 'destructive',
       });
       setLoading(false);
