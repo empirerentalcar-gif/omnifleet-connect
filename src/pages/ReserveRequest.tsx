@@ -13,6 +13,22 @@ const vehicleTypes = ["Compact", "Sedan", "SUV", "Truck", "Van", "Luxury"] as co
 
 const today = new Date().toISOString().split("T")[0];
 
+const formatBackendError = (error: {
+  message?: string | null;
+  details?: string | null;
+  hint?: string | null;
+  code?: string | null;
+}) => {
+  const parts = [
+    error.message,
+    error.details ? `details: ${error.details}` : null,
+    error.hint ? `hint: ${error.hint}` : null,
+    error.code ? `code: ${error.code}` : null,
+  ].filter(Boolean);
+
+  return parts.length > 0 ? parts.join(" | ") : "Unknown backend error";
+};
+
 const reservationSchema = z.object({
   customer_name: z.string().trim().min(1, "Name is required").max(100),
   customer_phone: z.string().trim().min(1, "Phone is required").max(20).regex(/^[0-9()\-+\s.]+$/, "Invalid phone format"),
@@ -75,7 +91,7 @@ const ReserveRequest = () => {
 
       if (error) {
         console.error("Reservation insert error:", error);
-        toast.error(`Reservation failed: ${error.message}`);
+        toast.error(`Reservation failed: ${formatBackendError(error)}`);
         setSubmitting(false);
         return;
       }
@@ -88,7 +104,7 @@ const ReserveRequest = () => {
       navigate(`/reservation-confirmed?agency=${encodeURIComponent(agencyName)}`);
     } catch (err: any) {
       console.error("Reservation submit error:", err);
-      toast.error(`Reservation failed: ${err?.message || 'Unknown error'}`);
+      toast.error(`Reservation failed: ${formatBackendError(err || {})}`);
       setSubmitting(false);
     }
   };
