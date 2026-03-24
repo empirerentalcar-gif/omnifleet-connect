@@ -17,12 +17,40 @@ function escapeHtml(text: string): string {
   return text.replace(/[&<>"']/g, (m) => map[m]);
 }
 
+// In-memory rate limit store (per isolate lifetime)
+const rateLimitMap = new Map<string, { count: number; windowStart: number }>();
+const RATE_LIMIT_WINDOW_MS = 60 * 1000; // 1 minute
+const RATE_LIMIT_MAX = 5; // max 5 calls per minute per IP
+
+function checkRateLimit(ip: string): boolean {
+  const now = Date.now();
+  const entry = rateLimitMap.get(ip);
+  if (!entry || now - entry.windowStart > RATE_LIMIT_WINDOW_MS) {
+    rateLimitMap.set(ip, { count: 1, windowStart: now });
+    return true;
+  }
+  if (entry.count >= RATE_LIMIT_MAX) {
+    return false;
+  }
+  entry.count++;
+  return true;
+}
+
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
   }
 
   try {
+    // Rate limit by IP
+    const clientIp = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "unknown";
+    if (!checkRateLimit(clientIp)) {
+      return new Response(
+        JSON.stringify({ error: "Too many requests. Please try again later." }),
+        { status: 429, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
+
     const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
     const serviceRoleKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
     const resendApiKey = Deno.env.get("RESEND_API_KEY");
@@ -31,9 +59,11 @@ Deno.serve(async (req) => {
 
     const { reservation_id } = await req.json() as { reservation_id: string };
 
-    if (!reservation_id) {
+    // Validate reservation_id format (UUID)
+    const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+    if (!reservation_id || !uuidRegex.test(reservation_id)) {
       return new Response(
-        JSON.stringify({ error: "Missing reservation_id" }),
+        JSON.stringify({ error: "Invalid reservation_id" }),
         { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
@@ -46,9 +76,21 @@ Deno.serve(async (req) => {
       .maybeSingle();
 
     if (resErr || !reservation) {
+      // Return generic error to prevent ID enumeration
       return new Response(
-        JSON.stringify({ error: "Reservation not found" }),
-        { status: 404, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        JSON.stringify({ error: "Unable to process request" }),
+        { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
+
+    // Idempotency guard: only send notification for recently created reservations (within 5 minutes)
+    const createdAt = new Date(reservation.created_at).getTime();
+    const now = Date.now();
+    const FIVE_MINUTES_MS = 5 * 60 * 1000;
+    if (now - createdAt > FIVE_MINUTES_MS) {
+      return new Response(
+        JSON.stringify({ success: true, message: "Notification already processed" }),
+        { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
 
@@ -181,7 +223,7 @@ Deno.serve(async (req) => {
       if (!results[0].ok) {
         console.error("[NOTIFY] Resend error (agency):", agencyResult);
         return new Response(
-          JSON.stringify({ error: "Failed to send agency email", details: agencyResult }),
+          JSON.stringify({ error: "Failed to send notification" }),
           { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
         );
       }
@@ -191,29 +233,22 @@ Deno.serve(async (req) => {
         customerResult = await results[1].json();
         if (!results[1].ok) {
           console.error("[NOTIFY] Resend error (customer):", customerResult);
-          // Don't fail the whole request if customer email fails
         }
       }
 
-      console.log(`[NOTIFY] Sent to agency ${agencyEmail}`, agencyResult);
+      console.log(`[NOTIFY] Sent to agency ${agencyEmail}`);
       if (r.customer_email) {
-        console.log(`[NOTIFY] Sent confirmation to customer ${r.customer_email}`, customerResult);
+        console.log(`[NOTIFY] Sent confirmation to customer ${r.customer_email}`);
       }
 
       return new Response(
-        JSON.stringify({
-          success: true,
-          message: `Notifications sent`,
-          agency_email: agencyEmail,
-          customer_email: r.customer_email || null,
-        }),
+        JSON.stringify({ success: true, message: "Notifications sent" }),
         { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     } else {
       console.log(`[NOTIFY] No RESEND_API_KEY — logging only`);
-      console.log(`[NOTIFY] Agency: ${agencyEmail}, Customer: ${r.customer_email || "N/A"}`);
       return new Response(
-        JSON.stringify({ success: true, message: "Logged (no RESEND_API_KEY)", to: agencyEmail }),
+        JSON.stringify({ success: true, message: "Logged (no RESEND_API_KEY)" }),
         { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
