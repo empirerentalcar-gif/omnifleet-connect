@@ -189,16 +189,16 @@ const SignUp = () => {
 
         <form onSubmit={handleSignUp} className="space-y-4">
           <div>
-            <label htmlFor="access-code" className="block text-sm font-medium text-foreground mb-1">
-              Access Code
+            <label htmlFor="registration-code" className="block text-sm font-medium text-foreground mb-1">
+              Registration Code
             </label>
             <Input
-              id="access-code"
+              id="registration-code"
               type="text"
-              value={accessCode}
-              onChange={(e) => setAccessCode(e.target.value)}
+              value={registrationCode}
+              onChange={(e) => setRegistrationCode(e.target.value)}
               required
-              placeholder="Enter your access code"
+              placeholder="Enter your registration code"
             />
           </div>
 
