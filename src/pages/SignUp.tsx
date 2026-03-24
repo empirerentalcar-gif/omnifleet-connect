@@ -106,19 +106,25 @@ const SignUp = () => {
       return;
     }
 
-    // Redeem the access code if we have a user and profile
+    // Redeem the code if we have a user and profile
     if (signUpData.user) {
-      const { data: profile } = await supabase
-        .from('profiles')
-        .select('id')
-        .eq('user_id', signUpData.user.id)
-        .single();
-
-      if (profile) {
-        await supabase.rpc('redeem_access_code', {
-          code_to_redeem: validated.accessCode,
-          user_profile_id: profile.id,
+      if (codeType === 'invite') {
+        await supabase.rpc('redeem_invite_code', {
+          code_to_redeem: validated.registrationCode,
         });
+      } else if (codeType === 'access') {
+        const { data: profile } = await supabase
+          .from('profiles')
+          .select('id')
+          .eq('user_id', signUpData.user.id)
+          .single();
+
+        if (profile) {
+          await supabase.rpc('redeem_access_code', {
+            code_to_redeem: validated.registrationCode,
+            user_profile_id: profile.id,
+          });
+        }
       }
 
       // Notify admin of new agency signup (fire-and-forget)
