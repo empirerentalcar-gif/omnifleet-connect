@@ -147,6 +147,22 @@ serve(async (req) => {
   }
 
   try {
+    // Authenticate: require CRON_SECRET via Authorization header or query param
+    const cronSecret = Deno.env.get("CRON_SECRET");
+    if (!cronSecret) throw new Error("CRON_SECRET not configured");
+
+    const authHeader = req.headers.get("Authorization");
+    const url = new URL(req.url);
+    const querySecret = url.searchParams.get("secret");
+    const providedSecret = authHeader?.replace("Bearer ", "") || querySecret;
+
+    if (!providedSecret || providedSecret !== cronSecret) {
+      return new Response(
+        JSON.stringify({ error: "Unauthorized" }),
+        { status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
+
     if (!RESEND_API_KEY) throw new Error("RESEND_API_KEY not set");
 
     const supabase = createClient(
