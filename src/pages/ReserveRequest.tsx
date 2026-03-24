@@ -59,7 +59,7 @@ const ReserveRequest = () => {
         return;
       }
 
-      const { data: inserted, error } = await supabase.from("reservation_requests").insert({
+      const { error } = await supabase.from("reservation_requests").insert({
         profile_id: agencyId || null,
         agency_name: agencyName,
         customer_name: parsed.data.customer_name,
@@ -69,16 +69,19 @@ const ReserveRequest = () => {
         dropoff_date: parsed.data.dropoff_date,
         vehicle_type: parsed.data.vehicle_type,
         notes: parsed.data.notes,
-      }).select("id").single();
+      });
 
-      if (error) throw error;
+      if (error) {
+        console.error("Reservation insert error:", error);
+        toast.error(`Reservation failed: ${error.message}`);
+        setSubmitting(false);
+        return;
+      }
 
       // Notify the agency owner via email (fire-and-forget)
-      if (inserted?.id) {
-        supabase.functions.invoke("notify-new-reservation", {
-          body: { reservation_id: inserted.id },
-        }).catch((err) => console.error("Failed to send agency notification:", err));
-      }
+      supabase.functions.invoke("notify-new-reservation", {
+        body: { agency_name: agencyName },
+      }).catch((err) => console.error("Failed to send agency notification:", err));
 
       navigate(`/reservation-confirmed?agency=${encodeURIComponent(agencyName)}`);
     } catch (err: any) {
