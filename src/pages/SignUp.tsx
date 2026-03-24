@@ -10,7 +10,7 @@ import SEO from '@/components/SEO';
 import { Crown } from 'lucide-react';
 
 const signUpSchema = z.object({
-  accessCode: z.string().trim().min(1, 'Access code is required').max(100, 'Access code too long'),
+  registrationCode: z.string().trim().min(1, 'Registration code is required').max(100, 'Registration code too long'),
   businessName: z.string().trim().min(1, 'Business name is required').max(200, 'Business name too long'),
   email: z.string().trim().email('Invalid email address').max(255, 'Email too long'),
   password: z
