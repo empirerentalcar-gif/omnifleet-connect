@@ -59,7 +59,9 @@ const ReserveRequest = () => {
         return;
       }
 
+      const reservationId = crypto.randomUUID();
       const { error } = await supabase.from("reservation_requests").insert({
+        id: reservationId,
         profile_id: agencyId || null,
         agency_name: agencyName,
         customer_name: parsed.data.customer_name,
@@ -78,10 +80,10 @@ const ReserveRequest = () => {
         return;
       }
 
-      // Notify the agency owner via email (fire-and-forget)
+      // Notify the agency owner and send customer confirmation email (fire-and-forget)
       supabase.functions.invoke("notify-new-reservation", {
-        body: { agency_name: agencyName },
-      }).catch((err) => console.error("Failed to send agency notification:", err));
+        body: { reservation_id: reservationId },
+      }).catch((err) => console.error("Failed to send notification:", err));
 
       navigate(`/reservation-confirmed?agency=${encodeURIComponent(agencyName)}`);
     } catch (err: any) {

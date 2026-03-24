@@ -11,6 +11,7 @@ import {
 import { Skeleton } from '@/components/ui/skeleton';
 import { toast } from '@/hooks/use-toast';
 import { format } from 'date-fns';
+import AdminReservations from '@/components/AdminReservations';
 
 interface Agency {
   id: string;
@@ -243,6 +244,9 @@ const AdminDashboard = () => {
             </div>
           )}
         </div>
+
+        {/* Reservations */}
+        <AdminReservations />
 
         {/* Pending Agencies */}
         <div>
