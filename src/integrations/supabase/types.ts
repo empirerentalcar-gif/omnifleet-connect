@@ -584,6 +584,7 @@ export type Database = {
         }
         Returns: boolean
       }
+      profile_exists: { Args: { _profile_id: string }; Returns: boolean }
       profile_has_approved_agency: {
         Args: { _profile_id: string }
         Returns: boolean
