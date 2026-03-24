@@ -10,7 +10,7 @@ import SEO from '@/components/SEO';
 import { Crown } from 'lucide-react';
 
 const signUpSchema = z.object({
-  accessCode: z.string().trim().min(1, 'Access code is required').max(100, 'Access code too long'),
+  registrationCode: z.string().trim().min(1, 'Registration code is required').max(100, 'Registration code too long'),
   businessName: z.string().trim().min(1, 'Business name is required').max(200, 'Business name too long'),
   email: z.string().trim().email('Invalid email address').max(255, 'Email too long'),
   password: z
@@ -25,7 +25,7 @@ const signUpSchema = z.object({
 const SignUp = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [accessCode, setAccessCode] = useState('');
+  const [registrationCode, setRegistrationCode] = useState('');
   const [businessName, setBusinessName] = useState('');
   const [loading, setLoading] = useState(false);
   const [foundingCount, setFoundingCount] = useState<number | null>(null);
@@ -44,7 +44,7 @@ const SignUp = () => {
     setLoading(true);
 
     // Validate inputs with Zod
-    const result = signUpSchema.safeParse({ accessCode, businessName, email, password });
+    const result = signUpSchema.safeParse({ registrationCode, businessName, email, password });
     if (!result.success) {
       toast({
         title: 'Validation error',
@@ -56,16 +56,28 @@ const SignUp = () => {
     }
 
     const validated = result.data;
+    let codeType: 'access' | 'invite' | null = null;
 
-    // Validate access code first
-    const { data: isValid, error: codeError } = await supabase.rpc('validate_access_code', {
-      code_to_check: validated.accessCode,
+    // Try invite code first
+    const { data: isInviteValid } = await supabase.rpc('validate_invite_code', {
+      code_to_check: validated.registrationCode,
     });
+    if (isInviteValid) {
+      codeType = 'invite';
+    } else {
+      // Try access code
+      const { data: isAccessValid } = await supabase.rpc('validate_access_code', {
+        code_to_check: validated.registrationCode,
+      });
+      if (isAccessValid) {
+        codeType = 'access';
+      }
+    }
 
-    if (codeError || !isValid) {
+    if (!codeType) {
       toast({
-        title: 'Invalid access code',
-        description: 'The access code is invalid or expired.',
+        title: 'Invalid registration code',
+        description: 'The code you entered is invalid or expired.',
         variant: 'destructive',
       });
       setLoading(false);
@@ -94,19 +106,25 @@ const SignUp = () => {
       return;
     }
 
-    // Redeem the access code if we have a user and profile
+    // Redeem the code if we have a user and profile
     if (signUpData.user) {
-      const { data: profile } = await supabase
-        .from('profiles')
-        .select('id')
-        .eq('user_id', signUpData.user.id)
-        .single();
-
-      if (profile) {
-        await supabase.rpc('redeem_access_code', {
-          code_to_redeem: validated.accessCode,
-          user_profile_id: profile.id,
+      if (codeType === 'invite') {
+        await supabase.rpc('redeem_invite_code', {
+          code_to_redeem: validated.registrationCode,
         });
+      } else if (codeType === 'access') {
+        const { data: profile } = await supabase
+          .from('profiles')
+          .select('id')
+          .eq('user_id', signUpData.user.id)
+          .single();
+
+        if (profile) {
+          await supabase.rpc('redeem_access_code', {
+            code_to_redeem: validated.registrationCode,
+            user_profile_id: profile.id,
+          });
+        }
       }
 
       // Notify admin of new agency signup (fire-and-forget)
@@ -171,16 +189,16 @@ const SignUp = () => {
 
         <form onSubmit={handleSignUp} className="space-y-4">
           <div>
-            <label htmlFor="access-code" className="block text-sm font-medium text-foreground mb-1">
-              Access Code
+            <label htmlFor="registration-code" className="block text-sm font-medium text-foreground mb-1">
+              Registration Code
             </label>
             <Input
-              id="access-code"
+              id="registration-code"
               type="text"
-              value={accessCode}
-              onChange={(e) => setAccessCode(e.target.value)}
+              value={registrationCode}
+              onChange={(e) => setRegistrationCode(e.target.value)}
               required
-              placeholder="Enter your access code"
+              placeholder="Enter your registration code"
             />
           </div>
 

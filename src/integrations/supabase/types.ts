@@ -592,7 +592,12 @@ export type Database = {
         Args: { code_to_redeem: string; user_profile_id: string }
         Returns: boolean
       }
+      redeem_invite_code: { Args: { code_to_redeem: string }; Returns: boolean }
       validate_access_code: {
+        Args: { code_to_check: string }
+        Returns: boolean
+      }
+      validate_invite_code: {
         Args: { code_to_check: string }
         Returns: boolean
       }
