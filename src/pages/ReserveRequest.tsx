@@ -76,9 +76,11 @@ const ReserveRequest = () => {
       }
 
       const reservationId = crypto.randomUUID();
+      const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+      const validProfileId = agencyId && uuidRegex.test(agencyId) ? agencyId : null;
       const { error } = await supabase.from("reservation_requests").insert({
         id: reservationId,
-        profile_id: agencyId || null,
+        profile_id: validProfileId,
         agency_name: agencyName,
         customer_name: parsed.data.customer_name,
         customer_phone: parsed.data.customer_phone,
