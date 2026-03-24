@@ -98,7 +98,8 @@ const Pricing = () => {
                 </span>
               </div>
               <h3 className="text-xl font-bold mb-1">Founding Member Plan</h3>
-              <p className="text-sm text-muted-foreground mb-6">Limited to the first 50 agencies</p>
+              <p className="text-sm text-muted-foreground mb-4">Limited to the first 50 agencies</p>
+              <p className="text-sm font-semibold text-accent mb-4">60 days FREE trial included</p>
               <div className="mb-6">
                 <span className="text-4xl font-bold text-foreground">$79</span>
                 <span className="text-muted-foreground">/month</span>

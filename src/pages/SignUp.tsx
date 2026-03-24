@@ -153,7 +153,7 @@ const SignUp = () => {
                   Only {50 - foundingCount} of 50 spots left
                 </Badge>
                 <p className="text-xs text-muted-foreground">
-                  After trial: <strong>$25/month + 3% commission</strong> (locked forever)
+                  After trial: <strong>$79/month + 5% per confirmed booking</strong> (locked forever)
                 </p>
               </div>
             </div>
