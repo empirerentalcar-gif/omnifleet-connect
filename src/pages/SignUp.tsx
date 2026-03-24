@@ -25,7 +25,7 @@ const signUpSchema = z.object({
 const SignUp = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [accessCode, setAccessCode] = useState('');
+  const [registrationCode, setRegistrationCode] = useState('');
   const [businessName, setBusinessName] = useState('');
   const [loading, setLoading] = useState(false);
   const [foundingCount, setFoundingCount] = useState<number | null>(null);
