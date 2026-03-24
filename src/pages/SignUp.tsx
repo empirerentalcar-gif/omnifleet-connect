@@ -150,7 +150,7 @@ const SignUp = () => {
               </p>
               <div className="flex flex-col items-center gap-1">
                 <Badge variant="secondary" className="text-sm">
-                  Only {50 - foundingCount} of 50 spots left
+                  Only 50 spots available
                 </Badge>
                 <p className="text-xs text-muted-foreground">
                   After trial: <strong>$79/month + 5% per confirmed booking</strong> (locked forever)
