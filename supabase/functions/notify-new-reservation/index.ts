@@ -207,7 +207,7 @@ Deno.serve(async (req) => {
               "Content-Type": "application/json",
             },
             body: JSON.stringify({
-              from: "ZUVIO <noreply@zuvio.us>",
+              from: "ZUVIO <team@zuvio.us>",
               to: [r.customer_email],
               cc: ["team@zuvio.us"],
               subject: `Your ZUVIO Rental Request — ${r.agency_name}`,
