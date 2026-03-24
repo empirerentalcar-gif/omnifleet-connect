@@ -85,7 +85,8 @@ const ReserveRequest = () => {
 
       navigate(`/reservation-confirmed?agency=${encodeURIComponent(agencyName)}`);
     } catch (err: any) {
-      toast.error("Failed to submit reservation. Please try again.");
+      console.error("Reservation submit error:", err);
+      toast.error(`Reservation failed: ${err?.message || 'Unknown error'}`);
       setSubmitting(false);
     }
   };
