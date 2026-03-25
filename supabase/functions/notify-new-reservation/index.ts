@@ -106,13 +106,7 @@ Deno.serve(async (req) => {
       agencyEmail = profile?.contact_email ?? null;
     }
 
-    if (!agencyEmail) {
-      console.log("[NOTIFY] No agency email found — logging only");
-      return new Response(
-        JSON.stringify({ success: true, message: "No agency email on file, skipped" }),
-        { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-      );
-    }
+    const ADMIN_ALERT_EMAIL = "mixdownent@icloud.com";
 
     const r = reservation;
     const notesRow = r.notes
@@ -124,7 +118,6 @@ Deno.serve(async (req) => {
 <div style="font-family:sans-serif;max-width:600px;margin:0 auto;padding:20px;">
   <h2 style="color:#10b981;">🚗 New Rental Request on ZUVIO</h2>
   <p>You have a new reservation request from a customer. Please follow up with them within 24 hours.</p>
-
   <table style="width:100%;border-collapse:collapse;margin:16px 0;">
     <tr><td style="padding:8px;border-bottom:1px solid #eee;color:#666;">Customer Name</td><td style="padding:8px;border-bottom:1px solid #eee;font-weight:bold;">${escapeHtml(r.customer_name)}</td></tr>
     <tr><td style="padding:8px;border-bottom:1px solid #eee;color:#666;">Phone</td><td style="padding:8px;border-bottom:1px solid #eee;font-weight:bold;">${escapeHtml(r.customer_phone)}</td></tr>
@@ -134,12 +127,10 @@ Deno.serve(async (req) => {
     <tr><td style="padding:8px;border-bottom:1px solid #eee;color:#666;">Drop-off Date</td><td style="padding:8px;border-bottom:1px solid #eee;">${escapeHtml(r.dropoff_date)}</td></tr>
     ${notesRow}
   </table>
-
   <p style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;padding:12px;font-size:14px;">
     📋 <strong>Next step:</strong> Log in to your <a href="https://zuvio.us/owner-dashboard" style="color:#10b981;">ZUVIO dashboard</a> to view and respond to this request.
   </p>
-
-  <p style="color:#888;font-size:12px;margin-top:24px;">— ZUVIO Team &nbsp;|&nbsp; This is an automated notification. Reply directly to the customer using the details above.</p>
+  <p style="color:#888;font-size:12px;margin-top:24px;">— ZUVIO Team</p>
 </div>`;
 
     // Customer confirmation email
@@ -148,15 +139,12 @@ Deno.serve(async (req) => {
   <h2 style="color:#10b981;">✅ Your Rental Request Has Been Submitted</h2>
   <p>Hi ${escapeHtml(r.customer_name)},</p>
   <p>Thank you for your rental request through ZUVIO! Here's a summary of what you submitted:</p>
-
   <table style="width:100%;border-collapse:collapse;margin:16px 0;background:#f9fafb;border-radius:8px;">
     <tr><td style="padding:12px;border-bottom:1px solid #eee;color:#666;">Agency</td><td style="padding:12px;border-bottom:1px solid #eee;font-weight:bold;">${escapeHtml(r.agency_name)}</td></tr>
     <tr><td style="padding:12px;border-bottom:1px solid #eee;color:#666;">Vehicle Type</td><td style="padding:12px;border-bottom:1px solid #eee;">${escapeHtml(r.vehicle_type)}</td></tr>
     <tr><td style="padding:12px;border-bottom:1px solid #eee;color:#666;">Pickup Date</td><td style="padding:12px;border-bottom:1px solid #eee;">${escapeHtml(r.pickup_date)}</td></tr>
     <tr><td style="padding:12px;border-bottom:1px solid #eee;color:#666;">Drop-off Date</td><td style="padding:12px;border-bottom:1px solid #eee;">${escapeHtml(r.dropoff_date)}</td></tr>
-    ${notesRow ? notesRow.replace(/border-bottom:1px solid #eee/g, "border-bottom:1px solid #eee;background:#f9fafb") : ""}
   </table>
-
   <div style="background:#fef3c7;border:1px solid #fcd34d;border-radius:8px;padding:16px;margin:16px 0;">
     <p style="margin:0 0 8px 0;font-weight:bold;color:#92400e;">⏱️ What happens next?</p>
     <ul style="margin:0;padding-left:20px;color:#92400e;">
@@ -165,21 +153,43 @@ Deno.serve(async (req) => {
       <li>Have your driver's license and payment method ready</li>
     </ul>
   </div>
-
-  <p style="color:#666;font-size:14px;">
-    Questions? Reply to this email or visit <a href="https://zuvio.us/faq" style="color:#10b981;">our FAQ</a> for more information.
-  </p>
-
   <p style="color:#888;font-size:12px;margin-top:24px;border-top:1px solid #eee;padding-top:16px;">
-    — The ZUVIO Team<br/>
-    <em>Connecting you with trusted local car rental agencies</em>
+    — The ZUVIO Team<br/><em>Connecting you with trusted local car rental agencies</em>
   </p>
 </div>`;
 
-    if (resendApiKey) {
-      const emailPromises: Promise<Response>[] = [];
+    if (!resendApiKey) {
+      console.log(`[NOTIFY] No RESEND_API_KEY — logging only`);
+      return new Response(
+        JSON.stringify({ success: true, message: "Logged (no RESEND_API_KEY)" }),
+        { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
 
-      // Send to agency owner
+    const emailPromises: Promise<Response>[] = [];
+
+    // 1. Always send admin alert to mixdownent@icloud.com
+    const adminRecipients = [ADMIN_ALERT_EMAIL];
+    if (agencyEmail) adminRecipients.push(agencyEmail);
+
+    emailPromises.push(
+      fetch("https://api.resend.com/emails", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${resendApiKey}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          from: "ZUVIO <noreply@zuvio.us>",
+          to: adminRecipients,
+          subject: `New Rental Request from ${r.customer_name} — ZUVIO`,
+          html: agencyEmailHtml,
+        }),
+      })
+    );
+
+    // 2. Always send confirmation to renter if email provided
+    if (r.customer_email) {
       emailPromises.push(
         fetch("https://api.resend.com/emails", {
           method: "POST",
@@ -188,70 +198,30 @@ Deno.serve(async (req) => {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            from: "ZUVIO <noreply@zuvio.us>",
-            to: [agencyEmail],
-            cc: ["team@zuvio.us"],
-            subject: `New Rental Request from ${r.customer_name} — ZUVIO`,
-            html: agencyEmailHtml,
+            from: "ZUVIO <team@zuvio.us>",
+            to: [r.customer_email],
+            subject: `Your ZUVIO Rental Request — ${r.agency_name}`,
+            html: customerEmailHtml,
           }),
         })
       );
-
-      // Send confirmation to customer if email provided
-      if (r.customer_email) {
-        emailPromises.push(
-          fetch("https://api.resend.com/emails", {
-            method: "POST",
-            headers: {
-              Authorization: `Bearer ${resendApiKey}`,
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              from: "ZUVIO <team@zuvio.us>",
-              to: [r.customer_email],
-              cc: ["team@zuvio.us"],
-              subject: `Your ZUVIO Rental Request — ${r.agency_name}`,
-              html: customerEmailHtml,
-            }),
-          })
-        );
-      }
-
-      const results = await Promise.all(emailPromises);
-      const agencyResult = await results[0].json();
-
-      if (!results[0].ok) {
-        console.error("[NOTIFY] Resend error (agency):", agencyResult);
-        return new Response(
-          JSON.stringify({ error: "Failed to send notification" }),
-          { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-        );
-      }
-
-      let customerResult = null;
-      if (results[1]) {
-        customerResult = await results[1].json();
-        if (!results[1].ok) {
-          console.error("[NOTIFY] Resend error (customer):", customerResult);
-        }
-      }
-
-      console.log(`[NOTIFY] Sent to agency ${agencyEmail}`);
-      if (r.customer_email) {
-        console.log(`[NOTIFY] Sent confirmation to customer ${r.customer_email}`);
-      }
-
-      return new Response(
-        JSON.stringify({ success: true, message: "Notifications sent" }),
-        { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-      );
-    } else {
-      console.log(`[NOTIFY] No RESEND_API_KEY — logging only`);
-      return new Response(
-        JSON.stringify({ success: true, message: "Logged (no RESEND_API_KEY)" }),
-        { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-      );
     }
+
+    const results = await Promise.all(emailPromises);
+
+    for (let i = 0; i < results.length; i++) {
+      const body = await results[i].json();
+      if (!results[i].ok) {
+        console.error(`[NOTIFY] Resend error (email ${i}):`, body);
+      } else {
+        console.log(`[NOTIFY] Email ${i} sent successfully:`, body);
+      }
+    }
+
+    return new Response(
+      JSON.stringify({ success: true, message: "Notifications sent" }),
+      { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+    );
   } catch (err) {
     console.error("Error:", err);
     return new Response(
