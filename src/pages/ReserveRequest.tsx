@@ -101,7 +101,13 @@ const ReserveRequest = () => {
       // Notify the agency owner and send customer confirmation email (fire-and-forget)
       supabase.functions.invoke("notify-new-reservation", {
         body: { reservation_id: reservationId },
-      }).catch((err) => console.error("Failed to send notification:", err));
+      }).then((res) => {
+        if (res.error) {
+          console.error("notify-new-reservation invocation error:", res.error);
+        } else {
+          console.log("notify-new-reservation response:", res.data);
+        }
+      }).catch((err) => console.error("Failed to invoke notify-new-reservation:", err));
 
       navigate(`/reservation-confirmed?agency=${encodeURIComponent(agencyName)}`);
     } catch (err: any) {
