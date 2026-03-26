@@ -31,6 +31,7 @@ const AdminInviteCodesPage = lazy(() => import("./pages/AdminInviteCodes"));
 const CityLanding = lazy(() => import("./pages/CityLanding"));
 const Cities = lazy(() => import("./pages/Cities"));
 const ForTuroHosts = lazy(() => import("./pages/ForTuroHosts"));
+const LasVegasLanding = lazy(() => import("./pages/LasVegasLanding"));
 
 const queryClient = new QueryClient();
 
