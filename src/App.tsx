@@ -31,6 +31,7 @@ const AdminInviteCodesPage = lazy(() => import("./pages/AdminInviteCodes"));
 const CityLanding = lazy(() => import("./pages/CityLanding"));
 const Cities = lazy(() => import("./pages/Cities"));
 const ForTuroHosts = lazy(() => import("./pages/ForTuroHosts"));
+const LasVegasLanding = lazy(() => import("./pages/LasVegasLanding"));
 
 const queryClient = new QueryClient();
 
@@ -71,6 +72,7 @@ const App = () => (
             <Route path="/admin/invite-codes" element={<AdminInviteCodesPage />} />
             <Route path="/cities" element={<Cities />} />
             <Route path="/for-turo-hosts" element={<ForTuroHosts />} />
+            <Route path="/las-vegas" element={<LasVegasLanding />} />
             <Route path="/city/:citySlug" element={<CityLanding />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
