@@ -70,6 +70,7 @@ const App = () => (
             <Route path="/admin/setup" element={<AdminSetupPage />} />
             <Route path="/admin/invite-codes" element={<AdminInviteCodesPage />} />
             <Route path="/cities" element={<Cities />} />
+            <Route path="/for-turo-hosts" element={<ForTuroHosts />} />
             <Route path="/city/:citySlug" element={<CityLanding />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
