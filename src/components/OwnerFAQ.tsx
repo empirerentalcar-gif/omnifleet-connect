@@ -7,52 +7,40 @@ import {
 
 const ownerFaqs = [
   {
-    id: "owner-faq-1",
+    id: "faq-1",
     question: "Do I keep my phone number?",
     answer:
-      "Absolutely. ZUVIO never replaces your phone number. Customers can still call you directly. We simply route new reservation leads your way — you stay in full control of every conversation.",
+      "Absolutely. Zuvio never replaces your phone number. Customers can call you directly. We simply route new reservation leads your way — you stay in full control of every conversation.",
   },
   {
-    id: "owner-faq-2",
-    question: "How do reservations arrive?",
+    id: "faq-2",
+    question: "Who handles payment?",
     answer:
-      "When a customer books through ZUVIO, you receive an instant notification via email and your ZUVIO dashboard. You'll see the customer name, dates, vehicle requested, and pickup location — all in real time.",
+      "You do. Zuvio does not process payments on your behalf. You collect payment however you prefer — cash, card, Zelle, or any method you choose. Your money, your terms.",
   },
   {
-    id: "owner-faq-3",
-    question: "Can I say no to a reservation?",
+    id: "faq-3",
+    question: "Can I decline bookings?",
     answer:
-      "Yes. You have full authority to accept or decline any reservation. If a vehicle isn't available or the timing doesn't work, simply decline — no penalties, no questions asked.",
+      "Yes. You have full authority to accept or decline any reservation request. If a vehicle isn't available or the timing doesn't work, simply decline — no penalties, no questions asked.",
   },
   {
-    id: "owner-faq-4",
-    question: "What are the fees?",
-    answer:
-      "ZUVIO charges a small commission only on completed reservations — no upfront costs, no monthly minimums. You choose your own daily rates, and we never undercut your pricing. Check our pricing page for current commission tiers.",
-  },
-  {
-    id: "owner-faq-5",
-    question: "How quickly can I start receiving bookings?",
+    id: "faq-4",
+    question: "How fast can I start?",
     answer:
       "Most owners go live within 24 hours. Once your profile and vehicle listings are approved, you'll start appearing in search results immediately.",
   },
   {
-    id: "owner-faq-6",
-    question: "Do customers pay through ZUVIO or directly to me?",
+    id: "faq-5",
+    question: "What are the fees?",
     answer:
-      "ZUVIO handles payment processing securely. Funds are deposited directly into your bank account on a regular payout schedule — no chasing payments.",
+      "Zuvio charges a simple listing fee — not a percentage of your earnings. You keep 100% of what you make from every booking. Check our pricing page for current plans.",
   },
   {
-    id: "owner-faq-7",
-    question: "What if a customer damages my vehicle?",
+    id: "faq-6",
+    question: "Can I list multiple vehicles?",
     answer:
-      "ZUVIO partners with insurance providers to offer optional coverage. You can also require a security deposit through the platform. Our support team assists with any damage claims.",
-  },
-  {
-    id: "owner-faq-8",
-    question: "Can I list vehicles across multiple locations?",
-    answer:
-      "Yes. You can manage multiple pickup and drop-off locations from a single dashboard. Each location gets its own availability calendar and pricing.",
+      "Yes. You can manage multiple vehicles and locations from a single dashboard. Each vehicle gets its own listing with pricing, photos, and availability.",
   },
 ];
 
@@ -69,9 +57,6 @@ const OwnerFAQ = () => {
           <h2 className="font-display text-3xl md:text-5xl font-bold mb-4">
             Questions from <span className="text-gradient">Owners</span>
           </h2>
-          <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
-            Everything you need to know before listing your fleet on ZUVIO
-          </p>
         </div>
 
         <div className="max-w-3xl mx-auto">
