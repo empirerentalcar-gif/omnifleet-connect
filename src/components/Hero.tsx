@@ -1,15 +1,19 @@
-import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, MapPin, Building2 } from "lucide-react";
+import { ArrowRight, CheckCircle2 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import CitySelector from "@/components/CitySelector";
+
+const bulletPoints = [
+  "Keep your pricing and policies",
+  "Customers contact you directly",
+  "No platform interference",
+  "Built for independent owners",
+];
 
 const Hero = () => {
   const navigate = useNavigate();
-  const [city, setCity] = useState("");
 
   return (
-    <section className="relative min-h-screen flex flex-col justify-center pt-20 pb-12 overflow-hidden">
+    <section className="relative min-h-screen flex flex-col justify-center pt-20 pb-16 overflow-hidden">
       <div className="absolute inset-0 bg-gradient-hero" />
       <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-primary/10 rounded-full blur-3xl animate-pulse-glow" />
       <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-accent/10 rounded-full blur-3xl animate-pulse-glow delay-500" />
@@ -24,52 +28,48 @@ const Hero = () => {
       />
 
       <div className="container mx-auto px-4 relative z-10">
-        <div className="text-center mb-12 animate-slide-up">
-          <div className="inline-flex items-center gap-2 glass-card rounded-full px-4 py-2 mb-6">
+        <div className="max-w-4xl mx-auto text-center animate-slide-up">
+          <div className="inline-flex items-center gap-2 glass-card rounded-full px-4 py-2 mb-8">
             <span className="w-2 h-2 bg-accent rounded-full animate-pulse" />
-            <span className="text-sm text-muted-foreground">Connecting renters to independent agencies nationwide</span>
+            <span className="text-sm text-muted-foreground">Independent car rental platform for owners</span>
           </div>
 
           <h1 className="font-display text-4xl md:text-6xl lg:text-7xl font-bold mb-6 leading-tight">
-            Independent Car Rentals
+            Turn Your Rental Cars Into Daily Income
             <br />
-            <span className="text-gradient">Near You</span>
+            <span className="text-gradient">— Without Giving Up Control</span>
           </h1>
 
-          <h2 className="text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto mb-4">
-            Find Cash-Friendly Local Rental Agencies
-          </h2>
+          <p className="text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto mb-10">
+            Zuvio connects independent rental car owners, agencies, and Turo hosts with real customers actively looking to rent — without corporate restrictions, pricing control, or middlemen.
+          </p>
 
-          <h2 className="text-base md:text-lg text-accent max-w-2xl mx-auto mb-8 font-medium">
-            Grow Your Rental Business with ZUVIO
-          </h2>
-
-          <div className="max-w-xl mx-auto glass-card rounded-2xl p-5 mb-8 border border-border/60 text-left">
-            <label className="block text-xs font-medium text-muted-foreground mb-2 uppercase tracking-wider">
-              Choose your destination city
-            </label>
-            <CitySelector value={city} onChange={setCity} placeholder="Select a major city or type your own" />
-            <Button
-              variant="hero"
-              size="lg"
-              className="w-full mt-3 group text-base"
-              onClick={() => navigate(`/search${city.trim() ? `?location=${encodeURIComponent(city.trim())}` : ''}`)}
-            >
-              <MapPin className="h-5 w-5" />
-              <span>Find Rentals in This City</span>
-              <ArrowRight className="h-5 w-5 group-hover:translate-x-1 transition-transform" />
-            </Button>
+          <div className="flex flex-wrap justify-center gap-x-8 gap-y-3 mb-10">
+            {bulletPoints.map((point) => (
+              <div key={point} className="flex items-center gap-2 text-foreground">
+                <CheckCircle2 className="h-5 w-5 text-accent shrink-0" />
+                <span className="text-sm md:text-base font-medium">{point}</span>
+              </div>
+            ))}
           </div>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <Button
+              variant="hero"
+              size="lg"
+              className="group text-base"
+              onClick={() => navigate("/signup")}
+            >
+              <span>Start Getting Booking Requests</span>
+              <ArrowRight className="h-5 w-5 group-hover:translate-x-1 transition-transform" />
+            </Button>
             <Button
               variant="outline"
               size="lg"
               className="text-base border-accent/30 hover:bg-accent/10"
               onClick={() => navigate("/pricing")}
             >
-              <Building2 className="h-5 w-5 text-accent" />
-              <span>Grow Your Rental Business</span>
+              <span>List My Rental Business</span>
             </Button>
           </div>
         </div>

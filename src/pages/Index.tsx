@@ -1,12 +1,14 @@
-import Header from "@/components/Header";
 import Hero from "@/components/Hero";
+import ProblemSolution from "@/components/ProblemSolution";
+import WhoThisIsFor from "@/components/WhoThisIsFor";
+import HowYouMakeMoney from "@/components/HowYouMakeMoney";
+import CompetitorContrast from "@/components/CompetitorContrast";
 import HowItWorks from "@/components/HowItWorks";
-import Comparison from "@/components/Comparison";
-import PopularDestinations from "@/components/PopularDestinations";
-import OwnerCTA from "@/components/OwnerCTA";
-import TrustBadges from "@/components/TrustBadges";
-import AgencyCTA from "@/components/AgencyCTA";
+import CityExpansion from "@/components/CityExpansion";
+import SocialProof from "@/components/SocialProof";
+import TrustSection from "@/components/TrustSection";
 import OwnerFAQ from "@/components/OwnerFAQ";
+import FinalCTA from "@/components/FinalCTA";
 import Footer from "@/components/Footer";
 import SEO from "@/components/SEO";
 
@@ -14,16 +16,16 @@ const Index = () => {
   return (
     <div className="min-h-screen bg-background">
       <SEO
-        title="ZUVIO | Independent Car Rentals Near You"
-        description="Find and book independent car rentals nationwide. Cash-friendly options available. Rental owners stay in full control with ZUVIO."
+        title="Independent Car Rental Platform for Owners | Zuvio"
+        description="List your rental cars, fleet, or agency on Zuvio. Get direct booking requests, keep control of your pricing, and grow your rental business."
         path="/"
       />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({
         "@context": "https://schema.org",
         "@type": "WebSite",
-        "name": "ZUVIO",
+        "name": "Zuvio",
         "url": "https://zuvio.us",
-        "description": "Find and book independent car rentals nationwide.",
+        "description": "Independent car rental platform for owners. List your rental cars and get direct booking requests.",
         "potentialAction": {
           "@type": "SearchAction",
           "target": "https://zuvio.us/search?q={search_term_string}",
@@ -31,13 +33,16 @@ const Index = () => {
         }
       }) }} />
       <Hero />
-      <PopularDestinations />
+      <ProblemSolution />
+      <WhoThisIsFor />
+      <HowYouMakeMoney />
+      <CompetitorContrast />
       <HowItWorks />
-      <Comparison />
-      <OwnerCTA />
-      <TrustBadges />
+      <CityExpansion />
+      <SocialProof />
+      <TrustSection />
       <OwnerFAQ />
-      <AgencyCTA />
+      <FinalCTA />
       <Footer />
     </div>
   );
