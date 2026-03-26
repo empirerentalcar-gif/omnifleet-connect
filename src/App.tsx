@@ -30,6 +30,7 @@ const AdminSetupPage = lazy(() => import("./pages/AdminSetup"));
 const AdminInviteCodesPage = lazy(() => import("./pages/AdminInviteCodes"));
 const CityLanding = lazy(() => import("./pages/CityLanding"));
 const Cities = lazy(() => import("./pages/Cities"));
+const ForTuroHosts = lazy(() => import("./pages/ForTuroHosts"));
 
 const queryClient = new QueryClient();
 
