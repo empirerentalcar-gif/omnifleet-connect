@@ -481,13 +481,16 @@ const LasVegasLanding = () => {
             <br />
             <span className="text-gradient">— On Your Terms</span>
           </h2>
-          <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-10">
-            Don't rely on one platform in a city with this much demand.
+          <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-2">
+            $79/month + 5% per confirmed booking. 60 days free for founding members. Limited availability.
+          </p>
+          <p className="text-sm text-muted-foreground mb-8">
+            Try it risk-free for 60 days. If it doesn't bring value, you don't continue.
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button variant="hero" size="xl" className="group text-base" onClick={() => navigate("/signup")}>
-              <span>Become a Founding Member</span>
+              <span>Lock My Founding Rate</span>
               <ArrowRight className="h-5 w-5 group-hover:translate-x-1 transition-transform" />
             </Button>
             <Button
@@ -496,7 +499,7 @@ const LasVegasLanding = () => {
               className="text-base border-accent/30 hover:bg-accent/10"
               onClick={() => navigate("/signup")}
             >
-              List My Vehicles in Las Vegas
+              Start Getting Vegas Bookings
             </Button>
           </div>
         </div>
