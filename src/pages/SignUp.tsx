@@ -182,10 +182,10 @@ const SignUp = () => {
           ) : (
             <div className="mt-3 space-y-2">
               <p className="text-sm text-muted-foreground">
-                Start your <strong>30-day FREE trial</strong>
+                Start your <strong>60-day FREE trial</strong>
               </p>
               <p className="text-xs text-muted-foreground">
-                After trial: $49/month + 5% commission
+                After trial: <strong>$79/month + 5% per confirmed booking</strong>
               </p>
             </div>
           )}

@@ -110,30 +110,29 @@ const ForAgencies = () => {
       <section className="py-16 md:py-20">
         <div className="container mx-auto px-4 max-w-4xl text-center">
           <h2 className="font-display text-3xl md:text-4xl font-bold mb-4">Simple, Transparent Pricing</h2>
-          <p className="text-lg text-muted-foreground mb-12 max-w-2xl mx-auto">Choose the plan that works best for your business. No hidden fees, no surprises.</p>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {[
-              { name: "Free Trial", price: "$0/month for first 3 months", items: ["Full platform access", "Unlimited vehicle listings", "Customer support", "No commitment required"] },
-              { name: "Commission Based", price: "Small commission per booking", items: ["Pay only when you get business", "No monthly fees", "Unlimited listings", "Perfect for growing agencies"], featured: true },
-              { name: "Monthly Plan", price: "Fixed monthly subscription", items: ["Predictable monthly cost", "No per-booking fees", "Priority support", "Best for high-volume agencies"] },
-            ].map((plan, i) => (
-              <div key={i} className={`bg-card rounded-2xl p-8 border-2 transition-all hover:-translate-y-1 ${plan.featured ? "border-primary shadow-lg relative" : "border-border/50 hover:border-primary"}`}>
-                {plan.featured && <span className="absolute -top-3 left-1/2 -translate-x-1/2 bg-primary text-primary-foreground text-xs font-semibold px-4 py-1 rounded-full">Most Popular</span>}
-                <h3 className="font-display text-xl font-bold mb-2">{plan.name}</h3>
-                <p className="text-muted-foreground mb-6 text-sm">{plan.price}</p>
-                <ul className="text-left space-y-3 mb-6">
-                  {plan.items.map((item, j) => (
-                    <li key={j} className="flex items-start gap-2 text-sm text-muted-foreground">
-                      <Check className="h-4 w-4 text-primary flex-shrink-0 mt-0.5" />
-                      {item}
-                    </li>
-                  ))}
-                </ul>
-                <Link to="/pricing" className="block bg-primary text-primary-foreground font-semibold px-6 py-2.5 rounded-full hover:bg-primary/90 transition-colors text-sm">
-                  {plan.featured ? "Learn More" : "Get Started"}
-                </Link>
+          <p className="text-lg text-muted-foreground mb-12 max-w-2xl mx-auto">No hidden fees. No long-term contracts. Cancel anytime.</p>
+          <div className="max-w-md mx-auto">
+            <div className="bg-card rounded-2xl p-8 border-2 border-primary shadow-lg relative">
+              <span className="absolute -top-3 left-1/2 -translate-x-1/2 bg-primary text-primary-foreground text-xs font-semibold px-4 py-1 rounded-full">LIMITED — FIRST 50</span>
+              <h3 className="font-display text-xl font-bold mb-1">Founding Member Plan</h3>
+              <p className="text-sm text-muted-foreground mb-2">60 days free for founding members</p>
+              <div className="mb-6">
+                <span className="text-4xl font-bold text-foreground">$79</span>
+                <span className="text-muted-foreground">/month</span>
+                <span className="block text-sm text-primary font-medium mt-1">+ 5% per confirmed booking</span>
               </div>
-            ))}
+              <ul className="text-left space-y-3 mb-6">
+                {["National and regional visibility", "Reservation request management", "Direct customer communication", "Owner-controlled approvals", "Locked founding rate for life", "Cancel anytime"].map((item, j) => (
+                  <li key={j} className="flex items-start gap-2 text-sm text-muted-foreground">
+                    <Check className="h-4 w-4 text-primary flex-shrink-0 mt-0.5" />
+                    {item}
+                  </li>
+                ))}
+              </ul>
+              <Link to="/signup" className="block bg-primary text-primary-foreground font-semibold px-6 py-2.5 rounded-full hover:bg-primary/90 transition-colors text-sm text-center">
+                Become a Founding Member
+              </Link>
+            </div>
           </div>
         </div>
       </section>
@@ -160,7 +159,7 @@ const ForAgencies = () => {
         <div className="container mx-auto px-4 max-w-3xl">
           <div className="bg-gradient-to-r from-primary to-accent rounded-2xl p-8 md:p-12 text-center text-primary-foreground">
             <h2 className="font-display text-3xl font-bold mb-4">Ready to Grow Your Business?</h2>
-            <p className="text-lg mb-8 opacity-95">Join hundreds of independent car rental agencies already thriving on ZUVIO. Start your free trial today.</p>
+            <p className="text-lg mb-8 opacity-95">Join independent car rental agencies growing with ZUVIO. $79/month + 5% per confirmed booking. 60 days free for founding members.</p>
             <Link to="/pricing" className="bg-background text-primary font-semibold px-8 py-3 rounded-full hover:bg-background/90 transition-colors inline-block">
               Become a Partner Agency
             </Link>
