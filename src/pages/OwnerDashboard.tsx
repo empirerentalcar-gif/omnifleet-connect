@@ -342,19 +342,19 @@ const OwnerDashboard = () => {
                   <p className="text-sm mt-1">Your vehicles are hidden from public search. Subscribe to make them visible again.</p>
                   <p className="text-sm mt-2 font-medium">
                     {trialInfo.isFoundingMember
-                      ? `Founding Member #${trialInfo.foundingNumber} pricing: $25/month + 3% commission — locked in forever.`
-                      : 'Standard pricing: $49/month + 5% commission.'}
+                      ? `Founding Member #${trialInfo.foundingNumber} pricing: $79/month + 5% per confirmed booking — locked in forever.`
+                      : 'Standard pricing: $79/month + 5% per confirmed booking.'}
                   </p>
                 </div>
               ) : (
                 <div>
                   <p className="font-bold">
-                    {trialInfo.daysLeft} days left in your {trialInfo.isFoundingMember ? '60-day founding member' : '30-day'} trial
+                    {trialInfo.daysLeft} days left in your {trialInfo.isFoundingMember ? '60-day founding member' : '60-day'} trial
                   </p>
                   <p className="text-sm mt-1">
                     {trialInfo.isFoundingMember
-                      ? `As Founding Member #${trialInfo.foundingNumber}, subscribe to lock in $25/month + 3% forever.`
-                      : 'Subscribe before your trial ends to keep your vehicles visible. $49/month + 5% commission.'}
+                      ? `As Founding Member #${trialInfo.foundingNumber}, subscribe to lock in $79/month + 5% per confirmed booking forever.`
+                      : 'Subscribe before your trial ends to keep your vehicles visible. $79/month + 5% per confirmed booking.'}
                   </p>
                 </div>
               )}
