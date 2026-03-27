@@ -20,6 +20,7 @@ import {
   XCircle,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { PricingCard, PricingROI } from "@/components/pricing/PricingCard";
 
 /* ─── 1. HERO ─── */
 const heroPoints = [
