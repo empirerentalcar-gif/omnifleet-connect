@@ -298,31 +298,8 @@ const LasVegasLanding = () => {
             </p>
           </div>
 
-          <div className="glass-card glow-border rounded-2xl p-8 md:p-10 relative overflow-hidden">
-            <div className="absolute top-4 right-4">
-              <span className="bg-accent text-accent-foreground text-xs font-bold px-3 py-1 rounded-full">
-                LIMITED — FIRST 50 LAS VEGAS AGENCIES
-              </span>
-            </div>
-            <h3 className="text-xl font-bold mb-1">Founding Member Plan</h3>
-            <p className="text-sm font-semibold text-accent mb-4">60 Days FREE + Lifetime Locked Pricing</p>
-            <div className="mb-6">
-              <span className="text-4xl font-bold text-foreground">$79</span>
-              <span className="text-muted-foreground">/month</span>
-              <span className="block text-sm text-accent font-medium mt-1">+ 5% per confirmed booking</span>
-            </div>
-            <ul className="space-y-3 mb-8">
-              {foundingFeatures.map((f) => (
-                <li key={f} className="flex items-start gap-3 text-sm text-foreground">
-                  <Check className="h-4 w-4 text-accent mt-0.5 shrink-0" />
-                  <span>{f}</span>
-                </li>
-              ))}
-            </ul>
-            <Button variant="hero" size="lg" className="w-full" onClick={() => navigate("/signup")}>
-              Become a Founding Member
-            </Button>
-          </div>
+          <PricingCard badgeText="LIMITED — FIRST 50 LAS VEGAS AGENCIES" />
+          <PricingROI />
         </div>
       </section>
 

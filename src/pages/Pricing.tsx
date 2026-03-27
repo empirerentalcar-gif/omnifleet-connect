@@ -1,24 +1,16 @@
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
-import { Check, ShieldCheck, Star, Users, Phone, DollarSign, Ban } from "lucide-react";
+import { Check, Ban, ShieldCheck, ArrowRight } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import SEO from "@/components/SEO";
+import { PricingCard, PricingROI } from "@/components/pricing/PricingCard";
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-
-const foundingFeatures = [
-  "National and regional listing visibility",
-  "Reservation request management",
-  "Extension requests in-app",
-  "Direct customer communication",
-  "Owner-controlled approval process",
-  "Lock in founding rate for life",
-];
 
 const standardFeatures = [
   "Everything in Founding Plan",
@@ -50,7 +42,7 @@ const faqs = [
   },
   {
     q: "What if I don't see results?",
-    a: "You can cancel anytime. No long-term contracts.",
+    a: "Try it risk-free for 60 days. If it doesn't bring value, you don't continue. No long-term contracts.",
   },
   {
     q: "How is this different from large corporate platforms?",
@@ -90,37 +82,9 @@ const Pricing = () => {
       <section className="pb-20">
         <div className="container mx-auto px-4 max-w-5xl">
           <div className="grid md:grid-cols-2 gap-8">
-            {/* Founding Member */}
-            <div className="glass-card glow-border rounded-2xl p-8 flex flex-col relative overflow-hidden">
-              <div className="absolute top-4 right-4">
-                <span className="bg-accent text-accent-foreground text-xs font-bold px-3 py-1 rounded-full">
-                  LIMITED
-                </span>
-              </div>
-              <h3 className="text-xl font-bold mb-1">Founding Member Plan</h3>
-              <p className="text-sm text-muted-foreground mb-4">Limited to the first 50 agencies</p>
-              <p className="text-sm font-semibold text-accent mb-4">60 days FREE + exclusive pricing locked forever</p>
-              <div className="mb-6">
-                <span className="text-4xl font-bold text-foreground">$79</span>
-                <span className="text-muted-foreground">/month</span>
-                <span className="block text-sm text-accent font-medium mt-1">+ 5% per confirmed booking</span>
-              </div>
-              <ul className="space-y-3 mb-8 flex-1">
-                {foundingFeatures.map((f) => (
-                  <li key={f} className="flex items-start gap-3 text-sm text-foreground">
-                    <Check className="h-4 w-4 text-accent mt-0.5 shrink-0" />
-                    <span>{f}</span>
-                  </li>
-                ))}
-              </ul>
-              <Button
-                variant="hero"
-                size="lg"
-                className="w-full"
-                onClick={() => navigate("/signup")}
-              >
-                Become a Founding Member
-              </Button>
+            {/* Founding Member — shared component */}
+            <div>
+              <PricingCard />
             </div>
 
             {/* Standard Growth */}
@@ -150,32 +114,39 @@ const Pricing = () => {
               </Button>
             </div>
           </div>
+
+          {/* ROI section */}
+          <PricingROI />
         </div>
       </section>
 
       {/* Why Booking Fee */}
       <section className="pb-20">
         <div className="container mx-auto px-4 max-w-3xl text-center">
-          <h2 className="text-2xl md:text-3xl font-bold mb-4">Why We Use a Booking Fee</h2>
+          <h2 className="text-2xl md:text-3xl font-bold mb-4">We Only Succeed When You Do</h2>
           <p className="text-muted-foreground text-lg leading-relaxed mb-4">
-            ZUVIO only succeeds when you succeed. We charge a small percentage of confirmed bookings to ensure we are motivated to bring real, qualified reservation opportunities to your agency.
+            ZUVIO earns a small percentage only when you receive bookings. This ensures we are motivated to bring real, qualified reservation opportunities to your agency.
           </p>
-          <p className="text-foreground font-semibold text-lg">
+          <p className="text-foreground font-semibold text-lg mb-4">
             If you don't grow — we don't grow.
           </p>
-          <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-6 text-sm text-muted-foreground">
+          <p className="text-sm text-accent font-medium mb-6">
+            Try it risk-free for 60 days. If it doesn't bring value, you don't continue.
+          </p>
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-6 text-sm text-muted-foreground">
             <div className="flex items-center gap-2">
               <Ban className="h-4 w-4 text-accent" />
               No Setup Fees
             </div>
             <div className="flex items-center gap-2">
               <Ban className="h-4 w-4 text-accent" />
-              No Long Contracts
+              No Contracts
+            </div>
+            <div className="flex items-center gap-2">
+              <ShieldCheck className="h-4 w-4 text-accent" />
+              Cancel Anytime
             </div>
           </div>
-          <p className="mt-4 text-sm text-muted-foreground">
-            Cancel anytime. Your business remains independent.
-          </p>
         </div>
       </section>
 
@@ -199,6 +170,16 @@ const Pricing = () => {
               </AccordionItem>
             ))}
           </Accordion>
+        </div>
+      </section>
+
+      {/* Final CTA */}
+      <section className="pb-20">
+        <div className="container mx-auto px-4 max-w-3xl text-center">
+          <Button variant="hero" size="xl" className="group text-base" onClick={() => navigate("/signup")}>
+            <span>Lock My Founding Rate</span>
+            <ArrowRight className="h-5 w-5 group-hover:translate-x-1 transition-transform" />
+          </Button>
         </div>
       </section>
 
