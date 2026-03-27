@@ -9,7 +9,7 @@ import TuroPricing from "@/components/turo/TuroPricing";
 import TuroProfitCalculator from "@/components/turo/TuroProfitCalculator";
 import TuroBookingFee from "@/components/turo/TuroBookingFee";
 import TuroHowItWorks from "@/components/turo/TuroHowItWorks";
-import TuroObjection from "@/components/turo/TuroObjection";
+import ObjectionHandling from "@/components/ObjectionHandling";
 import TuroComparison from "@/components/turo/TuroComparison";
 import TuroTestimonials from "@/components/turo/TuroTestimonials";
 import TuroFinalCTA from "@/components/turo/TuroFinalCTA";
@@ -38,7 +38,7 @@ const ForTuroHosts = () => {
       <TuroProfitCalculator />
       <TuroBookingFee />
       <TuroHowItWorks />
-      <TuroObjection />
+      <ObjectionHandling />
       <TuroComparison />
       <TuroTestimonials />
       <TuroFinalCTA />
