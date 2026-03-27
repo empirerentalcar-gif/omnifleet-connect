@@ -17,8 +17,11 @@ const FinalCTA = () => {
             <span className="text-gradient">Income</span>
           </h2>
 
-          <p className="text-lg text-muted-foreground mb-10 max-w-2xl mx-auto">
-            Stop relying on platforms that control your business. Start building one you control.
+          <p className="text-lg text-muted-foreground mb-2 max-w-2xl mx-auto">
+            $79/month + 5% per confirmed booking. 60 days free for founding members. Limited availability.
+          </p>
+          <p className="text-sm text-muted-foreground mb-8">
+            Try it risk-free for 60 days. If it doesn't bring value, you don't continue.
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
@@ -26,10 +29,10 @@ const FinalCTA = () => {
               variant="hero"
               size="lg"
               className="group text-base"
-              onClick={() => navigate("/pricing")}
+              onClick={() => navigate("/signup")}
             >
               <Building2 className="h-5 w-5" />
-              <span>List My Rental Business</span>
+              <span>Lock My Founding Rate</span>
               <ArrowRight className="h-5 w-5 group-hover:translate-x-1 transition-transform" />
             </Button>
             <Button
@@ -38,7 +41,7 @@ const FinalCTA = () => {
               className="text-base border-accent/30 hover:bg-accent/10"
               onClick={() => navigate("/signup")}
             >
-              <span>Start Getting Customers</span>
+              <span>Start Getting Booking Requests</span>
             </Button>
           </div>
         </div>
