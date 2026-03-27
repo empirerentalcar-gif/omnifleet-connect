@@ -34,7 +34,7 @@ const ownerFaqs = [
     id: "faq-5",
     question: "What are the fees?",
     answer:
-      "Zuvio charges a simple listing fee — not a percentage of your earnings. You keep 100% of what you make from every booking. Check our pricing page for current plans.",
+      "$79/month + 5% per confirmed booking. Founding members get 60 days free and their rate locked for life. No hidden fees. No long-term contracts. Cancel anytime.",
   },
   {
     id: "faq-6",
