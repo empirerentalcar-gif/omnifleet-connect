@@ -58,13 +58,17 @@ const Footer = () => {
           <div>
             <h3 className="font-display font-bold mb-6">Contact</h3>
             <ul className="space-y-3">
-              <li className="flex items-center gap-3 text-muted-foreground">
-                <Mail className="h-4 w-4 text-primary" />
-                <span>team@zuvio.us</span>
+              <li>
+                <a href="mailto:team@zuvio.us" className="flex items-center gap-3 text-muted-foreground hover:text-foreground transition-colors">
+                  <Mail className="h-4 w-4 text-primary" />
+                  <span>team@zuvio.us</span>
+                </a>
               </li>
-              <li className="flex items-center gap-3 text-muted-foreground">
-                <Phone className="h-4 w-4 text-primary" />
-                <span>(725) 239-2300</span>
+              <li>
+                <a href="tel:+17252392300" className="flex items-center gap-3 text-muted-foreground hover:text-foreground transition-colors">
+                  <Phone className="h-4 w-4 text-primary" />
+                  <span>(725) 239-2300</span>
+                </a>
               </li>
             </ul>
           </div>
