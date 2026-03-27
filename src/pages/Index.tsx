@@ -8,6 +8,7 @@ import CityExpansion from "@/components/CityExpansion";
 import SocialProof from "@/components/SocialProof";
 import TrustSection from "@/components/TrustSection";
 import OwnerFAQ from "@/components/OwnerFAQ";
+import ObjectionHandling from "@/components/ObjectionHandling";
 import FinalCTA from "@/components/FinalCTA";
 import Footer from "@/components/Footer";
 import SEO from "@/components/SEO";
@@ -41,6 +42,7 @@ const Index = () => {
       <CityExpansion />
       <SocialProof />
       <TrustSection />
+      <ObjectionHandling />
       <OwnerFAQ />
       <FinalCTA />
       <Footer />

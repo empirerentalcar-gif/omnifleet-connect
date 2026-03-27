@@ -9,6 +9,7 @@ import {
   XCircle, Clock,
 } from "lucide-react";
 import { PricingCard, PricingROI } from "@/components/pricing/PricingCard";
+import ObjectionHandling from "@/components/ObjectionHandling";
 
 const ForAgencies = () => {
   const navigate = useNavigate();
@@ -208,6 +209,8 @@ const ForAgencies = () => {
           <PricingROI />
         </div>
       </section>
+
+      <ObjectionHandling />
 
       {/* 8. WHY BOOKING FEE */}
       <section className="py-20 md:py-28">

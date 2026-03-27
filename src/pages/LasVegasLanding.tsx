@@ -21,6 +21,7 @@ import {
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { PricingCard, PricingROI } from "@/components/pricing/PricingCard";
+import ObjectionHandling from "@/components/ObjectionHandling";
 
 /* ─── 1. HERO ─── */
 const heroPoints = [
@@ -303,6 +304,8 @@ const LasVegasLanding = () => {
           <PricingROI />
         </div>
       </section>
+
+      <ObjectionHandling />
 
       {/* ─── 6. PROFIT CALCULATOR ─── */}
       <section className="py-20 md:py-28 relative overflow-hidden">
