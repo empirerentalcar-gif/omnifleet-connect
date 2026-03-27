@@ -1,168 +1,329 @@
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import SEO from "@/components/SEO";
-import { Link } from "react-router-dom";
-import { Globe, TrendingUp, Briefcase, Target, Handshake, Dumbbell, Check } from "lucide-react";
-
-const benefits = [
-  { icon: Globe, title: "Nationwide Visibility", desc: "Get discovered by customers across the United States. ZUVIO puts your agency in front of travelers searching for rentals in your area, dramatically expanding your reach beyond local advertising." },
-  { icon: TrendingUp, title: "Increase Bookings", desc: "Tap into a growing market of customers who prefer supporting local businesses and value personalized service. Our platform attracts renters specifically looking for independent agencies." },
-  { icon: Briefcase, title: "Professional Platform", desc: "Present your fleet professionally with easy-to-use listing tools. Upload photos, set pricing, manage availability, and showcase what makes your agency special." },
-  { icon: Target, title: "Target Your Market", desc: "Reach customers looking for flexible payment options including cash rentals. Attract the clients who need what you offer and value independent service." },
-  { icon: Handshake, title: "Keep Your Independence", desc: "You set your own rates, policies, and terms. ZUVIO connects you with customers but you remain completely independent and in control of your business." },
-  { icon: Dumbbell, title: "Compete with Chains", desc: "Level the playing field against Enterprise, Hertz, and other corporate chains. Gain the technology and reach you need while maintaining your personal touch." },
-];
-
-const steps = [
-  { num: 1, title: "Sign Up and Create Your Profile", desc: "Complete a simple registration process and set up your agency profile. Add your business information, location details, operating hours, and what makes your agency unique." },
-  { num: 2, title: "List Your Fleet", desc: "Upload your available vehicles with photos, descriptions, and pricing. Update availability in real-time and manage your inventory through an easy-to-use dashboard." },
-  { num: 3, title: "Receive Bookings", desc: "Get instant notifications when customers book through ZUVIO. Review reservation details, communicate with renters, and manage your bookings all in one place." },
-  { num: 4, title: "Serve Your Customers", desc: "Provide the excellent, personalized service that sets independent agencies apart. Complete the rental process at your location and build your reputation through reviews." },
-];
-
-const features = [
-  { title: "Booking Management", desc: "Intuitive dashboard to manage all reservations, track customer information, and handle schedule conflicts with ease." },
-  { title: "Marketing Tools", desc: "Get found by customers actively searching for independent rentals. SEO-optimized listings ensure maximum visibility." },
-  { title: "Customer Reviews", desc: "Build your reputation through authentic customer reviews. Positive feedback drives more bookings." },
-  { title: "Analytics & Insights", desc: "Track your performance with detailed analytics. Understand booking trends and optimize your business." },
-  { title: "Secure Payments", desc: "Accept various payment methods securely. You control payment terms and can offer cash, cards, or both." },
-  { title: "Dedicated Support", desc: "Access responsive customer support from people who understand the car rental business." },
-];
+import { Button } from "@/components/ui/button";
+import { Link, useNavigate } from "react-router-dom";
+import {
+  ArrowRight, Check, DollarSign, TrendingUp, Eye, Phone, ShieldCheck,
+  Ban, Users, CalendarCheck, CreditCard, ClipboardList, UserCheck,
+  XCircle, Clock,
+} from "lucide-react";
 
 const ForAgencies = () => {
+  const navigate = useNavigate();
+
   return (
     <div className="min-h-screen bg-background">
       <SEO
-        title="Join ZUVIO | Partner with the Independent Car Rental Network"
-        description="Grow your independent car rental business with ZUVIO. Connect with customers nationwide, increase bookings, and join a network designed for independent agencies."
+        title="Independent Car Rental Agencies | Get More Bookings with Zuvio"
+        description="Grow your car rental business with Zuvio. Get direct booking requests, keep control of pricing, and increase revenue."
         path="/for-agencies"
       />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({
         "@context": "https://schema.org",
         "@type": "WebPage",
         "name": "For Agencies — ZUVIO",
-        "description": "Grow your independent car rental business with ZUVIO.",
+        "description": "Grow your car rental business with Zuvio. Get direct booking requests, keep control of pricing, and increase revenue.",
         "url": "https://zuvio.us/for-agencies",
         "isPartOf": { "@type": "WebSite", "name": "ZUVIO", "url": "https://zuvio.us" }
       }) }} />
       <Header />
 
-      {/* Hero */}
-      <section className="pt-24 md:pt-32 pb-16 md:pb-20 bg-gradient-to-br from-primary/10 via-background to-secondary/10 text-center px-4">
-        <div className="container mx-auto max-w-3xl">
-          <h1 className="font-display text-4xl md:text-5xl font-bold mb-6">Grow Your Car Rental Business</h1>
-          <p className="text-lg md:text-xl text-muted-foreground mb-8">
-            Join ZUVIO and connect with customers across America. Built specifically for independent car rental agencies to thrive in the digital age.
+      {/* 1. HERO */}
+      <section className="pt-28 md:pt-36 pb-16 md:pb-24 relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-hero" />
+        <div className="absolute top-1/3 right-1/4 w-[500px] h-[500px] bg-primary/8 rounded-full blur-3xl" />
+        <div className="container mx-auto px-4 relative z-10 max-w-4xl">
+          <h1 className="font-display text-4xl md:text-6xl font-bold mb-6 leading-tight">
+            Get More Rental Bookings —{" "}
+            <span className="text-gradient">Without Giving Up Control</span>
+          </h1>
+          <p className="text-lg md:text-xl text-muted-foreground mb-8 max-w-3xl">
+            Zuvio helps independent car rental agencies attract direct customers, increase bookings, and grow revenue — while keeping full control of pricing, policies, and operations.
           </p>
-          <Link to="/pricing" className="bg-primary text-primary-foreground font-semibold px-8 py-3 rounded-full hover:bg-primary/90 transition-colors inline-block">
-            Become a Partner Agency
-          </Link>
+          <ul className="space-y-3 mb-10">
+            {["Direct customer communication", "No corporate restrictions", "Built for independent agencies"].map((t) => (
+              <li key={t} className="flex items-center gap-3 text-foreground">
+                <Check className="h-5 w-5 text-accent shrink-0" />
+                <span className="font-medium">{t}</span>
+              </li>
+            ))}
+          </ul>
+          <div className="flex flex-col sm:flex-row gap-4">
+            <Button variant="hero" size="xl" className="group text-base" onClick={() => navigate("/signup")}>
+              <span>Become a Founding Member</span>
+              <ArrowRight className="h-5 w-5 group-hover:translate-x-1 transition-transform" />
+            </Button>
+            <Button variant="outline" size="xl" className="text-base border-accent/30 hover:bg-accent/10" onClick={() => navigate("/signup")}>
+              Start Getting Booking Requests
+            </Button>
+          </div>
+          <p className="text-xs text-muted-foreground mt-4">No contracts. Cancel anytime.</p>
         </div>
       </section>
 
-      {/* Intro */}
-      <section className="py-16 md:py-20">
+      {/* 2. MONEY SECTION */}
+      <section className="py-20 md:py-28 relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-r from-primary/10 via-accent/5 to-primary/10" />
+        <div className="container mx-auto px-4 relative z-10 max-w-3xl text-center">
+          <span className="inline-block px-4 py-2 rounded-full bg-accent/10 text-accent text-sm font-medium mb-4">
+            Revenue Engine
+          </span>
+          <h2 className="font-display text-3xl md:text-5xl font-bold mb-4">
+            More Bookings = <span className="text-gradient">More Revenue</span>
+          </h2>
+          <p className="text-lg text-muted-foreground mb-10">
+            Even a few additional bookings per month can cover your cost and increase your total income.
+          </p>
+          <div className="grid sm:grid-cols-3 gap-6 mb-10">
+            {[
+              { icon: CalendarCheck, text: "Fill unused inventory" },
+              { icon: TrendingUp, text: "Increase monthly revenue" },
+              { icon: ShieldCheck, text: "Reduce reliance on one platform" },
+            ].map(({ icon: Icon, text }) => (
+              <div key={text} className="glass-card rounded-xl p-6 flex flex-col items-center gap-3">
+                <Icon className="h-8 w-8 text-accent" />
+                <p className="font-semibold text-foreground">{text}</p>
+              </div>
+            ))}
+          </div>
+          <p className="text-xl font-display font-bold text-foreground">
+            Zuvio is designed to <span className="text-gradient">pay for itself quickly.</span>
+          </p>
+        </div>
+      </section>
+
+      {/* 3. PROBLEM */}
+      <section className="py-20 md:py-28">
         <div className="container mx-auto px-4 max-w-3xl text-center">
-          <h2 className="font-display text-3xl md:text-4xl font-bold mb-6">Why Independent Agencies Choose ZUVIO</h2>
-          <p className="text-lg text-muted-foreground leading-relaxed">
-            We understand the challenges independent car rental agencies face competing against national chains. ZUVIO levels the playing field by giving you access to a nationwide customer base while maintaining your independence and local identity.
+          <h2 className="font-display text-3xl md:text-5xl font-bold mb-10">
+            Why Independent Agencies <span className="text-gradient">Struggle to Compete</span>
+          </h2>
+          <div className="space-y-5 max-w-xl mx-auto">
+            {[
+              { icon: XCircle, text: "Corporate chains dominate search results" },
+              { icon: XCircle, text: "Independent agencies are hard to find" },
+              { icon: XCircle, text: "Platforms control pricing and customers" },
+            ].map(({ icon: Icon, text }) => (
+              <div key={text} className="flex items-center gap-4 glass-card rounded-xl p-5">
+                <Icon className="h-6 w-6 text-destructive shrink-0" />
+                <p className="font-semibold text-foreground text-left">{text}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* 4. SOLUTION */}
+      <section className="py-20 md:py-28 relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-b from-primary/5 to-transparent" />
+        <div className="container mx-auto px-4 relative z-10 max-w-3xl text-center">
+          <h2 className="font-display text-3xl md:text-5xl font-bold mb-4">
+            Zuvio <span className="text-gradient">Levels the Playing Field</span>
+          </h2>
+          <p className="text-lg text-muted-foreground mb-10">
+            Zuvio gives independent agencies the visibility and tools needed to compete — without taking control away from you.
           </p>
-        </div>
-      </section>
-
-      {/* Benefits */}
-      <section className="pb-16 md:pb-20">
-        <div className="container mx-auto px-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-5xl mx-auto">
-            {benefits.map((b, i) => (
-              <div key={i} className="bg-card rounded-2xl p-8 shadow-sm hover:shadow-lg transition-all hover:-translate-y-1 border-t-4 border-primary">
-                <b.icon className="h-10 w-10 text-primary mb-4" />
-                <h3 className="font-display text-xl font-bold mb-3">{b.title}</h3>
-                <p className="text-muted-foreground">{b.desc}</p>
+          <div className="space-y-4 max-w-xl mx-auto">
+            {[
+              "Get discovered by local and traveling customers",
+              "Receive direct booking requests",
+              "Maintain full independence",
+            ].map((t) => (
+              <div key={t} className="flex items-center gap-4 glass-card rounded-xl p-5">
+                <Check className="h-5 w-5 text-accent shrink-0" />
+                <p className="font-semibold text-foreground text-left">{t}</p>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* How It Works */}
-      <section className="py-16 md:py-20 bg-secondary/5">
-        <div className="container mx-auto px-4 max-w-3xl">
-          <h2 className="font-display text-3xl md:text-4xl font-bold mb-4 text-center">How ZUVIO Works for Agencies</h2>
-          <p className="text-center text-lg text-muted-foreground mb-12">Getting started is simple and straightforward</p>
-          <div className="space-y-8">
-            {steps.map((s) => (
-              <div key={s.num} className="flex gap-6 items-start">
-                <div className="w-16 h-16 rounded-full bg-gradient-to-br from-primary to-accent flex items-center justify-center text-primary-foreground text-2xl font-extrabold flex-shrink-0">
-                  {s.num}
+      {/* 5. FEATURES */}
+      <section className="py-20 md:py-28">
+        <div className="container mx-auto px-4 max-w-4xl">
+          <h2 className="font-display text-3xl md:text-5xl font-bold text-center mb-14">
+            Built for <span className="text-gradient">Independent Rental Agencies</span>
+          </h2>
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {[
+              { icon: Eye, title: "Increased visibility" },
+              { icon: Phone, title: "Direct customer communication" },
+              { icon: UserCheck, title: "Owner-controlled approvals" },
+              { icon: CreditCard, title: "Flexible payment options" },
+              { icon: ClipboardList, title: "Booking request management" },
+              { icon: ShieldCheck, title: "Full control of your business" },
+            ].map(({ icon: Icon, title }) => (
+              <div key={title} className="glass-card rounded-xl p-6 flex items-center gap-4">
+                <div className="w-12 h-12 rounded-xl bg-accent/10 flex items-center justify-center shrink-0">
+                  <Icon className="h-6 w-6 text-accent" />
                 </div>
-                <div className="bg-card rounded-xl p-6 shadow-sm flex-1 border border-border/50">
-                  <h3 className="font-display text-xl font-bold mb-2">{s.title}</h3>
-                  <p className="text-muted-foreground">{s.desc}</p>
-                </div>
+                <p className="font-display font-semibold text-foreground">{title}</p>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Pricing Preview */}
-      <section className="py-16 md:py-20">
-        <div className="container mx-auto px-4 max-w-4xl text-center">
-          <h2 className="font-display text-3xl md:text-4xl font-bold mb-4">Simple, Transparent Pricing</h2>
-          <p className="text-lg text-muted-foreground mb-12 max-w-2xl mx-auto">No hidden fees. No long-term contracts. Cancel anytime.</p>
-          <div className="max-w-md mx-auto">
-            <div className="bg-card rounded-2xl p-8 border-2 border-primary shadow-lg relative">
-              <span className="absolute -top-3 left-1/2 -translate-x-1/2 bg-primary text-primary-foreground text-xs font-semibold px-4 py-1 rounded-full">LIMITED — FIRST 50</span>
-              <h3 className="font-display text-xl font-bold mb-1">Founding Member Plan</h3>
-              <p className="text-sm text-muted-foreground mb-2">60 days free for founding members</p>
-              <div className="mb-6">
-                <span className="text-4xl font-bold text-foreground">$79</span>
-                <span className="text-muted-foreground">/month</span>
-                <span className="block text-sm text-primary font-medium mt-1">+ 5% per confirmed booking</span>
+      {/* 6. HOW IT WORKS */}
+      <section className="py-20 md:py-28 relative">
+        <div className="absolute inset-0 bg-gradient-to-b from-background via-secondary/10 to-background" />
+        <div className="container mx-auto px-4 relative z-10 max-w-3xl">
+          <h2 className="font-display text-3xl md:text-5xl font-bold text-center mb-14">
+            How It <span className="text-gradient">Works</span>
+          </h2>
+          <div className="space-y-6">
+            {[
+              "Create your profile",
+              "List your vehicles",
+              "Receive booking requests",
+              "Approve or decline",
+              "Serve customers your way",
+            ].map((step, i) => (
+              <div key={step} className="flex gap-5 items-center">
+                <div className="w-12 h-12 rounded-full bg-gradient-to-br from-primary to-accent flex items-center justify-center text-primary-foreground text-lg font-bold shrink-0">
+                  {i + 1}
+                </div>
+                <p className="font-display text-lg font-semibold text-foreground">{step}</p>
               </div>
-              <ul className="text-left space-y-3 mb-6">
-                {["National and regional visibility", "Reservation request management", "Direct customer communication", "Owner-controlled approvals", "Locked founding rate for life", "Cancel anytime"].map((item, j) => (
-                  <li key={j} className="flex items-start gap-2 text-sm text-muted-foreground">
-                    <Check className="h-4 w-4 text-primary flex-shrink-0 mt-0.5" />
-                    {item}
-                  </li>
-                ))}
-              </ul>
-              <Link to="/signup" className="block bg-primary text-primary-foreground font-semibold px-6 py-2.5 rounded-full hover:bg-primary/90 transition-colors text-sm text-center">
-                Become a Founding Member
-              </Link>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* 7. PRICING */}
+      <section className="py-20 md:py-28 relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-b from-background via-secondary/10 to-background" />
+        <div className="container mx-auto px-4 relative z-10 max-w-lg">
+          <div className="text-center mb-14">
+            <h2 className="font-display text-3xl md:text-5xl font-bold mb-4">
+              Simple, <span className="text-gradient">Transparent Pricing</span>
+            </h2>
+            <p className="text-lg text-muted-foreground">
+              No hidden fees. No contracts. No loss of control.
+            </p>
+          </div>
+          <div className="glass-card glow-border rounded-2xl p-8 flex flex-col relative overflow-hidden">
+            <div className="absolute top-4 right-4">
+              <span className="bg-accent text-accent-foreground text-xs font-bold px-3 py-1 rounded-full">
+                LIMITED — FIRST 50
+              </span>
             </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Features */}
-      <section className="py-16 md:py-20">
-        <div className="container mx-auto px-4 max-w-5xl">
-          <div className="bg-card rounded-2xl p-8 md:p-12 shadow-sm border border-border/50">
-            <h3 className="font-display text-2xl md:text-3xl font-bold mb-8 text-center text-primary">Everything You Need to Succeed</h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {features.map((f, i) => (
-                <div key={i}>
-                  <h4 className="font-display font-bold text-lg mb-2">{f.title}</h4>
-                  <p className="text-muted-foreground text-sm">{f.desc}</p>
-                </div>
+            <h3 className="text-xl font-bold mb-1">Founding Member Plan</h3>
+            <p className="text-sm font-semibold text-accent mb-4">60 Days FREE + Lifetime Locked Pricing</p>
+            <div className="mb-6">
+              <span className="text-4xl font-bold text-foreground">$79</span>
+              <span className="text-muted-foreground">/month</span>
+              <span className="block text-sm text-accent font-medium mt-1">+ 5% per confirmed booking</span>
+            </div>
+            <ul className="space-y-3 mb-8 flex-1">
+              {[
+                "National + regional visibility",
+                "Reservation request management",
+                "Direct customer communication",
+                "Owner-controlled approvals",
+                "Lock your rate for life",
+              ].map((f) => (
+                <li key={f} className="flex items-start gap-3 text-sm text-foreground">
+                  <Check className="h-4 w-4 text-accent mt-0.5 shrink-0" />
+                  <span>{f}</span>
+                </li>
               ))}
+            </ul>
+            <Button variant="hero" size="lg" className="w-full" onClick={() => navigate("/signup")}>
+              Become a Founding Member
+            </Button>
+          </div>
+        </div>
+      </section>
+
+      {/* 8. WHY BOOKING FEE */}
+      <section className="py-20 md:py-28">
+        <div className="container mx-auto px-4 max-w-3xl text-center">
+          <h2 className="font-display text-3xl md:text-4xl font-bold mb-6">
+            We Only Succeed <span className="text-gradient">When You Do</span>
+          </h2>
+          <p className="text-lg text-muted-foreground mb-4">
+            Zuvio earns a small percentage only when you receive bookings.
+          </p>
+          <p className="text-xl font-bold text-foreground mb-8">
+            If you don't grow — <span className="text-accent">we don't grow.</span>
+          </p>
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-6 text-sm text-muted-foreground">
+            <div className="flex items-center gap-2">
+              <Ban className="h-4 w-4 text-accent" />
+              No setup fees
+            </div>
+            <div className="flex items-center gap-2">
+              <Ban className="h-4 w-4 text-accent" />
+              No long contracts
+            </div>
+            <div className="flex items-center gap-2">
+              <ShieldCheck className="h-4 w-4 text-accent" />
+              Cancel anytime
             </div>
           </div>
         </div>
       </section>
 
-      {/* CTA */}
-      <section className="py-16 md:py-20">
-        <div className="container mx-auto px-4 max-w-3xl">
-          <div className="bg-gradient-to-r from-primary to-accent rounded-2xl p-8 md:p-12 text-center text-primary-foreground">
-            <h2 className="font-display text-3xl font-bold mb-4">Ready to Grow Your Business?</h2>
-            <p className="text-lg mb-8 opacity-95">Join independent car rental agencies growing with ZUVIO. $79/month + 5% per confirmed booking. 60 days free for founding members.</p>
-            <Link to="/pricing" className="bg-background text-primary font-semibold px-8 py-3 rounded-full hover:bg-background/90 transition-colors inline-block">
-              Become a Partner Agency
-            </Link>
+      {/* 9. TRUST */}
+      <section className="py-20 md:py-28 relative">
+        <div className="absolute inset-0 bg-gradient-to-b from-primary/5 to-transparent" />
+        <div className="container mx-auto px-4 relative z-10 max-w-3xl text-center">
+          <h2 className="font-display text-3xl md:text-5xl font-bold mb-10">
+            You Stay in <span className="text-gradient">Control</span>
+          </h2>
+          <div className="grid sm:grid-cols-3 gap-6">
+            {[
+              { icon: DollarSign, text: "You set pricing" },
+              { icon: ShieldCheck, text: "You control policies" },
+              { icon: Users, text: "You manage your customers" },
+            ].map(({ icon: Icon, text }) => (
+              <div key={text} className="glass-card rounded-xl p-6 flex flex-col items-center gap-3">
+                <Icon className="h-8 w-8 text-accent" />
+                <p className="font-semibold text-foreground">{text}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* 10. URGENCY */}
+      <section className="py-20 md:py-28">
+        <div className="container mx-auto px-4 max-w-3xl text-center">
+          <div className="glass-card glow-border rounded-2xl p-10">
+            <Clock className="h-10 w-10 text-accent mx-auto mb-4" />
+            <h2 className="font-display text-2xl md:text-4xl font-bold mb-4">
+              Limited Founding Member Availability
+            </h2>
+            <p className="text-lg text-muted-foreground">
+              We are onboarding a limited number of agencies to ensure strong visibility and performance.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* 11. FINAL CTA */}
+      <section className="py-24 md:py-32 relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-hero" />
+        <div className="absolute top-1/3 left-1/3 w-96 h-96 bg-primary/10 rounded-full blur-3xl animate-pulse-glow" />
+        <div className="container mx-auto px-4 relative z-10 text-center">
+          <h2 className="font-display text-3xl md:text-5xl lg:text-6xl font-bold mb-6">
+            Start Getting More Bookings
+            <br />
+            <span className="text-gradient">— On Your Terms</span>
+          </h2>
+          <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-4">
+            $79/month + 5% per confirmed booking. 60 days free for founding members. Limited availability.
+          </p>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <Button variant="hero" size="xl" className="group text-base" onClick={() => navigate("/signup")}>
+              <span>Become a Founding Member</span>
+              <ArrowRight className="h-5 w-5 group-hover:translate-x-1 transition-transform" />
+            </Button>
+            <Button variant="outline" size="xl" className="text-base border-accent/30 hover:bg-accent/10" onClick={() => navigate("/signup")}>
+              Start Getting Booking Requests
+            </Button>
           </div>
         </div>
       </section>
