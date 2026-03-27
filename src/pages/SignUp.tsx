@@ -144,6 +144,10 @@ const SignUp = () => {
       }
     }
 
+    // Track successful form submission
+    const { trackFormSubmission } = await import('@/lib/analytics');
+    trackFormSubmission('signup_form');
+
     toast({
       title: 'Check your email',
       description: 'We sent you a confirmation link to verify your account.',
