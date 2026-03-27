@@ -17,8 +17,11 @@ const TuroFinalCTA = () => {
           <br />
           <span className="text-gradient">— On Your Terms</span>
         </h2>
-        <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-10">
-          Build a rental business that works for you — not the platform.
+        <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-2">
+          $79/month + 5% per confirmed booking. 60 days free for founding members. Limited availability.
+        </p>
+        <p className="text-sm text-muted-foreground mb-8">
+          Try it risk-free for 60 days. If it doesn't bring value, you don't continue.
         </p>
 
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
@@ -28,7 +31,7 @@ const TuroFinalCTA = () => {
             className="group text-base"
             onClick={() => navigate("/signup")}
           >
-            <span>Become a Founding Member</span>
+            <span>Lock My Founding Rate</span>
             <ArrowRight className="h-5 w-5 group-hover:translate-x-1 transition-transform" />
           </Button>
           <Button
@@ -37,7 +40,7 @@ const TuroFinalCTA = () => {
             className="text-base border-accent/30 hover:bg-accent/10"
             onClick={() => navigate("/signup")}
           >
-            Start Getting Direct Bookings
+            Get My First Bookings
           </Button>
         </div>
       </div>

@@ -2,12 +2,13 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import SEO from "@/components/SEO";
 import { Button } from "@/components/ui/button";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import {
   ArrowRight, Check, DollarSign, TrendingUp, Eye, Phone, ShieldCheck,
   Ban, Users, CalendarCheck, CreditCard, ClipboardList, UserCheck,
   XCircle, Clock,
 } from "lucide-react";
+import { PricingCard, PricingROI } from "@/components/pricing/PricingCard";
 
 const ForAgencies = () => {
   const navigate = useNavigate();
@@ -203,37 +204,8 @@ const ForAgencies = () => {
               No hidden fees. No contracts. No loss of control.
             </p>
           </div>
-          <div className="glass-card glow-border rounded-2xl p-8 flex flex-col relative overflow-hidden">
-            <div className="absolute top-4 right-4">
-              <span className="bg-accent text-accent-foreground text-xs font-bold px-3 py-1 rounded-full">
-                LIMITED — FIRST 50
-              </span>
-            </div>
-            <h3 className="text-xl font-bold mb-1">Founding Member Plan</h3>
-            <p className="text-sm font-semibold text-accent mb-4">60 Days FREE + Lifetime Locked Pricing</p>
-            <div className="mb-6">
-              <span className="text-4xl font-bold text-foreground">$79</span>
-              <span className="text-muted-foreground">/month</span>
-              <span className="block text-sm text-accent font-medium mt-1">+ 5% per confirmed booking</span>
-            </div>
-            <ul className="space-y-3 mb-8 flex-1">
-              {[
-                "National + regional visibility",
-                "Reservation request management",
-                "Direct customer communication",
-                "Owner-controlled approvals",
-                "Lock your rate for life",
-              ].map((f) => (
-                <li key={f} className="flex items-start gap-3 text-sm text-foreground">
-                  <Check className="h-4 w-4 text-accent mt-0.5 shrink-0" />
-                  <span>{f}</span>
-                </li>
-              ))}
-            </ul>
-            <Button variant="hero" size="lg" className="w-full" onClick={() => navigate("/signup")}>
-              Become a Founding Member
-            </Button>
-          </div>
+          <PricingCard />
+          <PricingROI />
         </div>
       </section>
 
@@ -313,16 +285,19 @@ const ForAgencies = () => {
             <br />
             <span className="text-gradient">— On Your Terms</span>
           </h2>
-          <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-4">
+          <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-2">
             $79/month + 5% per confirmed booking. 60 days free for founding members. Limited availability.
+          </p>
+          <p className="text-sm text-muted-foreground mb-6">
+            Try it risk-free for 60 days. If it doesn't bring value, you don't continue.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button variant="hero" size="xl" className="group text-base" onClick={() => navigate("/signup")}>
-              <span>Become a Founding Member</span>
+              <span>Lock My Founding Rate</span>
               <ArrowRight className="h-5 w-5 group-hover:translate-x-1 transition-transform" />
             </Button>
             <Button variant="outline" size="xl" className="text-base border-accent/30 hover:bg-accent/10" onClick={() => navigate("/signup")}>
-              Start Getting Booking Requests
+              Get My First Bookings
             </Button>
           </div>
         </div>
