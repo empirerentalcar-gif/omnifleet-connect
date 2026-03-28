@@ -57,6 +57,9 @@ const Header = () => {
             <a href="/about" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
               About
             </a>
+            <a href="/blog" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
+              Blog
+            </a>
           </nav>
 
           {/* Desktop Actions */}
@@ -121,6 +124,9 @@ const Header = () => {
               </a>
               <a href="/about" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
                 About
+              </a>
+              <a href="/blog" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
+                Blog
               </a>
               <div className="flex gap-3 pt-4 border-t border-border/30">
                 {!loading && user ? (
