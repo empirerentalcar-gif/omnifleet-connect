@@ -69,11 +69,12 @@ const BlogPost = () => {
           <div
             className="prose prose-invert prose-lg max-w-none
               prose-headings:font-display prose-headings:text-foreground
-              prose-p:text-muted-foreground prose-p:leading-relaxed
+              prose-p:text-muted-foreground prose-p:leading-relaxed prose-p:mb-6
               prose-li:text-muted-foreground
               prose-strong:text-foreground
               prose-a:text-primary hover:prose-a:text-primary/80
-              prose-ul:list-disc prose-ul:pl-6"
+              prose-ul:list-disc prose-ul:pl-6
+              prose-headings:mt-10 prose-headings:mb-4"
             dangerouslySetInnerHTML={{ __html: post.content }}
           />
 
@@ -82,8 +83,11 @@ const BlogPost = () => {
             <h2 className="font-display text-2xl md:text-3xl font-bold mb-4">
               Ready to grow your rental business?
             </h2>
-            <p className="text-muted-foreground mb-6">
+            <p className="text-muted-foreground mb-4">
               Join Zuvio as a Founding Member today.
+            </p>
+            <p className="text-sm font-semibold text-primary mb-6">
+              Use code <span className="font-bold">FOUNDING50</span> at signup — only 50 spots available.
             </p>
             <Button
               variant="hero"
