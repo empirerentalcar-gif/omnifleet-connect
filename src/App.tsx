@@ -32,6 +32,8 @@ const CityLanding = lazy(() => import("./pages/CityLanding"));
 const Cities = lazy(() => import("./pages/Cities"));
 const ForTuroHosts = lazy(() => import("./pages/ForTuroHosts"));
 const LasVegasLanding = lazy(() => import("./pages/LasVegasLanding"));
+const Blog = lazy(() => import("./pages/Blog"));
+const BlogPost = lazy(() => import("./pages/BlogPost"));
 
 const queryClient = new QueryClient();
 
@@ -74,6 +76,8 @@ const App = () => (
             <Route path="/for-turo-hosts" element={<ForTuroHosts />} />
             <Route path="/las-vegas" element={<LasVegasLanding />} />
             <Route path="/city/:citySlug" element={<CityLanding />} />
+            <Route path="/blog" element={<Blog />} />
+            <Route path="/blog/:slug" element={<BlogPost />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
