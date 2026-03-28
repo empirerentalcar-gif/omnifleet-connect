@@ -13,7 +13,7 @@ export const blogPosts: BlogPost[] = [
     title: "5 Ways Independent Car Rental Agencies Can Get More Bookings Without Spending a Fortune on Ads",
     excerpt:
       "You don't need a massive advertising budget to compete. Here are five proven ways to fill your calendar with bookings — without spending a fortune.",
-    date: "2026-01-16",
+    date: "2026-03-10",
     metaDescription:
       "Discover 5 proven ways independent car rental agencies can increase bookings without expensive ads. Tips on marketplaces, reviews, referrals, and more.",
     content: `
@@ -43,7 +43,7 @@ export const blogPosts: BlogPost[] = [
     title: "5 Proven Ways to Get More Bookings for Your Independent Car Rental Business",
     excerpt:
       "Struggling to fill your calendar? These five actionable strategies help independent rental agencies attract more customers and increase utilization — without relying on a single platform.",
-    date: "2025-06-15",
+    date: "2026-02-03",
     metaDescription:
       "Discover 5 proven strategies to increase bookings for your independent car rental agency. From diversifying listing channels to optimizing your pricing.",
     content: `
@@ -73,7 +73,7 @@ export const blogPosts: BlogPost[] = [
     title: "Why Independent Car Rental Agencies Are Winning in 2025",
     excerpt:
       "Big rental chains are losing ground to independent operators who offer better prices, more flexibility, and a personal touch. Here's why the shift is happening and how to take advantage.",
-    date: "2025-06-10",
+    date: "2026-01-08",
     metaDescription:
       "Independent car rental agencies are outpacing big chains in 2025. Learn why flexibility, pricing control, and personal service give independent operators the edge.",
     content: `
