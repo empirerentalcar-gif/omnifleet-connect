@@ -67,16 +67,13 @@ const BlogPost = () => {
 
           {/* Content */}
           <div
-            className="prose prose-invert prose-lg max-w-none
+            className="blog-content prose prose-invert prose-lg max-w-none
               prose-headings:font-display prose-headings:text-foreground
-              prose-headings:text-xl prose-headings:md:text-2xl prose-headings:font-bold
-              prose-p:text-muted-foreground prose-p:leading-relaxed prose-p:[margin-bottom:1.5rem]
+              prose-p:text-muted-foreground prose-p:leading-relaxed
               prose-li:text-muted-foreground
               prose-strong:text-foreground
               prose-a:text-primary hover:prose-a:text-primary/80
-              prose-ul:list-disc prose-ul:pl-6 prose-ul:[margin-bottom:1.5rem]
-              prose-h2:[margin-top:2rem] prose-h2:[margin-bottom:1rem]
-              prose-h3:[margin-top:2rem] prose-h3:[margin-bottom:1rem]"
+              prose-ul:list-disc prose-ul:pl-6 prose-ul:mb-6"
             dangerouslySetInnerHTML={{ __html: post.content }}
           />
 
