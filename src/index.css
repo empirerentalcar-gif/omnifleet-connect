@@ -140,6 +140,34 @@
   .animate-pulse-glow {
     animation: pulseGlow 3s ease-in-out infinite;
   }
+
+  /* Blog post content spacing */
+  .blog-content p {
+    margin-bottom: 1.5rem;
+  }
+
+  .blog-content h2 {
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+    font-weight: 700;
+    font-size: 1.25rem;
+  }
+
+  .blog-content h3 {
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+    font-weight: 700;
+    font-size: 1.125rem;
+  }
+
+  @media (min-width: 768px) {
+    .blog-content h2 {
+      font-size: 1.5rem;
+    }
+    .blog-content h3 {
+      font-size: 1.25rem;
+    }
+  }
 }
 
 @layer utilities {
