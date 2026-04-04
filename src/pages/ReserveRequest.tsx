@@ -102,7 +102,7 @@ const ReserveRequest = () => {
 
       const reservationId = crypto.randomUUID();
       // Insert into legacy reservation_requests table
-      const { error } = await supabase.from("reservation_requests").insert({
+      const { error: legacyError } = await supabase.from("reservation_requests").insert({
         id: reservationId,
         profile_id: validProfileId,
         agency_name: agencyName,
@@ -115,8 +115,8 @@ const ReserveRequest = () => {
         notes: parsed.data.notes,
       });
 
-      if (error) {
-        console.error("Reservation request insert error:", error);
+      if (legacyError) {
+        console.error("Reservation request insert error:", legacyError);
         // Non-blocking: legacy table insert failed but primary succeeded
       }
 
