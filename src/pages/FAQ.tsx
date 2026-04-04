@@ -1,5 +1,4 @@
 import Header from "@/components/Header";
-import Footer from "@/components/Footer";
 import SEO from "@/components/SEO";
 import { Link } from "react-router-dom";
 import {
@@ -119,7 +118,6 @@ const FAQ = () => {
         </div>
       </section>
 
-      <Footer />
     </div>
   );
 };

@@ -5,7 +5,10 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { HelmetProvider } from "react-helmet-async";
 import { lazy, Suspense } from "react";
+import { useLocation } from "react-router-dom";
 import Index from "./pages/Index";
+import Footer from "./components/Footer";
+import RentalCTA from "./components/RentalCTA";
 
 // Lazy-load non-critical routes to reduce initial JS bundle
 const SignIn = lazy(() => import("./pages/SignIn"));
@@ -43,6 +46,50 @@ const LazyFallback = () => (
   </div>
 );
 
+const GlobalLayout = () => {
+  const location = useLocation();
+  const isHomePage = location.pathname === "/";
+
+  return (
+    <>
+      <Suspense fallback={<LazyFallback />}>
+        <Routes>
+          <Route path="/" element={<Index />} />
+          <Route path="/signin" element={<SignIn />} />
+          <Route path="/signup" element={<SignUp />} />
+          <Route path="/terms" element={<TermsOfService />} />
+          <Route path="/privacy" element={<PrivacyPolicy />} />
+          <Route path="/owner-benefits" element={<OwnerBenefits />} />
+          <Route path="/pricing" element={<Pricing />} />
+          <Route path="/search" element={<SearchResults />} />
+          <Route path="/agency/:id" element={<AgencyDetail />} />
+          <Route path="/reserve/:agencyId" element={<ReserveRequest />} />
+          <Route path="/reservation-confirmed" element={<ReservationConfirmed />} />
+          <Route path="/dashboard" element={<OwnerDashboard />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/faq" element={<FAQ />} />
+          <Route path="/for-agencies" element={<ForAgencies />} />
+          <Route path="/how-it-works" element={<HowItWorksPage />} />
+          <Route path="/admin" element={<AdminDashboardPage />} />
+          <Route path="/admin/agencies" element={<AdminAgenciesPage />} />
+          <Route path="/admin/setup" element={<AdminSetupPage />} />
+          <Route path="/admin/invite-codes" element={<AdminInviteCodesPage />} />
+          <Route path="/cities" element={<Cities />} />
+          <Route path="/for-turo-hosts" element={<ForTuroHosts />} />
+          <Route path="/las-vegas" element={<LasVegasLanding />} />
+          <Route path="/city/:citySlug" element={<CityLanding />} />
+          <Route path="/blog" element={<Blog />} />
+          <Route path="/blog/:slug" element={<BlogPost />} />
+          {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+      </Suspense>
+      {isHomePage && <RentalCTA />}
+      <Footer />
+    </>
+  );
+};
+
 const App = () => (
   <HelmetProvider>
   <QueryClientProvider client={queryClient}>
@@ -50,38 +97,7 @@ const App = () => (
       <Toaster />
       <Sonner />
       <BrowserRouter>
-        <Suspense fallback={<LazyFallback />}>
-          <Routes>
-            <Route path="/" element={<Index />} />
-            <Route path="/signin" element={<SignIn />} />
-            <Route path="/signup" element={<SignUp />} />
-            <Route path="/terms" element={<TermsOfService />} />
-            <Route path="/privacy" element={<PrivacyPolicy />} />
-            <Route path="/owner-benefits" element={<OwnerBenefits />} />
-            <Route path="/pricing" element={<Pricing />} />
-            <Route path="/search" element={<SearchResults />} />
-            <Route path="/agency/:id" element={<AgencyDetail />} />
-            <Route path="/reserve/:agencyId" element={<ReserveRequest />} />
-            <Route path="/reservation-confirmed" element={<ReservationConfirmed />} />
-            <Route path="/dashboard" element={<OwnerDashboard />} />
-            <Route path="/about" element={<About />} />
-            <Route path="/faq" element={<FAQ />} />
-            <Route path="/for-agencies" element={<ForAgencies />} />
-            <Route path="/how-it-works" element={<HowItWorksPage />} />
-            <Route path="/admin" element={<AdminDashboardPage />} />
-            <Route path="/admin/agencies" element={<AdminAgenciesPage />} />
-            <Route path="/admin/setup" element={<AdminSetupPage />} />
-            <Route path="/admin/invite-codes" element={<AdminInviteCodesPage />} />
-            <Route path="/cities" element={<Cities />} />
-            <Route path="/for-turo-hosts" element={<ForTuroHosts />} />
-            <Route path="/las-vegas" element={<LasVegasLanding />} />
-            <Route path="/city/:citySlug" element={<CityLanding />} />
-            <Route path="/blog" element={<Blog />} />
-            <Route path="/blog/:slug" element={<BlogPost />} />
-            {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </Suspense>
+        <GlobalLayout />
       </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>

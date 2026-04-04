@@ -4,7 +4,6 @@ import { useParams, useSearchParams, useNavigate } from "react-router-dom";
 import { User, Phone, Calendar, Car, AlertCircle, ArrowRight, Mail } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Header from "@/components/Header";
-import Footer from "@/components/Footer";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { z } from "zod";
@@ -249,7 +248,6 @@ const ReserveRequest = () => {
         </div>
       </main>
 
-      <Footer />
     </div>
   );
 };

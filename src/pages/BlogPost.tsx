@@ -2,7 +2,6 @@ import { useParams, Link, Navigate } from "react-router-dom";
 import { ArrowLeft, ArrowRight, Calendar } from "lucide-react";
 import { Helmet } from "react-helmet-async";
 import Header from "@/components/Header";
-import Footer from "@/components/Footer";
 import { getPostBySlug } from "@/lib/blog-data";
 import { Button } from "@/components/ui/button";
 
@@ -101,7 +100,6 @@ const BlogPost = () => {
         </article>
       </main>
 
-      <Footer />
     </>
   );
 };

@@ -1,5 +1,4 @@
 import Header from "@/components/Header";
-import Footer from "@/components/Footer";
 import SEO from "@/components/SEO";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
@@ -306,7 +305,6 @@ const ForAgencies = () => {
         </div>
       </section>
 
-      <Footer />
     </div>
   );
 };
