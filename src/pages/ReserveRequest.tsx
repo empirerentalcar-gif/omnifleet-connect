@@ -78,6 +78,7 @@ const ReserveRequest = () => {
       const reservationId = crypto.randomUUID();
       const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
       const validProfileId = agencyId && uuidRegex.test(agencyId) ? agencyId : null;
+      // Insert into legacy reservation_requests table
       const { error } = await supabase.from("reservation_requests").insert({
         id: reservationId,
         profile_id: validProfileId,
@@ -90,6 +91,23 @@ const ReserveRequest = () => {
         vehicle_type: parsed.data.vehicle_type,
         notes: parsed.data.notes,
       });
+
+      // Also insert into the new reservations table
+      const { error: resError } = await supabase.from("reservations" as any).insert({
+        agency_id: validProfileId,
+        full_name: parsed.data.customer_name,
+        phone_number: parsed.data.customer_phone,
+        email: parsed.data.customer_email,
+        pickup_date: parsed.data.pickup_date,
+        dropoff_date: parsed.data.dropoff_date,
+        vehicle_type: parsed.data.vehicle_type,
+        additional_notes: parsed.data.notes,
+        status: "pending",
+      } as any);
+
+      if (resError) {
+        console.error("Reservations table insert error:", resError);
+      }
 
       if (error) {
         console.error("Reservation insert error:", error);
