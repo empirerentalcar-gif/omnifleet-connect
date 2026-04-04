@@ -1,4 +1,3 @@
-import Header from "@/components/Header";
 import SEO from "@/components/SEO";
 import TuroHero from "@/components/turo/TuroHero";
 import TuroPain from "@/components/turo/TuroPain";
@@ -28,8 +27,7 @@ const ForTuroHosts = () => {
         "url": "https://zuvio.us/for-turo-hosts",
         "description": "Get more bookings outside of Turo. Keep control of pricing, build repeat customers, and grow your rental business with Zuvio."
       }) }} />
-      <Header />
-      <TuroHero />
+<TuroHero />
       <TuroPain />
       <TuroSolution />
       <TuroMoney />

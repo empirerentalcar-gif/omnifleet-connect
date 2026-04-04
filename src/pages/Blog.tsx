@@ -1,7 +1,6 @@
 import { Link } from "react-router-dom";
 import { ArrowRight, Calendar } from "lucide-react";
 import { Helmet } from "react-helmet-async";
-import Header from "@/components/Header";
 import { blogPosts } from "@/lib/blog-data";
 import { Button } from "@/components/ui/button";
 
@@ -45,10 +44,7 @@ const Blog = () => {
         <meta property="og:url" content="https://zuvio.us/blog" />
         <script type="application/ld+json">{JSON.stringify(jsonLd)}</script>
       </Helmet>
-
-      <Header />
-
-      <main className="min-h-screen pt-24 md:pt-32">
+<main className="min-h-screen pt-8 md:pt-32">
         {/* Hero */}
         <section className="pb-16 md:pb-20 relative overflow-hidden">
           <div className="absolute inset-0 bg-gradient-to-b from-primary/5 via-transparent to-transparent" />

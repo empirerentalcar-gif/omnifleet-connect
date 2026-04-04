@@ -1,7 +1,6 @@
 import { useSearchParams, useNavigate } from "react-router-dom";
 import { CheckCircle, Phone, Mail, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import Header from "@/components/Header";
 import SEO from "@/components/SEO";
 
 const ReservationConfirmed = () => {
@@ -12,9 +11,7 @@ const ReservationConfirmed = () => {
   return (
     <div className="min-h-screen bg-background">
       <SEO title="Reservation Confirmed | ZUVIO" description="Your reservation request has been sent successfully." path="/reservation-confirmed" noindex />
-      <Header />
-
-      <main className="pt-24 pb-16">
+<main className="pt-8 pb-16">
         <div className="container mx-auto px-4 max-w-xl">
           <div className="glass-card glow-border rounded-2xl p-8 md:p-12 text-center animate-slide-up">
             <div className="w-20 h-20 rounded-full bg-accent/15 flex items-center justify-center mx-auto mb-6">

@@ -3,7 +3,6 @@ import { useState } from "react";
 import { useParams, useSearchParams, useNavigate } from "react-router-dom";
 import { User, Phone, Calendar, Car, AlertCircle, ArrowRight, Mail } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import Header from "@/components/Header";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { z } from "zod";
@@ -140,9 +139,7 @@ const ReserveRequest = () => {
   return (
     <div className="min-h-screen bg-background">
       <SEO title={`Reserve with ${agencyName} | ZUVIO`} description={`Request a car rental reservation with ${agencyName} through ZUVIO.`} path={`/reserve/${agencyId}`} noindex />
-      <Header />
-
-      <main className="pt-24 pb-16">
+<main className="pt-8 pb-16">
         <div className="container mx-auto px-4 max-w-2xl">
           <div className="text-center mb-8 animate-slide-up">
             <h1 className="font-display text-3xl md:text-4xl font-bold mb-2">Request a Reservation</h1>

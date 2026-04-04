@@ -1,4 +1,3 @@
-import Header from "@/components/Header";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Globe, CalendarCheck, Clock, Phone, Megaphone, CheckCircle2, ShieldCheck } from "lucide-react";
 import { useNavigate } from "react-router-dom";
@@ -89,9 +88,7 @@ const OwnerBenefits = () => {
         description="Discover how ZUVIO helps independent car rental owners gain visibility, manage reservations, and grow their business."
         path="/owner-benefits"
       />
-      <Header />
-
-      {/* Hero */}
+{/* Hero */}
       <section className="relative pt-32 pb-20 overflow-hidden">
         <div className="absolute inset-0 bg-gradient-hero" />
         <div className="absolute top-1/3 left-1/4 w-[500px] h-[500px] bg-primary/8 rounded-full blur-3xl" />

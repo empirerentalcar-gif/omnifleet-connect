@@ -3,7 +3,6 @@ import { useSearchParams, useNavigate } from "react-router-dom";
 import { MapPin, Calendar, Car, Filter, ArrowRight, Banknote } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
-import Header from "@/components/Header";
 import SEO from "@/components/SEO";
 import { supabase } from "@/integrations/supabase/client";
 import CitySelector from "@/components/CitySelector";
@@ -106,9 +105,7 @@ const SearchResults = () => {
         description="Search independent car rental agencies near you. Filter by location, vehicle type, and cash-friendly options."
         path="/search"
       />
-      <Header />
-
-      <main className="pt-24 pb-16">
+<main className="pt-8 pb-16">
         <div className="container mx-auto px-4">
           <h1 className="font-display text-3xl md:text-4xl font-bold mb-6">Search Car Rentals</h1>
           <div className="glass-card glow-border rounded-2xl p-6 mb-8">

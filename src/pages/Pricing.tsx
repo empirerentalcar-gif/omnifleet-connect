@@ -1,4 +1,3 @@
-import Header from "@/components/Header";
 import { Button } from "@/components/ui/button";
 import { Check, Ban, ShieldCheck, ArrowRight } from "lucide-react";
 import { useNavigate } from "react-router-dom";
@@ -59,9 +58,7 @@ const Pricing = () => {
         description="Transparent pricing for independent car rental agencies. No hidden fees, no long-term contracts. Founding member plan at $79/month."
         path="/pricing"
       />
-      <Header />
-
-      {/* Hero */}
+{/* Hero */}
       <section className="pt-32 pb-16 md:pt-40 md:pb-20">
         <div className="container mx-auto px-4 max-w-4xl text-center">
           <h1 className="text-3xl md:text-5xl font-bold tracking-tight mb-6">

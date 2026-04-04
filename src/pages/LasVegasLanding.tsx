@@ -1,5 +1,4 @@
 import { useState } from "react";
-import Header from "@/components/Header";
 import SEO from "@/components/SEO";
 import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
@@ -130,9 +129,7 @@ const LasVegasLanding = () => {
           }),
         }}
       />
-      <Header />
-
-      {/* ─── 1. HERO ─── */}
+{/* ─── 1. HERO ─── */}
       <section className="relative min-h-screen flex flex-col justify-center pt-20 pb-16 overflow-hidden">
         <div className="absolute inset-0 bg-gradient-hero" />
         <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-primary/10 rounded-full blur-3xl animate-pulse-glow" />

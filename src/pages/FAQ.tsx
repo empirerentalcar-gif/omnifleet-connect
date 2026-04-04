@@ -1,4 +1,3 @@
-import Header from "@/components/Header";
 import SEO from "@/components/SEO";
 import { Link } from "react-router-dom";
 import {
@@ -57,10 +56,8 @@ const FAQ = () => {
           "acceptedAnswer": { "@type": "Answer", "text": item.a }
         }))
       }) }} />
-      <Header />
-
-      {/* Hero */}
-      <section className="pt-24 md:pt-32 pb-16 md:pb-20 bg-gradient-to-br from-primary/10 via-background to-secondary/10 text-center px-4">
+{/* Hero */}
+      <section className="pt-8 md:pt-32 pb-16 md:pb-20 bg-gradient-to-br from-primary/10 via-background to-secondary/10 text-center px-4">
         <div className="container mx-auto max-w-3xl">
           <h1 className="font-display text-4xl md:text-5xl font-bold mb-6">Frequently Asked Questions</h1>
           <p className="text-lg md:text-xl text-muted-foreground">
