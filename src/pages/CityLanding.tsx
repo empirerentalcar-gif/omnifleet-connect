@@ -1,7 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { Car, MapPin, Lightbulb, ChevronRight, Building2 } from 'lucide-react';
-import Header from '@/components/Header';
 import SEO from '@/components/SEO';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
@@ -98,9 +97,7 @@ const CityLanding = () => {
         description={seoDescription}
         path={`/city/${citySlug}`}
       />
-      <Header />
-
-      <main className="pt-24 pb-16">
+<main className="pt-8 pb-16">
         {/* ── Hero ── */}
         <section className="container mx-auto px-4 mb-10">
           <div className="rounded-2xl bg-gradient-hero p-8 md:p-12 border border-border/50">

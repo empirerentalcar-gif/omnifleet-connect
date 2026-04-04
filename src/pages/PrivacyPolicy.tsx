@@ -1,4 +1,3 @@
-import Header from "@/components/Header";
 import SEO from "@/components/SEO";
 
 const PrivacyPolicy = () => {
@@ -9,9 +8,7 @@ const PrivacyPolicy = () => {
         description="Read ZUVIO's privacy policy. Learn how we collect, use, and protect your personal information."
         path="/privacy"
       />
-      <Header />
-      
-      <main className="container mx-auto px-4 py-24">
+<main className="container mx-auto px-4 py-24">
         <div className="max-w-3xl mx-auto">
           <h1 className="font-display text-4xl md:text-5xl font-bold mb-8">
             Privacy <span className="text-gradient">Policy</span>

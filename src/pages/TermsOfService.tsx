@@ -1,4 +1,3 @@
-import Header from "@/components/Header";
 import SEO from "@/components/SEO";
 
 const TermsOfService = () => {
@@ -9,9 +8,7 @@ const TermsOfService = () => {
         description="Review ZUVIO's terms of service for renters and independent car rental agencies."
         path="/terms"
       />
-      <Header />
-      
-      <main className="container mx-auto px-4 py-24">
+<main className="container mx-auto px-4 py-24">
         <div className="max-w-3xl mx-auto">
           <h1 className="font-display text-4xl md:text-5xl font-bold mb-8">
             Terms of <span className="text-gradient">Service</span>

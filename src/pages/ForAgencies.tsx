@@ -1,4 +1,3 @@
-import Header from "@/components/Header";
 import SEO from "@/components/SEO";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
@@ -28,9 +27,7 @@ const ForAgencies = () => {
         "url": "https://zuvio.us/for-agencies",
         "isPartOf": { "@type": "WebSite", "name": "ZUVIO", "url": "https://zuvio.us" }
       }) }} />
-      <Header />
-
-      {/* 1. HERO */}
+{/* 1. HERO */}
       <section className="pt-28 md:pt-36 pb-16 md:pb-24 relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-hero" />
         <div className="absolute top-1/3 right-1/4 w-[500px] h-[500px] bg-primary/8 rounded-full blur-3xl" />

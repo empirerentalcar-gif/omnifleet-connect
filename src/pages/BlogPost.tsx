@@ -1,7 +1,6 @@
 import { useParams, Link, Navigate } from "react-router-dom";
 import { ArrowLeft, ArrowRight, Calendar } from "lucide-react";
 import { Helmet } from "react-helmet-async";
-import Header from "@/components/Header";
 import { getPostBySlug } from "@/lib/blog-data";
 import { Button } from "@/components/ui/button";
 
@@ -33,10 +32,7 @@ const BlogPost = () => {
         <meta property="og:url" content={`https://zuvio.us/blog/${post.slug}`} />
         <script type="application/ld+json">{JSON.stringify(jsonLd)}</script>
       </Helmet>
-
-      <Header />
-
-      <main className="min-h-screen pt-24 md:pt-32 pb-20 md:pb-28">
+<main className="min-h-screen pt-8 md:pt-32 pb-20 md:pb-28">
         <article className="container mx-auto px-4 max-w-3xl">
           {/* Back link */}
           <Link

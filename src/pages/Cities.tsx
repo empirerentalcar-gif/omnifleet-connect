@@ -1,6 +1,5 @@
 import { Link } from 'react-router-dom';
 import { MapPin } from 'lucide-react';
-import Header from '@/components/Header';
 import SEO from '@/components/SEO';
 import { MAJOR_CITIES_STATE_ENTRIES } from '@/lib/city-data';
 
@@ -12,9 +11,7 @@ const Cities = () => {
         description="Browse car rental agencies in major cities across the United States. Find independent, local car rentals in Las Vegas, Miami, Los Angeles, and more."
         path="/cities"
       />
-      <Header />
-
-      <main className="pt-24 pb-16">
+<main className="pt-8 pb-16">
         <section className="container mx-auto px-4 mb-10">
           <div className="rounded-2xl bg-gradient-hero p-8 md:p-12 border border-border/50">
             <p className="text-sm uppercase tracking-wider text-muted-foreground mb-3">City directory</p>

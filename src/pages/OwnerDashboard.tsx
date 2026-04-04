@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
-import Header from "@/components/Header";
 import SEO from "@/components/SEO";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -318,9 +317,7 @@ const OwnerDashboard = () => {
   return (
     <div className="min-h-screen bg-background">
       <SEO title="Owner Dashboard | ZUVIO" description="Manage your rental vehicles and reservation requests on ZUVIO." path="/dashboard" noindex />
-      <Header />
-
-      <main className="pt-24 pb-16">
+<main className="pt-8 pb-16">
         <div className="container mx-auto px-4 max-w-6xl">
           {/* Trial Banner */}
           {trialInfo && (

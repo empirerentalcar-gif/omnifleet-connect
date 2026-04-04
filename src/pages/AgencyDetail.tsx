@@ -2,7 +2,6 @@ import { useParams, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { MapPin, Car, Banknote, Shield, Clock, AlertCircle, User, ArrowRight, Loader2, Phone } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import Header from "@/components/Header";
 import { supabase } from "@/integrations/supabase/client";
 import SEO from "@/components/SEO";
 
@@ -109,8 +108,7 @@ const AgencyDetail = () => {
   if (loading) {
     return (
       <div className="min-h-screen bg-background">
-        <Header />
-        <main className="pt-24 pb-16 flex items-center justify-center">
+<main className="pt-8 pb-16 flex items-center justify-center">
           <Loader2 className="h-10 w-10 text-primary animate-spin" />
         </main>
       </div>
@@ -120,8 +118,7 @@ const AgencyDetail = () => {
   if (!agency) {
     return (
       <div className="min-h-screen bg-background">
-        <Header />
-        <main className="pt-24 pb-16 text-center">
+<main className="pt-8 pb-16 text-center">
           <Car className="h-16 w-16 text-muted-foreground/30 mx-auto mb-4" />
           <h2 className="font-display text-2xl font-bold mb-2">Agency Not Found</h2>
           <p className="text-muted-foreground mb-6">This agency doesn't have any available vehicles right now.</p>
@@ -133,15 +130,13 @@ const AgencyDetail = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <Header />
-
-      <SEO
+<SEO
         title={`${agency.name} | Car Rental on ZUVIO`}
         description={`Rent cars from ${agency.name} in ${agency.city || "your area"}${agency.state ? `, ${agency.state}` : ""}. Starting at $${agency.startingPrice}/day.${agency.cashAccepted ? " Cash accepted." : ""}`}
         path={`/agency/${id}`}
       />
 
-      <main className="pt-24 pb-16">
+      <main className="pt-8 pb-16">
         <div className="container mx-auto px-4">
           {/* Photo Gallery */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
