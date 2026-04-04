@@ -44,7 +44,6 @@ const Index = () => {
       <ObjectionHandling />
       <OwnerFAQ />
       <FinalCTA />
-      <Footer />
     </div>
   );
 };
