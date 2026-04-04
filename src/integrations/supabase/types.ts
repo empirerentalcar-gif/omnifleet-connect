@@ -349,6 +349,48 @@ export type Database = {
           },
         ]
       }
+      reservations: {
+        Row: {
+          additional_notes: string | null
+          agency_id: string | null
+          created_at: string
+          dropoff_date: string
+          email: string | null
+          full_name: string
+          id: string
+          phone_number: string
+          pickup_date: string
+          status: string
+          vehicle_type: string
+        }
+        Insert: {
+          additional_notes?: string | null
+          agency_id?: string | null
+          created_at?: string
+          dropoff_date: string
+          email?: string | null
+          full_name: string
+          id?: string
+          phone_number: string
+          pickup_date: string
+          status?: string
+          vehicle_type: string
+        }
+        Update: {
+          additional_notes?: string | null
+          agency_id?: string | null
+          created_at?: string
+          dropoff_date?: string
+          email?: string | null
+          full_name?: string
+          id?: string
+          phone_number?: string
+          pickup_date?: string
+          status?: string
+          vehicle_type?: string
+        }
+        Relationships: []
+      }
       rpc_rate_limits: {
         Row: {
           attempt_count: number | null
