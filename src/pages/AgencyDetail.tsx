@@ -140,7 +140,13 @@ const AgencyDetail = () => {
           {/* Photo Gallery */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
             <div className="md:col-span-2 rounded-2xl overflow-hidden h-64 md:h-80">
-              <img src={agency.photos[0]} alt={agency.name} className="w-full h-full object-cover" loading="eager" decoding="async" width={800} height={320} />
+              {agency.photos.length > 0 ? (
+                <img src={agency.photos[0]} alt={agency.name} className="w-full h-full object-cover" loading="eager" decoding="async" width={800} height={320} />
+              ) : (
+                <div className="w-full h-full flex items-center justify-center" style={{ background: '#0d1b2e', borderBottom: '3px solid #2dd4bf' }}>
+                  <img src={zuvioLogo} alt="Zuvio" className="w-[180px] h-auto object-contain opacity-80" />
+                </div>
+              )}
             </div>
             {agency.photos.length > 1 && (
               <div className="grid grid-rows-2 gap-4">
