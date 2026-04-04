@@ -58,6 +58,29 @@ const ReserveRequest = () => {
     e.preventDefault();
     setSubmitting(true);
     try {
+      const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+      const validProfileId = agencyId && uuidRegex.test(agencyId) ? agencyId : null;
+
+      console.log("Attempting Supabase insert");
+      const { error: resError } = await supabase.from("reservations").insert({
+        agency_id: validProfileId,
+        full_name: name.trim(),
+        phone_number: phone.trim(),
+        email: email.trim() || null,
+        pickup_date: pickupDate,
+        dropoff_date: dropoffDate,
+        vehicle_type: vehicleType,
+        additional_notes: notes.trim() || null,
+        status: "pending",
+      });
+
+      if (resError) {
+        console.log("Supabase insert error:", resError);
+        toast.error(`Reservation failed: ${formatBackendError(resError)}`);
+        setSubmitting(false);
+        return;
+      }
+
       const parsed = reservationSchema.safeParse({
         customer_name: name,
         customer_phone: phone,
@@ -76,8 +99,6 @@ const ReserveRequest = () => {
       }
 
       const reservationId = crypto.randomUUID();
-      const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
-      const validProfileId = agencyId && uuidRegex.test(agencyId) ? agencyId : null;
       // Insert into legacy reservation_requests table
       const { error } = await supabase.from("reservation_requests").insert({
         id: reservationId,
@@ -91,27 +112,6 @@ const ReserveRequest = () => {
         vehicle_type: parsed.data.vehicle_type,
         notes: parsed.data.notes,
       });
-
-      // Insert into the new reservations table
-      console.log("Attempting Supabase insert");
-      const { error: resError } = await supabase.from("reservations").insert({
-        agency_id: validProfileId,
-        full_name: parsed.data.customer_name,
-        phone_number: parsed.data.customer_phone,
-        email: parsed.data.customer_email,
-        pickup_date: parsed.data.pickup_date,
-        dropoff_date: parsed.data.dropoff_date,
-        vehicle_type: parsed.data.vehicle_type,
-        additional_notes: parsed.data.notes,
-        status: "pending",
-      });
-
-      if (resError) {
-        console.log("Supabase insert error:", resError);
-        toast.error(`Reservation failed: ${formatBackendError(resError)}`);
-        setSubmitting(false);
-        return;
-      }
 
       if (error) {
         console.error("Reservation request insert error:", error);
