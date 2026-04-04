@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
-import { useSearchParams, useNavigate } from "react-router-dom";
-import { MapPin, Calendar, Car, Filter, ArrowRight, Banknote } from "lucide-react";
+import { useSearchParams, useNavigate, Link } from "react-router-dom";
+import { MapPin, Calendar, Car, Search, Banknote } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
 import SEO from "@/components/SEO";
@@ -26,7 +26,6 @@ const SearchResults = () => {
   const [location, setLocation] = useState(searchParams.get("location") || "");
   const [pickupDate, setPickupDate] = useState(searchParams.get("pickup") || "");
   const [dropoffDate, setDropoffDate] = useState(searchParams.get("dropoff") || "");
-  const [cashOnly, setCashOnly] = useState(false);
   const [vehicleType, setVehicleType] = useState("All");
   const [agencies, setAgencies] = useState<Agency[]>([]);
   const [loading, setLoading] = useState(true);
@@ -54,6 +53,10 @@ const SearchResults = () => {
 
       for (const v of vehicles) {
         if (!v.profile_id) continue;
+        const name = (v as any).business_name || "Local Agency";
+        // Hide admin/test agencies
+        if (name.toLowerCase() === "admin" || name.toLowerCase() === "test") continue;
+
         const existing = agencyMap.get(v.profile_id);
         if (existing) {
           if (v.daily_rate && v.daily_rate < existing.startingPrice) {
@@ -68,7 +71,7 @@ const SearchResults = () => {
         } else {
           agencyMap.set(v.profile_id, {
             id: v.profile_id,
-            name: (v as any).business_name || "Local Agency",
+            name,
             cashAccepted: (v as any).cash_accepted || false,
             startingPrice: v.daily_rate || 0,
             city: v.location_city || "",
@@ -89,7 +92,6 @@ const SearchResults = () => {
   };
 
   const filtered = agencies.filter((a) => {
-    if (cashOnly && !a.cashAccepted) return false;
     if (vehicleType !== "All" && !a.vehicleTypes.includes(vehicleType)) return false;
     if (location.trim()) {
       const loc = location.toLowerCase();
@@ -99,216 +101,185 @@ const SearchResults = () => {
   });
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen" style={{ backgroundColor: "#0d1b2e" }}>
       <SEO
         title="Search Car Rentals | ZUVIO"
         description="Search independent car rental agencies near you. Filter by location, vehicle type, and cash-friendly options."
         path="/search"
       />
-<main className="pt-8 pb-16">
+
+      {/* Hero Section */}
+      <section className="pt-10 pb-10 border-b-2 border-[#2dd4bf]/40" style={{ backgroundColor: "#0d1b2e" }}>
         <div className="container mx-auto px-4">
-          <h1 className="font-display text-3xl md:text-4xl font-bold mb-6">Search Car Rentals</h1>
-          <div className="glass-card glow-border rounded-2xl p-6 mb-8">
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
-              <div>
-                <label className="block text-xs font-medium text-muted-foreground mb-2 uppercase tracking-wider">
-                  City / ZIP Code
-                </label>
+          <div className="text-center mb-8">
+            <h1 className="text-3xl md:text-4xl font-bold text-white mb-2">Search Car Rentals</h1>
+            <p className="text-white/50 text-base">Independent agencies • Cash-friendly options</p>
+          </div>
+
+          {/* Search Bar */}
+          <div className="max-w-4xl mx-auto rounded-2xl p-1" style={{ backgroundColor: "#1a2d45", border: "1px solid rgba(45,212,191,0.3)" }}>
+            <div className="flex flex-col md:flex-row items-stretch">
+              <div className="flex-1 p-4 border-b md:border-b-0 md:border-r border-white/10">
+                <label className="block text-[10px] uppercase tracking-widest text-white/40 mb-1 font-medium">City / Zip</label>
                 <CitySelector
                   value={location}
                   onChange={setLocation}
-                  placeholder="Select a city or enter custom"
+                  placeholder="Select a city"
                 />
               </div>
-              <div>
-                <label className="block text-xs font-medium text-muted-foreground mb-2 uppercase tracking-wider">
-                  Pickup Date
-                </label>
-                <div className="relative">
-                  <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-primary" />
-                  <input
-                    type="date"
-                    value={pickupDate}
-                    onChange={(e) => setPickupDate(e.target.value)}
-                    className="w-full bg-secondary/50 border border-border rounded-xl pl-11 pr-4 py-3.5 text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all"
-                  />
-                </div>
+              <div className="flex-1 p-4 border-b md:border-b-0 md:border-r border-white/10">
+                <label className="block text-[10px] uppercase tracking-widest text-white/40 mb-1 font-medium">Pickup Date</label>
+                <input
+                  type="date"
+                  value={pickupDate}
+                  onChange={(e) => setPickupDate(e.target.value)}
+                  className="w-full bg-transparent text-white border-none outline-none text-sm py-2"
+                />
               </div>
-              <div>
-                <label className="block text-xs font-medium text-muted-foreground mb-2 uppercase tracking-wider">
-                  Drop-off Date
-                </label>
-                <div className="relative">
-                  <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-accent" />
-                  <input
-                    type="date"
-                    value={dropoffDate}
-                    onChange={(e) => setDropoffDate(e.target.value)}
-                    className="w-full bg-secondary/50 border border-border rounded-xl pl-11 pr-4 py-3.5 text-foreground focus:outline-none focus:ring-2 focus:ring-accent/50 focus:border-accent transition-all"
-                  />
-                </div>
+              <div className="flex-1 p-4 border-b md:border-b-0 md:border-r border-white/10">
+                <label className="block text-[10px] uppercase tracking-widest text-white/40 mb-1 font-medium">Drop-off Date</label>
+                <input
+                  type="date"
+                  value={dropoffDate}
+                  onChange={(e) => setDropoffDate(e.target.value)}
+                  className="w-full bg-transparent text-white border-none outline-none text-sm py-2"
+                />
               </div>
-              <Button variant="hero" size="lg" className="w-full group" onClick={fetchAgencies}>
-                <Car className="h-5 w-5" />
-                <span>View Available Agencies</span>
-                <ArrowRight className="h-5 w-5 group-hover:translate-x-1 transition-transform" />
-              </Button>
-            </div>
-
-            <div className="mt-6 pt-6 border-t border-border/50 flex flex-wrap items-center gap-4">
-              <div className="flex items-center gap-2">
-                <Filter className="h-4 w-4 text-muted-foreground" />
-                <span className="text-sm text-muted-foreground font-medium">Filters:</span>
-              </div>
-
-              <button
-                onClick={() => setCashOnly(!cashOnly)}
-                className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-all ${
-                  cashOnly
-                    ? "bg-accent/20 text-accent border border-accent/40"
-                    : "bg-secondary/50 text-muted-foreground border border-border hover:border-accent/40"
-                }`}
-              >
-                <Banknote className="h-4 w-4" />
-                Cash Accepted
-              </button>
-
-              <div className="flex items-center gap-2 flex-wrap">
-                {vehicleTypes.map((type) => (
-                  <button
-                    key={type}
-                    onClick={() => setVehicleType(type)}
-                    className={`px-4 py-2 rounded-xl text-sm font-medium transition-all ${
-                      vehicleType === type
-                        ? "bg-primary/20 text-primary border border-primary/40"
-                        : "bg-secondary/50 text-muted-foreground border border-border hover:border-primary/40"
-                    }`}
-                  >
-                    {type}
-                  </button>
-                ))}
+              <div className="p-3 flex items-center">
+                <button
+                  onClick={fetchAgencies}
+                  className="w-full md:w-auto px-8 py-3 rounded-xl font-bold text-sm transition-colors"
+                  style={{ backgroundColor: "#2dd4bf", color: "#0d1b2e" }}
+                  onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "#5eead4")}
+                  onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "#2dd4bf")}
+                >
+                  <span className="flex items-center gap-2 justify-center">
+                    <Search className="h-4 w-4" />
+                    Search
+                  </span>
+                </button>
               </div>
             </div>
           </div>
 
+          {/* Filter Pills */}
+          <div className="max-w-4xl mx-auto mt-6 flex flex-wrap gap-2 justify-center">
+            {vehicleTypes.map((type) => (
+              <button
+                key={type}
+                onClick={() => setVehicleType(type)}
+                className="px-4 py-2 rounded-full text-sm font-medium transition-all"
+                style={
+                  vehicleType === type
+                    ? { backgroundColor: "#2dd4bf", color: "#0d1b2e" }
+                    : { backgroundColor: "transparent", color: "rgba(255,255,255,0.6)", border: "1px solid rgba(255,255,255,0.2)" }
+                }
+                onMouseEnter={(e) => {
+                  if (vehicleType !== type) e.currentTarget.style.borderColor = "rgba(45,212,191,0.5)";
+                }}
+                onMouseLeave={(e) => {
+                  if (vehicleType !== type) e.currentTarget.style.borderColor = "rgba(255,255,255,0.2)";
+                }}
+              >
+                {type}
+              </button>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Results Section */}
+      <section className="py-10" style={{ backgroundColor: "#0d1b2e" }}>
+        <div className="container mx-auto px-4">
           {loading ? (
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              {Array.from({ length: 4 }).map((_, i) => (
-                <div key={i} className="glass-card rounded-2xl overflow-hidden">
-                  <div className="flex flex-col sm:flex-row">
-                    <div className="sm:w-48 h-48 sm:h-auto">
-                      <Skeleton className="w-full h-full min-h-[192px]" />
-                    </div>
-                    <div className="flex-1 p-6 space-y-4">
-                      <div>
-                        <Skeleton className="h-5 w-40 mb-2" />
-                        <Skeleton className="h-3 w-28" />
-                      </div>
-                      <Skeleton className="h-8 w-24" />
-                      <div className="flex gap-2">
-                        <Skeleton className="h-6 w-16 rounded-lg" />
-                        <Skeleton className="h-6 w-16 rounded-lg" />
-                      </div>
-                      <Skeleton className="h-9 w-full rounded-xl" />
-                    </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {Array.from({ length: 6 }).map((_, i) => (
+                <div key={i} className="rounded-xl p-6 space-y-4" style={{ backgroundColor: "#132640", border: "1px solid rgba(255,255,255,0.08)" }}>
+                  <Skeleton className="h-5 w-40 bg-white/10" />
+                  <Skeleton className="h-3 w-28 bg-white/10" />
+                  <Skeleton className="h-8 w-24 bg-white/10" />
+                  <div className="flex gap-2">
+                    <Skeleton className="h-6 w-16 rounded-lg bg-white/10" />
+                    <Skeleton className="h-6 w-16 rounded-lg bg-white/10" />
                   </div>
+                  <Skeleton className="h-10 w-full rounded-xl bg-white/10" />
                 </div>
               ))}
             </div>
           ) : (
             <>
-              <div className="mb-6">
-                <h2 className="font-display text-2xl font-bold" aria-live="polite">
-                  {filtered.length} {filtered.length === 1 ? "Agency" : "Agencies"} Found
-                </h2>
-                <p className="text-muted-foreground text-sm mt-1">
-                  {location ? `Near ${location}` : "Showing all locations"}
-                </p>
-              </div>
+              <p className="text-white/40 text-sm mb-6">
+                {filtered.length} {filtered.length === 1 ? "agency" : "agencies"} found{location ? ` near ${location}` : ""}.
+              </p>
 
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {filtered.map((agency) => (
                   <div
                     key={agency.id}
-                    className="glass-card glow-border rounded-2xl overflow-hidden group hover:shadow-glow transition-all duration-300"
+                    className="rounded-xl p-6 transition-all duration-200 hover:border-[#2dd4bf]/30"
+                    style={{ backgroundColor: "#132640", border: "1px solid rgba(255,255,255,0.08)" }}
                   >
-                    <div className="flex flex-col sm:flex-row">
-                      <div className="sm:w-48 h-48 sm:h-auto overflow-hidden bg-secondary">
-                        {agency.image ? (
-                          <img
-                            src={agency.image}
-                            alt={agency.name}
-                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                            loading="lazy"
-                            decoding="async"
-                            width={192}
-                            height={192}
-                          />
-                        ) : (
-                          <div className="w-full h-full flex items-center justify-center">
-                            <Car className="h-12 w-12 text-muted-foreground/30" />
-                          </div>
-                        )}
+                    <div className="flex items-start justify-between mb-3">
+                      <div>
+                        <Link
+                          to={`/agency/${agency.id}`}
+                          className="text-lg font-bold text-white hover:text-[#2dd4bf] transition-colors"
+                        >
+                          {agency.name}
+                        </Link>
+                        <p className="text-white/40 text-sm flex items-center gap-1 mt-1">
+                          <MapPin className="h-3 w-3" />
+                          {agency.city || "Location TBD"}{agency.state ? `, ${agency.state}` : ""}
+                        </p>
                       </div>
-                      <div className="flex-1 p-6">
-                        <div className="flex items-start justify-between mb-2">
-                          <div>
-                            <h3 className="font-display text-lg font-bold">{agency.name}</h3>
-                            <p className="text-sm text-muted-foreground flex items-center gap-1">
-                              <MapPin className="h-3 w-3" />
-                              {agency.city || "Location TBD"}{agency.state ? `, ${agency.state}` : ""}
-                            </p>
-                          </div>
-                          {agency.cashAccepted && (
-                            <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-accent/15 text-accent text-xs font-semibold border border-accent/30">
-                              <Banknote className="h-3 w-3" />
-                              Cash OK
-                            </span>
-                          )}
-                        </div>
-
-                        <div className="flex items-baseline gap-1 mb-4">
-                          <span className="text-sm text-muted-foreground">From</span>
-                          <span className="font-display text-2xl font-bold text-primary">${agency.startingPrice}</span>
-                          <span className="text-sm text-muted-foreground">/day</span>
-                        </div>
-
-                        <div className="flex flex-wrap gap-2 mb-4">
-                          {agency.vehicleTypes.map((vt) => (
-                            <span key={vt} className="px-2 py-1 rounded-lg bg-secondary text-xs text-muted-foreground">
-                              {vt}
-                            </span>
-                          ))}
-                        </div>
-
-                        <div className="flex gap-3">
-                          <Button
-                            variant="hero"
-                            size="sm"
-                            className="flex-1"
-                            onClick={() => navigate(`/agency/${agency.id}`)}
-                          >
-                            Request Reservation
-                          </Button>
-                        </div>
-                      </div>
+                      {agency.cashAccepted && (
+                        <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full text-[10px] font-semibold"
+                          style={{ backgroundColor: "rgba(45,212,191,0.15)", color: "#2dd4bf", border: "1px solid rgba(45,212,191,0.3)" }}>
+                          <Banknote className="h-3 w-3" />
+                          Cash
+                        </span>
+                      )}
                     </div>
+
+                    <div className="flex items-baseline gap-1 mb-4">
+                      <span className="text-white/40 text-sm">From</span>
+                      <span className="text-2xl font-bold" style={{ color: "#2dd4bf" }}>${agency.startingPrice}</span>
+                      <span className="text-white/40 text-sm">/day</span>
+                    </div>
+
+                    <div className="flex flex-wrap gap-1.5 mb-5">
+                      {agency.vehicleTypes.map((vt) => (
+                        <span key={vt} className="px-2 py-0.5 rounded text-[11px] text-white/50"
+                          style={{ backgroundColor: "rgba(255,255,255,0.06)" }}>
+                          {vt}
+                        </span>
+                      ))}
+                    </div>
+
+                    <button
+                      onClick={() => navigate(`/agency/${agency.id}`)}
+                      className="w-full py-2.5 rounded-lg font-bold text-sm transition-colors"
+                      style={{ backgroundColor: "#2dd4bf", color: "#0d1b2e" }}
+                      onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "#5eead4")}
+                      onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "#2dd4bf")}
+                    >
+                      Request Reservation
+                    </button>
                   </div>
                 ))}
               </div>
 
               {filtered.length === 0 && (
                 <div className="text-center py-16">
-                  <Car className="h-16 w-16 text-muted-foreground/30 mx-auto mb-4" />
-                  <p className="font-display text-xl font-bold mb-2">No agencies match your filters</p>
-                  <p className="text-muted-foreground">Try adjusting your filters or search a different location.</p>
+                  <Car className="h-16 w-16 mx-auto mb-4" style={{ color: "rgba(255,255,255,0.15)" }} />
+                  <p className="text-xl font-bold text-white mb-2">No agencies match your filters</p>
+                  <p className="text-white/40">Try adjusting your filters or search a different location.</p>
                 </div>
               )}
             </>
           )}
         </div>
-      </main>
-
+      </section>
     </div>
   );
 };
