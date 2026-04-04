@@ -62,7 +62,7 @@ const ReserveRequest = () => {
       const validProfileId = agencyId && uuidRegex.test(agencyId) ? agencyId : null;
 
       console.log("Attempting Supabase insert");
-      const { error: resError } = await supabase.from("reservations").insert({
+      const { data, error } = await supabase.from("reservations").insert({
         agency_id: validProfileId,
         full_name: name.trim(),
         phone_number: phone.trim(),
@@ -74,9 +74,11 @@ const ReserveRequest = () => {
         status: "pending",
       });
 
-      if (resError) {
-        console.log("Supabase insert error:", resError);
-        toast.error(`Reservation failed: ${formatBackendError(resError)}`);
+      console.log("Supabase insert result:", data);
+      console.log("Supabase insert error:", error);
+
+      if (error) {
+        toast.error(`Reservation failed: ${formatBackendError(error)}`);
         setSubmitting(false);
         return;
       }
@@ -100,7 +102,7 @@ const ReserveRequest = () => {
 
       const reservationId = crypto.randomUUID();
       // Insert into legacy reservation_requests table
-      const { error } = await supabase.from("reservation_requests").insert({
+      const { error: legacyError } = await supabase.from("reservation_requests").insert({
         id: reservationId,
         profile_id: validProfileId,
         agency_name: agencyName,
@@ -113,8 +115,8 @@ const ReserveRequest = () => {
         notes: parsed.data.notes,
       });
 
-      if (error) {
-        console.error("Reservation request insert error:", error);
+      if (legacyError) {
+        console.error("Reservation request insert error:", legacyError);
         // Non-blocking: legacy table insert failed but primary succeeded
       }
 
