@@ -1,12 +1,10 @@
 import { useState } from "react";
 import { useParams, useSearchParams, useNavigate } from "react-router-dom";
 import { User, Phone, Calendar, Car, AlertCircle, ArrowRight, Mail } from "lucide-react";
-import { createClient } from "@supabase/supabase-js";
 import { Button } from "@/components/ui/button";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { supabase } from "@/integrations/supabase/client";
-import type { Database } from "@/integrations/supabase/types";
 import { toast } from "sonner";
 import { z } from "zod";
 import SEO from "@/components/SEO";
@@ -14,25 +12,6 @@ import SEO from "@/components/SEO";
 const vehicleTypes = ["Compact", "Sedan", "SUV", "Truck", "Van", "Luxury"] as const;
 
 const today = new Date().toISOString().split("T")[0];
-
-const sessionlessStorage = {
-  getItem: () => null,
-  setItem: () => {},
-  removeItem: () => {},
-};
-
-const anonSupabase = createClient<Database>(
-  import.meta.env.VITE_SUPABASE_URL,
-  import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY,
-  {
-    auth: {
-      storage: sessionlessStorage,
-      persistSession: false,
-      autoRefreshToken: false,
-      detectSessionInUrl: false,
-    },
-  },
-);
 
 const formatBackendError = (error: {
   message?: string | null;
@@ -83,7 +62,7 @@ const ReserveRequest = () => {
       const validProfileId = agencyId && uuidRegex.test(agencyId) ? agencyId : null;
 
       console.log("Attempting Supabase insert");
-      const { data, error } = await anonSupabase.from("reservations").insert({
+      const { data, error } = await supabase.from("reservations").insert({
         agency_id: validProfileId,
         full_name: name.trim(),
         phone_number: phone.trim(),
