@@ -4,6 +4,7 @@ import { MapPin, Car, Banknote, Shield, Clock, AlertCircle, User, ArrowRight, Lo
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import SEO from "@/components/SEO";
+import zuvioLogo from "@/assets/zuvio-logo.png";
 
 interface AgencyData {
   name: string;
