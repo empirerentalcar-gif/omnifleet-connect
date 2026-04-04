@@ -92,8 +92,8 @@ const ReserveRequest = () => {
         notes: parsed.data.notes,
       });
 
-      // Also insert into the new reservations table
-      const { error: resError } = await supabase.from("reservations" as any).insert({
+      // Insert into the new reservations table
+      const { error: resError } = await supabase.from("reservations").insert({
         agency_id: validProfileId,
         full_name: parsed.data.customer_name,
         phone_number: parsed.data.customer_phone,
@@ -103,17 +103,18 @@ const ReserveRequest = () => {
         vehicle_type: parsed.data.vehicle_type,
         additional_notes: parsed.data.notes,
         status: "pending",
-      } as any);
+      });
 
       if (resError) {
         console.error("Reservations table insert error:", resError);
+        toast.error(`Reservation failed: ${formatBackendError(resError)}`);
+        setSubmitting(false);
+        return;
       }
 
       if (error) {
-        console.error("Reservation insert error:", error);
-        toast.error(`Reservation failed: ${formatBackendError(error)}`);
-        setSubmitting(false);
-        return;
+        console.error("Reservation request insert error:", error);
+        // Non-blocking: legacy table insert failed but primary succeeded
       }
 
       // Notify the agency owner and send customer confirmation email (fire-and-forget)
