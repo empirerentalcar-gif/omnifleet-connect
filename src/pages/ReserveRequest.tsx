@@ -62,7 +62,7 @@ const ReserveRequest = () => {
       const validProfileId = agencyId && uuidRegex.test(agencyId) ? agencyId : null;
 
       console.log("Attempting Supabase insert");
-      const { data, error } = await anonSupabase.from("reservations").insert({
+      const { data, error } = await supabase.from("reservations").insert({
         agency_id: validProfileId,
         full_name: name.trim(),
         phone_number: phone.trim(),
