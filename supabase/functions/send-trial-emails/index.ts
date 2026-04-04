@@ -147,18 +147,25 @@ serve(async (req) => {
   }
 
   try {
-    // Authenticate: require CRON_SECRET via Authorization header or query param
-    const cronSecret = Deno.env.get("CRON_SECRET");
-    if (!cronSecret) throw new Error("CRON_SECRET not configured");
-
+    // Authenticate: require valid service role key or CRON_SECRET
     const authHeader = req.headers.get("Authorization");
-    const url = new URL(req.url);
-    const querySecret = url.searchParams.get("secret");
-    const providedSecret = authHeader?.replace("Bearer ", "") || querySecret;
-
-    if (!providedSecret || providedSecret !== cronSecret) {
+    if (!authHeader || !authHeader.startsWith("Bearer ")) {
       return new Response(
-        JSON.stringify({ error: "Unauthorized" }),
+        JSON.stringify({ error: "Unauthorized: missing Authorization header" }),
+        { status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
+
+    const token = authHeader.replace("Bearer ", "");
+    const serviceRoleKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
+    const cronSecret = Deno.env.get("CRON_SECRET");
+
+    const isServiceRole = serviceRoleKey && token === serviceRoleKey;
+    const isCronSecret = cronSecret && token === cronSecret;
+
+    if (!isServiceRole && !isCronSecret) {
+      return new Response(
+        JSON.stringify({ error: "Unauthorized: invalid credentials" }),
         { status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
