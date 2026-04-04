@@ -90,9 +90,7 @@ const AgencyDetail = () => {
         cashAccepted,
         startingPrice: minPrice === Infinity ? 0 : minPrice,
         story: ownerStory,
-        photos: allPhotos.length > 0 ? allPhotos.slice(0, 3) : [
-          "https://images.unsplash.com/photo-1549317661-bd32c8ce0afe?w=800&h=500&fit=crop",
-        ],
+        photos: allPhotos.length > 0 ? allPhotos.slice(0, 3) : [],
         vehicleCategories: Array.from(vehicleCats.entries()).map(([name, from]) => ({ name, from })),
         requirements: Array.isArray(requirements) ? requirements : [requirements],
         deposit: depositInfo,
