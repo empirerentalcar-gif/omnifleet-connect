@@ -62,7 +62,6 @@ const ReserveRequest = () => {
       const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
       const validProfileId = agencyId && uuidRegex.test(agencyId) ? agencyId : null;
 
-      console.log("Attempting Supabase insert");
       const { data, error } = await supabase.from("reservations").insert({
         agency_id: validProfileId,
         full_name: name.trim(),
@@ -74,9 +73,6 @@ const ReserveRequest = () => {
         additional_notes: notes.trim() || null,
         status: "pending",
       });
-
-      console.log("Supabase insert result:", data, error);
-      console.log("Supabase insert error:", error);
 
       if (error) {
         toast.error(`Reservation failed: ${formatBackendError(error)}`);
