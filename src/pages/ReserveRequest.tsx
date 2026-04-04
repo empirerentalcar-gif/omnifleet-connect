@@ -93,6 +93,7 @@ const ReserveRequest = () => {
       });
 
       // Insert into the new reservations table
+      console.log("Attempting Supabase insert");
       const { error: resError } = await supabase.from("reservations").insert({
         agency_id: validProfileId,
         full_name: parsed.data.customer_name,
@@ -106,7 +107,7 @@ const ReserveRequest = () => {
       });
 
       if (resError) {
-        console.error("Reservations table insert error:", resError);
+        console.log("Supabase insert error:", resError);
         toast.error(`Reservation failed: ${formatBackendError(resError)}`);
         setSubmitting(false);
         return;
