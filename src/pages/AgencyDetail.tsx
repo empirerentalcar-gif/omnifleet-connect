@@ -4,6 +4,7 @@ import { MapPin, Car, Banknote, Shield, Clock, AlertCircle, User, ArrowRight, Lo
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import SEO from "@/components/SEO";
+import zuvioLogo from "@/assets/zuvio-logo.png";
 
 interface AgencyData {
   name: string;
@@ -89,9 +90,7 @@ const AgencyDetail = () => {
         cashAccepted,
         startingPrice: minPrice === Infinity ? 0 : minPrice,
         story: ownerStory,
-        photos: allPhotos.length > 0 ? allPhotos.slice(0, 3) : [
-          "https://images.unsplash.com/photo-1549317661-bd32c8ce0afe?w=800&h=500&fit=crop",
-        ],
+        photos: allPhotos.length > 0 ? allPhotos.slice(0, 3) : [],
         vehicleCategories: Array.from(vehicleCats.entries()).map(([name, from]) => ({ name, from })),
         requirements: Array.isArray(requirements) ? requirements : [requirements],
         deposit: depositInfo,
@@ -141,7 +140,13 @@ const AgencyDetail = () => {
           {/* Photo Gallery */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
             <div className="md:col-span-2 rounded-2xl overflow-hidden h-64 md:h-80">
-              <img src={agency.photos[0]} alt={agency.name} className="w-full h-full object-cover" loading="eager" decoding="async" width={800} height={320} />
+              {agency.photos.length > 0 ? (
+                <img src={agency.photos[0]} alt={agency.name} className="w-full h-full object-cover" loading="eager" decoding="async" width={800} height={320} />
+              ) : (
+                <div className="w-full h-full flex items-center justify-center" style={{ background: '#0d1b2e', borderBottom: '3px solid #2dd4bf' }}>
+                  <img src={zuvioLogo} alt="Zuvio" className="w-[180px] h-auto object-contain opacity-80" />
+                </div>
+              )}
             </div>
             {agency.photos.length > 1 && (
               <div className="grid grid-rows-2 gap-4">
