@@ -1,3 +1,4 @@
+// Updated Supabase connection - April 2026
 import { useState } from "react";
 import { useParams, useSearchParams, useNavigate } from "react-router-dom";
 import { User, Phone, Calendar, Car, AlertCircle, ArrowRight, Mail } from "lucide-react";
