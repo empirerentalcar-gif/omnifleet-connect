@@ -4,7 +4,6 @@ import { MapPin, Calendar, Car, Filter, ArrowRight, Banknote } from "lucide-reac
 import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
 import Header from "@/components/Header";
-import Footer from "@/components/Footer";
 import SEO from "@/components/SEO";
 import { supabase } from "@/integrations/supabase/client";
 import CitySelector from "@/components/CitySelector";
@@ -313,7 +312,6 @@ const SearchResults = () => {
         </div>
       </main>
 
-      <Footer />
     </div>
   );
 };

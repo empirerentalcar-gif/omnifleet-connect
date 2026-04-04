@@ -1,5 +1,4 @@
 import Header from "@/components/Header";
-import Footer from "@/components/Footer";
 import SEO from "@/components/SEO";
 import TuroHero from "@/components/turo/TuroHero";
 import TuroPain from "@/components/turo/TuroPain";
@@ -42,7 +41,6 @@ const ForTuroHosts = () => {
       <TuroComparison />
       <TuroTestimonials />
       <TuroFinalCTA />
-      <Footer />
     </div>
   );
 };

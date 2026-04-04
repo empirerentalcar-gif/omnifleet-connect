@@ -1,5 +1,4 @@
 import Header from "@/components/Header";
-import Footer from "@/components/Footer";
 import SEO from "@/components/SEO";
 import { Link } from "react-router-dom";
 import { CreditCard, Store, Star, Search, Car, MapPin } from "lucide-react";
@@ -133,7 +132,6 @@ const HowItWorksPage = () => {
         </div>
       </section>
 
-      <Footer />
     </div>
   );
 };

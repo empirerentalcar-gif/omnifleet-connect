@@ -1,5 +1,4 @@
 import Header from "@/components/Header";
-import Footer from "@/components/Footer";
 import SEO from "@/components/SEO";
 import { Link } from "react-router-dom";
 import { Handshake, Scale, Star, Lightbulb, Lock, Globe, Check } from "lucide-react";
@@ -167,7 +166,6 @@ const About = () => {
         </div>
       </section>
 
-      <Footer />
     </div>
   );
 };

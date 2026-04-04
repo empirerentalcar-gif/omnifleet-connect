@@ -1,6 +1,5 @@
 import { useState } from "react";
 import Header from "@/components/Header";
-import Footer from "@/components/Footer";
 import SEO from "@/components/SEO";
 import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
@@ -508,7 +507,6 @@ const LasVegasLanding = () => {
         </div>
       </section>
 
-      <Footer />
     </div>
   );
 };

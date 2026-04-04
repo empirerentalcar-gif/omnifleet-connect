@@ -1,5 +1,4 @@
 import Header from "@/components/Header";
-import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Globe, CalendarCheck, Clock, Phone, Megaphone, CheckCircle2, ShieldCheck } from "lucide-react";
 import { useNavigate } from "react-router-dom";
@@ -231,7 +230,6 @@ const OwnerBenefits = () => {
         </div>
       </section>
 
-      <Footer />
     </div>
   );
 };

@@ -2,7 +2,6 @@ import { Link } from "react-router-dom";
 import { ArrowRight, Calendar } from "lucide-react";
 import { Helmet } from "react-helmet-async";
 import Header from "@/components/Header";
-import Footer from "@/components/Footer";
 import { blogPosts } from "@/lib/blog-data";
 import { Button } from "@/components/ui/button";
 
@@ -100,7 +99,6 @@ const Blog = () => {
         </section>
       </main>
 
-      <Footer />
     </>
   );
 };

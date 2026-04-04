@@ -3,7 +3,6 @@ import { useState, useEffect } from "react";
 import { MapPin, Car, Banknote, Shield, Clock, AlertCircle, User, ArrowRight, Loader2, Phone } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Header from "@/components/Header";
-import Footer from "@/components/Footer";
 import { supabase } from "@/integrations/supabase/client";
 import SEO from "@/components/SEO";
 
@@ -114,7 +113,6 @@ const AgencyDetail = () => {
         <main className="pt-24 pb-16 flex items-center justify-center">
           <Loader2 className="h-10 w-10 text-primary animate-spin" />
         </main>
-        <Footer />
       </div>
     );
   }
@@ -129,7 +127,6 @@ const AgencyDetail = () => {
           <p className="text-muted-foreground mb-6">This agency doesn't have any available vehicles right now.</p>
           <Button variant="hero" onClick={() => navigate("/search")}>Back to Search</Button>
         </main>
-        <Footer />
       </div>
     );
   }
@@ -265,7 +262,6 @@ const AgencyDetail = () => {
         </div>
       </main>
 
-      <Footer />
     </div>
   );
 };

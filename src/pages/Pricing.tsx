@@ -1,5 +1,4 @@
 import Header from "@/components/Header";
-import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Check, Ban, ShieldCheck, ArrowRight } from "lucide-react";
 import { useNavigate } from "react-router-dom";
@@ -183,7 +182,6 @@ const Pricing = () => {
         </div>
       </section>
 
-      <Footer />
     </div>
   );
 };
