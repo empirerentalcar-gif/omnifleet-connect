@@ -37,6 +37,7 @@ const ForTuroHosts = lazy(() => import("./pages/ForTuroHosts"));
 const LasVegasLanding = lazy(() => import("./pages/LasVegasLanding"));
 const Blog = lazy(() => import("./pages/Blog"));
 const BlogPost = lazy(() => import("./pages/BlogPost"));
+const ResetPassword = lazy(() => import("./pages/ResetPassword"));
 
 const queryClient = new QueryClient();
 
@@ -80,6 +81,7 @@ const GlobalLayout = () => {
           <Route path="/city/:citySlug" element={<CityLanding />} />
           <Route path="/blog" element={<Blog />} />
           <Route path="/blog/:slug" element={<BlogPost />} />
+          <Route path="/reset-password" element={<ResetPassword />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
