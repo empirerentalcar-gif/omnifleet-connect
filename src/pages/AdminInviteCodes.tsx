@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { ArrowLeft, Search, Pencil, Plus, ChevronLeft, ChevronRight, RefreshCw, ArrowUp, ArrowDown, ArrowUpDown, Download, CalendarIcon } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAdmin } from '@/hooks/useAdmin';
+import { useIdleSignOut } from '@/hooks/useIdleSignOut';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -45,6 +46,7 @@ const generateCode = () => {
 
 const AdminInviteCodes = () => {
   const { isAdmin, loading: adminLoading } = useAdmin();
+  useIdleSignOut();
   const [codes, setCodes] = useState<InviteCode[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');

@@ -108,12 +108,34 @@ const SignIn = () => {
           </Button>
         </form>
 
-        <p className="text-center text-sm text-muted-foreground">
-          Don't have an account?{' '}
-          <Link to="/signup" className="text-primary hover:underline">
-            Sign Up
-          </Link>
-        </p>
+        <div className="text-center space-y-2">
+          <button
+            type="button"
+            onClick={async () => {
+              if (!email.trim()) {
+                toast({ title: 'Enter your email', description: 'Please enter your email address first, then click Forgot Password.', variant: 'destructive' });
+                return;
+              }
+              const { error } = await supabase.auth.resetPasswordForEmail(email.trim(), {
+                redirectTo: `${window.location.origin}/reset-password`,
+              });
+              if (error) {
+                toast({ title: 'Error', description: error.message, variant: 'destructive' });
+              } else {
+                toast({ title: 'Check your email', description: 'A password reset link has been sent if an account exists.' });
+              }
+            }}
+            className="text-sm text-primary hover:underline"
+          >
+            Forgot Password?
+          </button>
+          <p className="text-sm text-muted-foreground">
+            Don't have an account?{' '}
+            <Link to="/signup" className="text-primary hover:underline">
+              Sign Up
+            </Link>
+          </p>
+        </div>
       </div>
     </div>
   );

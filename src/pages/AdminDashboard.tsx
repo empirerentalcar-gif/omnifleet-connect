@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { Building2, CheckCircle, Clock, XCircle, ArrowRight, KeyRound, MapPin, Car, Crown, AlertTriangle } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAdmin } from '@/hooks/useAdmin';
+import { useIdleSignOut } from '@/hooks/useIdleSignOut';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import {
@@ -43,6 +44,7 @@ interface KPIs {
 
 const AdminDashboard = () => {
   const { isAdmin, loading: adminLoading } = useAdmin();
+  useIdleSignOut();
   const [agencies, setAgencies] = useState<Agency[]>([]);
   const [kpis, setKPIs] = useState<KPIs>({ total: 0, pending: 0, activeApproved: 0, inactive: 0, totalVehicles: 0, foundingMembers: 0, activeTrial: 0, paymentRequired: 0 });
   const [loading, setLoading] = useState(true);

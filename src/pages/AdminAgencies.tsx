@@ -21,6 +21,7 @@ import {
 import { supabase } from '@/integrations/supabase/client';
 import { Badge } from '@/components/ui/badge';
 import { useAdmin } from '@/hooks/useAdmin';
+import { useIdleSignOut } from '@/hooks/useIdleSignOut';
 import { useAuth } from '@/hooks/useAuth';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -149,6 +150,7 @@ const OWNER_UNASSIGNED = '__unassigned__';
 
 const AdminAgencies = () => {
   const { isAdmin, loading: adminLoading } = useAdmin();
+  useIdleSignOut();
   const { user } = useAuth();
   const [agencies, setAgencies] = useState<Agency[]>([]);
   const [vehicleCounts, setVehicleCounts] = useState<Record<string, number>>({});
