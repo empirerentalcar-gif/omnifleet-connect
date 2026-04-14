@@ -40,13 +40,19 @@
       "sameAs": []
     }
     </script>
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-8710Q7G249"></script>
+    <!-- Google tag (gtag.js) — deferred to avoid render blocking -->
     <script>
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
       gtag('js', new Date());
       gtag('config', 'G-8710Q7G249');
+      // Load gtag script after page is interactive
+      window.addEventListener('load', function() {
+        var s = document.createElement('script');
+        s.src = 'https://www.googletagmanager.com/gtag/js?id=G-8710Q7G249';
+        s.async = true;
+        document.head.appendChild(s);
+      });
     </script>
   </head>
 
