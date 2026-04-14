@@ -32,7 +32,7 @@ const About = () => {
     <div className="min-h-screen bg-background">
       <SEO
         title="About ZUVIO | Empowering Independent Car Rental Agencies"
-        description="Learn about ZUVIO's mission to connect independent car rental agencies with customers nationwide. Discover our story, values, and commitment to supporting local businesses."
+        description="Zuvio is the independent car rental network built for owners who want more bookings, full control, and no corporate middlemen. Learn our story."
         path="/about"
       />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({

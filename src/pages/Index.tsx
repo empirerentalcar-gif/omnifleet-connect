@@ -17,7 +17,7 @@ const Index = () => {
     <div className="min-h-screen bg-background">
       <SEO
         title="Independent Car Rental Platform for Owners | Zuvio"
-        description="List your rental cars, fleet, or agency on Zuvio. Get direct booking requests, keep control of your pricing, and grow your rental business."
+        description="Zuvio connects independent car rental owners & agencies with real customers nationwide. Keep your pricing, policies, and control. No middlemen."
         path="/"
       />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({

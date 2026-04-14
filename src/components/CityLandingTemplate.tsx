@@ -19,17 +19,18 @@ export interface CityLandingConfig {
   stateAbbr: string;
   h1: string;
   h2s: string[];
+  description?: string;
 }
 
 const CityLandingTemplate = ({ config }: { config: CityLandingConfig }) => {
   const navigate = useNavigate();
-  const { slug, cityName, state, stateAbbr, h1, h2s } = config;
+  const { slug, cityName, state, stateAbbr, h1, h2s, description: customDescription } = config;
 
   return (
     <div className="min-h-screen bg-background">
       <SEO
         title={`Independent Car Rentals in ${cityName}, ${stateAbbr} | Zuvio`}
-        description={`Find independent car rentals in ${cityName}. Book direct from local agencies, pay with cash, and skip the big rental counters.`}
+        description={customDescription || `Find independent car rentals in ${cityName}. Book direct from local agencies, pay with cash, and skip the big rental counters.`}
         path={`/${slug}`}
       />
       <script

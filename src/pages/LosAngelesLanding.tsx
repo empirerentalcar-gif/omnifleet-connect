@@ -8,6 +8,7 @@ const LosAngelesLanding = () => (
       state: "California",
       stateAbbr: "CA",
       h1: "Independent Car Rentals in Los Angeles, CA — Book Direct, No Middleman",
+      description: "Find independent car rentals in Los Angeles, CA. Book direct from local LA agencies, cash-friendly options. No airport counter markups.",
       h2s: [
         "Cash-Friendly Car Rentals Near You in Los Angeles",
         "Skip the LAX Counter — Rent Direct from Local LA Agencies",

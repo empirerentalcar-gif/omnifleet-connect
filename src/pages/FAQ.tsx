@@ -44,7 +44,7 @@ const FAQ = () => {
     <div className="min-h-screen bg-background">
       <SEO
         title="FAQ | ZUVIO — Independent Car Rental Questions Answered"
-        description="Get answers to frequently asked questions about ZUVIO. Learn about booking rentals, cash payments, agency partnerships, pricing, and how our independent car rental network works."
+        description="Got questions about renting or listing cars on Zuvio? Find answers to the most common questions from renters and independent agencies."
         path="/faq"
       />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({
