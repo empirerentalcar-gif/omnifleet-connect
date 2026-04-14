@@ -63,7 +63,7 @@ const Pricing = () => {
         <div className="container mx-auto px-4 max-w-4xl text-center">
           <h1 className="text-3xl md:text-5xl font-bold tracking-tight mb-6">
             Simple, Transparent Pricing for{" "}
-            <span className="text-gradient">Independent Rental Agencies</span>
+            <span className="text-gradient">Independent Car Rental Agencies</span>
           </h1>
           <p className="text-muted-foreground text-lg md:text-xl max-w-3xl mx-auto leading-relaxed">
             ZUVIO is built to help independent rental agencies grow regional visibility and generate more reservation opportunities — while staying fully in control of their business.
@@ -119,7 +119,7 @@ const Pricing = () => {
       {/* Why Booking Fee */}
       <section className="pb-20">
         <div className="container mx-auto px-4 max-w-3xl text-center">
-          <h2 className="text-2xl md:text-3xl font-bold mb-4">We Only Succeed When You Do</h2>
+          <h2 className="text-2xl md:text-3xl font-bold mb-4">We Only Succeed When Your Car Rental Agency Does</h2>
           <p className="text-muted-foreground text-lg leading-relaxed mb-4">
             ZUVIO earns a small percentage only when you receive bookings. This ensures we are motivated to bring real, qualified reservation opportunities to your agency.
           </p>
@@ -149,7 +149,7 @@ const Pricing = () => {
       {/* Owner FAQ */}
       <section className="pb-20">
         <div className="container mx-auto px-4 max-w-3xl">
-          <h2 className="text-2xl md:text-3xl font-bold text-center mb-10">Owner FAQ</h2>
+          <h2 className="text-2xl md:text-3xl font-bold text-center mb-10">Car Rental Agency Pricing FAQs</h2>
           <Accordion type="single" collapsible className="space-y-2">
             {faqs.map((faq, i) => (
               <AccordionItem

@@ -16,7 +16,7 @@ const TuroSolution = () => (
           The Solution
         </span>
         <h2 className="font-display text-3xl md:text-5xl font-bold mb-4">
-          Zuvio Helps You <span className="text-gradient">Take Back Control</span>
+          Zuvio Helps Las Vegas Turo Hosts <span className="text-gradient">Take Back Control</span>
         </h2>
         <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
           Zuvio works alongside Turo — helping you generate direct bookings and build long-term customers.

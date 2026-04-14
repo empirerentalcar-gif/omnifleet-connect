@@ -16,7 +16,7 @@ const TuroPain = () => (
           The Risk
         </span>
         <h2 className="font-display text-3xl md:text-5xl font-bold mb-4">
-          The Risk of Relying <span className="text-gradient">Only on Turo</span>
+          The Risk of Relying Only on Turo <span className="text-gradient">for Your Car Rental Income</span>
         </h2>
       </div>
 

@@ -16,7 +16,7 @@ const TuroMoney = () => (
           Revenue
         </span>
         <h2 className="font-display text-3xl md:text-5xl font-bold mb-4">
-          Make More Than <span className="text-gradient">You Spend</span>
+          Earn More From Your Rental Cars — <span className="text-gradient">Keep More of What You Make</span>
         </h2>
         <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
           One or two additional bookings can cover your entire monthly cost.

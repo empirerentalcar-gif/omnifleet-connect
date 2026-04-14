@@ -48,7 +48,7 @@ const About = () => {
 {/* Hero */}
       <section className="pt-8 md:pt-32 pb-16 md:pb-20 bg-gradient-to-br from-primary/10 via-background to-secondary/10 text-center px-4">
         <div className="container mx-auto max-w-3xl">
-          <h1 className="font-display text-4xl md:text-5xl font-bold mb-6">About ZUVIO</h1>
+          <h1 className="font-display text-4xl md:text-5xl font-bold mb-6">About Zuvio — The Independent Car Rental Network</h1>
           <p className="text-lg md:text-xl text-muted-foreground">
             Empowering independent car rental agencies and connecting them with customers who value local service and flexibility.
           </p>
@@ -58,7 +58,7 @@ const About = () => {
       {/* Mission */}
       <section className="py-16 md:py-20">
         <div className="container mx-auto px-4 max-w-3xl text-center">
-          <h2 className="font-display text-3xl md:text-4xl font-bold mb-6 text-primary">Our Mission</h2>
+          <h2 className="font-display text-3xl md:text-4xl font-bold mb-6 text-primary">Our Mission: Empower Independent Car Rental Owners Nationwide</h2>
           <p className="text-lg text-muted-foreground leading-relaxed mb-8">
             ZUVIO exists to level the playing field for independent car rental agencies competing in a market dominated by national chains. We believe that local businesses deserve access to the same technology and customer reach as corporate giants, while maintaining their independence and personal touch.
           </p>
@@ -74,7 +74,7 @@ const About = () => {
       {/* Story */}
       <section className="py-16 md:py-20 bg-secondary/5">
         <div className="container mx-auto px-4 max-w-3xl">
-          <h2 className="font-display text-3xl md:text-4xl font-bold mb-8 text-primary">Our Story</h2>
+          <h2 className="font-display text-3xl md:text-4xl font-bold mb-8 text-primary">How Zuvio Was Built for Independent Car Rental Agencies</h2>
           <div className="space-y-6 text-muted-foreground text-lg leading-relaxed">
             <p>The idea for ZUVIO was born from a simple observation: while national car rental chains have sophisticated booking platforms and massive marketing budgets, independent rental agencies struggle to be discovered by customers who would actually prefer their personalized service and flexible terms.</p>
             <p>We saw talented business owners with quality vehicles and exceptional customer service being overshadowed simply because they lacked the digital infrastructure to compete. Customers looking for cash rentals, flexible policies, or just wanting to support local businesses couldn't easily find these independent agencies.</p>
@@ -107,7 +107,7 @@ const About = () => {
       <section className="py-16 md:py-20">
         <div className="container mx-auto px-4 max-w-5xl">
           <div className="bg-card rounded-2xl p-8 md:p-12 shadow-sm border border-border/50">
-            <h2 className="font-display text-3xl md:text-4xl font-bold mb-10 text-primary text-center">The ZUVIO Difference</h2>
+            <h2 className="font-display text-3xl md:text-4xl font-bold mb-10 text-primary text-center">The Zuvio Difference — Direct Bookings, No Big Platform Middleman</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {differences.map((d, i) => (
                 <div key={i} className="flex gap-3">
@@ -142,7 +142,7 @@ const About = () => {
       {/* Join */}
       <section className="py-16 md:py-20">
         <div className="container mx-auto px-4 max-w-3xl text-center">
-          <h2 className="font-display text-3xl md:text-4xl font-bold mb-6">Join Our Mission</h2>
+          <h2 className="font-display text-3xl md:text-4xl font-bold mb-6">Join the Fastest-Growing Independent Car Rental Network</h2>
           <p className="text-lg text-muted-foreground mb-10">
             ZUVIO is more than a platform—it's a movement to support independent businesses and give customers better rental options. Whether you're an agency owner looking to grow or a customer seeking personalized service, we invite you to be part of our community.
           </p>

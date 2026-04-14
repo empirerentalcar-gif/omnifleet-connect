@@ -94,8 +94,8 @@ const OwnerBenefits = () => {
         <div className="absolute top-1/3 left-1/4 w-[500px] h-[500px] bg-primary/8 rounded-full blur-3xl" />
         <div className="container mx-auto px-4 relative z-10 text-center max-w-4xl">
           <h1 className="font-display text-4xl md:text-6xl lg:text-7xl font-bold mb-6 leading-tight">
-            Grow Your Independent Rental Business with{" "}
-            <span className="text-gradient">ZUVIO</span>
+            Grow Your Independent Car Rental Business in Las Vegas with{" "}
+            <span className="text-gradient">Zuvio</span>
           </h1>
           <p className="text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto">
             Independent rental agencies are the backbone of local transportation — but too often, they're invisible online.
@@ -111,7 +111,7 @@ const OwnerBenefits = () => {
       <section className="py-20">
         <div className="container mx-auto px-4">
           <h2 className="font-display text-3xl md:text-5xl font-bold text-center mb-16">
-            What ZUVIO Does <span className="text-gradient">for You</span>
+            What Zuvio Does for <span className="text-gradient">Independent Car Rental Owners</span>
           </h2>
 
           <div className="grid gap-8 max-w-5xl mx-auto">
@@ -153,7 +153,7 @@ const OwnerBenefits = () => {
         <div className="absolute inset-0 bg-gradient-to-b from-primary/5 to-transparent" />
         <div className="container mx-auto px-4 relative z-10">
           <h2 className="font-display text-3xl md:text-5xl font-bold text-center mb-12">
-            Why Independent Owners <span className="text-gradient">Join</span>
+            Why Independent Car Rental Owners <span className="text-gradient">Choose Zuvio</span>
           </h2>
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-4xl mx-auto">
             {whyJoin.map((reason, i) => (
@@ -204,7 +204,7 @@ const OwnerBenefits = () => {
         <div className="absolute inset-0 bg-gradient-to-r from-primary/10 via-accent/5 to-primary/10" />
         <div className="container mx-auto px-4 relative z-10 text-center max-w-3xl">
           <h2 className="font-display text-3xl md:text-5xl font-bold mb-6">
-            Ready to grow your rental agency?
+            Ready to Grow Your Car Rental Agency? Join Zuvio Today
           </h2>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button

@@ -55,7 +55,7 @@ const HowItWorksPage = () => {
 {/* Hero */}
       <section className="pt-8 md:pt-32 pb-16 md:pb-20 bg-gradient-to-br from-primary/10 via-background to-secondary/10 text-center px-4">
         <div className="container mx-auto max-w-3xl">
-          <h1 className="font-display text-4xl md:text-5xl font-bold mb-6">How ZUVIO Works for Renters</h1>
+          <h1 className="font-display text-4xl md:text-5xl font-bold mb-6">How to Rent a Car from Independent Agencies in Las Vegas & Nationwide</h1>
           <p className="text-lg md:text-xl text-muted-foreground">
             Renting from independent car rental agencies has never been easier. Follow our simple three-step process to find the perfect rental.
           </p>
@@ -65,7 +65,7 @@ const HowItWorksPage = () => {
       {/* Intro */}
       <section className="py-16 md:py-20">
         <div className="container mx-auto px-4 max-w-3xl text-center">
-          <h2 className="font-display text-3xl md:text-4xl font-bold mb-6">Your Guide to Independent Car Rentals</h2>
+          <h2 className="font-display text-3xl md:text-4xl font-bold mb-6">Your Complete Guide to Booking Independent Car Rentals</h2>
           <p className="text-lg text-muted-foreground leading-relaxed">
             ZUVIO connects you with trusted independent car rental agencies across the United States. Whether you need flexible payment options, personalized service, or want to support local businesses, we make it simple to find and book the perfect rental vehicle.
           </p>
@@ -103,7 +103,7 @@ const HowItWorksPage = () => {
       {/* Features */}
       <section className="py-16 md:py-20 bg-secondary/5">
         <div className="container mx-auto px-4">
-          <h2 className="font-display text-3xl md:text-4xl font-bold mb-12 text-center">Why Rent Through ZUVIO?</h2>
+          <h2 className="font-display text-3xl md:text-4xl font-bold mb-12 text-center">Why Rent a Car Through Zuvio Instead of the Big Platforms?</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-5xl mx-auto">
             {features.map((f, i) => (
               <div key={i} className="bg-card rounded-xl p-6 text-center shadow-sm hover:-translate-y-1 transition-all border border-border/50">
@@ -120,7 +120,7 @@ const HowItWorksPage = () => {
       <section className="py-16 md:py-20">
         <div className="container mx-auto px-4 max-w-3xl">
           <div className="bg-gradient-to-r from-primary to-accent rounded-2xl p-8 md:p-12 text-center text-primary-foreground">
-            <h2 className="font-display text-3xl font-bold mb-4">Ready to Find Your Perfect Rental?</h2>
+            <h2 className="font-display text-3xl font-bold mb-4">Find Cash-Friendly Car Rentals Near You — Book Direct Today</h2>
             <p className="text-lg mb-8 opacity-95">Search our network of independent car rental agencies and discover the ZUVIO difference today.</p>
             <Link to="/search" className="bg-background text-primary font-semibold px-8 py-3 rounded-full hover:bg-background/90 transition-colors inline-block">
               Start Your Search
