@@ -34,10 +34,18 @@ const Footer = () => {
             <h3 className="font-display font-bold mb-6 text-white">For Renters</h3>
             <ul className="space-y-3">
               <li><Link to="/search" className="text-[#2dd4bf] hover:text-[#5eead4] transition-colors">Search Vehicles</Link></li>
-              <li><Link to="/cities" className="text-[#2dd4bf] hover:text-[#5eead4] transition-colors">Browse Cities</Link></li>
-              <li><Link to="/las-vegas" className="text-[#2dd4bf] hover:text-[#5eead4] transition-colors">Las Vegas</Link></li>
               <li><Link to="/how-it-works" className="text-[#2dd4bf] hover:text-[#5eead4] transition-colors">How It Works</Link></li>
               <li><Link to="/faq" className="text-[#2dd4bf] hover:text-[#5eead4] transition-colors">FAQs</Link></li>
+            </ul>
+            <h4 className="font-display font-bold mt-6 mb-3 text-white text-sm">Browse Cities</h4>
+            <ul className="space-y-3">
+              <li><Link to="/las-vegas" className="text-[#2dd4bf] hover:text-[#5eead4] transition-colors">Las Vegas</Link></li>
+              <li><Link to="/phoenix" className="text-[#2dd4bf] hover:text-[#5eead4] transition-colors">Phoenix</Link></li>
+              <li><Link to="/los-angeles" className="text-[#2dd4bf] hover:text-[#5eead4] transition-colors">Los Angeles</Link></li>
+              <li><Link to="/houston" className="text-[#2dd4bf] hover:text-[#5eead4] transition-colors">Houston</Link></li>
+              <li><Link to="/miami" className="text-[#2dd4bf] hover:text-[#5eead4] transition-colors">Miami</Link></li>
+              <li><Link to="/new-york" className="text-[#2dd4bf] hover:text-[#5eead4] transition-colors">New York</Link></li>
+              <li><Link to="/cities" className="text-[#2dd4bf] hover:text-[#5eead4] transition-colors">All Cities</Link></li>
             </ul>
           </div>
 
