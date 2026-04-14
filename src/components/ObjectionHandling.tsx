@@ -71,8 +71,8 @@ const ObjectionHandling = () => {
       <div className="container mx-auto px-4 relative z-10 max-w-3xl">
         <div className="text-center mb-12">
           <h2 className="font-display text-3xl md:text-4xl font-bold mb-4">
-            Still Thinking About It?{" "}
-            <span className="text-gradient">Let's Address the Most Common Questions</span>
+            Common Questions from{" "}
+            <span className="text-gradient">Independent Car Rental Owners</span>
           </h2>
         </div>
 

@@ -33,8 +33,8 @@ const ForAgencies = () => {
         <div className="absolute top-1/3 right-1/4 w-[500px] h-[500px] bg-primary/8 rounded-full blur-3xl" />
         <div className="container mx-auto px-4 relative z-10 max-w-4xl">
           <h1 className="font-display text-4xl md:text-6xl font-bold mb-6 leading-tight">
-            Get More Rental Bookings —{" "}
-            <span className="text-gradient">Without Giving Up Control</span>
+            Get More Car Rental Bookings for Independent Agencies in{" "}
+            <span className="text-gradient">Las Vegas & Beyond</span>
           </h1>
           <p className="text-lg md:text-xl text-muted-foreground mb-8 max-w-3xl">
             Zuvio helps independent car rental agencies attract direct customers, increase bookings, and grow revenue — while keeping full control of pricing, policies, and operations.
@@ -68,7 +68,7 @@ const ForAgencies = () => {
             Revenue Engine
           </span>
           <h2 className="font-display text-3xl md:text-5xl font-bold mb-4">
-            More Bookings = <span className="text-gradient">More Revenue</span>
+            More Car Rental Bookings = <span className="text-gradient">More Revenue for Your Agency</span>
           </h2>
           <p className="text-lg text-muted-foreground mb-10">
             Even a few additional bookings per month can cover your cost and increase your total income.
@@ -95,7 +95,7 @@ const ForAgencies = () => {
       <section className="py-20 md:py-28">
         <div className="container mx-auto px-4 max-w-3xl text-center">
           <h2 className="font-display text-3xl md:text-5xl font-bold mb-10">
-            Why Independent Agencies <span className="text-gradient">Struggle to Compete</span>
+            Why Independent Car Rental Agencies <span className="text-gradient">Struggle to Compete Online</span>
           </h2>
           <div className="space-y-5 max-w-xl mx-auto">
             {[
@@ -117,7 +117,7 @@ const ForAgencies = () => {
         <div className="absolute inset-0 bg-gradient-to-b from-primary/5 to-transparent" />
         <div className="container mx-auto px-4 relative z-10 max-w-3xl text-center">
           <h2 className="font-display text-3xl md:text-5xl font-bold mb-4">
-            Zuvio <span className="text-gradient">Levels the Playing Field</span>
+            Zuvio Levels the Playing Field for <span className="text-gradient">Independent Rental Agencies</span>
           </h2>
           <p className="text-lg text-muted-foreground mb-10">
             Zuvio gives independent agencies the visibility and tools needed to compete — without taking control away from you.
@@ -265,7 +265,7 @@ const ForAgencies = () => {
           <div className="glass-card glow-border rounded-2xl p-10">
             <Clock className="h-10 w-10 text-accent mx-auto mb-4" />
             <h2 className="font-display text-2xl md:text-4xl font-bold mb-4">
-              Limited Founding Member Availability
+              Limited Founding Member Spots for Independent Car Rental Agencies
             </h2>
             <p className="text-lg text-muted-foreground">
               We are onboarding a limited number of agencies to ensure strong visibility and performance.

@@ -21,8 +21,8 @@ const HowYouMakeMoney = () => {
               Revenue Engine
             </span>
             <h2 className="font-display text-3xl md:text-5xl font-bold mb-4">
-              More Visibility → More Calls →{" "}
-              <span className="text-gradient">More Bookings</span>
+              Get More Visibility for Your Car Rental Business —{" "}
+              <span className="text-gradient">Locally & Nationwide</span>
             </h2>
           </div>
 
