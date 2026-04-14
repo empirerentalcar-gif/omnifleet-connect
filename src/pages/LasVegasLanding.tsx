@@ -16,6 +16,7 @@ import {
   ShieldCheck,
   Quote,
   XCircle,
+  Search,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { PricingCard, PricingROI } from "@/components/pricing/PricingCard";
