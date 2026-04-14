@@ -143,9 +143,7 @@ const LasVegasLanding = () => {
             </div>
 
             <h1 className="font-display text-4xl md:text-6xl lg:text-7xl font-bold mb-6 leading-tight">
-              Las Vegas Rental Car Owners: Get More Bookings
-              <br />
-              <span className="text-gradient">— Without Giving Up Control</span>
+              Independent Car Rentals in Las Vegas, NV — Book Direct, Pay Less
             </h1>
 
             <p className="text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto mb-10">
@@ -189,8 +187,7 @@ const LasVegasLanding = () => {
               Local Opportunity
             </span>
             <h2 className="font-display text-3xl md:text-5xl font-bold mb-4">
-              Las Vegas Has Constant Rental Demand —{" "}
-              <span className="text-gradient">Are You Capturing It?</span>
+              Cash-Friendly Car Rentals Near You in Las Vegas
             </h2>
             <p className="text-lg text-muted-foreground">
               Millions of visitors come to Las Vegas every year — many looking for flexible, local, and cash-friendly rental options.
@@ -221,8 +218,7 @@ const LasVegasLanding = () => {
               First-Mover Advantage
             </span>
             <h2 className="font-display text-3xl md:text-5xl font-bold mb-4">
-              Be One of the First Agencies{" "}
-              <span className="text-gradient">Listed in Las Vegas</span>
+              Skip the Airport Counter — Rent Direct from Local Las Vegas Agencies
             </h2>
             <p className="text-lg text-muted-foreground">
               Zuvio is expanding city-by-city — and Las Vegas is a priority market.
@@ -261,8 +257,7 @@ const LasVegasLanding = () => {
               Revenue
             </span>
             <h2 className="font-display text-3xl md:text-5xl font-bold mb-4">
-              Turn Las Vegas Demand Into{" "}
-              <span className="text-gradient">Daily Income</span>
+              Las Vegas Car Rental Owners: List Your Fleet on Zuvio
             </h2>
           </div>
 
@@ -289,7 +284,7 @@ const LasVegasLanding = () => {
         <div className="container mx-auto px-4 relative max-w-3xl">
           <div className="text-center mb-14">
             <h2 className="font-display text-3xl md:text-5xl font-bold mb-4">
-              Simple, <span className="text-gradient">Transparent Pricing</span>
+              How to Book an Independent Car Rental in Las Vegas
             </h2>
             <p className="text-lg text-muted-foreground">
               Built for independent rental owners — no hidden fees.
@@ -312,7 +307,7 @@ const LasVegasLanding = () => {
               💰 Profit Calculator
             </span>
             <h2 className="font-display text-3xl md:text-5xl font-bold mb-4">
-              See What You Could <span className="text-gradient">Earn in Las Vegas</span>
+              Why Las Vegas Travelers Choose <span className="text-gradient">Independent Car Rentals</span>
             </h2>
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
               Even a few extra bookings per month can significantly increase your income.
@@ -403,7 +398,7 @@ const LasVegasLanding = () => {
         <div className="container mx-auto px-4 relative max-w-3xl">
           <div className="text-center mb-14">
             <h2 className="font-display text-3xl md:text-5xl font-bold mb-4">
-              How It <span className="text-gradient">Works</span>
+              Find the Right Vehicle for Las Vegas — <span className="text-gradient">Sedans, SUVs, Trucks & More</span>
             </h2>
           </div>
           <div className="space-y-6">
