@@ -35,6 +35,11 @@ const CityLanding = lazy(() => import("./pages/CityLanding"));
 const Cities = lazy(() => import("./pages/Cities"));
 const ForTuroHosts = lazy(() => import("./pages/ForTuroHosts"));
 const LasVegasLanding = lazy(() => import("./pages/LasVegasLanding"));
+const PhoenixLanding = lazy(() => import("./pages/PhoenixLanding"));
+const LosAngelesLanding = lazy(() => import("./pages/LosAngelesLanding"));
+const HoustonLanding = lazy(() => import("./pages/HoustonLanding"));
+const MiamiLanding = lazy(() => import("./pages/MiamiLanding"));
+const NewYorkLanding = lazy(() => import("./pages/NewYorkLanding"));
 const Blog = lazy(() => import("./pages/Blog"));
 const BlogPost = lazy(() => import("./pages/BlogPost"));
 const ResetPassword = lazy(() => import("./pages/ResetPassword"));
@@ -78,6 +83,11 @@ const GlobalLayout = () => {
           <Route path="/cities" element={<Cities />} />
           <Route path="/for-turo-hosts" element={<ForTuroHosts />} />
           <Route path="/las-vegas" element={<LasVegasLanding />} />
+          <Route path="/phoenix" element={<PhoenixLanding />} />
+          <Route path="/los-angeles" element={<LosAngelesLanding />} />
+          <Route path="/houston" element={<HoustonLanding />} />
+          <Route path="/miami" element={<MiamiLanding />} />
+          <Route path="/new-york" element={<NewYorkLanding />} />
           <Route path="/city/:citySlug" element={<CityLanding />} />
           <Route path="/blog" element={<Blog />} />
           <Route path="/blog/:slug" element={<BlogPost />} />

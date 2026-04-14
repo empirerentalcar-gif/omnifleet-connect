@@ -16,6 +16,7 @@ import {
   ShieldCheck,
   Quote,
   XCircle,
+  Search,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { PricingCard, PricingROI } from "@/components/pricing/PricingCard";
@@ -143,9 +144,7 @@ const LasVegasLanding = () => {
             </div>
 
             <h1 className="font-display text-4xl md:text-6xl lg:text-7xl font-bold mb-6 leading-tight">
-              Las Vegas Rental Car Owners: Get More Bookings
-              <br />
-              <span className="text-gradient">— Without Giving Up Control</span>
+              Independent Car Rentals in Las Vegas, NV — Book Direct, Pay Less
             </h1>
 
             <p className="text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto mb-10">
@@ -189,8 +188,7 @@ const LasVegasLanding = () => {
               Local Opportunity
             </span>
             <h2 className="font-display text-3xl md:text-5xl font-bold mb-4">
-              Las Vegas Has Constant Rental Demand —{" "}
-              <span className="text-gradient">Are You Capturing It?</span>
+              Cash-Friendly Car Rentals Near You in Las Vegas
             </h2>
             <p className="text-lg text-muted-foreground">
               Millions of visitors come to Las Vegas every year — many looking for flexible, local, and cash-friendly rental options.
@@ -221,8 +219,7 @@ const LasVegasLanding = () => {
               First-Mover Advantage
             </span>
             <h2 className="font-display text-3xl md:text-5xl font-bold mb-4">
-              Be One of the First Agencies{" "}
-              <span className="text-gradient">Listed in Las Vegas</span>
+              Skip the Airport Counter — Rent Direct from Local Las Vegas Agencies
             </h2>
             <p className="text-lg text-muted-foreground">
               Zuvio is expanding city-by-city — and Las Vegas is a priority market.
@@ -261,8 +258,7 @@ const LasVegasLanding = () => {
               Revenue
             </span>
             <h2 className="font-display text-3xl md:text-5xl font-bold mb-4">
-              Turn Las Vegas Demand Into{" "}
-              <span className="text-gradient">Daily Income</span>
+              Las Vegas Car Rental Owners: List Your Fleet on Zuvio
             </h2>
           </div>
 
@@ -289,7 +285,7 @@ const LasVegasLanding = () => {
         <div className="container mx-auto px-4 relative max-w-3xl">
           <div className="text-center mb-14">
             <h2 className="font-display text-3xl md:text-5xl font-bold mb-4">
-              Simple, <span className="text-gradient">Transparent Pricing</span>
+              How to Book an Independent Car Rental in Las Vegas
             </h2>
             <p className="text-lg text-muted-foreground">
               Built for independent rental owners — no hidden fees.
@@ -312,7 +308,7 @@ const LasVegasLanding = () => {
               💰 Profit Calculator
             </span>
             <h2 className="font-display text-3xl md:text-5xl font-bold mb-4">
-              See What You Could <span className="text-gradient">Earn in Las Vegas</span>
+              Why Las Vegas Travelers Choose <span className="text-gradient">Independent Car Rentals</span>
             </h2>
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
               Even a few extra bookings per month can significantly increase your income.
@@ -403,7 +399,7 @@ const LasVegasLanding = () => {
         <div className="container mx-auto px-4 relative max-w-3xl">
           <div className="text-center mb-14">
             <h2 className="font-display text-3xl md:text-5xl font-bold mb-4">
-              How It <span className="text-gradient">Works</span>
+              Find the Right Vehicle for Las Vegas — <span className="text-gradient">Sedans, SUVs, Trucks & More</span>
             </h2>
           </div>
           <div className="space-y-6">
@@ -468,37 +464,29 @@ const LasVegasLanding = () => {
         </div>
       </section>
 
-      {/* ─── 10. FINAL CTA ─── */}
+      {/* ─── SEARCH CTAs ─── */}
       <section className="py-24 md:py-32 relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-hero" />
         <div className="absolute top-1/3 left-1/3 w-96 h-96 bg-primary/10 rounded-full blur-3xl animate-pulse-glow" />
-        <div className="absolute bottom-1/3 right-1/3 w-96 h-96 bg-accent/10 rounded-full blur-3xl animate-pulse-glow delay-500" />
 
         <div className="container mx-auto px-4 relative z-10 text-center">
-          <h2 className="font-display text-3xl md:text-5xl lg:text-6xl font-bold mb-6">
-            Get More Las Vegas Bookings
-            <br />
-            <span className="text-gradient">— On Your Terms</span>
+          <h2 className="font-display text-3xl md:text-5xl lg:text-6xl font-bold mb-8">
+            Get Started in <span className="text-gradient">Las Vegas</span>
           </h2>
-          <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-2">
-            $79/month + 5% per confirmed booking. 60 days free for founding members. Limited availability.
-          </p>
-          <p className="text-sm text-muted-foreground mb-8">
-            Try it risk-free for 60 days. If it doesn't bring value, you don't continue.
-          </p>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button variant="hero" size="xl" className="group text-base" onClick={() => navigate("/signup")}>
-              <span>Lock My Founding Rate</span>
+            <Button variant="hero" size="xl" className="group text-base" onClick={() => navigate(`/search?location=${encodeURIComponent("Las Vegas")}`)}>
+              <Search className="h-5 w-5" />
+              <span>Search Las Vegas Car Rentals</span>
               <ArrowRight className="h-5 w-5 group-hover:translate-x-1 transition-transform" />
             </Button>
             <Button
               variant="outline"
               size="xl"
               className="text-base border-accent/30 hover:bg-accent/10"
-              onClick={() => navigate("/signup")}
+              onClick={() => navigate("/for-agencies")}
             >
-              Start Getting Vegas Bookings
+              List Your Cars in Las Vegas
             </Button>
           </div>
         </div>

@@ -26,9 +26,9 @@ const TuroHero = () => {
           </div>
 
           <h1 className="font-display text-4xl md:text-6xl lg:text-7xl font-bold mb-6 leading-tight">
-            Turo Hosts: Get More Bookings
+            Las Vegas Turo Hosts: Get More Bookings
             <br />
-            <span className="text-gradient">— and Keep More Control</span>
+            <span className="text-gradient">& Keep More Control with Zuvio</span>
           </h1>
 
           <p className="text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto mb-10">

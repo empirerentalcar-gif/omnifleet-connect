@@ -26,7 +26,7 @@ const SocialProof = () => {
       <div className="container mx-auto px-4 relative">
         <div className="text-center mb-14">
           <h2 className="font-display text-3xl md:text-5xl font-bold mb-4">
-            What Owners Are <span className="text-gradient">Saying</span>
+            What Independent Car Rental Owners Are <span className="text-gradient">Saying About Zuvio</span>
           </h2>
         </div>
 

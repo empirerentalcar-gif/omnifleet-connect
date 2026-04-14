@@ -28,7 +28,7 @@ const ProblemSolution = () => {
               The Problem
             </div>
             <h2 className="font-display text-2xl md:text-3xl font-bold mb-6">
-              The Problem With Traditional Rental Platforms
+              Why Independent Owners Lose Money on Big Rental Platforms
             </h2>
             <div className="space-y-4">
               {problems.map((item) => (
@@ -47,7 +47,7 @@ const ProblemSolution = () => {
               The Zuvio Difference
             </div>
             <h2 className="font-display text-2xl md:text-3xl font-bold mb-4">
-              The <span className="text-gradient">Zuvio Difference</span>
+              The Zuvio Difference — <span className="text-gradient">More Bookings, No Middleman</span>
             </h2>
             <p className="text-muted-foreground mb-6">
               Zuvio is not a rental company. It is a visibility and booking engine built for independent owners.

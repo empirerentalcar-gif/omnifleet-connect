@@ -24,7 +24,7 @@ const TuroProfitCalculator = () => {
             💰 Profit Calculator
           </span>
           <h2 className="font-display text-3xl md:text-5xl font-bold mb-4">
-            See What You Could <span className="text-gradient">Earn With Zuvio</span>
+            See What Las Vegas Car Rental Hosts Could <span className="text-gradient">Earn With Zuvio</span>
           </h2>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
             Estimate how much additional income you could generate with just a few extra bookings per month.

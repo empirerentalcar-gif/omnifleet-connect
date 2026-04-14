@@ -59,7 +59,7 @@ const FAQ = () => {
 {/* Hero */}
       <section className="pt-8 md:pt-32 pb-16 md:pb-20 bg-gradient-to-br from-primary/10 via-background to-secondary/10 text-center px-4">
         <div className="container mx-auto max-w-3xl">
-          <h1 className="font-display text-4xl md:text-5xl font-bold mb-6">Frequently Asked Questions</h1>
+          <h1 className="font-display text-4xl md:text-5xl font-bold mb-6">Independent Car Rental FAQs — Zuvio Las Vegas & Nationwide</h1>
           <p className="text-lg md:text-xl text-muted-foreground">
             Find answers to common questions about renting from independent agencies and joining the ZUVIO network.
           </p>
@@ -106,7 +106,7 @@ const FAQ = () => {
 
           {/* CTA */}
           <div className="mt-16 bg-gradient-to-r from-primary to-accent rounded-2xl p-8 md:p-12 text-center text-primary-foreground">
-            <h2 className="font-display text-2xl md:text-3xl font-bold mb-4">Still Have Questions?</h2>
+            <h2 className="font-display text-2xl md:text-3xl font-bold mb-4">Still Have Questions About Renting or Listing Cars on Zuvio?</h2>
             <p className="text-lg mb-6 opacity-95">Can't find the answer you're looking for? Our support team is ready to help.</p>
             <a href="mailto:team@zuvio.us" className="bg-background text-primary font-semibold px-8 py-3 rounded-full hover:bg-background/90 transition-colors inline-block">
               Contact Support
