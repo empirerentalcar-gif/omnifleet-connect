@@ -37,7 +37,7 @@ const HowItWorksPage = () => {
     <div className="min-h-screen bg-background">
       <SEO
         title="How ZUVIO Works | Rent from Independent Car Rental Agencies"
-        description="Learn how to rent a car from independent agencies on ZUVIO. Simple 3-step process: search local rentals, compare options, and book with flexible terms including cash payments."
+        description="Learn how to rent a car directly from independent agencies on Zuvio. Cash-friendly options, no big platform markups. Book in minutes."
         path="/how-it-works"
       />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({

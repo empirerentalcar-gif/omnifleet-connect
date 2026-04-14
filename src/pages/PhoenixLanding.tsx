@@ -8,6 +8,7 @@ const PhoenixLanding = () => (
       state: "Arizona",
       stateAbbr: "AZ",
       h1: "Independent Car Rentals in Phoenix, AZ — Book Direct from Local Agencies",
+      description: "Find independent car rentals in Phoenix, AZ. Book direct from local agencies, cash-friendly options available. Skip the big brands with Zuvio.",
       h2s: [
         "Cash-Friendly Car Rentals Available in Phoenix",
         "Skip the Big Brands — Rent Direct from Phoenix-Based Agencies",

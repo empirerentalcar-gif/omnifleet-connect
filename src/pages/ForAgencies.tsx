@@ -16,7 +16,7 @@ const ForAgencies = () => {
     <div className="min-h-screen bg-background">
       <SEO
         title="Independent Car Rental Agencies | Get More Bookings with Zuvio"
-        description="Grow your car rental business with Zuvio. Get direct booking requests, keep control of pricing, and increase revenue."
+        description="Get more car rental bookings for your independent agency. Zuvio connects you with real customers in Las Vegas & nationwide. No middlemen."
         path="/for-agencies"
       />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({

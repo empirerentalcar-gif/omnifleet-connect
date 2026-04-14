@@ -8,6 +8,7 @@ const NewYorkLanding = () => (
       state: "New York",
       stateAbbr: "NY",
       h1: "Independent Car Rentals in New York — Book Direct, Skip the Big Platforms",
+      description: "Find independent car rentals in New York. Book direct from local agencies, cash-friendly options available. No big platform fees with Zuvio.",
       h2s: [
         "Cash-Friendly Car Rentals Available in New York",
         "Skip the Airport Counter — Rent Direct from New York Agencies",

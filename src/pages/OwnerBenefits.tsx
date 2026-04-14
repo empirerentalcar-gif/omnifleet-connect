@@ -85,7 +85,7 @@ const OwnerBenefits = () => {
     <div className="min-h-screen bg-background">
       <SEO
         title="Owner Benefits | ZUVIO — Grow Your Rental Business"
-        description="Discover how ZUVIO helps independent car rental owners gain visibility, manage reservations, and grow their business."
+        description="See why independent car rental owners choose Zuvio. More bookings, full pricing control, direct customer contact, and no middlemen nationwide."
         path="/owner-benefits"
       />
 {/* Hero */}

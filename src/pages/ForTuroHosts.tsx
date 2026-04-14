@@ -17,7 +17,7 @@ const ForTuroHosts = () => {
     <div className="min-h-screen bg-background">
       <SEO
         title="Turo Alternative for Hosts | Get Direct Bookings with Zuvio"
-        description="Get more bookings outside of Turo. Keep control of pricing, build repeat customers, and grow your rental business with Zuvio."
+        description="Las Vegas Turo hosts: get more bookings & keep full control. Zuvio helps you diversify beyond Turo and earn more from your rental fleet."
         path="/for-turo-hosts"
       />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({

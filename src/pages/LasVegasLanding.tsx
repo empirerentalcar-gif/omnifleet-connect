@@ -114,7 +114,7 @@ const LasVegasLanding = () => {
     <div className="min-h-screen bg-background">
       <SEO
         title="Las Vegas Car Rental Owners | Get More Bookings with Zuvio"
-        description="Own rental cars in Las Vegas? Get direct booking requests, keep control of pricing, and grow your rental business with Zuvio."
+        description="Find independent car rentals in Las Vegas, NV. Cash-friendly options, book direct from local agencies. Skip the airport counter with Zuvio."
         path="/las-vegas"
       />
       <script

@@ -55,7 +55,7 @@ const Pricing = () => {
     <div className="min-h-screen bg-background">
       <SEO
         title="Pricing | ZUVIO — Plans for Independent Rental Agencies"
-        description="Transparent pricing for independent car rental agencies. No hidden fees, no long-term contracts. Founding member plan at $79/month."
+        description="Simple, transparent pricing for independent car rental agencies. No setup fees. Zuvio only succeeds when you do. See our plans."
         path="/pricing"
       />
 {/* Hero */}
