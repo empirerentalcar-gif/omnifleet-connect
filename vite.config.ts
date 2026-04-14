@@ -8,6 +8,20 @@ import { ViteImageOptimizer } from "vite-plugin-image-optimizer";
 export default defineConfig(({ mode }) => ({
   build: {
     sourcemap: true,
+    cssMinify: true,
+    minify: 'esbuild',
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          'vendor-react': ['react', 'react-dom', 'react-router-dom'],
+          'vendor-ui': ['@radix-ui/react-dialog', '@radix-ui/react-dropdown-menu', '@radix-ui/react-tooltip', '@radix-ui/react-accordion', '@radix-ui/react-tabs', '@radix-ui/react-select', '@radix-ui/react-popover'],
+          'vendor-query': ['@tanstack/react-query'],
+          'vendor-helmet': ['react-helmet-async'],
+          'vendor-supabase': ['@supabase/supabase-js'],
+          'vendor-recharts': ['recharts'],
+        },
+      },
+    },
   },
   server: {
     host: "::",
