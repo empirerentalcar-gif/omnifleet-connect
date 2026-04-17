@@ -42,7 +42,14 @@ const CityLanding = () => {
     const fetchCityVehicles = async () => {
       setLoading(true);
       const { data, error } = await supabase.from('available_vehicles_public').select('*');
-      if (error || !data) { setAgencies([]); setLoading(false); return; }
+      if (error) {
+        console.error("[CityLanding] Supabase error fetching vehicles for city", citySlug, ":", error.message, error);
+        setAgencies([]); setLoading(false); return;
+      }
+      if (!data || data.length === 0) {
+        console.error("[CityLanding] No vehicles returned from available_vehicles_public for city:", citySlug);
+        setAgencies([]); setLoading(false); return;
+      }
 
       const labelCity = cityMeta?.city ?? citySlug.split('-').map((w) => w[0]?.toUpperCase() + w.slice(1)).join(' ');
       const cityName = normalizeCity(labelCity);

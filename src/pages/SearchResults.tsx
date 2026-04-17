@@ -41,9 +41,13 @@ const SearchResults = () => {
         .from("available_vehicles_public")
         .select("*");
 
-      if (error) throw error;
+      if (error) {
+        console.error("[SearchResults] Supabase error fetching vehicles:", error.message, error);
+        throw error;
+      }
 
       if (!vehicles || vehicles.length === 0) {
+        console.error("[SearchResults] No vehicles returned from available_vehicles_public. Vehicles count:", vehicles?.length ?? 0);
         setAgencies([]);
         setLoading(false);
         return;
