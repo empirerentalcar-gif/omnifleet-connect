@@ -39,9 +39,13 @@ const AgencyDetail = () => {
         .select("*")
         .eq("profile_id", id);
 
-      if (error) throw error;
+      if (error) {
+        console.error("[AgencyDetail] Supabase error fetching vehicles for profile", id, ":", error.message, error);
+        throw error;
+      }
 
       if (!vehicles || vehicles.length === 0) {
+        console.error("[AgencyDetail] No vehicles returned for profile_id:", id);
         setAgency(null);
         setLoading(false);
         return;
