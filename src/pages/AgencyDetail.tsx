@@ -1,5 +1,5 @@
 import { useParams, useNavigate } from "react-router-dom";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { MapPin, Car, Banknote, Shield, Clock, AlertCircle, User, ArrowRight, Loader2, Phone } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
@@ -25,14 +25,26 @@ const AgencyDetail = () => {
   const navigate = useNavigate();
   const [agency, setAgency] = useState<AgencyData | null>(null);
   const [loading, setLoading] = useState(true);
+  const isMountedRef = useRef(true);
+  const latestRequestRef = useRef(0);
 
   useEffect(() => {
+    isMountedRef.current = true;
     fetchAgency();
+
+    return () => {
+      isMountedRef.current = false;
+    };
   }, [id]);
 
   const fetchAgency = async () => {
     if (!id) return;
-    setLoading(true);
+    const requestId = ++latestRequestRef.current;
+
+    if (isMountedRef.current) {
+      setLoading(true);
+    }
+
     try {
       const { data: vehicles, error } = await supabase
         .from("available_vehicles_public")
@@ -46,8 +58,10 @@ const AgencyDetail = () => {
 
       if (!vehicles || vehicles.length === 0) {
         console.error("[AgencyDetail] No vehicles returned for profile_id:", id);
-        setAgency(null);
-        setLoading(false);
+        if (isMountedRef.current && requestId === latestRequestRef.current) {
+          setAgency(null);
+          setLoading(false);
+        }
         return;
       }
 
@@ -87,24 +101,30 @@ const AgencyDetail = () => {
 
       const allPhotos = [...agencyPhotos, ...vehiclePhotos];
 
-      setAgency({
-        name: agencyName,
-        city,
-        state,
-        cashAccepted,
-        startingPrice: minPrice === Infinity ? 0 : minPrice,
-        story: ownerStory,
-        photos: allPhotos.length > 0 ? allPhotos.slice(0, 3) : [],
-        vehicleCategories: Array.from(vehicleCats.entries()).map(([name, from]) => ({ name, from })),
-        requirements: Array.isArray(requirements) ? requirements : [requirements],
-        deposit: depositInfo,
-        cancellation: cancellationPolicy,
-      });
+      if (isMountedRef.current && requestId === latestRequestRef.current) {
+        setAgency({
+          name: agencyName,
+          city,
+          state,
+          cashAccepted,
+          startingPrice: minPrice === Infinity ? 0 : minPrice,
+          story: ownerStory,
+          photos: allPhotos.length > 0 ? allPhotos.slice(0, 3) : [],
+          vehicleCategories: Array.from(vehicleCats.entries()).map(([name, from]) => ({ name, from })),
+          requirements: Array.isArray(requirements) ? requirements : [requirements],
+          deposit: depositInfo,
+          cancellation: cancellationPolicy,
+        });
+      }
     } catch (err) {
-      console.error("Error fetching agency:", err);
-      setAgency(null);
+      console.error("[AgencyDetail] Error fetching agency:", err);
+      if (isMountedRef.current && requestId === latestRequestRef.current) {
+        setAgency(null);
+      }
     } finally {
-      setLoading(false);
+      if (isMountedRef.current && requestId === latestRequestRef.current) {
+        setLoading(false);
+      }
     }
   };
 
@@ -185,7 +205,7 @@ const AgencyDetail = () => {
                 <h2 className="font-display text-xl font-bold mb-4 flex items-center gap-2">
                   <Car className="h-5 w-5 text-primary" /> Vehicle Categories
                 </h2>
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4" style={{ display: "grid" }}>
                   {agency.vehicleCategories.map((cat) => (
                     <div key={cat.name} className="bg-secondary/50 rounded-xl p-4 text-center border border-border">
                       <p className="font-semibold">{cat.name}</p>

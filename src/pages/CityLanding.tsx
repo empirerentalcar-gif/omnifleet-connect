@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { Car, MapPin, Lightbulb, ChevronRight, Building2 } from 'lucide-react';
 import SEO from '@/components/SEO';
@@ -37,48 +37,84 @@ const CityLanding = () => {
   const [query, setQuery] = useState('');
   const [vehicleType, setVehicleType] = useState('All');
   const [loading, setLoading] = useState(true);
+  const isMountedRef = useRef(true);
+  const latestRequestRef = useRef(0);
 
   useEffect(() => {
+    isMountedRef.current = true;
+
     const fetchCityVehicles = async () => {
-      setLoading(true);
-      const { data, error } = await supabase.from('available_vehicles_public').select('*');
-      if (error) {
-        console.error("[CityLanding] Supabase error fetching vehicles for city", citySlug, ":", error.message, error);
-        setAgencies([]); setLoading(false); return;
-      }
-      if (!data || data.length === 0) {
-        console.error("[CityLanding] No vehicles returned from available_vehicles_public for city:", citySlug);
-        setAgencies([]); setLoading(false); return;
+      const requestId = ++latestRequestRef.current;
+
+      if (isMountedRef.current) {
+        setLoading(true);
       }
 
-      const labelCity = cityMeta?.city ?? citySlug.split('-').map((w) => w[0]?.toUpperCase() + w.slice(1)).join(' ');
-      const cityName = normalizeCity(labelCity);
-      const cityVehicles = (data as VehicleRow[]).filter((v) => normalizeCity(v.location_city || '') === cityName);
+      try {
+        const { data, error } = await supabase.from('available_vehicles_public').select('*');
+        if (error) {
+          console.error("[CityLanding] Supabase error fetching vehicles for city", citySlug, ":", error.message, error);
+          if (isMountedRef.current && requestId === latestRequestRef.current) {
+            setAgencies([]);
+            setLoading(false);
+          }
+          return;
+        }
 
-      const agencyMap = new Map<string, AgencySummary>();
-      for (const v of cityVehicles) {
-        if (!v.profile_id) continue;
-        const existing = agencyMap.get(v.profile_id);
-        if (existing) {
-          existing.vehicleCount += 1;
-          if (v.vehicle_type && !existing.vehicleTypes.includes(v.vehicle_type)) existing.vehicleTypes.push(v.vehicle_type);
-          if (!existing.image && v.images?.[0]) existing.image = v.images[0];
-        } else {
-          agencyMap.set(v.profile_id, {
-            profileId: v.profile_id,
-            name: v.business_name || 'Local Agency',
-            city: v.location_city || cityMeta?.city || labelCity,
-            state: v.location_state || cityMeta?.state || '',
-            vehicleCount: 1,
-            vehicleTypes: v.vehicle_type ? [v.vehicle_type] : [],
-            image: v.images?.[0] || null,
-          });
+        if (!data || data.length === 0) {
+          console.error("[CityLanding] No vehicles returned from available_vehicles_public for city:", citySlug);
+          if (isMountedRef.current && requestId === latestRequestRef.current) {
+            setAgencies([]);
+            setLoading(false);
+          }
+          return;
+        }
+
+        const labelCity = cityMeta?.city ?? citySlug.split('-').map((w) => w[0]?.toUpperCase() + w.slice(1)).join(' ');
+        const cityName = normalizeCity(labelCity);
+        const cityVehicles = (data as VehicleRow[]).filter((v) => normalizeCity(v.location_city || '') === cityName);
+
+        const agencyMap = new Map<string, AgencySummary>();
+        for (const v of cityVehicles) {
+          if (!v.profile_id) continue;
+          const existing = agencyMap.get(v.profile_id);
+          if (existing) {
+            existing.vehicleCount += 1;
+            if (v.vehicle_type && !existing.vehicleTypes.includes(v.vehicle_type)) existing.vehicleTypes.push(v.vehicle_type);
+            if (!existing.image && v.images?.[0]) existing.image = v.images[0];
+          } else {
+            agencyMap.set(v.profile_id, {
+              profileId: v.profile_id,
+              name: v.business_name || 'Local Agency',
+              city: v.location_city || cityMeta?.city || labelCity,
+              state: v.location_state || cityMeta?.state || '',
+              vehicleCount: 1,
+              vehicleTypes: v.vehicle_type ? [v.vehicle_type] : [],
+              image: v.images?.[0] || null,
+            });
+          }
+        }
+
+        if (isMountedRef.current && requestId === latestRequestRef.current) {
+          setAgencies(Array.from(agencyMap.values()));
+        }
+      } catch (err) {
+        console.error('[CityLanding] Error fetching city vehicles:', err);
+        if (isMountedRef.current && requestId === latestRequestRef.current) {
+          setAgencies([]);
+        }
+      } finally {
+        if (isMountedRef.current && requestId === latestRequestRef.current) {
+          setLoading(false);
         }
       }
-      setAgencies(Array.from(agencyMap.values()));
-      setLoading(false);
     };
+
     fetchCityVehicles();
+
+    return () => {
+      isMountedRef.current = false;
+    };
   }, [cityMeta, citySlug]);
 
   const cityLabel = cityMeta?.city ?? citySlug.split('-').map((w) => w[0]?.toUpperCase() + w.slice(1)).join(' ');
@@ -165,7 +201,7 @@ const CityLanding = () => {
         <section className="container mx-auto px-4">
           <h2 className="text-2xl font-bold mb-4">Agencies in {cityLabel}</h2>
           {loading ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4" style={{ display: 'grid' }}>
               {[1, 2].map((n) => (
                 <div key={n} className="h-64 rounded-xl bg-secondary/50 animate-pulse" />
               ))}
@@ -178,7 +214,7 @@ const CityLanding = () => {
               <Button variant="outline" className="mt-4" onClick={() => navigate('/search')}>Browse All Agencies</Button>
             </div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4" style={{ display: 'grid' }}>
               {filtered.map((agency) => (
                 <Card key={agency.profileId} className="overflow-hidden hover:shadow-glow transition-shadow duration-300">
                   <CardContent className="p-0">
