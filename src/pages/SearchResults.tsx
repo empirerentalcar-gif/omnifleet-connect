@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useSearchParams, useNavigate, Link } from "react-router-dom";
 import { MapPin, Calendar, Car, Search, Banknote } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -29,13 +29,25 @@ const SearchResults = () => {
   const [vehicleType, setVehicleType] = useState("All");
   const [agencies, setAgencies] = useState<Agency[]>([]);
   const [loading, setLoading] = useState(true);
+  const isMountedRef = useRef(true);
+  const latestRequestRef = useRef(0);
 
   useEffect(() => {
+    isMountedRef.current = true;
     fetchAgencies();
+
+    return () => {
+      isMountedRef.current = false;
+    };
   }, []);
 
   const fetchAgencies = async () => {
-    setLoading(true);
+    const requestId = ++latestRequestRef.current;
+
+    if (isMountedRef.current) {
+      setLoading(true);
+    }
+
     try {
       const { data: vehicles, error } = await supabase
         .from("available_vehicles_public")
@@ -48,8 +60,10 @@ const SearchResults = () => {
 
       if (!vehicles || vehicles.length === 0) {
         console.error("[SearchResults] No vehicles returned from available_vehicles_public. Vehicles count:", vehicles?.length ?? 0);
-        setAgencies([]);
-        setLoading(false);
+        if (isMountedRef.current && requestId === latestRequestRef.current) {
+          setAgencies([]);
+          setLoading(false);
+        }
         return;
       }
 
@@ -86,12 +100,18 @@ const SearchResults = () => {
         }
       }
 
-      setAgencies(Array.from(agencyMap.values()));
+      if (isMountedRef.current && requestId === latestRequestRef.current) {
+        setAgencies(Array.from(agencyMap.values()));
+      }
     } catch (err) {
-      console.error("Error fetching agencies:", err);
-      setAgencies([]);
+      console.error("[SearchResults] Error fetching agencies:", err);
+      if (isMountedRef.current && requestId === latestRequestRef.current) {
+        setAgencies([]);
+      }
     } finally {
-      setLoading(false);
+      if (isMountedRef.current && requestId === latestRequestRef.current) {
+        setLoading(false);
+      }
     }
   };
 
@@ -196,7 +216,7 @@ const SearchResults = () => {
       <section className="py-10" style={{ backgroundColor: "#0d1b2e" }}>
         <div className="container mx-auto px-4">
           {loading ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" style={{ display: "grid" }}>
               {Array.from({ length: 6 }).map((_, i) => (
                 <div key={i} className="rounded-xl p-6 space-y-4" style={{ backgroundColor: "#132640", border: "1px solid rgba(255,255,255,0.08)" }}>
                   <Skeleton className="h-5 w-40 bg-white/10" />
@@ -216,7 +236,7 @@ const SearchResults = () => {
                 {filtered.length} {filtered.length === 1 ? "agency" : "agencies"} found{location ? ` near ${location}` : ""}.
               </p>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" style={{ display: "grid" }}>
                 {filtered.map((agency) => (
                   <div
                     key={agency.id}
