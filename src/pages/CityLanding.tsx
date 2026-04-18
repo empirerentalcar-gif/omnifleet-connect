@@ -210,9 +210,19 @@ const CityLanding = () => {
           ) : filtered.length === 0 ? (
             <div className="rounded-xl border border-border p-8 text-center">
               <Building2 className="h-10 w-10 mx-auto text-muted-foreground/50 mb-3" />
-              <p className="font-medium">No agencies are listed in {cityLabel} yet.</p>
-              <p className="text-sm text-muted-foreground mt-2">We are actively expanding this market. Check back soon!</p>
-              <Button variant="outline" className="mt-4" onClick={() => navigate('/search')}>Browse All Agencies</Button>
+              {agencies.length === 0 ? (
+                <>
+                  <p className="font-medium">No agencies are listed in {cityLabel} yet.</p>
+                  <p className="text-sm text-muted-foreground mt-2">We are actively expanding this market. Check back soon!</p>
+                  <Button variant="outline" className="mt-4" onClick={() => navigate('/search')}>Browse All Agencies</Button>
+                </>
+              ) : (
+                <>
+                  <p className="font-medium">No agencies match your filters in {cityLabel}.</p>
+                  <p className="text-sm text-muted-foreground mt-2">Try clearing your filters to see all {agencies.length} {agencies.length === 1 ? 'agency' : 'agencies'} in this city.</p>
+                  <Button variant="outline" className="mt-4" onClick={() => { setQuery(''); setVehicleType('All'); }}>Reset Filters</Button>
+                </>
+              )}
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4" style={{ display: 'grid' }}>
