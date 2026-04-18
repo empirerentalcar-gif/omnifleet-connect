@@ -1,0 +1,1 @@
+GRANT EXECUTE ON FUNCTION public.profile_has_approved_agency(uuid) TO anon, authenticated;
