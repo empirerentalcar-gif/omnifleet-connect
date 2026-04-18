@@ -9,6 +9,7 @@ import { useLocation } from "react-router-dom";
 import Index from "./pages/Index";
 import Footer from "./components/Footer";
 import RentalCTA from "./components/RentalCTA";
+import ScrollToTop from "./components/ScrollToTop";
 
 // Lazy-load non-critical routes to reduce initial JS bundle
 const SignIn = lazy(() => import("./pages/SignIn"));
