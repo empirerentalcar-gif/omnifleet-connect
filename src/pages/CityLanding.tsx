@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { supabase } from '@/integrations/supabase/client';
 import { MAJOR_CITIES, citySlugToLabel, normalizeCity, FEATURED_CITY_SLUGS } from '@/lib/city-data';
+import { logVehicleFetchFailure, logVehicleFetchEmpty } from '@/lib/telemetry';
 
 /* ── types ── */
 type VehicleRow = {
@@ -53,7 +54,7 @@ const CityLanding = () => {
       try {
         const { data, error } = await supabase.from('available_vehicles_public').select('*');
         if (error) {
-          console.error("[CityLanding] Supabase error fetching vehicles for city", citySlug, ":", error.message, error);
+          logVehicleFetchFailure("city_landing", error.message, { city_slug: citySlug, code: (error as any).code });
           if (isMountedRef.current && requestId === latestRequestRef.current) {
             setAgencies([]);
             setLoading(false);
@@ -62,7 +63,7 @@ const CityLanding = () => {
         }
 
         if (!data || data.length === 0) {
-          console.error("[CityLanding] No vehicles returned from available_vehicles_public for city:", citySlug);
+          logVehicleFetchEmpty("city_landing", { city_slug: citySlug, scope: "all_vehicles" });
           if (isMountedRef.current && requestId === latestRequestRef.current) {
             setAgencies([]);
             setLoading(false);
@@ -99,7 +100,7 @@ const CityLanding = () => {
           setAgencies(Array.from(agencyMap.values()));
         }
       } catch (err) {
-        console.error('[CityLanding] Error fetching city vehicles:', err);
+        logVehicleFetchFailure("city_landing", err instanceof Error ? err.message : String(err), { city_slug: citySlug });
         if (isMountedRef.current && requestId === latestRequestRef.current) {
           setAgencies([]);
         }

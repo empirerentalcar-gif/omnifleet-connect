@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import SEO from "@/components/SEO";
 import zuvioLogo from "@/assets/zuvio-logo.png";
+import { logVehicleFetchFailure, logVehicleFetchEmpty } from "@/lib/telemetry";
 
 interface AgencyData {
   name: string;
@@ -52,12 +53,12 @@ const AgencyDetail = () => {
         .eq("profile_id", id);
 
       if (error) {
-        console.error("[AgencyDetail] Supabase error fetching vehicles for profile", id, ":", error.message, error);
+        logVehicleFetchFailure("agency_detail", error.message, { profile_id: id, code: (error as any).code });
         throw error;
       }
 
       if (!vehicles || vehicles.length === 0) {
-        console.error("[AgencyDetail] No vehicles returned for profile_id:", id);
+        logVehicleFetchEmpty("agency_detail", { profile_id: id });
         if (isMountedRef.current && requestId === latestRequestRef.current) {
           setAgency(null);
           setLoading(false);
@@ -117,7 +118,7 @@ const AgencyDetail = () => {
         });
       }
     } catch (err) {
-      console.error("[AgencyDetail] Error fetching agency:", err);
+      logVehicleFetchFailure("agency_detail", err instanceof Error ? err.message : String(err), { profile_id: id });
       if (isMountedRef.current && requestId === latestRequestRef.current) {
         setAgency(null);
       }

@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import SEO from "@/components/SEO";
 import { supabase } from "@/integrations/supabase/client";
 import CitySelector from "@/components/CitySelector";
+import { logVehicleFetchFailure, logVehicleFetchEmpty } from "@/lib/telemetry";
 
 const vehicleTypes = ["All", "Sedan", "SUV", "Truck", "Van", "Compact", "Luxury"];
 
@@ -54,12 +55,12 @@ const SearchResults = () => {
         .select("*");
 
       if (error) {
-        console.error("[SearchResults] Supabase error fetching vehicles:", error.message, error);
+        logVehicleFetchFailure("search_results", error.message, { code: (error as any).code });
         throw error;
       }
 
       if (!vehicles || vehicles.length === 0) {
-        console.error("[SearchResults] No vehicles returned from available_vehicles_public. Vehicles count:", vehicles?.length ?? 0);
+        logVehicleFetchEmpty("search_results", { count: vehicles?.length ?? 0 });
         if (isMountedRef.current && requestId === latestRequestRef.current) {
           setAgencies([]);
           setLoading(false);
@@ -104,7 +105,7 @@ const SearchResults = () => {
         setAgencies(Array.from(agencyMap.values()));
       }
     } catch (err) {
-      console.error("[SearchResults] Error fetching agencies:", err);
+      logVehicleFetchFailure("search_results", err instanceof Error ? err.message : String(err));
       if (isMountedRef.current && requestId === latestRequestRef.current) {
         setAgencies([]);
       }
