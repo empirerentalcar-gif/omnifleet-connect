@@ -295,10 +295,27 @@ const SearchResults = () => {
               </div>
 
               {filtered.length === 0 && (
-                <div className="text-center py-16">
+                <div className="text-center py-16 rounded-xl" style={{ backgroundColor: "#132640", border: "1px solid rgba(255,255,255,0.08)" }}>
                   <Car className="h-16 w-16 mx-auto mb-4" style={{ color: "rgba(255,255,255,0.15)" }} />
-                  <p className="text-xl font-bold text-white mb-2">No agencies match your filters</p>
-                  <p className="text-white/40">Try adjusting your filters or search a different location.</p>
+                  <p className="text-xl font-bold text-white mb-2">
+                    {agencies.length === 0 ? "No agencies available yet" : "No agencies match your filters"}
+                  </p>
+                  <p className="text-white/40 mb-6">
+                    {agencies.length === 0
+                      ? "We're actively onboarding new agencies. Check back soon!"
+                      : `Try clearing your filters to see all ${agencies.length} ${agencies.length === 1 ? "agency" : "agencies"}.`}
+                  </p>
+                  {agencies.length > 0 && (
+                    <button
+                      onClick={() => { setLocation(""); setVehicleType("All"); setPickupDate(""); setDropoffDate(""); }}
+                      className="px-6 py-2.5 rounded-lg font-bold text-sm transition-colors"
+                      style={{ backgroundColor: "#2dd4bf", color: "#0d1b2e" }}
+                      onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "#5eead4")}
+                      onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "#2dd4bf")}
+                    >
+                      Reset Filters
+                    </button>
+                  )}
                 </div>
               )}
             </>
