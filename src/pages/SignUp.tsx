@@ -63,11 +63,20 @@ const SignUp = () => {
     // Validate inputs with Zod
     const result = signUpSchema.safeParse({ registrationCode, businessName, email, password });
     if (!result.success) {
-      toast({
-        title: 'Validation error',
-        description: result.error.errors[0].message,
-        variant: 'destructive',
-      });
+      const passwordErrors = result.error.errors.filter((err) => err.path[0] === 'password');
+      if (passwordErrors.length > 0) {
+        toast({
+          title: 'Password does not meet requirements',
+          description: passwordErrors.map((err) => `• ${err.message}`).join('\n'),
+          variant: 'destructive',
+        });
+      } else {
+        toast({
+          title: 'Validation error',
+          description: result.error.errors[0].message,
+          variant: 'destructive',
+        });
+      }
       setLoading(false);
       return;
     }
