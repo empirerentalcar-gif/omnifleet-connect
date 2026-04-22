@@ -273,9 +273,29 @@ const SignUp = () => {
               minLength={8}
               placeholder="••••••••"
             />
-            <p className="mt-1 text-xs text-muted-foreground">
-              Min 8 characters, with uppercase, lowercase, and a number
-            </p>
+            <ul className="mt-2 space-y-1" aria-label="Password requirements">
+              {(() => {
+                const rules = checkPasswordRules(password);
+                return PASSWORD_RULE_LABELS.map(({ key, label }) => {
+                  const ok = rules[key];
+                  return (
+                    <li
+                      key={key}
+                      className={`flex items-center gap-2 text-xs ${
+                        ok ? 'text-primary' : 'text-muted-foreground'
+                      }`}
+                    >
+                      {ok ? (
+                        <Check className="h-3.5 w-3.5" aria-hidden="true" />
+                      ) : (
+                        <X className="h-3.5 w-3.5" aria-hidden="true" />
+                      )}
+                      <span>{label}</span>
+                    </li>
+                  );
+                });
+              })()}
+            </ul>
           </div>
 
           <Button type="submit" className="w-full" disabled={loading}>
