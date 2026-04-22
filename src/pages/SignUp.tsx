@@ -7,7 +7,7 @@ import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/hooks/use-toast';
 import { z } from 'zod';
 import SEO from '@/components/SEO';
-import { Crown } from 'lucide-react';
+import { Crown, Check, X } from 'lucide-react';
 
 const signUpSchema = z.object({
   registrationCode: z.string().trim().min(1, 'Registration code is required').max(100, 'Registration code too long'),
@@ -19,8 +19,25 @@ const signUpSchema = z.object({
     .max(128, 'Password too long')
     .regex(/[A-Z]/, 'Password must contain an uppercase letter')
     .regex(/[a-z]/, 'Password must contain a lowercase letter')
-    .regex(/[0-9]/, 'Password must contain a number'),
+    .regex(/[0-9]/, 'Password must contain a number')
+    .regex(/[^A-Za-z0-9]/, 'Password must contain a special character'),
 });
+
+const checkPasswordRules = (pw: string) => ({
+  length: pw.length >= 8,
+  uppercase: /[A-Z]/.test(pw),
+  lowercase: /[a-z]/.test(pw),
+  number: /[0-9]/.test(pw),
+  special: /[^A-Za-z0-9]/.test(pw),
+});
+
+const PASSWORD_RULE_LABELS: { key: keyof ReturnType<typeof checkPasswordRules>; label: string }[] = [
+  { key: 'length', label: 'At least 8 characters' },
+  { key: 'uppercase', label: 'One uppercase letter (A–Z)' },
+  { key: 'lowercase', label: 'One lowercase letter (a–z)' },
+  { key: 'number', label: 'One number (0–9)' },
+  { key: 'special', label: 'One special character (!@#$…)' },
+];
 
 const SignUp = () => {
   const [email, setEmail] = useState('');
