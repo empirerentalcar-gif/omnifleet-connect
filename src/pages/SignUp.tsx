@@ -7,7 +7,7 @@ import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/hooks/use-toast';
 import { z } from 'zod';
 import SEO from '@/components/SEO';
-import { Crown } from 'lucide-react';
+import { Crown, Check, X } from 'lucide-react';
 
 const signUpSchema = z.object({
   registrationCode: z.string().trim().min(1, 'Registration code is required').max(100, 'Registration code too long'),
@@ -19,8 +19,25 @@ const signUpSchema = z.object({
     .max(128, 'Password too long')
     .regex(/[A-Z]/, 'Password must contain an uppercase letter')
     .regex(/[a-z]/, 'Password must contain a lowercase letter')
-    .regex(/[0-9]/, 'Password must contain a number'),
+    .regex(/[0-9]/, 'Password must contain a number')
+    .regex(/[^A-Za-z0-9]/, 'Password must contain a special character'),
 });
+
+const checkPasswordRules = (pw: string) => ({
+  length: pw.length >= 8,
+  uppercase: /[A-Z]/.test(pw),
+  lowercase: /[a-z]/.test(pw),
+  number: /[0-9]/.test(pw),
+  special: /[^A-Za-z0-9]/.test(pw),
+});
+
+const PASSWORD_RULE_LABELS: { key: keyof ReturnType<typeof checkPasswordRules>; label: string }[] = [
+  { key: 'length', label: 'At least 8 characters' },
+  { key: 'uppercase', label: 'One uppercase letter (A–Z)' },
+  { key: 'lowercase', label: 'One lowercase letter (a–z)' },
+  { key: 'number', label: 'One number (0–9)' },
+  { key: 'special', label: 'One special character (!@#$…)' },
+];
 
 const SignUp = () => {
   const [email, setEmail] = useState('');
@@ -46,11 +63,20 @@ const SignUp = () => {
     // Validate inputs with Zod
     const result = signUpSchema.safeParse({ registrationCode, businessName, email, password });
     if (!result.success) {
-      toast({
-        title: 'Validation error',
-        description: result.error.errors[0].message,
-        variant: 'destructive',
-      });
+      const passwordErrors = result.error.errors.filter((err) => err.path[0] === 'password');
+      if (passwordErrors.length > 0) {
+        toast({
+          title: 'Password does not meet requirements',
+          description: passwordErrors.map((err) => `• ${err.message}`).join('\n'),
+          variant: 'destructive',
+        });
+      } else {
+        toast({
+          title: 'Validation error',
+          description: result.error.errors[0].message,
+          variant: 'destructive',
+        });
+      }
       setLoading(false);
       return;
     }
@@ -247,9 +273,29 @@ const SignUp = () => {
               minLength={8}
               placeholder="••••••••"
             />
-            <p className="mt-1 text-xs text-muted-foreground">
-              Min 8 characters, with uppercase, lowercase, and a number
-            </p>
+            <ul className="mt-2 space-y-1" aria-label="Password requirements">
+              {(() => {
+                const rules = checkPasswordRules(password);
+                return PASSWORD_RULE_LABELS.map(({ key, label }) => {
+                  const ok = rules[key];
+                  return (
+                    <li
+                      key={key}
+                      className={`flex items-center gap-2 text-xs ${
+                        ok ? 'text-primary' : 'text-muted-foreground'
+                      }`}
+                    >
+                      {ok ? (
+                        <Check className="h-3.5 w-3.5" aria-hidden="true" />
+                      ) : (
+                        <X className="h-3.5 w-3.5" aria-hidden="true" />
+                      )}
+                      <span>{label}</span>
+                    </li>
+                  );
+                });
+              })()}
+            </ul>
           </div>
 
           <Button type="submit" className="w-full" disabled={loading}>
