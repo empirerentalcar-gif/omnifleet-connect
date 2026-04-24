@@ -21,6 +21,7 @@ const SearchResults = lazy(() => import("./pages/SearchResults"));
 const AgencyDetail = lazy(() => import("./pages/AgencyDetail"));
 const ReserveRequest = lazy(() => import("./pages/ReserveRequest"));
 const ReservationConfirmed = lazy(() => import("./pages/ReservationConfirmed"));
+const VehicleDetail = lazy(() => import("./pages/VehicleDetail"));
 const Pricing = lazy(() => import("./pages/Pricing"));
 const OwnerDashboard = lazy(() => import("./pages/OwnerDashboard"));
 const NotFound = lazy(() => import("./pages/NotFound"));
@@ -72,6 +73,7 @@ const GlobalLayout = () => {
           <Route path="/agency/:id" element={<AgencyDetail />} />
           <Route path="/reserve/:agencyId" element={<ReserveRequest />} />
           <Route path="/reservation-confirmed" element={<ReservationConfirmed />} />
+          <Route path="/vehicles/:id" element={<VehicleDetail />} />
           <Route path="/dashboard" element={<OwnerDashboard />} />
           <Route path="/about" element={<About />} />
           <Route path="/faq" element={<FAQ />} />
