@@ -231,7 +231,22 @@ const OwnerDashboard = () => {
   };
 
   // Vehicle CRUD
+  const isAccountBlocked =
+    !!trialInfo &&
+    (trialInfo.status === "expired" ||
+      (trialInfo.status === "payment_required" &&
+        (trialInfo.graceDaysLeft === null || trialInfo.graceDaysLeft <= 0)));
+
   const openAddVehicle = () => {
+    if (isAccountBlocked) {
+      toast({
+        title: "Subscription required",
+        description:
+          "Subscribe or update your payment method in the Billing section to add vehicles.",
+        variant: "destructive",
+      });
+      return;
+    }
     setEditingVehicle(null);
     setVehicleForm(emptyVehicle);
     setVehicleDialogOpen(true);
