@@ -87,8 +87,8 @@ Deno.serve(async (req) => {
     const total = (booking.total_amount_cents / 100).toFixed(2);
     const isAuthOnly = booking.payment_status === "requires_capture";
     const noticeText = isAuthOnly
-      ? "Your card has been authorized but not yet charged. The agency will confirm your booking shortly. You'll be charged when they confirm."
-      : "Your card has been saved and will be authorized 7 days before pickup. You won't be charged until the agency confirms your booking.";
+      ? "Your card has been authorized but not yet charged. The agency will confirm your booking shortly. Your card will be charged on your pickup date."
+      : "Your card has been saved and will be authorized 7 days before pickup. Your card will be charged on your pickup date.";
 
     const emailHtml = `<div style="font-family:sans-serif;max-width:600px;margin:0 auto;padding:20px;background:#0d1b2e;color:#fff;">
       <h2 style="color:#2dd4bf;margin-top:0;">🚗 Booking Received!</h2>
