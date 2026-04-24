@@ -19,6 +19,7 @@ interface Agency {
   state: string;
   vehicleTypes: string[];
   image: string | null;
+  featuredVehicleId: string | null;
 }
 
 const SearchResults = () => {
@@ -80,6 +81,7 @@ const SearchResults = () => {
         if (existing) {
           if (v.daily_rate && v.daily_rate < existing.startingPrice) {
             existing.startingPrice = v.daily_rate;
+            existing.featuredVehicleId = v.id;
           }
           if (v.vehicle_type && !existing.vehicleTypes.includes(v.vehicle_type)) {
             existing.vehicleTypes.push(v.vehicle_type);
@@ -97,6 +99,7 @@ const SearchResults = () => {
             state: v.location_state || "",
             vehicleTypes: v.vehicle_type ? [v.vehicle_type] : [],
             image: v.images && v.images.length > 0 ? v.images[0] : null,
+            featuredVehicleId: v.id,
           });
         }
       }
@@ -290,6 +293,17 @@ const SearchResults = () => {
                     >
                       Request Reservation
                     </button>
+                    {agency.featuredVehicleId && (
+                      <Link
+                        to={`/vehicles/${agency.featuredVehicleId}`}
+                        className="block w-full mt-2 py-2.5 rounded-lg font-semibold text-sm text-center transition-colors"
+                        style={{ backgroundColor: "transparent", color: "#2dd4bf", border: "1px solid rgba(45,212,191,0.4)" }}
+                        onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "rgba(45,212,191,0.1)")}
+                        onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "transparent")}
+                      >
+                        View Details & Reserve
+                      </Link>
+                    )}
                   </div>
                 ))}
               </div>
