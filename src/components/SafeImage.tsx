@@ -54,14 +54,16 @@ interface SafeImageProps {
 
 export const SafeImage = memo(({ src, alt, className, width, height, loading = "lazy", compact = false }: SafeImageProps) => {
   const [errored, setErrored] = useState(false);
+  const [loaded, setLoaded] = useState(false);
   const [cacheBust, setCacheBust] = useState(0);
   const lastSrcRef = useRef(src);
 
-  // Reset error state only when the underlying src truly changes,
+  // Reset error/loaded state only when the underlying src truly changes,
   // not on every parent re-render — prevents overlay flicker.
   if (lastSrcRef.current !== src) {
     lastSrcRef.current = src;
     if (errored) setErrored(false);
+    if (loaded) setLoaded(false);
     if (cacheBust !== 0) setCacheBust(0);
   }
 
@@ -74,6 +76,7 @@ export const SafeImage = memo(({ src, alt, className, width, height, loading = "
         showUnavailable
         onRetry={() => {
           setErrored(false);
+          setLoaded(false);
           setCacheBust((n) => n + 1);
         }}
       />
@@ -81,17 +84,26 @@ export const SafeImage = memo(({ src, alt, className, width, height, loading = "
   }
   const finalSrc = cacheBust > 0 ? `${src}${src.includes("?") ? "&" : "?"}retry=${cacheBust}` : src;
   return (
-    <img
-      key={cacheBust}
-      src={finalSrc}
-      alt={alt}
-      className={className}
-      loading={loading}
-      decoding="async"
-      width={width}
-      height={height}
-      onError={() => setErrored(true)}
-    />
+    <div className="relative w-full h-full">
+      {!loaded && (
+        <div
+          aria-hidden="true"
+          className="absolute inset-0 animate-pulse bg-gradient-to-br from-secondary/60 via-muted/40 to-secondary/60 backdrop-blur-sm"
+        />
+      )}
+      <img
+        key={cacheBust}
+        src={finalSrc}
+        alt={alt}
+        className={`${className ?? ""} transition-opacity duration-300 ${loaded ? "opacity-100" : "opacity-0"}`}
+        loading={loading}
+        decoding="async"
+        width={width}
+        height={height}
+        onLoad={() => setLoaded(true)}
+        onError={() => setErrored(true)}
+      />
+    </div>
   );
 });
 SafeImage.displayName = "SafeImage";
