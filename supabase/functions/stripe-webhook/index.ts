@@ -179,7 +179,8 @@ serve(async (req) => {
 });
 
 async function syncSubscription(
-  supabaseAdmin: ReturnType<typeof createClient>,
+  // deno-lint-ignore no-explicit-any
+  supabaseAdmin: any,
   sub: Stripe.Subscription,
 ) {
   const customerId = typeof sub.customer === "string" ? sub.customer : sub.customer.id;
