@@ -1,5 +1,5 @@
 import { useParams, useNavigate } from "react-router-dom";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, memo } from "react";
 import { MapPin, Car, Banknote, Shield, Clock, AlertCircle, User, ArrowRight, Loader2, Phone, RefreshCw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
@@ -41,7 +41,7 @@ const PhotoFallback = ({
   </div>
 );
 
-const SafeImage = ({
+const SafeImage = memo(({
   src,
   alt,
   className,
@@ -58,6 +58,16 @@ const SafeImage = ({
 }) => {
   const [errored, setErrored] = useState(false);
   const [cacheBust, setCacheBust] = useState(0);
+  const lastSrcRef = useRef(src);
+
+  // Reset error state only when the underlying src truly changes,
+  // not on every parent re-render — prevents overlay flicker.
+  if (lastSrcRef.current !== src) {
+    lastSrcRef.current = src;
+    if (errored) setErrored(false);
+    if (cacheBust !== 0) setCacheBust(0);
+  }
+
   const isValid = typeof src === "string" && src.trim().length > 0 && src !== "null" && src !== "undefined";
   if (!isValid) return <PhotoFallback />;
   if (errored) {
@@ -85,7 +95,8 @@ const SafeImage = ({
       onError={() => setErrored(true)}
     />
   );
-};
+});
+SafeImage.displayName = "SafeImage";
 
 interface AgencyData {
   name: string;
