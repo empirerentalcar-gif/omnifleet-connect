@@ -23,3 +23,9 @@ verify_jwt = false
 
 [functions.send-renter-booking-confirmation]
 verify_jwt = false
+
+[functions.send-renter-booking-status]
+verify_jwt = false
+
+[functions.capture-pickup-day-bookings]
+verify_jwt = false

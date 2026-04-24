@@ -89,6 +89,18 @@ serve(async (req) => {
       })
       .eq("id", booking_id);
 
+    // Fire-and-forget renter notification email
+    try {
+      const supabaseUrl = Deno.env.get("SUPABASE_URL") ?? "";
+      await fetch(`${supabaseUrl}/functions/v1/send-renter-booking-status`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ booking_id, status: "declined", reason }),
+      });
+    } catch (e) {
+      log("status email failed", { msg: (e as Error).message });
+    }
+
     return new Response(JSON.stringify({ ok: true }), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
       status: 200,
