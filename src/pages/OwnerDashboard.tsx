@@ -48,6 +48,7 @@ import { SafeImage } from "@/components/SafeImage";
 import { cn } from "@/lib/utils";
 import { StripeConnectCard } from "@/components/owner/StripeConnectCard";
 import { SubscriptionCard } from "@/components/owner/SubscriptionCard";
+import { BookingsSection } from "@/components/owner/BookingsSection";
 
 type Reservation = {
   id: string;
@@ -112,6 +113,7 @@ const OwnerDashboard = () => {
   const { toast } = useToast();
 
   const [profile, setProfile] = useState<Profile | null>(null);
+  const [agencyId, setAgencyId] = useState<string | null>(null);
   const [reservations, setReservations] = useState<Reservation[]>([]);
   const [vehicles, setVehicles] = useState<Vehicle[]>([]);
   const [loading, setLoading] = useState(true);
@@ -162,6 +164,7 @@ const OwnerDashboard = () => {
         .single();
 
       if (agencyData) {
+        // BookingsSection needs the agencies.id (not profiles.id)
         const daysLeft = agencyData.trial_end_date
           ? Math.ceil((new Date(agencyData.trial_end_date).getTime() - Date.now()) / (1000 * 60 * 60 * 24))
           : null;
