@@ -401,13 +401,15 @@ const OwnerDashboard = () => {
             (trialInfo.status === 'trial' && trialInfo.daysLeft !== null && trialInfo.daysLeft <= (trialInfo.isFoundingMember ? 15 : 7))
           ) && (
             <div className={`rounded-lg p-4 mb-6 border ${
-              trialInfo.status === 'payment_required' || trialInfo.status === 'expired'
+              trialInfo.status === 'expired' || (trialInfo.status === 'payment_required' && (trialInfo.graceDaysLeft === null || trialInfo.graceDaysLeft <= 0))
                 ? 'bg-destructive/10 border-destructive/30 text-destructive' 
-                : trialInfo.daysLeft !== null && trialInfo.daysLeft <= 5
+                : trialInfo.status === 'payment_required'
+                  ? 'bg-amber-500/10 border-amber-500/30 text-amber-600'
+                  : trialInfo.daysLeft !== null && trialInfo.daysLeft <= 5
                   ? 'bg-amber-500/10 border-amber-500/30 text-amber-600'
                   : 'bg-primary/10 border-primary/30 text-primary'
             }`}>
-              {trialInfo.status === 'payment_required' || trialInfo.status === 'expired' ? (
+              {trialInfo.status === 'expired' ? (
                 <div>
                   <p className="font-bold text-lg">Your trial has ended — Subscribe to continue</p>
                   <p className="text-sm mt-1">Your vehicles are hidden from public search. Subscribe to make them visible again.</p>
@@ -416,6 +418,16 @@ const OwnerDashboard = () => {
                       ? `Founding Member #${trialInfo.foundingNumber} pricing: $79/month + 5% per confirmed booking — locked in forever.`
                       : 'Standard pricing: $79/month + 5% per confirmed booking.'}
                   </p>
+                </div>
+              ) : trialInfo.status === 'payment_required' ? (
+                <div>
+                  <p className="font-bold text-lg">Payment failed — update your payment method</p>
+                  <p className="text-sm mt-1">
+                    {trialInfo.graceDaysLeft !== null && trialInfo.graceDaysLeft > 0
+                      ? `You have ${trialInfo.graceDaysLeft} day${trialInfo.graceDaysLeft === 1 ? '' : 's'} to fix this before your vehicles are hidden from public search.`
+                      : 'Your 7-day grace period has ended. Your vehicles are now hidden from public search.'}
+                  </p>
+                  <p className="text-sm mt-2">Use the Manage billing button below to update your card.</p>
                 </div>
               ) : (
                 <div>
@@ -451,6 +463,9 @@ const OwnerDashboard = () => {
 
           {/* Stripe Connect onboarding */}
           <StripeConnectCard />
+
+          {/* Subscription / Billing */}
+          <SubscriptionCard />
 
           {/* Stats */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-10">
