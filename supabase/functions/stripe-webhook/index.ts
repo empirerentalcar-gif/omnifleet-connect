@@ -1,6 +1,6 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import Stripe from "https://esm.sh/stripe@18.5.0";
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2.45.0";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -179,7 +179,8 @@ serve(async (req) => {
 });
 
 async function syncSubscription(
-  supabaseAdmin: ReturnType<typeof createClient>,
+  // deno-lint-ignore no-explicit-any
+  supabaseAdmin: any,
   sub: Stripe.Subscription,
 ) {
   const customerId = typeof sub.customer === "string" ? sub.customer : sub.customer.id;

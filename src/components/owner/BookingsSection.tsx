@@ -103,7 +103,8 @@ export const BookingsSection = ({ agencyId }: { agencyId: string | null }) => {
             <tbody className="divide-y divide-border/50">
               {bookings.map((b) => {
                 const canCapture = b.booking_status === "pending_agency" && b.payment_status === "requires_capture" && !!b.stripe_payment_intent_id;
-                const awaitingAuth = b.payment_status === "scheduled";
+                const awaitingAuth = b.booking_status === "pending_agency" && b.payment_status === "scheduled";
+                const canDecline = b.booking_status === "pending_agency";
                 return (
                   <tr key={b.id}>
                     <td className="px-4 py-3">
@@ -126,20 +127,36 @@ export const BookingsSection = ({ agencyId }: { agencyId: string | null }) => {
                       {b.decline_reason && <p className="text-[10px] text-destructive mt-1">{b.decline_reason}</p>}
                     </td>
                     <td className="px-4 py-3">
-                      {canCapture && (
-                        <div className="flex gap-1">
-                          <Button size="sm" variant="ghost" disabled={busyId === b.id} onClick={() => approve(b)}>
-                            {busyId === b.id ? <Loader2 className="h-4 w-4 animate-spin" /> : <CheckCircle2 className="h-4 w-4 text-primary" />}
-                          </Button>
-                          <Button size="sm" variant="ghost" disabled={busyId === b.id} onClick={() => decline(b)}>
-                            <XCircle className="h-4 w-4 text-destructive" />
-                          </Button>
+                      {canDecline ? (
+                        <div className="flex flex-col gap-1.5">
+                          <div className="flex gap-2">
+                            <Button
+                              size="sm"
+                              variant="default"
+                              disabled={busyId === b.id || !canCapture}
+                              onClick={() => approve(b)}
+                              title={canCapture ? "Approve & authorize hold" : "Card auth pending — cannot approve yet"}
+                            >
+                              {busyId === b.id ? <Loader2 className="h-3.5 w-3.5 animate-spin mr-1" /> : <CheckCircle2 className="h-3.5 w-3.5 mr-1" />}
+                              Approve
+                            </Button>
+                            <Button
+                              size="sm"
+                              variant="destructive"
+                              disabled={busyId === b.id}
+                              onClick={() => decline(b)}
+                            >
+                              <XCircle className="h-3.5 w-3.5 mr-1" />
+                              Decline
+                            </Button>
+                          </div>
+                          {awaitingAuth && (
+                            <span className="text-[10px] text-muted-foreground">Card on file — auth 7d before pickup</span>
+                          )}
                         </div>
+                      ) : (
+                        <span className="text-xs text-muted-foreground">—</span>
                       )}
-                      {awaitingAuth && (
-                        <span className="text-xs text-muted-foreground">Card on file — auth 7d before pickup</span>
-                      )}
-                      {!canCapture && !awaitingAuth && <span className="text-xs text-muted-foreground">—</span>}
                     </td>
                   </tr>
                 );
