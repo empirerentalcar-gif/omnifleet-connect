@@ -47,6 +47,7 @@ import { format } from "date-fns";
 import { SafeImage } from "@/components/SafeImage";
 import { cn } from "@/lib/utils";
 import { StripeConnectCard } from "@/components/owner/StripeConnectCard";
+import { SubscriptionCard } from "@/components/owner/SubscriptionCard";
 
 type Reservation = {
   id: string;
@@ -114,7 +115,7 @@ const OwnerDashboard = () => {
   const [reservations, setReservations] = useState<Reservation[]>([]);
   const [vehicles, setVehicles] = useState<Vehicle[]>([]);
   const [loading, setLoading] = useState(true);
-  const [trialInfo, setTrialInfo] = useState<{ status: string; daysLeft: number | null; isFoundingMember: boolean; foundingNumber: number | null } | null>(null);
+  const [trialInfo, setTrialInfo] = useState<{ status: string; daysLeft: number | null; isFoundingMember: boolean; foundingNumber: number | null; graceDaysLeft: number | null } | null>(null);
   const [updatingId, setUpdatingId] = useState<string | null>(null);
   const [statusFilter, setStatusFilter] = useState("all");
   const [dateFrom, setDateFrom] = useState<Date | undefined>(undefined);
@@ -156,7 +157,7 @@ const OwnerDashboard = () => {
       // Fetch trial info from agencies
       const { data: agencyData } = await supabase
         .from('agencies')
-        .select('subscription_status, trial_end_date, is_founding_member, founding_member_number')
+        .select('subscription_status, trial_end_date, grace_period_end, is_founding_member, founding_member_number')
         .eq('owner_user_id', user.id)
         .single();
 
@@ -164,11 +165,15 @@ const OwnerDashboard = () => {
         const daysLeft = agencyData.trial_end_date
           ? Math.ceil((new Date(agencyData.trial_end_date).getTime() - Date.now()) / (1000 * 60 * 60 * 24))
           : null;
+        const graceDaysLeft = agencyData.grace_period_end
+          ? Math.ceil((new Date(agencyData.grace_period_end).getTime() - Date.now()) / (1000 * 60 * 60 * 24))
+          : null;
         setTrialInfo({
           status: agencyData.subscription_status || 'trial',
           daysLeft,
           isFoundingMember: agencyData.is_founding_member || false,
           foundingNumber: agencyData.founding_member_number || null,
+          graceDaysLeft,
         });
       }
 
