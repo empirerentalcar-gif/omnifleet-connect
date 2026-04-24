@@ -44,6 +44,7 @@ import {
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { format } from "date-fns";
+import { SafeImage } from "@/components/SafeImage";
 import { cn } from "@/lib/utils";
 
 type Reservation = {
@@ -886,7 +887,7 @@ const OwnerDashboard = () => {
                         <div className="grid grid-cols-3 gap-2">
                           {(v.images || []).map((url) => (
                             <div key={url} className="relative group/photo aspect-square rounded-md overflow-hidden bg-secondary/30">
-                              <img src={url} alt="Vehicle" className="w-full h-full object-cover" loading="lazy" />
+                              <SafeImage src={url} alt="Vehicle" className="w-full h-full object-cover" compact />
                               <button
                                 type="button"
                                 onClick={() => removeVehiclePhoto(v, url)}
