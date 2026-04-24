@@ -39,6 +39,8 @@ import {
   Pencil,
   Trash2,
   X,
+  Upload,
+  ImagePlus,
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { format } from "date-fns";
@@ -68,6 +70,7 @@ type Vehicle = {
   status: string;
   location_city: string | null;
   location_state: string | null;
+  images: string[] | null;
 };
 
 type Profile = {
@@ -175,7 +178,7 @@ const OwnerDashboard = () => {
           .order("created_at", { ascending: false }),
         supabase
           .from("vehicles")
-          .select("id, make, model, year, vehicle_type, daily_rate, status, location_city, location_state")
+          .select("id, make, model, year, vehicle_type, daily_rate, status, location_city, location_state, images")
           .eq("profile_id", profileData.id)
           .order("created_at", { ascending: false }),
       ]);
@@ -300,6 +303,71 @@ const OwnerDashboard = () => {
       toast({ title: "Vehicle removed" });
       setVehicles((prev) => prev.filter((v) => v.id !== id));
     }
+  };
+
+  // Photo upload (max 5 per vehicle)
+  const [uploadingPhotoId, setUploadingPhotoId] = useState<string | null>(null);
+  const MAX_PHOTOS = 5;
+
+  const uploadVehiclePhotos = async (vehicle: Vehicle, files: FileList) => {
+    if (!user || !files.length) return;
+    const existing = vehicle.images || [];
+    const remaining = MAX_PHOTOS - existing.length;
+    if (remaining <= 0) {
+      toast({ title: "Limit reached", description: `Maximum ${MAX_PHOTOS} photos per vehicle.`, variant: "destructive" });
+      return;
+    }
+    const toUpload = Array.from(files).slice(0, remaining);
+    setUploadingPhotoId(vehicle.id);
+    const newUrls: string[] = [];
+    try {
+      for (const file of toUpload) {
+        if (!file.type.startsWith("image/")) continue;
+        if (file.size > 10 * 1024 * 1024) {
+          toast({ title: "Too large", description: `${file.name} exceeds 10MB.`, variant: "destructive" });
+          continue;
+        }
+        const ext = file.name.split(".").pop() || "jpg";
+        const path = `${user.id}/${vehicle.id}/${Date.now()}-${Math.random().toString(36).slice(2, 8)}.${ext}`;
+        const { error: upErr } = await supabase.storage.from("vehicle-photos").upload(path, file, { cacheControl: "3600", upsert: false });
+        if (upErr) {
+          toast({ title: "Upload failed", description: upErr.message, variant: "destructive" });
+          continue;
+        }
+        const { data: pub } = supabase.storage.from("vehicle-photos").getPublicUrl(path);
+        newUrls.push(pub.publicUrl);
+      }
+      if (newUrls.length) {
+        const updated = [...existing, ...newUrls];
+        const { error: dbErr } = await supabase.from("vehicles").update({ images: updated }).eq("id", vehicle.id);
+        if (dbErr) {
+          toast({ title: "Save failed", description: dbErr.message, variant: "destructive" });
+        } else {
+          setVehicles((prev) => prev.map((v) => (v.id === vehicle.id ? { ...v, images: updated } : v)));
+          toast({ title: "Photos uploaded", description: `${newUrls.length} photo(s) added.` });
+        }
+      }
+    } finally {
+      setUploadingPhotoId(null);
+    }
+  };
+
+  const removeVehiclePhoto = async (vehicle: Vehicle, url: string) => {
+    const updated = (vehicle.images || []).filter((u) => u !== url);
+    const { error } = await supabase.from("vehicles").update({ images: updated }).eq("id", vehicle.id);
+    if (error) {
+      toast({ title: "Error", description: error.message, variant: "destructive" });
+      return;
+    }
+    // best-effort: delete from storage
+    const marker = "/vehicle-photos/";
+    const idx = url.indexOf(marker);
+    if (idx !== -1) {
+      const path = url.substring(idx + marker.length);
+      await supabase.storage.from("vehicle-photos").remove([path]);
+    }
+    setVehicles((prev) => prev.map((v) => (v.id === vehicle.id ? { ...v, images: updated } : v)));
+    toast({ title: "Photo removed" });
   };
 
   if (authLoading || loading) {
@@ -764,6 +832,74 @@ const OwnerDashboard = () => {
                         {v.location_city}, {v.location_state}
                       </p>
                     )}
+
+                    {/* Photos */}
+                    <div className="mt-4 pt-4 border-t border-border/40">
+                      <div className="flex items-center justify-between mb-2">
+                        <p className="text-xs font-semibold text-muted-foreground">
+                          Photos ({(v.images || []).length}/{MAX_PHOTOS})
+                        </p>
+                        {(v.images || []).length < MAX_PHOTOS && (
+                          <label className="cursor-pointer">
+                            <input
+                              type="file"
+                              accept="image/*"
+                              multiple
+                              className="hidden"
+                              disabled={uploadingPhotoId === v.id}
+                              onChange={(e) => {
+                                if (e.target.files) uploadVehiclePhotos(v, e.target.files);
+                                e.target.value = "";
+                              }}
+                            />
+                            <span className="inline-flex items-center gap-1 text-xs text-primary hover:underline">
+                              {uploadingPhotoId === v.id ? (
+                                <>Uploading...</>
+                              ) : (
+                                <>
+                                  <Upload className="h-3 w-3" /> Add
+                                </>
+                              )}
+                            </span>
+                          </label>
+                        )}
+                      </div>
+                      {(v.images || []).length === 0 ? (
+                        <label className="cursor-pointer">
+                          <input
+                            type="file"
+                            accept="image/*"
+                            multiple
+                            className="hidden"
+                            disabled={uploadingPhotoId === v.id}
+                            onChange={(e) => {
+                              if (e.target.files) uploadVehiclePhotos(v, e.target.files);
+                              e.target.value = "";
+                            }}
+                          />
+                          <div className="flex flex-col items-center justify-center gap-1 py-4 rounded-lg border border-dashed border-border/60 text-muted-foreground hover:border-primary/50 hover:text-primary transition-colors">
+                            <ImagePlus className="h-5 w-5" />
+                            <span className="text-xs">Upload up to 5 photos</span>
+                          </div>
+                        </label>
+                      ) : (
+                        <div className="grid grid-cols-3 gap-2">
+                          {(v.images || []).map((url) => (
+                            <div key={url} className="relative group/photo aspect-square rounded-md overflow-hidden bg-secondary/30">
+                              <img src={url} alt="Vehicle" className="w-full h-full object-cover" loading="lazy" />
+                              <button
+                                type="button"
+                                onClick={() => removeVehiclePhoto(v, url)}
+                                className="absolute top-1 right-1 bg-background/80 hover:bg-destructive hover:text-destructive-foreground rounded-full p-0.5 opacity-0 group-hover/photo:opacity-100 transition-opacity"
+                                aria-label="Remove photo"
+                              >
+                                <X className="h-3 w-3" />
+                              </button>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                    </div>
                   </div>
                 ))}
               </div>
