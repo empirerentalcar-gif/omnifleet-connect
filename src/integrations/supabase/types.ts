@@ -65,6 +65,10 @@ export type Database = {
           grace_period_end: string | null
           id: string
           is_founding_member: boolean
+          last_payout_amount_cents: number | null
+          last_payout_at: string | null
+          last_payout_failure_message: string | null
+          last_payout_status: string | null
           owner_user_id: string | null
           phone: string | null
           state: string | null
@@ -93,6 +97,10 @@ export type Database = {
           grace_period_end?: string | null
           id?: string
           is_founding_member?: boolean
+          last_payout_amount_cents?: number | null
+          last_payout_at?: string | null
+          last_payout_failure_message?: string | null
+          last_payout_status?: string | null
           owner_user_id?: string | null
           phone?: string | null
           state?: string | null
@@ -121,6 +129,10 @@ export type Database = {
           grace_period_end?: string | null
           id?: string
           is_founding_member?: boolean
+          last_payout_amount_cents?: number | null
+          last_payout_at?: string | null
+          last_payout_failure_message?: string | null
+          last_payout_status?: string | null
           owner_user_id?: string | null
           phone?: string | null
           state?: string | null
