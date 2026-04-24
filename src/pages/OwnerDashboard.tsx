@@ -159,12 +159,13 @@ const OwnerDashboard = () => {
       // Fetch trial info from agencies
       const { data: agencyData } = await supabase
         .from('agencies')
-        .select('subscription_status, trial_end_date, grace_period_end, is_founding_member, founding_member_number')
+        .select('id, subscription_status, trial_end_date, grace_period_end, is_founding_member, founding_member_number')
         .eq('owner_user_id', user.id)
         .single();
 
       if (agencyData) {
         // BookingsSection needs the agencies.id (not profiles.id)
+        setAgencyId(agencyData.id);
         const daysLeft = agencyData.trial_end_date
           ? Math.ceil((new Date(agencyData.trial_end_date).getTime() - Date.now()) / (1000 * 60 * 60 * 24))
           : null;
@@ -484,6 +485,9 @@ const OwnerDashboard = () => {
 
           {/* Subscription / Billing */}
           <SubscriptionCard />
+
+          {/* Paid bookings (Stripe) */}
+          <BookingsSection agencyId={agencyId} />
 
           {/* Stats */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-10">
