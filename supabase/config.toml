@@ -5,3 +5,18 @@ verify_jwt = true
 
 [functions.notify-new-reservation]
 verify_jwt = false
+
+[functions.create-booking-payment]
+verify_jwt = false
+
+[functions.capture-booking-payment]
+verify_jwt = true
+
+[functions.cancel-booking-payment]
+verify_jwt = true
+
+[functions.authorize-pending-bookings]
+verify_jwt = false
+
+[functions.stripe-webhook]
+verify_jwt = false
