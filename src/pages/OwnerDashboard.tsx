@@ -305,6 +305,71 @@ const OwnerDashboard = () => {
     }
   };
 
+  // Photo upload (max 5 per vehicle)
+  const [uploadingPhotoId, setUploadingPhotoId] = useState<string | null>(null);
+  const MAX_PHOTOS = 5;
+
+  const uploadVehiclePhotos = async (vehicle: Vehicle, files: FileList) => {
+    if (!user || !files.length) return;
+    const existing = vehicle.images || [];
+    const remaining = MAX_PHOTOS - existing.length;
+    if (remaining <= 0) {
+      toast({ title: "Limit reached", description: `Maximum ${MAX_PHOTOS} photos per vehicle.`, variant: "destructive" });
+      return;
+    }
+    const toUpload = Array.from(files).slice(0, remaining);
+    setUploadingPhotoId(vehicle.id);
+    const newUrls: string[] = [];
+    try {
+      for (const file of toUpload) {
+        if (!file.type.startsWith("image/")) continue;
+        if (file.size > 10 * 1024 * 1024) {
+          toast({ title: "Too large", description: `${file.name} exceeds 10MB.`, variant: "destructive" });
+          continue;
+        }
+        const ext = file.name.split(".").pop() || "jpg";
+        const path = `${user.id}/${vehicle.id}/${Date.now()}-${Math.random().toString(36).slice(2, 8)}.${ext}`;
+        const { error: upErr } = await supabase.storage.from("vehicle-photos").upload(path, file, { cacheControl: "3600", upsert: false });
+        if (upErr) {
+          toast({ title: "Upload failed", description: upErr.message, variant: "destructive" });
+          continue;
+        }
+        const { data: pub } = supabase.storage.from("vehicle-photos").getPublicUrl(path);
+        newUrls.push(pub.publicUrl);
+      }
+      if (newUrls.length) {
+        const updated = [...existing, ...newUrls];
+        const { error: dbErr } = await supabase.from("vehicles").update({ images: updated }).eq("id", vehicle.id);
+        if (dbErr) {
+          toast({ title: "Save failed", description: dbErr.message, variant: "destructive" });
+        } else {
+          setVehicles((prev) => prev.map((v) => (v.id === vehicle.id ? { ...v, images: updated } : v)));
+          toast({ title: "Photos uploaded", description: `${newUrls.length} photo(s) added.` });
+        }
+      }
+    } finally {
+      setUploadingPhotoId(null);
+    }
+  };
+
+  const removeVehiclePhoto = async (vehicle: Vehicle, url: string) => {
+    const updated = (vehicle.images || []).filter((u) => u !== url);
+    const { error } = await supabase.from("vehicles").update({ images: updated }).eq("id", vehicle.id);
+    if (error) {
+      toast({ title: "Error", description: error.message, variant: "destructive" });
+      return;
+    }
+    // best-effort: delete from storage
+    const marker = "/vehicle-photos/";
+    const idx = url.indexOf(marker);
+    if (idx !== -1) {
+      const path = url.substring(idx + marker.length);
+      await supabase.storage.from("vehicle-photos").remove([path]);
+    }
+    setVehicles((prev) => prev.map((v) => (v.id === vehicle.id ? { ...v, images: updated } : v)));
+    toast({ title: "Photo removed" });
+  };
+
   if (authLoading || loading) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
