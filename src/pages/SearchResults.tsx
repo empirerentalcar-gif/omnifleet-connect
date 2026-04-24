@@ -81,6 +81,7 @@ const SearchResults = () => {
         if (existing) {
           if (v.daily_rate && v.daily_rate < existing.startingPrice) {
             existing.startingPrice = v.daily_rate;
+            existing.featuredVehicleId = v.id;
           }
           if (v.vehicle_type && !existing.vehicleTypes.includes(v.vehicle_type)) {
             existing.vehicleTypes.push(v.vehicle_type);
@@ -98,6 +99,7 @@ const SearchResults = () => {
             state: v.location_state || "",
             vehicleTypes: v.vehicle_type ? [v.vehicle_type] : [],
             image: v.images && v.images.length > 0 ? v.images[0] : null,
+            featuredVehicleId: v.id,
           });
         }
       }
