@@ -223,6 +223,12 @@ const PaymentForm = ({ intent, onDone }: { intent: IntentInfo; onDone: () => voi
       toast({ title: "Payment failed", description: result.error.message, variant: "destructive" });
       return;
     }
+    // Fire-and-forget renter confirmation email — never block UX on email
+    supabase.functions
+      .invoke("send-renter-booking-confirmation", {
+        body: { booking_id: intent.booking_id },
+      })
+      .catch((err) => console.warn("renter confirmation email failed", err));
     onDone();
   };
 
