@@ -293,6 +293,17 @@ const SearchResults = () => {
                     >
                       Request Reservation
                     </button>
+                    {agency.featuredVehicleId && (
+                      <Link
+                        to={`/vehicles/${agency.featuredVehicleId}`}
+                        className="block w-full mt-2 py-2.5 rounded-lg font-semibold text-sm text-center transition-colors"
+                        style={{ backgroundColor: "transparent", color: "#2dd4bf", border: "1px solid rgba(45,212,191,0.4)" }}
+                        onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "rgba(45,212,191,0.1)")}
+                        onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "transparent")}
+                      >
+                        View Details & Reserve
+                      </Link>
+                    )}
                   </div>
                 ))}
               </div>
