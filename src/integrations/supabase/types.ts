@@ -62,11 +62,19 @@ export type Database = {
           created_at: string
           email: string | null
           founding_member_number: number | null
+          grace_period_end: string | null
           id: string
           is_founding_member: boolean
           owner_user_id: string | null
           phone: string | null
           state: string | null
+          stripe_charges_enabled: boolean
+          stripe_connect_account_id: string | null
+          stripe_connect_status: string
+          stripe_customer_id: string | null
+          stripe_payouts_enabled: boolean
+          stripe_subscription_id: string | null
+          subscription_current_period_end: string | null
           subscription_status: string
           trial_end_date: string | null
           trial_start_date: string | null
@@ -82,11 +90,19 @@ export type Database = {
           created_at?: string
           email?: string | null
           founding_member_number?: number | null
+          grace_period_end?: string | null
           id?: string
           is_founding_member?: boolean
           owner_user_id?: string | null
           phone?: string | null
           state?: string | null
+          stripe_charges_enabled?: boolean
+          stripe_connect_account_id?: string | null
+          stripe_connect_status?: string
+          stripe_customer_id?: string | null
+          stripe_payouts_enabled?: boolean
+          stripe_subscription_id?: string | null
+          subscription_current_period_end?: string | null
           subscription_status?: string
           trial_end_date?: string | null
           trial_start_date?: string | null
@@ -102,11 +118,19 @@ export type Database = {
           created_at?: string
           email?: string | null
           founding_member_number?: number | null
+          grace_period_end?: string | null
           id?: string
           is_founding_member?: boolean
           owner_user_id?: string | null
           phone?: string | null
           state?: string | null
+          stripe_charges_enabled?: boolean
+          stripe_connect_account_id?: string | null
+          stripe_connect_status?: string
+          stripe_customer_id?: string | null
+          stripe_payouts_enabled?: boolean
+          stripe_subscription_id?: string | null
+          subscription_current_period_end?: string | null
           subscription_status?: string
           trial_end_date?: string | null
           trial_start_date?: string | null
@@ -193,6 +217,116 @@ export type Database = {
             columns: ["profile_id"]
             isOneToOne: true
             referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      bookings: {
+        Row: {
+          agency_id: string
+          booking_status: string
+          capture_method: string
+          created_at: string
+          currency: string
+          daily_rate_cents: number
+          decline_reason: string | null
+          dropoff_date: string
+          id: string
+          payment_method_id: string | null
+          payment_status: string
+          pickup_date: string
+          platform_fee_cents: number
+          profile_id: string
+          rental_days: number
+          renter_email: string
+          renter_name: string
+          renter_phone: string
+          stripe_charge_id: string | null
+          stripe_payment_intent_id: string | null
+          stripe_setup_intent_id: string | null
+          total_amount_cents: number
+          updated_at: string
+          vehicle_id: string
+        }
+        Insert: {
+          agency_id: string
+          booking_status?: string
+          capture_method?: string
+          created_at?: string
+          currency?: string
+          daily_rate_cents: number
+          decline_reason?: string | null
+          dropoff_date: string
+          id?: string
+          payment_method_id?: string | null
+          payment_status?: string
+          pickup_date: string
+          platform_fee_cents: number
+          profile_id: string
+          rental_days: number
+          renter_email: string
+          renter_name: string
+          renter_phone: string
+          stripe_charge_id?: string | null
+          stripe_payment_intent_id?: string | null
+          stripe_setup_intent_id?: string | null
+          total_amount_cents: number
+          updated_at?: string
+          vehicle_id: string
+        }
+        Update: {
+          agency_id?: string
+          booking_status?: string
+          capture_method?: string
+          created_at?: string
+          currency?: string
+          daily_rate_cents?: number
+          decline_reason?: string | null
+          dropoff_date?: string
+          id?: string
+          payment_method_id?: string | null
+          payment_status?: string
+          pickup_date?: string
+          platform_fee_cents?: number
+          profile_id?: string
+          rental_days?: number
+          renter_email?: string
+          renter_name?: string
+          renter_phone?: string
+          stripe_charge_id?: string | null
+          stripe_payment_intent_id?: string | null
+          stripe_setup_intent_id?: string | null
+          total_amount_cents?: number
+          updated_at?: string
+          vehicle_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "bookings_agency_id_fkey"
+            columns: ["agency_id"]
+            isOneToOne: false
+            referencedRelation: "agencies"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "bookings_profile_id_fkey"
+            columns: ["profile_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "bookings_vehicle_id_fkey"
+            columns: ["vehicle_id"]
+            isOneToOne: false
+            referencedRelation: "available_vehicles_public"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "bookings_vehicle_id_fkey"
+            columns: ["vehicle_id"]
+            isOneToOne: false
+            referencedRelation: "vehicles"
             referencedColumns: ["id"]
           },
         ]
@@ -415,6 +549,30 @@ export type Database = {
           id?: string
           user_id?: string | null
           window_start?: string | null
+        }
+        Relationships: []
+      }
+      stripe_webhook_events: {
+        Row: {
+          event_type: string
+          id: string
+          payload: Json | null
+          processed_at: string
+          stripe_event_id: string
+        }
+        Insert: {
+          event_type: string
+          id?: string
+          payload?: Json | null
+          processed_at?: string
+          stripe_event_id: string
+        }
+        Update: {
+          event_type?: string
+          id?: string
+          payload?: Json | null
+          processed_at?: string
+          stripe_event_id?: string
         }
         Relationships: []
       }
