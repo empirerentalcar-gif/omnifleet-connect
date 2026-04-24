@@ -3,7 +3,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
-import { CheckCircle2, AlertCircle, ExternalLink, RefreshCw, Loader2 } from "lucide-react";
+import { CheckCircle2, AlertCircle, ExternalLink, RefreshCw, Loader2, Banknote } from "lucide-react";
 
 type ConnectStatus = {
   connected: boolean;
@@ -18,6 +18,13 @@ type ConnectStatus = {
   } | null;
 };
 
+type PayoutInfo = {
+  status: string | null;
+  amount_cents: number | null;
+  at: string | null;
+  failure_message: string | null;
+};
+
 const STATUS_LABEL: Record<string, string> = {
   not_started: "Not connected",
   pending: "Onboarding incomplete",
@@ -29,12 +36,16 @@ const STATUS_LABEL: Record<string, string> = {
 export function StripeConnectCard() {
   const { toast } = useToast();
   const [status, setStatus] = useState<ConnectStatus | null>(null);
+  const [payout, setPayout] = useState<PayoutInfo | null>(null);
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
 
   const refresh = async () => {
     setLoading(true);
-    const { data, error } = await supabase.functions.invoke("connect-account-status");
+    const [{ data, error }, { data: userRes }] = await Promise.all([
+      supabase.functions.invoke("connect-account-status"),
+      supabase.auth.getUser(),
+    ]);
     if (error) {
       toast({
         title: "Couldn't load Stripe status",
@@ -43,6 +54,23 @@ export function StripeConnectCard() {
       });
     } else if (data) {
       setStatus(data as ConnectStatus);
+    }
+
+    const userId = userRes?.user?.id;
+    if (userId) {
+      const { data: agencyRow } = await supabase
+        .from("agencies")
+        .select("last_payout_status, last_payout_amount_cents, last_payout_at, last_payout_failure_message")
+        .eq("owner_user_id", userId)
+        .maybeSingle();
+      if (agencyRow) {
+        setPayout({
+          status: agencyRow.last_payout_status,
+          amount_cents: agencyRow.last_payout_amount_cents,
+          at: agencyRow.last_payout_at,
+          failure_message: agencyRow.last_payout_failure_message,
+        });
+      }
     }
     setLoading(false);
   };
@@ -130,6 +158,35 @@ export function StripeConnectCard() {
                   {status.payouts_enabled ? "Enabled" : "Pending"}
                 </span>
               </span>
+            </div>
+          )}
+
+          {payout?.status && (
+            <div className="mt-4 flex items-start gap-2 text-xs">
+              <Banknote className="h-4 w-4 mt-0.5 text-muted-foreground shrink-0" />
+              <div>
+                <div className="text-muted-foreground">
+                  Last payout:{" "}
+                  <span
+                    className={
+                      payout.status === "paid"
+                        ? "text-emerald-400 font-medium"
+                        : "text-red-400 font-medium"
+                    }
+                  >
+                    {payout.status === "paid" ? "Paid" : "Failed"}
+                  </span>
+                  {typeof payout.amount_cents === "number" && (
+                    <> · ${(payout.amount_cents / 100).toFixed(2)}</>
+                  )}
+                  {payout.at && (
+                    <> · {new Date(payout.at).toLocaleDateString()}</>
+                  )}
+                </div>
+                {payout.status !== "paid" && payout.failure_message && (
+                  <div className="text-red-400 mt-1">{payout.failure_message}</div>
+                )}
+              </div>
             </div>
           )}
         </div>

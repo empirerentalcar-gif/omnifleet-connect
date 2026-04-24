@@ -144,6 +144,74 @@ serve(async (req) => {
           }
           break;
         }
+        case "charge.refunded": {
+          const charge = event.data.object as Stripe.Charge;
+          const bookingId = charge.metadata?.booking_id;
+          // Charges may not carry booking_id metadata directly — fall back to PI lookup
+          const piId = typeof charge.payment_intent === "string"
+            ? charge.payment_intent
+            : charge.payment_intent?.id;
+          const refunded = charge.amount_refunded >= charge.amount;
+          const query = supabaseAdmin.from("bookings").update({
+            payment_status: refunded ? "refunded" : "partially_refunded",
+            updated_at: new Date().toISOString(),
+          });
+          if (bookingId) {
+            await query.eq("id", bookingId);
+          } else if (piId) {
+            await query.eq("stripe_payment_intent_id", piId);
+          }
+          break;
+        }
+        case "payout.paid":
+        case "payout.failed": {
+          // Connect payout — event.account is the connected account ID
+          const payout = event.data.object as Stripe.Payout;
+          const connectAccountId = (event as unknown as { account?: string }).account;
+          if (!connectAccountId) {
+            log("payout event missing account", { id: event.id });
+            break;
+          }
+          const isPaid = event.type === "payout.paid";
+          const arrival = payout.arrival_date
+            ? new Date(payout.arrival_date * 1000).toISOString()
+            : new Date().toISOString();
+          await supabaseAdmin
+            .from("agencies")
+            .update({
+              last_payout_status: isPaid ? "paid" : "failed",
+              last_payout_amount_cents: payout.amount,
+              last_payout_at: arrival,
+              last_payout_failure_message: isPaid
+                ? null
+                : payout.failure_message?.slice(0, 500) ?? "Payout failed",
+              updated_at: new Date().toISOString(),
+            })
+            .eq("stripe_connect_account_id", connectAccountId);
+          break;
+        }
+        case "account.updated": {
+          const account = event.data.object as Stripe.Account;
+          const requirements = account.requirements;
+          let connectStatus = "pending";
+          if (account.charges_enabled && account.payouts_enabled) {
+            connectStatus = "active";
+          } else if ((requirements?.disabled_reason ?? null) !== null) {
+            connectStatus = "restricted";
+          } else if (account.details_submitted) {
+            connectStatus = "pending_verification";
+          }
+          await supabaseAdmin
+            .from("agencies")
+            .update({
+              stripe_charges_enabled: account.charges_enabled ?? false,
+              stripe_payouts_enabled: account.payouts_enabled ?? false,
+              stripe_connect_status: connectStatus,
+              updated_at: new Date().toISOString(),
+            })
+            .eq("stripe_connect_account_id", account.id);
+          break;
+        }
         default:
           log("Unhandled event type", { type: event.type });
       }
