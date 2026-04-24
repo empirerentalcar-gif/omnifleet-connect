@@ -7,6 +7,47 @@ import SEO from "@/components/SEO";
 import zuvioLogo from "@/assets/zuvio-logo.png";
 import { logVehicleFetchFailure, logVehicleFetchEmpty } from "@/lib/telemetry";
 
+const PhotoFallback = ({ className = "" }: { className?: string }) => (
+  <div
+    className={`w-full h-full flex items-center justify-center ${className}`}
+    style={{ background: "#0d1b2e", borderBottom: "3px solid #2dd4bf" }}
+  >
+    <img src={zuvioLogo} alt="Zuvio placeholder" className="w-[120px] h-auto object-contain opacity-80" />
+  </div>
+);
+
+const SafeImage = ({
+  src,
+  alt,
+  className,
+  width,
+  height,
+  loading = "lazy",
+}: {
+  src: string;
+  alt: string;
+  className?: string;
+  width?: number;
+  height?: number;
+  loading?: "eager" | "lazy";
+}) => {
+  const [errored, setErrored] = useState(false);
+  const isValid = typeof src === "string" && src.trim().length > 0 && src !== "null" && src !== "undefined";
+  if (!isValid || errored) return <PhotoFallback />;
+  return (
+    <img
+      src={src}
+      alt={alt}
+      className={className}
+      loading={loading}
+      decoding="async"
+      width={width}
+      height={height}
+      onError={() => setErrored(true)}
+    />
+  );
+};
+
 interface AgencyData {
   name: string;
   city: string;
