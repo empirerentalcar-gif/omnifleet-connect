@@ -46,6 +46,7 @@ import { useToast } from "@/hooks/use-toast";
 import { format } from "date-fns";
 import { SafeImage } from "@/components/SafeImage";
 import { cn } from "@/lib/utils";
+import { StripeConnectCard } from "@/components/owner/StripeConnectCard";
 
 type Reservation = {
   id: string;
