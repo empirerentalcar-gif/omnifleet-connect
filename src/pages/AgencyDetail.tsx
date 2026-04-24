@@ -1,22 +1,42 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { useState, useEffect, useRef } from "react";
-import { MapPin, Car, Banknote, Shield, Clock, AlertCircle, User, ArrowRight, Loader2, Phone } from "lucide-react";
+import { MapPin, Car, Banknote, Shield, Clock, AlertCircle, User, ArrowRight, Loader2, Phone, RefreshCw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import SEO from "@/components/SEO";
 import zuvioLogo from "@/assets/zuvio-logo.png";
 import { logVehicleFetchFailure, logVehicleFetchEmpty } from "@/lib/telemetry";
 
-const PhotoFallback = ({ className = "", showUnavailable = false }: { className?: string; showUnavailable?: boolean }) => (
+const PhotoFallback = ({
+  className = "",
+  showUnavailable = false,
+  onRetry,
+}: {
+  className?: string;
+  showUnavailable?: boolean;
+  onRetry?: () => void;
+}) => (
   <div
     className={`relative w-full h-full flex items-center justify-center ${className}`}
     style={{ background: "#0d1b2e", borderBottom: "3px solid #2dd4bf" }}
   >
     <img src={zuvioLogo} alt="Zuvio placeholder" className="w-[120px] h-auto object-contain opacity-80" />
     {showUnavailable && (
-      <span className="absolute bottom-2 left-1/2 -translate-x-1/2 px-2 py-1 rounded-md bg-background/80 text-foreground text-xs font-medium border border-border backdrop-blur-sm">
-        Photo unavailable
-      </span>
+      <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex items-center gap-2">
+        <span className="px-2 py-1 rounded-md bg-background/80 text-foreground text-xs font-medium border border-border backdrop-blur-sm">
+          Photo unavailable
+        </span>
+        {onRetry && (
+          <button
+            type="button"
+            onClick={onRetry}
+            aria-label="Retry loading photo"
+            className="inline-flex items-center gap-1 px-2 py-1 rounded-md bg-primary/90 text-primary-foreground text-xs font-medium border border-primary/40 hover:bg-primary transition-colors"
+          >
+            <RefreshCw className="h-3 w-3" /> Retry
+          </button>
+        )}
+      </div>
     )}
   </div>
 );
@@ -37,12 +57,25 @@ const SafeImage = ({
   loading?: "eager" | "lazy";
 }) => {
   const [errored, setErrored] = useState(false);
+  const [cacheBust, setCacheBust] = useState(0);
   const isValid = typeof src === "string" && src.trim().length > 0 && src !== "null" && src !== "undefined";
   if (!isValid) return <PhotoFallback />;
-  if (errored) return <PhotoFallback showUnavailable />;
+  if (errored) {
+    return (
+      <PhotoFallback
+        showUnavailable
+        onRetry={() => {
+          setErrored(false);
+          setCacheBust((n) => n + 1);
+        }}
+      />
+    );
+  }
+  const finalSrc = cacheBust > 0 ? `${src}${src.includes("?") ? "&" : "?"}retry=${cacheBust}` : src;
   return (
     <img
-      src={src}
+      key={cacheBust}
+      src={finalSrc}
       alt={alt}
       className={className}
       loading={loading}
