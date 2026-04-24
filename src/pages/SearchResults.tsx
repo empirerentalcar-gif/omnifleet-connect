@@ -7,19 +7,23 @@ import SEO from "@/components/SEO";
 import { supabase } from "@/integrations/supabase/client";
 import CitySelector from "@/components/CitySelector";
 import { logVehicleFetchFailure, logVehicleFetchEmpty } from "@/lib/telemetry";
+import { SafeImage } from "@/components/SafeImage";
 
 const vehicleTypes = ["All", "Sedan", "SUV", "Truck", "Van", "Compact", "Luxury"];
 
-interface Agency {
+interface VehicleCard {
   id: string;
-  name: string;
+  profileId: string;
+  agencyName: string;
   cashAccepted: boolean;
-  startingPrice: number;
+  dailyRate: number;
+  make: string;
+  model: string;
+  year: number;
+  vehicleType: string;
   city: string;
   state: string;
-  vehicleTypes: string[];
   image: string | null;
-  featuredVehicleId: string | null;
 }
 
 const SearchResults = () => {
@@ -29,7 +33,7 @@ const SearchResults = () => {
   const [pickupDate, setPickupDate] = useState(searchParams.get("pickup") || "");
   const [dropoffDate, setDropoffDate] = useState(searchParams.get("dropoff") || "");
   const [vehicleType, setVehicleType] = useState("All");
-  const [agencies, setAgencies] = useState<Agency[]>([]);
+  const [vehicles, setVehicles] = useState<VehicleCard[]>([]);
   const [loading, setLoading] = useState(true);
   const isMountedRef = useRef(true);
   const latestRequestRef = useRef(0);
@@ -51,7 +55,7 @@ const SearchResults = () => {
     }
 
     try {
-      const { data: vehicles, error } = await supabase
+      const { data: rows, error } = await supabase
         .from("available_vehicles_public")
         .select("*");
 
@@ -60,57 +64,43 @@ const SearchResults = () => {
         throw error;
       }
 
-      if (!vehicles || vehicles.length === 0) {
-        logVehicleFetchEmpty("search_results", { count: vehicles?.length ?? 0 });
+      if (!rows || rows.length === 0) {
+        logVehicleFetchEmpty("search_results", { count: rows?.length ?? 0 });
         if (isMountedRef.current && requestId === latestRequestRef.current) {
-          setAgencies([]);
+          setVehicles([]);
           setLoading(false);
         }
         return;
       }
 
-      const agencyMap = new Map<string, Agency>();
-
-      for (const v of vehicles) {
+      const list: VehicleCard[] = [];
+      for (const v of rows as any[]) {
         if (!v.profile_id) continue;
-        const name = (v as any).business_name || "Local Agency";
-        // Hide admin/test agencies
+        const name = v.business_name || "Local Agency";
         if (name.toLowerCase() === "admin" || name.toLowerCase() === "test") continue;
-
-        const existing = agencyMap.get(v.profile_id);
-        if (existing) {
-          if (v.daily_rate && v.daily_rate < existing.startingPrice) {
-            existing.startingPrice = v.daily_rate;
-            existing.featuredVehicleId = v.id;
-          }
-          if (v.vehicle_type && !existing.vehicleTypes.includes(v.vehicle_type)) {
-            existing.vehicleTypes.push(v.vehicle_type);
-          }
-          if (!existing.image && v.images && v.images.length > 0) {
-            existing.image = v.images[0];
-          }
-        } else {
-          agencyMap.set(v.profile_id, {
-            id: v.profile_id,
-            name,
-            cashAccepted: (v as any).cash_accepted || false,
-            startingPrice: v.daily_rate || 0,
-            city: v.location_city || "",
-            state: v.location_state || "",
-            vehicleTypes: v.vehicle_type ? [v.vehicle_type] : [],
-            image: v.images && v.images.length > 0 ? v.images[0] : null,
-            featuredVehicleId: v.id,
-          });
-        }
+        list.push({
+          id: v.id,
+          profileId: v.profile_id,
+          agencyName: name,
+          cashAccepted: !!v.cash_accepted,
+          dailyRate: Number(v.daily_rate) || 0,
+          make: v.make,
+          model: v.model,
+          year: v.year,
+          vehicleType: v.vehicle_type || "",
+          city: v.location_city || "",
+          state: v.location_state || "",
+          image: Array.isArray(v.images) && v.images.length > 0 ? v.images[0] : null,
+        });
       }
 
       if (isMountedRef.current && requestId === latestRequestRef.current) {
-        setAgencies(Array.from(agencyMap.values()));
+        setVehicles(list);
       }
     } catch (err) {
       logVehicleFetchFailure("search_results", err instanceof Error ? err.message : String(err));
       if (isMountedRef.current && requestId === latestRequestRef.current) {
-        setAgencies([]);
+        setVehicles([]);
       }
     } finally {
       if (isMountedRef.current && requestId === latestRequestRef.current) {
@@ -119,11 +109,11 @@ const SearchResults = () => {
     }
   };
 
-  const filtered = agencies.filter((a) => {
-    if (vehicleType !== "All" && !a.vehicleTypes.includes(vehicleType)) return false;
+  const filtered = vehicles.filter((v) => {
+    if (vehicleType !== "All" && v.vehicleType !== vehicleType) return false;
     if (location.trim()) {
       const loc = location.toLowerCase();
-      if (!a.city.toLowerCase().includes(loc) && !a.state.toLowerCase().includes(loc)) return false;
+      if (!v.city.toLowerCase().includes(loc) && !v.state.toLowerCase().includes(loc)) return false;
     }
     return true;
   });
@@ -237,89 +227,70 @@ const SearchResults = () => {
           ) : (
             <>
               <p className="text-white/40 text-sm mb-6">
-                {filtered.length} {filtered.length === 1 ? "agency" : "agencies"} found{location ? ` near ${location}` : ""}.
+                {filtered.length} {filtered.length === 1 ? "vehicle" : "vehicles"} found{location ? ` near ${location}` : ""}.
               </p>
 
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" style={{ display: "grid" }}>
-                {filtered.map((agency) => (
-                  <div
-                    key={agency.id}
-                    className="rounded-xl p-6 transition-all duration-200 hover:border-[#2dd4bf]/30"
-                    style={{ backgroundColor: "#132640", border: "1px solid rgba(255,255,255,0.08)" }}
-                  >
-                    <div className="flex items-start justify-between mb-3">
-                      <div>
-                        <Link
-                          to={`/agency/${agency.id}`}
-                          className="text-lg font-bold text-white hover:text-[#2dd4bf] transition-colors"
-                        >
-                          {agency.name}
-                        </Link>
-                        <p className="text-white/40 text-sm flex items-center gap-1 mt-1">
-                          <MapPin className="h-3 w-3" />
-                          {agency.city || "Location TBD"}{agency.state ? `, ${agency.state}` : ""}
-                        </p>
-                      </div>
-                      {agency.cashAccepted && (
-                        <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full text-[10px] font-semibold"
-                          style={{ backgroundColor: "rgba(45,212,191,0.15)", color: "#2dd4bf", border: "1px solid rgba(45,212,191,0.3)" }}>
-                          <Banknote className="h-3 w-3" />
-                          Cash
-                        </span>
-                      )}
-                    </div>
-
-                    <div className="flex items-baseline gap-1 mb-4">
-                      <span className="text-white/40 text-sm">From</span>
-                      <span className="text-2xl font-bold" style={{ color: "#2dd4bf" }}>${agency.startingPrice}</span>
-                      <span className="text-white/40 text-sm">/day</span>
-                    </div>
-
-                    <div className="flex flex-wrap gap-1.5 mb-5">
-                      {agency.vehicleTypes.map((vt) => (
-                        <span key={vt} className="px-2 py-0.5 rounded text-[11px] text-white/50"
-                          style={{ backgroundColor: "rgba(255,255,255,0.06)" }}>
-                          {vt}
-                        </span>
-                      ))}
-                    </div>
-
-                    <button
-                      onClick={() => navigate(`/agency/${agency.id}`)}
-                      className="w-full py-2.5 rounded-lg font-bold text-sm transition-colors"
-                      style={{ backgroundColor: "#2dd4bf", color: "#0d1b2e" }}
-                      onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "#5eead4")}
-                      onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "#2dd4bf")}
+                {filtered.map((v) => {
+                  const label = `${v.year} ${v.make} ${v.model}`;
+                  return (
+                    <div
+                      key={v.id}
+                      className="rounded-xl overflow-hidden transition-all duration-200 hover:border-[#2dd4bf]/30 flex flex-col"
+                      style={{ backgroundColor: "#132640", border: "1px solid rgba(255,255,255,0.08)" }}
                     >
-                      Request Reservation
-                    </button>
-                    {agency.featuredVehicleId && (
-                      <Link
-                        to={`/vehicles/${agency.featuredVehicleId}`}
-                        className="block w-full mt-2 py-2.5 rounded-lg font-semibold text-sm text-center transition-colors"
-                        style={{ backgroundColor: "transparent", color: "#2dd4bf", border: "1px solid rgba(45,212,191,0.4)" }}
-                        onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "rgba(45,212,191,0.1)")}
-                        onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "transparent")}
-                      >
-                        View Details & Reserve
+                      <Link to={`/vehicles/${v.id}`} className="block aspect-video relative" style={{ backgroundColor: "#0d1b2e" }}>
+                        <SafeImage src={v.image ?? ""} alt={label} className="w-full h-full object-cover" />
                       </Link>
-                    )}
-                  </div>
-                ))}
+                      <div className="p-5 flex flex-col flex-1">
+                        <div className="flex items-start justify-between mb-2 gap-2">
+                          <Link to={`/vehicles/${v.id}`} className="text-lg font-bold text-white hover:text-[#2dd4bf] transition-colors leading-tight">
+                            {label}
+                          </Link>
+                          {v.cashAccepted && (
+                            <span className="shrink-0 inline-flex items-center gap-1 px-2 py-1 rounded-full text-[10px] font-semibold"
+                              style={{ backgroundColor: "rgba(45,212,191,0.15)", color: "#2dd4bf", border: "1px solid rgba(45,212,191,0.3)" }}>
+                              <Banknote className="h-3 w-3" /> Cash
+                            </span>
+                          )}
+                        </div>
+                        <Link to={`/agency/${v.profileId}`} className="text-white/50 text-xs hover:text-[#2dd4bf] mb-1">
+                          {v.agencyName}
+                        </Link>
+                        <p className="text-white/40 text-xs flex items-center gap-1 mb-3">
+                          <MapPin className="h-3 w-3" />
+                          {v.city || "Location TBD"}{v.state ? `, ${v.state}` : ""}
+                          {v.vehicleType && <span className="ml-2 px-1.5 py-0.5 rounded text-[10px]" style={{ backgroundColor: "rgba(255,255,255,0.06)" }}>{v.vehicleType}</span>}
+                        </p>
+                        <div className="flex items-baseline gap-1 mb-4 mt-auto">
+                          <span className="text-2xl font-bold" style={{ color: "#2dd4bf" }}>${v.dailyRate}</span>
+                          <span className="text-white/40 text-sm">/day</span>
+                        </div>
+                        <button
+                          onClick={() => navigate(`/vehicles/${v.id}`)}
+                          className="w-full py-2.5 rounded-lg font-bold text-sm transition-colors"
+                          style={{ backgroundColor: "#2dd4bf", color: "#0d1b2e" }}
+                        >
+                          View Details & Reserve
+                        </button>
+                      </div>
+                    </div>
+                  );
+                })}
               </div>
 
               {filtered.length === 0 && (
                 <div className="text-center py-16 rounded-xl" style={{ backgroundColor: "#132640", border: "1px solid rgba(255,255,255,0.08)" }}>
                   <Car className="h-16 w-16 mx-auto mb-4" style={{ color: "rgba(255,255,255,0.15)" }} />
                   <p className="text-xl font-bold text-white mb-2">
-                    {agencies.length === 0 ? "No agencies available yet" : "No agencies match your filters"}
+                    {vehicles.length === 0 ? "No vehicles available yet" : "No vehicles match your filters"}
                   </p>
                   <p className="text-white/40 mb-6">
-                    {agencies.length === 0
+                    {vehicles.length === 0
                       ? "We're actively onboarding new agencies. Check back soon!"
-                      : `Try clearing your filters to see all ${agencies.length} ${agencies.length === 1 ? "agency" : "agencies"}.`}
+                      : `Try clearing your filters to see all ${vehicles.length} ${vehicles.length === 1 ? "vehicle" : "vehicles"}.`}
                   </p>
-                  {agencies.length > 0 && (
+                  {vehicles.length > 0 && (
                     <button
                       onClick={() => { setLocation(""); setVehicleType("All"); setPickupDate(""); setDropoffDate(""); }}
                       className="px-6 py-2.5 rounded-lg font-bold text-sm transition-colors"
