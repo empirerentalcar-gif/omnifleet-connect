@@ -46,6 +46,7 @@ import { useToast } from "@/hooks/use-toast";
 import { format } from "date-fns";
 import { SafeImage } from "@/components/SafeImage";
 import { cn } from "@/lib/utils";
+import { StripeConnectCard } from "@/components/owner/StripeConnectCard";
 
 type Reservation = {
   id: string;
@@ -442,6 +443,9 @@ const OwnerDashboard = () => {
               Refresh
             </Button>
           </div>
+
+          {/* Stripe Connect onboarding */}
+          <StripeConnectCard />
 
           {/* Stats */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-10">
