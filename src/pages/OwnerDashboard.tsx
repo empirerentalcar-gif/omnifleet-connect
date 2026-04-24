@@ -39,6 +39,8 @@ import {
   Pencil,
   Trash2,
   X,
+  Upload,
+  ImagePlus,
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { format } from "date-fns";
@@ -68,6 +70,7 @@ type Vehicle = {
   status: string;
   location_city: string | null;
   location_state: string | null;
+  images: string[] | null;
 };
 
 type Profile = {
@@ -175,7 +178,7 @@ const OwnerDashboard = () => {
           .order("created_at", { ascending: false }),
         supabase
           .from("vehicles")
-          .select("id, make, model, year, vehicle_type, daily_rate, status, location_city, location_state")
+          .select("id, make, model, year, vehicle_type, daily_rate, status, location_city, location_state, images")
           .eq("profile_id", profileData.id)
           .order("created_at", { ascending: false }),
       ]);
