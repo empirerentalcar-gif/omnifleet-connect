@@ -832,6 +832,74 @@ const OwnerDashboard = () => {
                         {v.location_city}, {v.location_state}
                       </p>
                     )}
+
+                    {/* Photos */}
+                    <div className="mt-4 pt-4 border-t border-border/40">
+                      <div className="flex items-center justify-between mb-2">
+                        <p className="text-xs font-semibold text-muted-foreground">
+                          Photos ({(v.images || []).length}/{MAX_PHOTOS})
+                        </p>
+                        {(v.images || []).length < MAX_PHOTOS && (
+                          <label className="cursor-pointer">
+                            <input
+                              type="file"
+                              accept="image/*"
+                              multiple
+                              className="hidden"
+                              disabled={uploadingPhotoId === v.id}
+                              onChange={(e) => {
+                                if (e.target.files) uploadVehiclePhotos(v, e.target.files);
+                                e.target.value = "";
+                              }}
+                            />
+                            <span className="inline-flex items-center gap-1 text-xs text-primary hover:underline">
+                              {uploadingPhotoId === v.id ? (
+                                <>Uploading...</>
+                              ) : (
+                                <>
+                                  <Upload className="h-3 w-3" /> Add
+                                </>
+                              )}
+                            </span>
+                          </label>
+                        )}
+                      </div>
+                      {(v.images || []).length === 0 ? (
+                        <label className="cursor-pointer">
+                          <input
+                            type="file"
+                            accept="image/*"
+                            multiple
+                            className="hidden"
+                            disabled={uploadingPhotoId === v.id}
+                            onChange={(e) => {
+                              if (e.target.files) uploadVehiclePhotos(v, e.target.files);
+                              e.target.value = "";
+                            }}
+                          />
+                          <div className="flex flex-col items-center justify-center gap-1 py-4 rounded-lg border border-dashed border-border/60 text-muted-foreground hover:border-primary/50 hover:text-primary transition-colors">
+                            <ImagePlus className="h-5 w-5" />
+                            <span className="text-xs">Upload up to 5 photos</span>
+                          </div>
+                        </label>
+                      ) : (
+                        <div className="grid grid-cols-3 gap-2">
+                          {(v.images || []).map((url) => (
+                            <div key={url} className="relative group/photo aspect-square rounded-md overflow-hidden bg-secondary/30">
+                              <img src={url} alt="Vehicle" className="w-full h-full object-cover" loading="lazy" />
+                              <button
+                                type="button"
+                                onClick={() => removeVehiclePhoto(v, url)}
+                                className="absolute top-1 right-1 bg-background/80 hover:bg-destructive hover:text-destructive-foreground rounded-full p-0.5 opacity-0 group-hover/photo:opacity-100 transition-opacity"
+                                aria-label="Remove photo"
+                              >
+                                <X className="h-3 w-3" />
+                              </button>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                    </div>
                   </div>
                 ))}
               </div>
