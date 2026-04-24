@@ -19,6 +19,7 @@ interface Agency {
   state: string;
   vehicleTypes: string[];
   image: string | null;
+  featuredVehicleId: string | null;
 }
 
 const SearchResults = () => {
