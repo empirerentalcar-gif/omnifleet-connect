@@ -161,34 +161,43 @@ export function StripeConnectCard() {
             </div>
           )}
 
-          {payout?.status && (
-            <div className="mt-4 flex items-start gap-2 text-xs">
-              <Banknote className="h-4 w-4 mt-0.5 text-muted-foreground shrink-0" />
-              <div>
+          <div className="mt-4 flex items-start gap-2 text-xs">
+            <Banknote className="h-4 w-4 mt-0.5 text-muted-foreground shrink-0" />
+            <div>
+              {payout?.status ? (
+                <>
+                  <div className="text-muted-foreground">
+                    Last payout:{" "}
+                    <span
+                      className={
+                        payout.status === "paid"
+                          ? "text-emerald-400 font-medium"
+                          : "text-red-400 font-medium"
+                      }
+                    >
+                      {payout.status === "paid" ? "Paid" : "Failed"}
+                    </span>
+                    {typeof payout.amount_cents === "number" && (
+                      <> · ${(payout.amount_cents / 100).toFixed(2)}</>
+                    )}
+                    {payout.at && (
+                      <> · {new Date(payout.at).toLocaleDateString()}</>
+                    )}
+                  </div>
+                  {payout.status !== "paid" && payout.failure_message && (
+                    <div className="text-red-400 mt-1">{payout.failure_message}</div>
+                  )}
+                </>
+              ) : (
                 <div className="text-muted-foreground">
-                  Last payout:{" "}
-                  <span
-                    className={
-                      payout.status === "paid"
-                        ? "text-emerald-400 font-medium"
-                        : "text-red-400 font-medium"
-                    }
-                  >
-                    {payout.status === "paid" ? "Paid" : "Failed"}
-                  </span>
-                  {typeof payout.amount_cents === "number" && (
-                    <> · ${(payout.amount_cents / 100).toFixed(2)}</>
-                  )}
-                  {payout.at && (
-                    <> · {new Date(payout.at).toLocaleDateString()}</>
-                  )}
+                  Last payout: <span className="font-medium text-foreground/80">No payouts yet</span>
+                  <div className="text-muted-foreground/80 mt-1">
+                    Payouts will appear here once Stripe sends funds to your bank account.
+                  </div>
                 </div>
-                {payout.status !== "paid" && payout.failure_message && (
-                  <div className="text-red-400 mt-1">{payout.failure_message}</div>
-                )}
-              </div>
+              )}
             </div>
-          )}
+          </div>
         </div>
 
         <div className="flex flex-col sm:flex-row gap-2 shrink-0">
