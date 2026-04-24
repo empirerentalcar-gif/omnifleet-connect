@@ -7,6 +7,47 @@ import SEO from "@/components/SEO";
 import zuvioLogo from "@/assets/zuvio-logo.png";
 import { logVehicleFetchFailure, logVehicleFetchEmpty } from "@/lib/telemetry";
 
+const PhotoFallback = ({ className = "" }: { className?: string }) => (
+  <div
+    className={`w-full h-full flex items-center justify-center ${className}`}
+    style={{ background: "#0d1b2e", borderBottom: "3px solid #2dd4bf" }}
+  >
+    <img src={zuvioLogo} alt="Zuvio placeholder" className="w-[120px] h-auto object-contain opacity-80" />
+  </div>
+);
+
+const SafeImage = ({
+  src,
+  alt,
+  className,
+  width,
+  height,
+  loading = "lazy",
+}: {
+  src: string;
+  alt: string;
+  className?: string;
+  width?: number;
+  height?: number;
+  loading?: "eager" | "lazy";
+}) => {
+  const [errored, setErrored] = useState(false);
+  const isValid = typeof src === "string" && src.trim().length > 0 && src !== "null" && src !== "undefined";
+  if (!isValid || errored) return <PhotoFallback />;
+  return (
+    <img
+      src={src}
+      alt={alt}
+      className={className}
+      loading={loading}
+      decoding="async"
+      width={width}
+      height={height}
+      onError={() => setErrored(true)}
+    />
+  );
+};
+
 interface AgencyData {
   name: string;
   city: string;
@@ -166,18 +207,16 @@ const AgencyDetail = () => {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
             <div className="md:col-span-2 rounded-2xl overflow-hidden h-64 md:h-80">
               {agency.photos.length > 0 ? (
-                <img src={agency.photos[0]} alt={agency.name} className="w-full h-full object-cover" loading="eager" decoding="async" width={800} height={320} />
+                <SafeImage src={agency.photos[0]} alt={agency.name} className="w-full h-full object-cover" loading="eager" width={800} height={320} />
               ) : (
-                <div className="w-full h-full flex items-center justify-center" style={{ background: '#0d1b2e', borderBottom: '3px solid #2dd4bf' }}>
-                  <img src={zuvioLogo} alt="Zuvio" className="w-[180px] h-auto object-contain opacity-80" />
-                </div>
+                <PhotoFallback />
               )}
             </div>
             {agency.photos.length > 1 && (
               <div className="grid grid-rows-2 gap-4">
                 {agency.photos.slice(1, 3).map((p, i) => (
                   <div key={i} className="rounded-2xl overflow-hidden">
-                    <img src={p} alt={`${agency.name} photo ${i + 2}`} className="w-full h-full object-cover" loading="lazy" decoding="async" width={400} height={160} />
+                    <SafeImage src={p} alt={`${agency.name} photo ${i + 2}`} className="w-full h-full object-cover" width={400} height={160} />
                   </div>
                 ))}
               </div>
