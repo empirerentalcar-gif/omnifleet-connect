@@ -7,12 +7,17 @@ import SEO from "@/components/SEO";
 import zuvioLogo from "@/assets/zuvio-logo.png";
 import { logVehicleFetchFailure, logVehicleFetchEmpty } from "@/lib/telemetry";
 
-const PhotoFallback = ({ className = "" }: { className?: string }) => (
+const PhotoFallback = ({ className = "", showUnavailable = false }: { className?: string; showUnavailable?: boolean }) => (
   <div
-    className={`w-full h-full flex items-center justify-center ${className}`}
+    className={`relative w-full h-full flex items-center justify-center ${className}`}
     style={{ background: "#0d1b2e", borderBottom: "3px solid #2dd4bf" }}
   >
     <img src={zuvioLogo} alt="Zuvio placeholder" className="w-[120px] h-auto object-contain opacity-80" />
+    {showUnavailable && (
+      <span className="absolute bottom-2 left-1/2 -translate-x-1/2 px-2 py-1 rounded-md bg-background/80 text-foreground text-xs font-medium border border-border backdrop-blur-sm">
+        Photo unavailable
+      </span>
+    )}
   </div>
 );
 
@@ -33,7 +38,8 @@ const SafeImage = ({
 }) => {
   const [errored, setErrored] = useState(false);
   const isValid = typeof src === "string" && src.trim().length > 0 && src !== "null" && src !== "undefined";
-  if (!isValid || errored) return <PhotoFallback />;
+  if (!isValid) return <PhotoFallback />;
+  if (errored) return <PhotoFallback showUnavailable />;
   return (
     <img
       src={src}
