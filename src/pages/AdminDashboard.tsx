@@ -179,30 +179,32 @@ const AdminDashboard = () => {
   return (
     <div className="min-h-screen bg-background">
       <header className="border-b bg-card">
-        <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-          <div>
-            <h1 className="text-2xl font-bold">Platform Administration</h1>
-            <p className="text-sm text-muted-foreground">Zuvio Admin Dashboard</p>
+        <div className="container mx-auto px-4 py-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4">
+          <div className="min-w-0">
+            <h1 className="text-xl sm:text-2xl font-bold truncate">Platform Administration</h1>
+            <p className="text-xs sm:text-sm text-muted-foreground">Zuvio Admin Dashboard</p>
           </div>
-          <div className="flex gap-2">
-            <Link to="/admin/invite-codes">
-              <Button variant="outline" size="sm">
-                <KeyRound className="mr-2 h-4 w-4" /> Manage Invite Codes
+          <div className="flex flex-wrap gap-2">
+            <Link to="/admin/invite-codes" className="flex-1 sm:flex-none min-w-0">
+              <Button variant="outline" size="sm" className="w-full sm:w-auto">
+                <KeyRound className="mr-2 h-4 w-4 shrink-0" />
+                <span className="truncate">Invite Codes</span>
               </Button>
             </Link>
-            <Link to="/admin/agencies">
-              <Button variant="outline" size="sm">
-                Manage Agencies <ArrowRight className="ml-2 h-4 w-4" />
+            <Link to="/admin/agencies" className="flex-1 sm:flex-none min-w-0">
+              <Button variant="outline" size="sm" className="w-full sm:w-auto">
+                <span className="truncate">Agencies</span>
+                <ArrowRight className="ml-2 h-4 w-4 shrink-0" />
               </Button>
             </Link>
-            <Link to="/">
-              <Button variant="ghost" size="sm">Back to Site</Button>
+            <Link to="/" className="flex-1 sm:flex-none min-w-0">
+              <Button variant="ghost" size="sm" className="w-full sm:w-auto">Back to Site</Button>
             </Link>
           </div>
         </div>
       </header>
 
-      <main className="container mx-auto px-4 py-8 space-y-8">
+      <main className="container mx-auto px-4 py-6 sm:py-8 space-y-6 sm:space-y-8 max-w-full overflow-x-hidden">
         {/* KPI Cards */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-4 gap-4">
           {kpiCards.map((kpi) => (

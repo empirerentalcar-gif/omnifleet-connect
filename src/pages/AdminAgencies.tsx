@@ -561,18 +561,18 @@ const AdminAgencies = () => {
   return (
     <div className="min-h-screen bg-background">
       <header className="border-b bg-card">
-        <div className="container mx-auto px-4 py-4 flex items-center gap-4">
-          <Link to="/admin">
+        <div className="container mx-auto px-4 py-4 flex items-center gap-3">
+          <Link to="/admin" className="shrink-0">
             <Button variant="ghost" size="icon"><ArrowLeft className="h-5 w-5" /></Button>
           </Link>
-          <h1 className="text-2xl font-bold">Agencies Management</h1>
+          <h1 className="text-xl sm:text-2xl font-bold truncate">Agencies Management</h1>
         </div>
       </header>
 
-      <main className="container mx-auto px-4 py-8 space-y-6">
-        <div className="flex items-center justify-between gap-4 flex-wrap">
-          <div className="flex items-center gap-3 flex-1 flex-wrap">
-            <div className="relative max-w-md flex-1 min-w-[200px]">
+      <main className="container mx-auto px-4 py-6 sm:py-8 space-y-6 max-w-full overflow-x-hidden">
+        <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-3 lg:gap-4">
+          <div className="flex flex-col sm:flex-row sm:items-center gap-3 flex-1">
+            <div className="relative w-full sm:max-w-md sm:flex-1">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               <Input
                 placeholder="Search by name or city..."
@@ -581,9 +581,10 @@ const AdminAgencies = () => {
                 className="pl-10"
               />
             </div>
+            <div className="flex gap-2 sm:gap-3">
             <Select value={cityFilter} onValueChange={setCityFilter}>
-              <SelectTrigger className="w-[200px]">
-                <Filter className="h-4 w-4 mr-2" />
+              <SelectTrigger className="w-full sm:w-[200px] flex-1 sm:flex-none">
+                <Filter className="h-4 w-4 mr-2 shrink-0" />
                 <SelectValue placeholder="Filter by city" />
               </SelectTrigger>
               <SelectContent>
@@ -594,7 +595,7 @@ const AdminAgencies = () => {
               </SelectContent>
             </Select>
             <Select value={trialFilter} onValueChange={setTrialFilter}>
-              <SelectTrigger className="w-[180px]">
+              <SelectTrigger className="w-full sm:w-[180px] flex-1 sm:flex-none">
                 <SelectValue placeholder="Trial status" />
               </SelectTrigger>
               <SelectContent>
@@ -606,8 +607,9 @@ const AdminAgencies = () => {
                 <SelectItem value="founding">Founding Members</SelectItem>
               </SelectContent>
             </Select>
+            </div>
           </div>
-          <Button variant="outline" onClick={exportCSV}>
+          <Button variant="outline" onClick={exportCSV} className="w-full lg:w-auto">
             <Download className="h-4 w-4 mr-2" /> Export CSV
           </Button>
         </div>

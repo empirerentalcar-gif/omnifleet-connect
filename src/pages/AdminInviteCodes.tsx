@@ -221,17 +221,17 @@ const AdminInviteCodes = () => {
   return (
     <div className="min-h-screen bg-background">
       <header className="border-b bg-card">
-        <div className="container mx-auto px-4 py-4 flex items-center gap-4">
-          <Link to="/admin">
+        <div className="container mx-auto px-4 py-4 flex items-center gap-3">
+          <Link to="/admin" className="shrink-0">
             <Button variant="ghost" size="icon"><ArrowLeft className="h-5 w-5" /></Button>
           </Link>
-          <h1 className="text-2xl font-bold">Invite Code Management</h1>
+          <h1 className="text-xl sm:text-2xl font-bold truncate">Invite Code Management</h1>
         </div>
       </header>
 
-      <main className="container mx-auto px-4 py-8 space-y-6">
-        <div className="flex items-center justify-between gap-4 flex-wrap">
-          <div className="relative max-w-md flex-1">
+      <main className="container mx-auto px-4 py-6 sm:py-8 space-y-6 max-w-full overflow-x-hidden">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4">
+          <div className="relative w-full sm:max-w-md sm:flex-1">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
             <Input
               placeholder="Search by code or city..."
@@ -241,11 +241,11 @@ const AdminInviteCodes = () => {
             />
           </div>
           <div className="flex gap-2">
-            <Button variant="outline" onClick={exportCSV}>
-              <Download className="h-4 w-4 mr-2" /> Export CSV
+            <Button variant="outline" onClick={exportCSV} className="flex-1 sm:flex-none">
+              <Download className="h-4 w-4 mr-2 shrink-0" /> <span className="truncate">Export CSV</span>
             </Button>
-            <Button onClick={() => { setNewCode({ code: '', city: '', max_uses: 25, expires_at: undefined }); setCreateOpen(true); }}>
-              <Plus className="h-4 w-4 mr-2" /> Create New Code
+            <Button onClick={() => { setNewCode({ code: '', city: '', max_uses: 25, expires_at: undefined }); setCreateOpen(true); }} className="flex-1 sm:flex-none">
+              <Plus className="h-4 w-4 mr-2 shrink-0" /> <span className="truncate">Create Code</span>
             </Button>
           </div>
         </div>
