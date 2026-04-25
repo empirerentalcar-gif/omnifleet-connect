@@ -45,6 +45,7 @@ const NewYorkLanding = lazy(() => import("./pages/NewYorkLanding"));
 const Blog = lazy(() => import("./pages/Blog"));
 const BlogPost = lazy(() => import("./pages/BlogPost"));
 const ResetPassword = lazy(() => import("./pages/ResetPassword"));
+const CancellationPolicy = lazy(() => import("./pages/CancellationPolicy"));
 
 const queryClient = new QueryClient();
 
@@ -95,6 +96,7 @@ const GlobalLayout = () => {
           <Route path="/blog" element={<Blog />} />
           <Route path="/blog/:slug" element={<BlogPost />} />
           <Route path="/reset-password" element={<ResetPassword />} />
+          <Route path="/cancellation-policy" element={<CancellationPolicy />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
