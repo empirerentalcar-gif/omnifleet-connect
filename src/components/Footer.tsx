@@ -106,7 +106,7 @@ const Footer = () => {
             © 2026 Zuvio. All rights reserved.
           </p>
           <Link to="/admin" className="text-sm text-white/40 hover:text-white/60 transition-colors">
-            Admin
+            Team Login
           </Link>
         </div>
       </div>
