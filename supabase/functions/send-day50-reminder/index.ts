@@ -104,6 +104,22 @@ serve(async (req) => {
   try {
     if (!RESEND_API_KEY) throw new Error("RESEND_API_KEY not set");
 
+    if (req.method === "POST") {
+      let body: any = null;
+      try { body = await req.json(); } catch (_) { body = null; }
+      if (body?.test === true && body?.to) {
+        const ok = await sendEmail(
+          String(body.to),
+          "[TEST] ⚠ 10 Days Remaining — Don't Lose Your Spot on Zuvio",
+          buildEmailHtml(String(body.agency_name ?? "Test Agency"))
+        );
+        return new Response(
+          JSON.stringify({ success: ok, test: true, to: body.to }),
+          { headers: { ...corsHeaders, "Content-Type": "application/json" }, status: ok ? 200 : 500 }
+        );
+      }
+    }
+
     const supabase = createClient(
       Deno.env.get("SUPABASE_URL") ?? "",
       Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? "",
