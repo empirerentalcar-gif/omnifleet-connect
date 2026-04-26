@@ -127,9 +127,12 @@ export function StripeConnectCard() {
             )}
           </div>
           <p className="text-sm text-muted-foreground">
-            Connect a Stripe Express account to receive renter payouts. Zuvio collects
-            the rental, deducts a 5% platform fee, and pays the remainder directly to
-            your bank on the pickup date.
+            <span className="text-foreground font-medium">Recommended.</span>{" "}
+            Connect a Stripe Express account to start accepting paid bookings and
+            receive renter payouts. Zuvio collects the rental, deducts a 5% platform
+            fee, and pays the remainder directly to your bank on the pickup date.
+            Your listings stay visible during your free trial — Stripe is only required
+            to receive paid bookings.
           </p>
 
           {status?.requirements?.currently_due && status.requirements.currently_due.length > 0 && (
