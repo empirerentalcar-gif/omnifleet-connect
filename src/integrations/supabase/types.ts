@@ -62,6 +62,7 @@ export type Database = {
           created_at: string
           day40_reminder_sent: boolean
           day50_reminder_sent: boolean
+          day60_notice_sent: boolean
           email: string | null
           founding_member_number: number | null
           grace_period_end: string | null
@@ -96,6 +97,7 @@ export type Database = {
           created_at?: string
           day40_reminder_sent?: boolean
           day50_reminder_sent?: boolean
+          day60_notice_sent?: boolean
           email?: string | null
           founding_member_number?: number | null
           grace_period_end?: string | null
@@ -130,6 +132,7 @@ export type Database = {
           created_at?: string
           day40_reminder_sent?: boolean
           day50_reminder_sent?: boolean
+          day60_notice_sent?: boolean
           email?: string | null
           founding_member_number?: number | null
           grace_period_end?: string | null
