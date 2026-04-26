@@ -69,7 +69,7 @@ const Header = () => {
                 {isAdmin && (
                   <Button variant="ghost" size="sm" onClick={() => navigate('/admin')}>
                     <Shield className="h-4 w-4 mr-1" />
-                    Admin
+                    Team Login
                   </Button>
                 )}
                 {!isAdmin && (
@@ -134,7 +134,7 @@ const Header = () => {
                     {isAdmin && (
                       <Button variant="ghost" size="sm" className="flex-1" onClick={() => { navigate('/admin'); setMobileMenuOpen(false); }}>
                         <Shield className="h-4 w-4 mr-1" />
-                        Admin
+                        Team Login
                       </Button>
                     )}
                     {!isAdmin && (
