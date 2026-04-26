@@ -49,6 +49,7 @@ import { cn } from "@/lib/utils";
 import { StripeConnectCard } from "@/components/owner/StripeConnectCard";
 import { SubscriptionCard } from "@/components/owner/SubscriptionCard";
 import { BookingsSection } from "@/components/owner/BookingsSection";
+import { Sparkles } from "lucide-react";
 
 type Reservation = {
   id: string;
@@ -481,6 +482,30 @@ const OwnerDashboard = () => {
           </div>
 
           {/* Stripe Connect onboarding */}
+          {(() => {
+            const missingPhotos = vehicles.some((v) => !v.images || v.images.length === 0);
+            const missingRates = vehicles.some((v) => !v.daily_rate || v.daily_rate <= 0);
+            const noVehicles = vehicles.length === 0;
+            if (!missingPhotos && !missingRates && !noVehicles) return null;
+            const items: string[] = [];
+            if (noVehicles) items.push("add your first vehicle");
+            if (missingPhotos) items.push("upload photos");
+            if (missingRates) items.push("set daily rates");
+            return (
+              <div className="rounded-xl p-5 mb-6 border border-primary/30 bg-gradient-to-r from-primary/10 to-transparent flex items-start gap-3">
+                <Sparkles className="h-5 w-5 text-primary mt-0.5 shrink-0" />
+                <div className="flex-1">
+                  <h3 className="font-semibold text-sm">Complete your setup to unlock your full earning potential</h3>
+                  <p className="text-sm text-muted-foreground mt-1">
+                    Your listings are live during your free trial. To start accepting paid
+                    bookings, connect Stripe and {items.join(", ")}. You can keep using the
+                    dashboard normally in the meantime.
+                  </p>
+                </div>
+              </div>
+            );
+          })()}
+
           <StripeConnectCard />
 
           {/* Subscription / Billing */}
