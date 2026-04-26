@@ -7,19 +7,23 @@ export const PhotoFallback = ({
   showUnavailable = false,
   onRetry,
   compact = false,
+  alt = "Vehicle photo not uploaded yet",
 }: {
   className?: string;
   showUnavailable?: boolean;
   onRetry?: () => void;
   compact?: boolean;
+  alt?: string;
 }) => (
   <div
     className={`relative w-full h-full flex items-center justify-center ${className}`}
     style={{ background: "#0d1b2e", borderBottom: "3px solid #2dd4bf" }}
+    role="img"
+    aria-label={alt}
   >
     <img
       src={zuvioLogo}
-      alt="Zuvio placeholder"
+      alt={alt}
       className={`${compact ? "w-[60%] max-w-[100px]" : "w-[120px]"} h-auto object-contain opacity-80`}
     />
     {showUnavailable && (
@@ -68,12 +72,13 @@ export const SafeImage = memo(({ src, alt, className, width, height, loading = "
   }
 
   const isValid = typeof src === "string" && src.trim().length > 0 && src !== "null" && src !== "undefined";
-  if (!isValid) return <PhotoFallback compact={compact} />;
+  if (!isValid) return <PhotoFallback compact={compact} alt="Vehicle photo not uploaded yet" />;
   if (errored) {
     return (
       <PhotoFallback
         compact={compact}
         showUnavailable
+        alt={alt || "Vehicle photo not uploaded yet"}
         onRetry={() => {
           setErrored(false);
           setLoaded(false);
