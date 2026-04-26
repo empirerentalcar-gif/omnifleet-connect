@@ -29,3 +29,6 @@ verify_jwt = false
 
 [functions.capture-pickup-day-bookings]
 verify_jwt = false
+
+[functions.send-day40-reminder]
+verify_jwt = false

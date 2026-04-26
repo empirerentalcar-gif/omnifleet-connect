@@ -60,6 +60,7 @@ export type Database = {
           approved: boolean
           city: string | null
           created_at: string
+          day40_reminder_sent: boolean
           email: string | null
           founding_member_number: number | null
           grace_period_end: string | null
@@ -92,6 +93,7 @@ export type Database = {
           approved?: boolean
           city?: string | null
           created_at?: string
+          day40_reminder_sent?: boolean
           email?: string | null
           founding_member_number?: number | null
           grace_period_end?: string | null
@@ -124,6 +126,7 @@ export type Database = {
           approved?: boolean
           city?: string | null
           created_at?: string
+          day40_reminder_sent?: boolean
           email?: string | null
           founding_member_number?: number | null
           grace_period_end?: string | null
