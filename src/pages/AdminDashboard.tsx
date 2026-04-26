@@ -1,6 +1,6 @@
 import { useEffect, useState, useMemo } from 'react';
 import { Link } from 'react-router-dom';
-import { Building2, CheckCircle, Clock, XCircle, ArrowRight, KeyRound, MapPin, Car, Crown, AlertTriangle, Mail } from 'lucide-react';
+import { Building2, CheckCircle, Clock, XCircle, ArrowRight, KeyRound, MapPin, Car, Crown, AlertTriangle } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAdmin } from '@/hooks/useAdmin';
 import { useIdleSignOut } from '@/hooks/useIdleSignOut';
@@ -48,32 +48,6 @@ const AdminDashboard = () => {
   const [agencies, setAgencies] = useState<Agency[]>([]);
   const [kpis, setKPIs] = useState<KPIs>({ total: 0, pending: 0, activeApproved: 0, inactive: 0, totalVehicles: 0, foundingMembers: 0, activeTrial: 0, paymentRequired: 0 });
   const [loading, setLoading] = useState(true);
-  const [testingEmail, setTestingEmail] = useState<string | null>(null);
-
-  const TEST_RECIPIENT = 'team@zuvio.us';
-
-  const handleTestEmail = async (
-    fn: 'send-day40-reminder' | 'send-day50-reminder' | 'send-day60-notice',
-    label: string
-  ) => {
-    setTestingEmail(fn);
-    try {
-      const { data, error } = await supabase.functions.invoke(fn, {
-        body: { test: true, to: TEST_RECIPIENT, agency_name: 'Test Agency' },
-      });
-      if (error) throw error;
-      if ((data as any)?.success === false) throw new Error('Email send failed');
-      toast({ title: `${label} sent`, description: `Test email sent to ${TEST_RECIPIENT}` });
-    } catch (err: any) {
-      toast({
-        title: `${label} failed`,
-        description: err?.message ?? String(err),
-        variant: 'destructive',
-      });
-    } finally {
-      setTestingEmail(null);
-    }
-  };
 
   // City breakdown
   const cityBreakdown = useMemo(() => {
@@ -277,44 +251,6 @@ const AdminDashboard = () => {
 
         {/* Reservations */}
         <AdminReservations />
-
-        {/* TEMPORARY — Test Email Section */}
-        <Card className="border-dashed border-2 border-amber-500/50 bg-amber-50/30 dark:bg-amber-950/10">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2 text-base">
-              <Mail className="h-5 w-5 text-amber-600" />
-              Test Email Section (Temporary)
-            </CardTitle>
-            <p className="text-xs text-muted-foreground">
-              Sends test versions of the trial reminder emails to <strong>{TEST_RECIPIENT}</strong>,
-              bypassing date and "already sent" checks. No DB updates are made. Remove this section
-              once testing is complete.
-            </p>
-          </CardHeader>
-          <CardContent className="flex flex-wrap gap-3">
-            <Button
-              variant="outline"
-              onClick={() => handleTestEmail('send-day40-reminder', 'Day 40 email')}
-              disabled={testingEmail !== null}
-            >
-              {testingEmail === 'send-day40-reminder' ? 'Sending…' : 'Test Day 40 Email'}
-            </Button>
-            <Button
-              variant="outline"
-              onClick={() => handleTestEmail('send-day50-reminder', 'Day 50 email')}
-              disabled={testingEmail !== null}
-            >
-              {testingEmail === 'send-day50-reminder' ? 'Sending…' : 'Test Day 50 Email'}
-            </Button>
-            <Button
-              variant="outline"
-              onClick={() => handleTestEmail('send-day60-notice', 'Day 60 email')}
-              disabled={testingEmail !== null}
-            >
-              {testingEmail === 'send-day60-notice' ? 'Sending…' : 'Test Day 60 Email'}
-            </Button>
-          </CardContent>
-        </Card>
 
         {/* Pending Agencies */}
         <div>
