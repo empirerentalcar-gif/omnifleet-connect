@@ -32,3 +32,6 @@ verify_jwt = false
 
 [functions.send-day40-reminder]
 verify_jwt = false
+
+[functions.send-day50-reminder]
+verify_jwt = false
