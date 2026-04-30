@@ -344,21 +344,53 @@ const OwnerDashboard = () => {
       toast({ title: "Limit reached", description: `Maximum ${MAX_PHOTOS} photos per vehicle.`, variant: "destructive" });
       return;
     }
-    const toUpload = Array.from(files).slice(0, remaining);
+    const all = Array.from(files);
+    const ALLOWED = ["image/jpeg", "image/jpg", "image/png", "image/webp"];
+    const MAX_BYTES = 10 * 1024 * 1024;
+    const heic = all.filter((f) => /\.(heic|heif)$/i.test(f.name) || f.type === "image/heic" || f.type === "image/heif");
+    const tooLarge = all.filter((f) => f.size > MAX_BYTES);
+    const wrongType = all.filter(
+      (f) => !heic.includes(f) && !ALLOWED.includes(f.type.toLowerCase()) && !/\.(jpe?g|png|webp)$/i.test(f.name),
+    );
+    if (heic.length) {
+      toast({
+        title: "iPhone HEIC photos not supported",
+        description: `Open the photo on your phone, tap Share → Save to Files (or email it to yourself) — it will convert to JPG. Then upload again.`,
+        variant: "destructive",
+      });
+    }
+    if (tooLarge.length) {
+      toast({
+        title: "Photo too large",
+        description: `${tooLarge.map((f) => f.name).join(", ")} exceeds the 10MB limit. Try a smaller version.`,
+        variant: "destructive",
+      });
+    }
+    if (wrongType.length) {
+      toast({
+        title: "Unsupported file type",
+        description: `${wrongType.map((f) => f.name).join(", ")} — only JPG, PNG, or WEBP images are accepted.`,
+        variant: "destructive",
+      });
+    }
+    const valid = all.filter((f) => !heic.includes(f) && !tooLarge.includes(f) && !wrongType.includes(f));
+    const toUpload = valid.slice(0, remaining);
+    if (valid.length > remaining) {
+      toast({
+        title: "Some photos skipped",
+        description: `Only ${remaining} more photo(s) allowed (limit ${MAX_PHOTOS}). Uploading the first ${remaining}.`,
+      });
+    }
+    if (!toUpload.length) return;
     setUploadingPhotoId(vehicle.id);
     const newUrls: string[] = [];
     try {
       for (const file of toUpload) {
-        if (!file.type.startsWith("image/")) continue;
-        if (file.size > 10 * 1024 * 1024) {
-          toast({ title: "Too large", description: `${file.name} exceeds 10MB.`, variant: "destructive" });
-          continue;
-        }
-        const ext = file.name.split(".").pop() || "jpg";
+        const ext = (file.name.split(".").pop() || "jpg").toLowerCase();
         const path = `${user.id}/${vehicle.id}/${Date.now()}-${Math.random().toString(36).slice(2, 8)}.${ext}`;
-        const { error: upErr } = await supabase.storage.from("vehicle-photos").upload(path, file, { cacheControl: "3600", upsert: false });
+        const { error: upErr } = await supabase.storage.from("vehicle-photos").upload(path, file, { cacheControl: "3600", upsert: false, contentType: file.type || undefined });
         if (upErr) {
-          toast({ title: "Upload failed", description: upErr.message, variant: "destructive" });
+          toast({ title: `Upload failed: ${file.name}`, description: upErr.message, variant: "destructive" });
           continue;
         }
         const { data: pub } = supabase.storage.from("vehicle-photos").getPublicUrl(path);
@@ -905,6 +937,12 @@ const OwnerDashboard = () => {
                       </p>
                     )}
 
+                    {(v.status === "maintenance" || v.status === "inactive") && (
+                      <p className="text-xs text-amber-400 bg-amber-500/10 border border-amber-500/30 rounded-md px-2 py-1.5 mt-2">
+                        This vehicle is set to <strong className="capitalize">{v.status}</strong> and won't appear in public search. Edit it and change status to <strong>Available</strong> to list it.
+                      </p>
+                    )}
+
                     {/* Photos */}
                     <div className="mt-4 pt-4 border-t border-border/40">
                       <div className="flex items-center justify-between mb-2">
@@ -915,7 +953,7 @@ const OwnerDashboard = () => {
                           <label className="cursor-pointer">
                             <input
                               type="file"
-                              accept="image/*"
+                              accept="image/jpeg,image/png,image/webp,.jpg,.jpeg,.png,.webp"
                               multiple
                               className="hidden"
                               disabled={uploadingPhotoId === v.id}
@@ -940,7 +978,7 @@ const OwnerDashboard = () => {
                         <label className="cursor-pointer">
                           <input
                             type="file"
-                            accept="image/*"
+                            accept="image/jpeg,image/png,image/webp,.jpg,.jpeg,.png,.webp"
                             multiple
                             className="hidden"
                             disabled={uploadingPhotoId === v.id}
@@ -951,7 +989,7 @@ const OwnerDashboard = () => {
                           />
                           <div className="flex flex-col items-center justify-center gap-1 py-4 rounded-lg border border-dashed border-border/60 text-muted-foreground hover:border-primary/50 hover:text-primary transition-colors">
                             <ImagePlus className="h-5 w-5" />
-                            <span className="text-xs">Upload up to 5 photos</span>
+                            <span className="text-xs">Upload up to 5 photos (JPG/PNG/WEBP, max 10MB each)</span>
                           </div>
                         </label>
                       ) : (
