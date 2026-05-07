@@ -1,4 +1,4 @@
-import { Facebook, Twitter, Instagram, Linkedin, Mail, Phone } from "lucide-react";
+import { Facebook, Youtube, Mail, Phone } from "lucide-react";
 import { Link } from "react-router-dom";
 import zuvioLogo from "@/assets/zuvio-logo.png";
 
@@ -17,12 +17,17 @@ const Footer = () => {
             </p>
             <div className="flex gap-4">
               {[
-                { Icon: Facebook, label: "Follow ZUVIO on Facebook" },
-                { Icon: Twitter, label: "Follow ZUVIO on Twitter" },
-                { Icon: Instagram, label: "Follow ZUVIO on Instagram" },
-                { Icon: Linkedin, label: "Follow ZUVIO on LinkedIn" },
-              ].map(({ Icon, label }, i) => (
-                <a key={i} href="#" aria-label={label} className="w-10 h-10 rounded-xl bg-[#1a2d4a] flex items-center justify-center text-[#8899aa] hover:text-[#2dd4bf] hover:bg-[#1a2d4a]/80 transition-colors">
+                { Icon: Facebook, label: "Follow ZUVIO on Facebook", href: "https://www.facebook.com/profile.php?id=61587809278822" },
+                { Icon: Youtube, label: "Follow ZUVIO on YouTube", href: "https://www.youtube.com/@SilverPathAISecureSmartAfter50" },
+              ].map(({ Icon, label, href }, i) => (
+                <a
+                  key={i}
+                  href={href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={label}
+                  className="w-10 h-10 rounded-xl bg-[#1a2d4a] flex items-center justify-center text-[#8899aa] hover:text-[#2dd4bf] hover:bg-[#1a2d4a]/80 transition-colors"
+                >
                   <Icon className="h-5 w-5" />
                 </a>
               ))}
