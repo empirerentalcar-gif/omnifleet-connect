@@ -41,6 +41,8 @@ import {
   X,
   Upload,
   ImagePlus,
+  Check,
+  AlertCircle,
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { format } from "date-fns";
