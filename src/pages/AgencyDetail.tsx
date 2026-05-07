@@ -158,6 +158,7 @@ const AgencyDetail = () => {
         title={`${agency.name} | Car Rental on ZUVIO`}
         description={`Rent cars from ${agency.name} in ${agency.city || "your area"}${agency.state ? `, ${agency.state}` : ""}. Starting at $${agency.startingPrice}/day.${agency.cashAccepted ? " Cash accepted." : ""}`}
         path={`/agency/${id}`}
+        ready={!loading}
       />
 
       <main className="pt-8 pb-16">
