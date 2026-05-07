@@ -41,6 +41,8 @@ import {
   X,
   Upload,
   ImagePlus,
+  Check,
+  AlertCircle,
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { format } from "date-fns";
@@ -335,6 +337,56 @@ const OwnerDashboard = () => {
   // Photo upload (max 5 per vehicle)
   const [uploadingPhotoId, setUploadingPhotoId] = useState<string | null>(null);
   const MAX_PHOTOS = 5;
+
+  // Pre-submit staging checklist (per-vehicle)
+  type StagedFile = {
+    file: File;
+    typeOk: boolean;
+    sizeOk: boolean;
+    countOk: boolean;
+    isHeic: boolean;
+  };
+  const [stagedByVehicle, setStagedByVehicle] = useState<Record<string, StagedFile[]>>({});
+  const ALLOWED_TYPES = ["image/jpeg", "image/jpg", "image/png", "image/webp"];
+  const MAX_BYTES = 10 * 1024 * 1024;
+
+  const stagePhotos = (vehicle: Vehicle, files: FileList) => {
+    const existingCount = (vehicle.images || []).length;
+    const remaining = MAX_PHOTOS - existingCount;
+    const arr = Array.from(files);
+    const staged: StagedFile[] = arr.map((file, idx) => {
+      const isHeic = /\.(heic|heif)$/i.test(file.name) || file.type === "image/heic" || file.type === "image/heif";
+      const typeOk = !isHeic && (ALLOWED_TYPES.includes(file.type.toLowerCase()) || /\.(jpe?g|png|webp)$/i.test(file.name));
+      const sizeOk = file.size <= MAX_BYTES;
+      const countOk = idx < remaining;
+      return { file, typeOk, sizeOk, countOk, isHeic };
+    });
+    setStagedByVehicle((prev) => ({ ...prev, [vehicle.id]: staged }));
+  };
+
+  const removeStaged = (vehicleId: string, index: number) => {
+    setStagedByVehicle((prev) => {
+      const list = (prev[vehicleId] || []).filter((_, i) => i !== index);
+      // Recompute countOk based on new positions
+      const next = list.map((s, i) => ({ ...s, countOk: i < MAX_PHOTOS }));
+      return { ...prev, [vehicleId]: next };
+    });
+  };
+
+  const submitStaged = async (vehicle: Vehicle) => {
+    const staged = stagedByVehicle[vehicle.id] || [];
+    const valid = staged.filter((s) => s.typeOk && s.sizeOk && s.countOk);
+    if (!valid.length) {
+      toast({ title: "Nothing to upload", description: "All staged files failed validation. Remove them or pick new ones.", variant: "destructive" });
+      return;
+    }
+    const dt = new DataTransfer();
+    valid.forEach((s) => dt.items.add(s.file));
+    await uploadVehiclePhotos(vehicle, dt.files);
+    setStagedByVehicle((prev) => ({ ...prev, [vehicle.id]: [] }));
+  };
+
+  const formatBytes = (n: number) => (n < 1024 * 1024 ? `${(n / 1024).toFixed(0)} KB` : `${(n / 1024 / 1024).toFixed(1)} MB`);
 
   const uploadVehiclePhotos = async (vehicle: Vehicle, files: FileList) => {
     if (!user || !files.length) return;
@@ -958,7 +1010,7 @@ const OwnerDashboard = () => {
                               className="hidden"
                               disabled={uploadingPhotoId === v.id}
                               onChange={(e) => {
-                                if (e.target.files) uploadVehiclePhotos(v, e.target.files);
+                                if (e.target.files) stagePhotos(v, e.target.files);
                                 e.target.value = "";
                               }}
                             />
@@ -974,6 +1026,70 @@ const OwnerDashboard = () => {
                           </label>
                         )}
                       </div>
+                      {(stagedByVehicle[v.id]?.length ?? 0) > 0 && (
+                        <div className="mb-3 rounded-md border border-border/60 bg-secondary/20 p-3">
+                          <div className="flex items-center justify-between mb-2">
+                            <p className="text-xs font-semibold">Pre-upload checklist</p>
+                            <p className="text-[10px] text-muted-foreground">
+                              JPG/PNG/WEBP · ≤10MB · max {MAX_PHOTOS - (v.images || []).length} more
+                            </p>
+                          </div>
+                          <ul className="space-y-1.5">
+                            {stagedByVehicle[v.id].map((s, idx) => {
+                              const ok = s.typeOk && s.sizeOk && s.countOk;
+                              const issues: string[] = [];
+                              if (!s.typeOk) issues.push(s.isHeic ? "HEIC not supported" : "wrong type");
+                              if (!s.sizeOk) issues.push(`${formatBytes(s.file.size)} > 10MB`);
+                              if (!s.countOk) issues.push("over photo limit");
+                              return (
+                                <li key={idx} className="flex items-center gap-2 text-xs">
+                                  {ok ? (
+                                    <Check className="h-3.5 w-3.5 text-emerald-400 shrink-0" />
+                                  ) : (
+                                    <AlertCircle className="h-3.5 w-3.5 text-destructive shrink-0" />
+                                  )}
+                                  <span className="truncate flex-1" title={s.file.name}>{s.file.name}</span>
+                                  <span className={cn("text-[10px]", ok ? "text-emerald-400" : "text-destructive")}>
+                                    {ok ? "Ready" : issues.join(", ")}
+                                  </span>
+                                  <button
+                                    type="button"
+                                    onClick={() => removeStaged(v.id, idx)}
+                                    className="text-muted-foreground hover:text-destructive"
+                                    aria-label={`Remove ${s.file.name}`}
+                                  >
+                                    <X className="h-3 w-3" />
+                                  </button>
+                                </li>
+                              );
+                            })}
+                          </ul>
+                          <div className="flex items-center justify-end gap-2 mt-3">
+                            <Button
+                              type="button"
+                              variant="ghost"
+                              size="sm"
+                              onClick={() => setStagedByVehicle((p) => ({ ...p, [v.id]: [] }))}
+                              disabled={uploadingPhotoId === v.id}
+                            >
+                              Clear
+                            </Button>
+                            <Button
+                              type="button"
+                              size="sm"
+                              onClick={() => submitStaged(v)}
+                              disabled={
+                                uploadingPhotoId === v.id ||
+                                !(stagedByVehicle[v.id] || []).some((s) => s.typeOk && s.sizeOk && s.countOk)
+                              }
+                            >
+                              {uploadingPhotoId === v.id
+                                ? "Uploading..."
+                                : `Upload ${(stagedByVehicle[v.id] || []).filter((s) => s.typeOk && s.sizeOk && s.countOk).length} valid`}
+                            </Button>
+                          </div>
+                        </div>
+                      )}
                       {(v.images || []).length === 0 ? (
                         <label className="cursor-pointer">
                           <input
@@ -983,7 +1099,7 @@ const OwnerDashboard = () => {
                             className="hidden"
                             disabled={uploadingPhotoId === v.id}
                             onChange={(e) => {
-                              if (e.target.files) uploadVehiclePhotos(v, e.target.files);
+                              if (e.target.files) stagePhotos(v, e.target.files);
                               e.target.value = "";
                             }}
                           />
