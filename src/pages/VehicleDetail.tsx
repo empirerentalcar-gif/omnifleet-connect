@@ -90,6 +90,7 @@ const VehicleDetail = () => {
         title={`${label} for rent | ZUVIO`}
         description={`Reserve a ${label} from ${vehicle.business_name ?? "an independent agency"} on ZUVIO. Cash-friendly options.`}
         path={`/vehicles/${vehicle.id}`}
+        ready={!loading}
       />
       <main className="container mx-auto px-4 pt-8 pb-16 max-w-6xl">
         <Link to="/search" className="inline-flex items-center gap-2 text-white/60 hover:text-[#2dd4bf] text-sm mb-6">
