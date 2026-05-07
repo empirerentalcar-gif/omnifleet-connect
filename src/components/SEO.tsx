@@ -7,6 +7,13 @@ interface SEOProps {
   path?: string;
   noindex?: boolean;
   image?: string;
+  /**
+   * Set to false while dynamic content (Supabase queries, blog posts, vehicle
+   * listings, etc.) is still loading. Once all critical data has resolved,
+   * pass true so Netlify Prerender captures the fully rendered page.
+   * Defaults to true for static pages with no async data.
+   */
+  ready?: boolean;
 }
 
 declare global {
@@ -17,17 +24,23 @@ declare global {
 
 const DEFAULT_OG_IMAGE = "https://zuvio.us/og-image.png";
 
-const SEO = ({ title, description, path = "/", noindex = false, image }: SEOProps) => {
+const SEO = ({ title, description, path = "/", noindex = false, image, ready = true }: SEOProps) => {
   const url = `https://zuvio.us${path}`;
   const ogImage = image || DEFAULT_OG_IMAGE;
 
   useEffect(() => {
-    // Signal Netlify Prerender that the page is ready
-    window.prerenderReady = true;
+    // Only signal Netlify Prerender once all dynamic content has loaded.
+    // Pages that fetch data from Supabase should pass `ready={!isLoading}`
+    // so crawlers receive the fully hydrated HTML.
+    if (ready) {
+      window.prerenderReady = true;
+    } else {
+      window.prerenderReady = false;
+    }
     return () => {
       window.prerenderReady = false;
     };
-  }, []);
+  }, [ready]);
 
   return (
     <Helmet>
