@@ -1026,6 +1026,70 @@ const OwnerDashboard = () => {
                           </label>
                         )}
                       </div>
+                      {(stagedByVehicle[v.id]?.length ?? 0) > 0 && (
+                        <div className="mb-3 rounded-md border border-border/60 bg-secondary/20 p-3">
+                          <div className="flex items-center justify-between mb-2">
+                            <p className="text-xs font-semibold">Pre-upload checklist</p>
+                            <p className="text-[10px] text-muted-foreground">
+                              JPG/PNG/WEBP · ≤10MB · max {MAX_PHOTOS - (v.images || []).length} more
+                            </p>
+                          </div>
+                          <ul className="space-y-1.5">
+                            {stagedByVehicle[v.id].map((s, idx) => {
+                              const ok = s.typeOk && s.sizeOk && s.countOk;
+                              const issues: string[] = [];
+                              if (!s.typeOk) issues.push(s.isHeic ? "HEIC not supported" : "wrong type");
+                              if (!s.sizeOk) issues.push(`${formatBytes(s.file.size)} > 10MB`);
+                              if (!s.countOk) issues.push("over photo limit");
+                              return (
+                                <li key={idx} className="flex items-center gap-2 text-xs">
+                                  {ok ? (
+                                    <Check className="h-3.5 w-3.5 text-emerald-400 shrink-0" />
+                                  ) : (
+                                    <AlertCircle className="h-3.5 w-3.5 text-destructive shrink-0" />
+                                  )}
+                                  <span className="truncate flex-1" title={s.file.name}>{s.file.name}</span>
+                                  <span className={cn("text-[10px]", ok ? "text-emerald-400" : "text-destructive")}>
+                                    {ok ? "Ready" : issues.join(", ")}
+                                  </span>
+                                  <button
+                                    type="button"
+                                    onClick={() => removeStaged(v.id, idx)}
+                                    className="text-muted-foreground hover:text-destructive"
+                                    aria-label={`Remove ${s.file.name}`}
+                                  >
+                                    <X className="h-3 w-3" />
+                                  </button>
+                                </li>
+                              );
+                            })}
+                          </ul>
+                          <div className="flex items-center justify-end gap-2 mt-3">
+                            <Button
+                              type="button"
+                              variant="ghost"
+                              size="sm"
+                              onClick={() => setStagedByVehicle((p) => ({ ...p, [v.id]: [] }))}
+                              disabled={uploadingPhotoId === v.id}
+                            >
+                              Clear
+                            </Button>
+                            <Button
+                              type="button"
+                              size="sm"
+                              onClick={() => submitStaged(v)}
+                              disabled={
+                                uploadingPhotoId === v.id ||
+                                !(stagedByVehicle[v.id] || []).some((s) => s.typeOk && s.sizeOk && s.countOk)
+                              }
+                            >
+                              {uploadingPhotoId === v.id
+                                ? "Uploading..."
+                                : `Upload ${(stagedByVehicle[v.id] || []).filter((s) => s.typeOk && s.sizeOk && s.countOk).length} valid`}
+                            </Button>
+                          </div>
+                        </div>
+                      )}
                       {(v.images || []).length === 0 ? (
                         <label className="cursor-pointer">
                           <input
