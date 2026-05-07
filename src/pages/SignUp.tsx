@@ -123,9 +123,25 @@ const SignUp = () => {
     });
 
     if (error) {
+      console.error('[SignUp] supabase.auth.signUp error:', error);
+      const raw = error.message || '';
+      let friendly = raw || 'Unable to create account. Please try again.';
+
+      if (/already registered|already been registered|user already/i.test(raw)) {
+        friendly = 'An account with this email already exists. Try signing in or use a different email.';
+      } else if (/password/i.test(raw) && /pwned|leaked|compromis/i.test(raw)) {
+        friendly = 'This password has appeared in a known data breach. Please choose a different password.';
+      } else if (/rate limit|too many/i.test(raw)) {
+        friendly = 'Too many sign-up attempts. Please wait a few minutes and try again.';
+      } else if (/invalid.*email|email.*invalid/i.test(raw)) {
+        friendly = 'That email address was rejected. Please double-check it and try again.';
+      } else if (/database error|unexpected_failure|saving new user/i.test(raw)) {
+        friendly = 'We hit a server error creating your account. Please contact team@zuvio.us so we can help.';
+      }
+
       toast({
         title: 'Sign up failed',
-        description: 'Unable to create account. Please try again.',
+        description: friendly,
         variant: 'destructive',
       });
       setLoading(false);
