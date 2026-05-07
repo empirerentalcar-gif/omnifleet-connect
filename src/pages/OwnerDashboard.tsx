@@ -1010,7 +1010,7 @@ const OwnerDashboard = () => {
                               className="hidden"
                               disabled={uploadingPhotoId === v.id}
                               onChange={(e) => {
-                                if (e.target.files) uploadVehiclePhotos(v, e.target.files);
+                                if (e.target.files) stagePhotos(v, e.target.files);
                                 e.target.value = "";
                               }}
                             />
@@ -1035,7 +1035,7 @@ const OwnerDashboard = () => {
                             className="hidden"
                             disabled={uploadingPhotoId === v.id}
                             onChange={(e) => {
-                              if (e.target.files) uploadVehiclePhotos(v, e.target.files);
+                              if (e.target.files) stagePhotos(v, e.target.files);
                               e.target.value = "";
                             }}
                           />
