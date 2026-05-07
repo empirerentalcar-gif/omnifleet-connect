@@ -1,5 +1,6 @@
 import { useParams, Link, Navigate } from "react-router-dom";
-import { ArrowLeft, ArrowRight, Calendar } from "lucide-react";
+import { useState } from "react";
+import { ArrowLeft, ArrowRight, Calendar, Facebook, Link2, Check } from "lucide-react";
 import { Helmet } from "react-helmet-async";
 import { getPostBySlug } from "@/lib/blog-data";
 import { Button } from "@/components/ui/button";
@@ -7,8 +8,21 @@ import { Button } from "@/components/ui/button";
 const BlogPost = () => {
   const { slug } = useParams<{ slug: string }>();
   const post = slug ? getPostBySlug(slug) : undefined;
+  const [copied, setCopied] = useState(false);
 
   if (!post) return <Navigate to="/blog" replace />;
+
+  const postUrl = `https://zuvio.us/blog/${post.slug}`;
+
+  const handleCopy = async () => {
+    try {
+      await navigator.clipboard.writeText(postUrl);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch {
+      // ignore
+    }
+  };
 
   const jsonLd = {
     "@context": "https://schema.org",
@@ -71,6 +85,32 @@ const BlogPost = () => {
               prose-ul:list-disc prose-ul:pl-6 prose-ul:mb-6"
             dangerouslySetInnerHTML={{ __html: post.content }}
           />
+
+          {/* Share this article */}
+          <div className="mt-12 pt-8 border-t border-border">
+            <h2 className="font-display text-lg font-semibold mb-4 text-foreground">
+              Share this article
+            </h2>
+            <div className="flex gap-3">
+              <a
+                href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(postUrl)}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Share this article on Facebook"
+                className="w-10 h-10 rounded-xl bg-secondary flex items-center justify-center text-muted-foreground hover:text-primary hover:bg-secondary/80 transition-colors"
+              >
+                <Facebook className="h-5 w-5" />
+              </a>
+              <button
+                type="button"
+                onClick={handleCopy}
+                aria-label="Copy link to this article"
+                className="w-10 h-10 rounded-xl bg-secondary flex items-center justify-center text-muted-foreground hover:text-primary hover:bg-secondary/80 transition-colors"
+              >
+                {copied ? <Check className="h-5 w-5" /> : <Link2 className="h-5 w-5" />}
+              </button>
+            </div>
+          </div>
 
           {/* CTA */}
           <div className="mt-16 glass-card rounded-2xl p-8 md:p-10 text-center">
