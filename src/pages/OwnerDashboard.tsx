@@ -338,6 +338,56 @@ const OwnerDashboard = () => {
   const [uploadingPhotoId, setUploadingPhotoId] = useState<string | null>(null);
   const MAX_PHOTOS = 5;
 
+  // Pre-submit staging checklist (per-vehicle)
+  type StagedFile = {
+    file: File;
+    typeOk: boolean;
+    sizeOk: boolean;
+    countOk: boolean;
+    isHeic: boolean;
+  };
+  const [stagedByVehicle, setStagedByVehicle] = useState<Record<string, StagedFile[]>>({});
+  const ALLOWED_TYPES = ["image/jpeg", "image/jpg", "image/png", "image/webp"];
+  const MAX_BYTES = 10 * 1024 * 1024;
+
+  const stagePhotos = (vehicle: Vehicle, files: FileList) => {
+    const existingCount = (vehicle.images || []).length;
+    const remaining = MAX_PHOTOS - existingCount;
+    const arr = Array.from(files);
+    const staged: StagedFile[] = arr.map((file, idx) => {
+      const isHeic = /\.(heic|heif)$/i.test(file.name) || file.type === "image/heic" || file.type === "image/heif";
+      const typeOk = !isHeic && (ALLOWED_TYPES.includes(file.type.toLowerCase()) || /\.(jpe?g|png|webp)$/i.test(file.name));
+      const sizeOk = file.size <= MAX_BYTES;
+      const countOk = idx < remaining;
+      return { file, typeOk, sizeOk, countOk, isHeic };
+    });
+    setStagedByVehicle((prev) => ({ ...prev, [vehicle.id]: staged }));
+  };
+
+  const removeStaged = (vehicleId: string, index: number) => {
+    setStagedByVehicle((prev) => {
+      const list = (prev[vehicleId] || []).filter((_, i) => i !== index);
+      // Recompute countOk based on new positions
+      const next = list.map((s, i) => ({ ...s, countOk: i < MAX_PHOTOS }));
+      return { ...prev, [vehicleId]: next };
+    });
+  };
+
+  const submitStaged = async (vehicle: Vehicle) => {
+    const staged = stagedByVehicle[vehicle.id] || [];
+    const valid = staged.filter((s) => s.typeOk && s.sizeOk && s.countOk);
+    if (!valid.length) {
+      toast({ title: "Nothing to upload", description: "All staged files failed validation. Remove them or pick new ones.", variant: "destructive" });
+      return;
+    }
+    const dt = new DataTransfer();
+    valid.forEach((s) => dt.items.add(s.file));
+    await uploadVehiclePhotos(vehicle, dt.files);
+    setStagedByVehicle((prev) => ({ ...prev, [vehicle.id]: [] }));
+  };
+
+  const formatBytes = (n: number) => (n < 1024 * 1024 ? `${(n / 1024).toFixed(0)} KB` : `${(n / 1024 / 1024).toFixed(1)} MB`);
+
   const uploadVehiclePhotos = async (vehicle: Vehicle, files: FileList) => {
     if (!user || !files.length) return;
     const existing = vehicle.images || [];
