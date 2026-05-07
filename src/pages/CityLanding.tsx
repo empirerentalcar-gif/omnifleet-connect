@@ -140,6 +140,7 @@ const CityLanding = () => {
         title={`Car Rentals in ${cityLabel} | ZUVIO`}
         description={seoDescription}
         path={`/city/${citySlug}`}
+        ready={!loading}
       />
 <main className="pt-8 pb-16">
         {/* ── Hero ── */}
