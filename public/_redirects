@@ -1,2 +1,40 @@
-/sitemap  /sitemap.xml  200
-/*    /index.html   200
+/sitemap                /sitemap.xml               200
+
+# Static routes
+/                       /index.html                200
+/signin                 /index.html                200
+/signup                 /index.html                200
+/terms                  /index.html                200
+/privacy                /index.html                200
+/owner-benefits         /index.html                200
+/pricing                /index.html                200
+/search                 /index.html                200
+/reservation-confirmed  /index.html                200
+/dashboard              /index.html                200
+/about                  /index.html                200
+/faq                    /index.html                200
+/for-agencies           /index.html                200
+/how-it-works           /index.html                200
+/cities                 /index.html                200
+/for-turo-hosts         /index.html                200
+/blog                   /index.html                200
+/reset-password         /index.html                200
+/cancellation-policy    /index.html                200
+
+# City landing pages
+/las-vegas              /index.html                200
+/phoenix                /index.html                200
+/los-angeles            /index.html                200
+/houston                /index.html                200
+/miami                  /index.html                200
+/new-york               /index.html                200
+
+# Dynamic routes
+/agency/:id             /index.html                200
+/reserve/:agencyId      /index.html                200
+/vehicles/:id           /index.html                200
+/city/:citySlug         /index.html                200
+/blog/:slug             /index.html                200
+
+# Catch-all
+/*                      /index.html                200
