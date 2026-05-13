@@ -26,8 +26,8 @@ serve(async (req) => {
   try {
     const cronSecret = Deno.env.get("CRON_SECRET");
     const incoming = req.headers.get("x-cron-secret") || req.headers.get("X-Cron-Secret");
-    if (cronSecret && incoming !== cronSecret) {
-      // Allow Supabase scheduled invoke without secret only when CRON_SECRET unset
+    // Fail-secure: require CRON_SECRET to be set AND match the incoming header.
+    if (!cronSecret || incoming !== cronSecret) {
       return new Response(JSON.stringify({ error: "unauthorized" }), {
         headers: { ...corsHeaders, "Content-Type": "application/json" },
         status: 401,
