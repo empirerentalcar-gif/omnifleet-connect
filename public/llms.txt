@@ -1,0 +1,36 @@
+# Zuvio
+
+> Independent car rental marketplace connecting renters with local agencies across the US. Cash accepted, no credit card required.
+
+Zuvio helps independent rental agencies and Turo hosts get direct bookings without middlemen. Owners keep their pricing, policies, and customer relationships while reaching renters nationwide.
+
+## Pages
+
+- [Home](/): Independent car rental platform overview for owners and renters.
+- [Search](/search): Find rental cars from independent agencies.
+- [Cities](/cities): Browse rental agencies by city.
+- [How It Works](/how-it-works): How Zuvio connects renters and rental agencies.
+- [For Agencies](/for-agencies): Information for rental agency owners.
+- [For Turo Hosts](/for-turo-hosts): Diversify beyond Turo with direct bookings.
+- [Owner Benefits](/owner-benefits): Why owners choose Zuvio.
+- [Pricing](/pricing): Plans and fees for agencies.
+- [Blog](/blog): Articles about the independent rental industry.
+- [About](/about): About Zuvio.
+- [FAQ](/faq): Frequently asked questions.
+- [Sign Up](/signup): Create an agency owner account.
+- [Sign In](/signin): Access your account.
+
+## City Landing Pages
+
+- [Las Vegas](/las-vegas): Car rentals in Las Vegas.
+- [Phoenix](/phoenix): Car rentals in Phoenix.
+- [Los Angeles](/los-angeles): Car rentals in Los Angeles.
+- [Houston](/houston): Car rentals in Houston.
+- [Miami](/miami): Car rentals in Miami.
+- [New York](/new-york): Car rentals in New York.
+
+## Optional
+
+- [Cancellation Policy](/cancellation-policy): Booking cancellation terms.
+- [Privacy Policy](/privacy): Privacy practices.
+- [Terms of Service](/terms): Terms of use.
