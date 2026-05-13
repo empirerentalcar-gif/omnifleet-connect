@@ -23,7 +23,8 @@ serve(async (req) => {
   try {
     const cronSecret = Deno.env.get("CRON_SECRET");
     const incoming = req.headers.get("x-cron-secret") || req.headers.get("X-Cron-Secret");
-    if (cronSecret && incoming !== cronSecret) {
+    // Fail-secure: require CRON_SECRET to be set AND match the incoming header.
+    if (!cronSecret || incoming !== cronSecret) {
       return new Response(JSON.stringify({ error: "unauthorized" }), {
         headers: { ...corsHeaders, "Content-Type": "application/json" }, status: 401,
       });
@@ -72,7 +73,10 @@ serve(async (req) => {
         try {
           await fetch(`${supabaseUrl}/functions/v1/send-renter-booking-status`, {
             method: "POST",
-            headers: { "Content-Type": "application/json" },
+            headers: {
+              "Content-Type": "application/json",
+              "x-cron-secret": cronSecret,
+            },
             body: JSON.stringify({ booking_id: b.id, status: "captured" }),
           });
         } catch (e) {
