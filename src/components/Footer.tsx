@@ -107,11 +107,11 @@ const Footer = () => {
         </div>
 
         {/* Bottom Bar */}
-        <div className="border-t border-[#1a2d4a] mt-12 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
-          <p className="w-full text-center md:w-auto md:text-left text-sm text-[#8899aa]">
+        <div className="border-t border-[#1a2d4a] mt-12 pt-8 flex flex-col md:flex-row justify-between md:justify-start items-center gap-4">
+          <p className="w-full text-center md:w-auto md:text-left md:mr-auto text-sm text-[#8899aa]">
             © 2026 Zuvio. All rights reserved.
           </p>
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-4 md:contents">
             <StripeBadge />
             <Link to="/admin" className="text-sm text-white/40 hover:text-white/60 transition-colors">
               Team Login
