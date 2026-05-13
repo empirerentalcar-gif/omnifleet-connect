@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import SEO from "@/components/SEO";
+import { Helmet } from "react-helmet-async";
 import { SafeImage } from "@/components/SafeImage";
 import { Button } from "@/components/ui/button";
 import { ReserveDrawer } from "@/components/vehicle/ReserveDrawer";
@@ -84,6 +85,35 @@ const VehicleDetail = () => {
   const photos = vehicle.images?.length ? vehicle.images : [];
   const label = `${vehicle.year} ${vehicle.make} ${vehicle.model}`;
 
+  const productJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Product",
+    name: label,
+    description:
+      vehicle.description ||
+      `Rent a ${label} from ${vehicle.business_name ?? "an independent agency"} on Zuvio.`,
+    image: photos.length ? photos : undefined,
+    brand: { "@type": "Brand", name: vehicle.make },
+    category: vehicle.vehicle_type,
+    offers: {
+      "@type": "Offer",
+      price: Number(vehicle.daily_rate),
+      priceCurrency: "USD",
+      availability: "https://schema.org/InStock",
+      url: `https://zuvio.us/vehicles/${vehicle.id}`,
+      seller: {
+        "@type": "Organization",
+        name: vehicle.business_name ?? "Independent agency",
+      },
+      priceSpecification: {
+        "@type": "UnitPriceSpecification",
+        price: Number(vehicle.daily_rate),
+        priceCurrency: "USD",
+        unitCode: "DAY",
+      },
+    },
+  };
+
   return (
     <div className="min-h-screen" style={{ backgroundColor: "#0d1b2e" }}>
       <SEO
@@ -92,6 +122,9 @@ const VehicleDetail = () => {
         path={`/vehicles/${vehicle.id}`}
         ready={!loading}
       />
+      <Helmet>
+        <script type="application/ld+json">{JSON.stringify(productJsonLd)}</script>
+      </Helmet>
       <main className="container mx-auto px-4 pt-8 pb-16 max-w-6xl">
         <Link to="/search" className="inline-flex items-center gap-2 text-white/60 hover:text-[#2dd4bf] text-sm mb-6">
           <ArrowLeft className="h-4 w-4" /> Back to search
