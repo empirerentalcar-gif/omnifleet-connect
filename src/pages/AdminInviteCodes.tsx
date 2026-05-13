@@ -223,7 +223,7 @@ const AdminInviteCodes = () => {
       <header className="border-b bg-card">
         <div className="container mx-auto px-4 py-4 flex items-center gap-3">
           <Link to="/admin" className="shrink-0">
-            <Button variant="ghost" size="icon"><ArrowLeft className="h-5 w-5" /></Button>
+            <Button variant="ghost" size="icon" aria-label="Back to admin dashboard"><ArrowLeft className="h-5 w-5" /></Button>
           </Link>
           <h1 className="text-xl sm:text-2xl font-bold truncate">Invite Code Management</h1>
         </div>
@@ -314,7 +314,7 @@ const AdminInviteCodes = () => {
                         </TableCell>
                         <TableCell className="text-right">
                           <div className="flex gap-1 justify-end">
-                            <Button size="icon" variant="ghost" onClick={() => openEdit(item)}>
+                            <Button size="icon" variant="ghost" onClick={() => openEdit(item)} aria-label="Edit invite code">
                               <Pencil className="h-4 w-4" />
                             </Button>
                             <Button

@@ -563,7 +563,7 @@ const AdminAgencies = () => {
       <header className="border-b bg-card">
         <div className="container mx-auto px-4 py-4 flex items-center gap-3">
           <Link to="/admin" className="shrink-0">
-            <Button variant="ghost" size="icon"><ArrowLeft className="h-5 w-5" /></Button>
+            <Button variant="ghost" size="icon" aria-label="Back to admin dashboard"><ArrowLeft className="h-5 w-5" /></Button>
           </Link>
           <h1 className="text-xl sm:text-2xl font-bold truncate">Agencies Management</h1>
         </div>
@@ -805,15 +805,15 @@ const AdminAgencies = () => {
                             <div className="flex gap-1 justify-end">
                               {editingId === agency.id ? (
                                 <>
-                                  <Button size="icon" variant="ghost" onClick={saveEdit}>
+                                  <Button size="icon" variant="ghost" onClick={saveEdit} aria-label="Save changes">
                                     <Save className="h-4 w-4" />
                                   </Button>
-                                  <Button size="icon" variant="ghost" onClick={() => setEditingId(null)}>
+                                  <Button size="icon" variant="ghost" onClick={() => setEditingId(null)} aria-label="Cancel editing">
                                     <X className="h-4 w-4" />
                                   </Button>
                                 </>
                               ) : (
-                                <Button size="icon" variant="ghost" onClick={() => startEdit(agency)}>
+                                <Button size="icon" variant="ghost" onClick={() => startEdit(agency)} aria-label="Edit agency">
                                   <Pencil className="h-4 w-4" />
                                 </Button>
                               )}
@@ -823,6 +823,7 @@ const AdminAgencies = () => {
                                   variant={expandedNotes === agency.id ? 'secondary' : 'ghost'}
                                   onClick={() => toggleNotes(agency.id)}
                                   title="Notes"
+                                  aria-label="Toggle agency notes"
                                 >
                                   <MessageSquare className="h-4 w-4" />
                                 </Button>
