@@ -9,6 +9,51 @@ export interface BlogPost {
 
 export const blogPosts: BlogPost[] = [
   {
+    slug: "peace-of-mind-on-every-mile-insurance-guide",
+    title: "Peace of Mind on Every Mile: A Friendly Guide to Adding Insurance to Your Rental Fleet",
+    excerpt:
+      "Insurance doesn't have to feel like a roadblock. Here's a friendly, practical guide to layering protection across your independent rental fleet.",
+    date: "2026-04-05",
+    metaDescription:
+      "A friendly guide for independent car rental agencies on commercial fleet insurance, supplemental products, on-demand coverage, and how to add it all.",
+    content: `
+<p>Running an independent car rental agency is an exciting journey. You're building a brand, meeting new people, and managing a fleet that keeps your community moving. But let's be real—the "insurance talk" can sometimes feel like a roadblock.</p>
+
+<p>At Zuvio, we believe that protecting your assets shouldn't feel like a chore. Whether you're just starting with two cars or scaling up to twenty, here is a simple, friendly guide on how to layer up your protection and sleep better at night.</p>
+
+<h2>1. The Foundation: Commercial Fleet Insurance</h2>
+<p>First things first: your personal auto insurance won't cut it once you start renting out your vehicles. You'll need a <strong>Commercial Fleet Policy</strong>.</p>
+<p>Think of this as the "home base" for your business. It covers your vehicles while they are sitting on your lot, being cleaned, or being driven by your employees.</p>
+<p><strong>The Pro Tip:</strong> Look for "Lessor's Contingent Coverage." This is a lifesaver that kicks in if a renter's own insurance fails or isn't enough to cover a claim.</p>
+
+<h2>2. The Power of "Counter Products" (Supplemental Insurance)</h2>
+<p>Did you know that insurance can actually be a revenue stream for you? By offering supplemental products to your renters, you're providing them with extra security while adding a little extra to your bottom line.</p>
+<ul>
+<li><strong>SLI (Supplemental Liability Insurance):</strong> Protects the renter (and you!) against third-party claims for injury or property damage.</li>
+<li><strong>CDW (Collision Damage Waiver):</strong> Technically a "waiver" and not insurance, this is an agreement where you agree not to hold the renter liable for damage to the car. It's highly popular because it gives renters total peace of mind.</li>
+</ul>
+
+<h2>3. Modern Solutions: On-Demand & Platform Insurance</h2>
+<p>If the idea of a massive annual commercial premium feels a bit heavy, the industry has evolved. Modern providers like Lula or ABI offer more flexible, tech-forward options tailored for independent owners.</p>
+<ul>
+<li><strong>Pay-per-day models:</strong> Some insurers allow you to pay only for the days the car is actually out on a trip.</li>
+<li><strong>Off-platform coverage:</strong> If you use Turo or other marketplaces alongside your own site, make sure you have "Off-Platform" insurance to cover the gaps when the car isn't on a booked trip.</li>
+</ul>
+
+<h2>4. How to Actually "Add" It</h2>
+<p>It's easier than you think. Here is the 3-step checklist:</p>
+<ol>
+<li><strong>Gather your VINs:</strong> Have a list of your vehicle identification numbers and their current mileage ready.</li>
+<li><strong>Verify Renter Coverage:</strong> Always ask for a "Declaration Page" from your renters. It's a standard request and shows they have active personal coverage.</li>
+<li><strong>Integrate with your Platform:</strong> Use a tool like Zuvio to store insurance documents and automate the "proof of insurance" step during checkout.</li>
+</ol>
+
+<h2>You've Got This!</h2>
+<p>Insurance isn't just about "what-ifs"—it's about professionalizing your business. When you can look a customer in the eye and know that both of you are protected, you're not just a person with a car; you're a trusted agency owner.</p>
+<p>Ready to streamline your rental business? Check out how Zuvio helps you manage contracts and fleet details all in one place.</p>
+`,
+  },
+  {
     slug: "5-ways-to-get-more-bookings-without-ads",
     title: "5 Ways Independent Car Rental Agencies Can Get More Bookings Without Spending a Fortune on Ads",
     excerpt:
