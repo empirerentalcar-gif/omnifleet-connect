@@ -29,6 +29,15 @@ Deno.serve(async (req) => {
     const serviceRoleKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
     const resendApiKey = Deno.env.get("RESEND_API_KEY");
 
+    // Server-to-server only: require CRON_SECRET. Fail-secure if unset.
+    const cronSecret = Deno.env.get("CRON_SECRET");
+    const incoming = req.headers.get("x-cron-secret") || req.headers.get("X-Cron-Secret");
+    if (!cronSecret || incoming !== cronSecret) {
+      return new Response(JSON.stringify({ error: "unauthorized" }), {
+        status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
     const { booking_id, status, reason } = (await req.json()) as {
       booking_id?: string;
       status?: StatusKind;

@@ -92,20 +92,13 @@ serve(async (req) => {
   }
 
   try {
-    if (req.method === "POST") {
-      let body: any = null;
-      try { body = await req.json(); } catch (_) { body = null; }
-      if (body?.test === true && body?.to) {
-        const ok = await sendEmail(
-          String(body.to),
-          "[TEST] Your Free Trial Has Ended — Reactivate Your Listing on Zuvio",
-          buildEmailHtml(String(body.agency_name ?? "Test Agency"))
-        );
-        return new Response(
-          JSON.stringify({ success: ok, test: true, to: body.to }),
-          { headers: { ...corsHeaders, "Content-Type": "application/json" }, status: ok ? 200 : 500 }
-        );
-      }
+    const cronSecret = Deno.env.get("CRON_SECRET");
+    const incoming = req.headers.get("x-cron-secret") || req.headers.get("X-Cron-Secret");
+    if (!cronSecret || incoming !== cronSecret) {
+      return new Response(JSON.stringify({ error: "unauthorized" }), {
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+        status: 401,
+      });
     }
 
     const supabase = createClient(

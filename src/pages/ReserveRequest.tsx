@@ -60,24 +60,7 @@ const ReserveRequest = () => {
       const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
       const validProfileId = agencyId && uuidRegex.test(agencyId) ? agencyId : null;
 
-      const { data, error } = await supabase.from("reservations").insert({
-        agency_id: validProfileId,
-        full_name: name.trim(),
-        phone_number: phone.trim(),
-        email: email.trim() || null,
-        pickup_date: pickupDate,
-        dropoff_date: dropoffDate,
-        vehicle_type: vehicleType,
-        additional_notes: notes.trim() || null,
-        status: "pending",
-      });
-
-      if (error) {
-        toast.error(`Reservation failed: ${formatBackendError(error)}`);
-        setSubmitting(false);
-        return;
-      }
-
+      // Validate inputs BEFORE any database write to prevent orphaned rows.
       const parsed = reservationSchema.safeParse({
         customer_name: name,
         customer_phone: phone,
@@ -91,6 +74,24 @@ const ReserveRequest = () => {
       if (!parsed.success) {
         const firstError = parsed.error.errors[0]?.message || "Invalid input";
         toast.error(firstError);
+        setSubmitting(false);
+        return;
+      }
+
+      const { error } = await supabase.from("reservations").insert({
+        agency_id: validProfileId,
+        full_name: parsed.data.customer_name,
+        phone_number: parsed.data.customer_phone,
+        email: parsed.data.customer_email,
+        pickup_date: parsed.data.pickup_date,
+        dropoff_date: parsed.data.dropoff_date,
+        vehicle_type: parsed.data.vehicle_type,
+        additional_notes: parsed.data.notes,
+        status: "pending",
+      });
+
+      if (error) {
+        toast.error(`Reservation failed: ${formatBackendError(error)}`);
         setSubmitting(false);
         return;
       }

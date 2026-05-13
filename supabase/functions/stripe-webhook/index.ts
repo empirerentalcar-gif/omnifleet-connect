@@ -111,7 +111,21 @@ serve(async (req) => {
                 updated_at: new Date().toISOString(),
               })
               .eq("id", bookingId);
+            await sendRenterConfirmation(bookingId);
           }
+          break;
+        }
+        case "payment_intent.amount_capturable_updated": {
+          // Manual-capture authorization succeeded — send the confirmation email
+          const pi = event.data.object as Stripe.PaymentIntent;
+          const bookingId = pi.metadata?.booking_id;
+          if (bookingId) await sendRenterConfirmation(bookingId);
+          break;
+        }
+        case "setup_intent.succeeded": {
+          const si = event.data.object as Stripe.SetupIntent;
+          const bookingId = si.metadata?.booking_id;
+          if (bookingId) await sendRenterConfirmation(bookingId);
           break;
         }
         case "payment_intent.payment_failed": {
@@ -299,4 +313,21 @@ async function syncSubscription(
     .eq("id", (agency as { id: string }).id);
 
   log("Subscription synced", { agencyId: (agency as { id: string }).id, newStatus });
+}
+
+async function sendRenterConfirmation(bookingId: string) {
+  try {
+    const supabaseUrl = Deno.env.get("SUPABASE_URL") ?? "";
+    const cronSecret = Deno.env.get("CRON_SECRET") ?? "";
+    await fetch(`${supabaseUrl}/functions/v1/send-renter-booking-confirmation`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "x-cron-secret": cronSecret,
+      },
+      body: JSON.stringify({ booking_id: bookingId }),
+    });
+  } catch (e) {
+    console.error("[STRIPE-WEBHOOK] renter confirmation email failed", e);
+  }
 }
