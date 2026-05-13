@@ -114,6 +114,11 @@ const Pricing = () => {
 
           {/* ROI section */}
           <PricingROI />
+
+          {/* Payment trust badge */}
+          <div className="flex justify-center mt-10">
+            <StripeBadge />
+          </div>
         </div>
       </section>
 
