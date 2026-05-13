@@ -3,6 +3,7 @@ import { Check, Ban, ShieldCheck, ArrowRight } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import SEO from "@/components/SEO";
 import { PricingCard, PricingROI } from "@/components/pricing/PricingCard";
+import StripeBadge from "@/components/StripeBadge";
 import {
   Accordion,
   AccordionContent,
@@ -113,6 +114,11 @@ const Pricing = () => {
 
           {/* ROI section */}
           <PricingROI />
+
+          {/* Payment trust badge */}
+          <div className="flex justify-center mt-10">
+            <StripeBadge />
+          </div>
         </div>
       </section>
 
