@@ -10,6 +10,8 @@ import {
   DollarSign,
   Users,
   ShieldCheck,
+  Scale,
+  UtensilsCrossed,
 } from "lucide-react";
 
 export interface CityLandingConfig {
@@ -20,11 +22,17 @@ export interface CityLandingConfig {
   h1: string;
   h2s: string[];
   description?: string;
+  localFlavor?: {
+    intro?: string;
+    regulations: string[];
+    restaurants: { name: string; note: string }[];
+    popularCars: { type: string; reason: string }[];
+  };
 }
 
 const CityLandingTemplate = ({ config }: { config: CityLandingConfig }) => {
   const navigate = useNavigate();
-  const { slug, cityName, state, stateAbbr, h1, h2s, description: customDescription } = config;
+  const { slug, cityName, state, stateAbbr, h1, h2s, description: customDescription, localFlavor } = config;
 
   return (
     <div className="min-h-screen bg-background">
@@ -222,6 +230,82 @@ const CityLandingTemplate = ({ config }: { config: CityLandingConfig }) => {
           </div>
         </div>
       </section>
+
+      {/* Local Flavor — unique per-city content */}
+      {localFlavor && (
+        <section className="py-20 md:py-28 relative overflow-hidden">
+          <div className="absolute inset-0 bg-gradient-to-b from-background via-accent/5 to-background" />
+          <div className="container mx-auto px-4 relative max-w-5xl">
+            <div className="text-center mb-14">
+              <span className="inline-block px-4 py-2 rounded-full bg-accent/10 text-accent text-sm font-medium mb-4">
+                Local Knowledge
+              </span>
+              <h2 className="font-display text-3xl md:text-5xl font-bold mb-4">
+                Renting a Car in {cityName}: What Locals Know
+              </h2>
+              {localFlavor.intro && (
+                <p className="text-lg text-muted-foreground max-w-3xl mx-auto">{localFlavor.intro}</p>
+              )}
+            </div>
+
+            <div className="grid md:grid-cols-3 gap-6">
+              {/* Regulations */}
+              <div className="glass-card rounded-2xl p-6">
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="p-2 rounded-lg bg-primary/10">
+                    <Scale className="h-5 w-5 text-primary" />
+                  </div>
+                  <h3 className="font-bold text-foreground text-lg">Local Driving Rules</h3>
+                </div>
+                <ul className="space-y-3">
+                  {localFlavor.regulations.map((r) => (
+                    <li key={r} className="flex items-start gap-2 text-muted-foreground text-sm leading-relaxed">
+                      <CheckCircle2 className="h-4 w-4 text-accent shrink-0 mt-0.5" />
+                      <span>{r}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              {/* Restaurants */}
+              <div className="glass-card rounded-2xl p-6">
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="p-2 rounded-lg bg-accent/10">
+                    <UtensilsCrossed className="h-5 w-5 text-accent" />
+                  </div>
+                  <h3 className="font-bold text-foreground text-lg">Worth the Drive</h3>
+                </div>
+                <ul className="space-y-3">
+                  {localFlavor.restaurants.map((r) => (
+                    <li key={r.name} className="text-sm">
+                      <p className="font-semibold text-foreground">{r.name}</p>
+                      <p className="text-muted-foreground leading-relaxed">{r.note}</p>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              {/* Popular Cars */}
+              <div className="glass-card rounded-2xl p-6">
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="p-2 rounded-lg bg-primary/10">
+                    <Car className="h-5 w-5 text-primary" />
+                  </div>
+                  <h3 className="font-bold text-foreground text-lg">What {cityName} Drives</h3>
+                </div>
+                <ul className="space-y-3">
+                  {localFlavor.popularCars.map((c) => (
+                    <li key={c.type} className="text-sm">
+                      <p className="font-semibold text-foreground">{c.type}</p>
+                      <p className="text-muted-foreground leading-relaxed">{c.reason}</p>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          </div>
+        </section>
+      )}
 
       {/* CTAs */}
       <section className="py-20 md:py-28 relative overflow-hidden">
