@@ -17,6 +17,9 @@ import {
   Quote,
   XCircle,
   Search,
+  Scale,
+  UtensilsCrossed,
+  Car,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { PricingCard, PricingROI } from "@/components/pricing/PricingCard";
@@ -465,6 +468,86 @@ const LasVegasLanding = () => {
       </section>
 
       {/* ─── SEARCH CTAs ─── */}
+      {/* ─── LOCAL FLAVOR ─── */}
+      <section className="py-20 md:py-28 relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-b from-background via-accent/5 to-background" />
+        <div className="container mx-auto px-4 relative max-w-5xl">
+          <div className="text-center mb-14">
+            <span className="inline-block px-4 py-2 rounded-full bg-accent/10 text-accent text-sm font-medium mb-4">
+              Local Knowledge
+            </span>
+            <h2 className="font-display text-3xl md:text-5xl font-bold mb-4">
+              Renting a Car in Las Vegas: What Locals Know
+            </h2>
+            <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
+              The Strip is only four miles long — the rest of Vegas (and Red Rock, Hoover Dam, and Mt. Charleston) needs a car. Here's what to know before you drive.
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-6">
+            <div className="glass-card rounded-2xl p-6">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="p-2 rounded-lg bg-primary/10"><Scale className="h-5 w-5 text-primary" /></div>
+                <h3 className="font-bold text-foreground text-lg">Local Driving Rules</h3>
+              </div>
+              <ul className="space-y-3 text-sm">
+                {[
+                  "Nevada bans handheld phones — hands-free only, primary offense.",
+                  "Right turns on red are allowed after a full stop unless posted.",
+                  "Las Vegas Blvd between Sahara and Russell restricts U-turns and has heavy pedestrian enforcement.",
+                  "McCarran/Harry Reid (LAS) routes all rental cars through the off-airport McCarran Rent-A-Car Center via shuttle.",
+                  "Watch for flash-flood washes if driving toward Red Rock or Mt. Charleston during summer monsoons.",
+                ].map((r) => (
+                  <li key={r} className="flex items-start gap-2 text-muted-foreground leading-relaxed">
+                    <CheckCircle2 className="h-4 w-4 text-accent shrink-0 mt-0.5" /><span>{r}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            <div className="glass-card rounded-2xl p-6">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="p-2 rounded-lg bg-accent/10"><UtensilsCrossed className="h-5 w-5 text-accent" /></div>
+                <h3 className="font-bold text-foreground text-lg">Worth the Drive</h3>
+              </div>
+              <ul className="space-y-3 text-sm">
+                {[
+                  { name: "Lotus of Siam (Commercial Center)", note: "James Beard–winning northern Thai — paid lot on-site, 10 min off the Strip." },
+                  { name: "Esther's Kitchen (Arts District)", note: "Handmade pasta downtown; street parking is realistic on weekdays." },
+                  { name: "Raku (Chinatown / Spring Mountain)", note: "Cult-favorite Japanese robata — Spring Mountain Rd is the best food strip in town." },
+                  { name: "The Golden Steer (West Sahara)", note: "Old-school steakhouse, Rat Pack–era; valet parking included." },
+                ].map((r) => (
+                  <li key={r.name}>
+                    <p className="font-semibold text-foreground">{r.name}</p>
+                    <p className="text-muted-foreground leading-relaxed">{r.note}</p>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            <div className="glass-card rounded-2xl p-6">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="p-2 rounded-lg bg-primary/10"><Car className="h-5 w-5 text-primary" /></div>
+                <h3 className="font-bold text-foreground text-lg">What Vegas Drives</h3>
+              </div>
+              <ul className="space-y-3 text-sm">
+                {[
+                  { type: "Convertibles (Mustang, Camaro)", note: "Top-down on the Strip at night and Red Rock Scenic Loop by day — Vegas's signature rental." },
+                  { type: "Luxury & Exotic (Tesla, BMW, Lambo)", note: "Bachelor parties and arrivals at Wynn/Bellagio valet — Vegas has the deepest exotic market in the US." },
+                  { type: "Mid-size SUVs", note: "Best for Hoover Dam, Valley of Fire, and Grand Canyon West Rim day trips." },
+                  { type: "Compact Sedans", note: "Cheapest fuel for I-15 commutes from Henderson and Summerlin to the Strip." },
+                ].map((c) => (
+                  <li key={c.type}>
+                    <p className="font-semibold text-foreground">{c.type}</p>
+                    <p className="text-muted-foreground leading-relaxed">{c.note}</p>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
       <section className="py-24 md:py-32 relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-hero" />
         <div className="absolute top-1/3 left-1/3 w-96 h-96 bg-primary/10 rounded-full blur-3xl animate-pulse-glow" />
