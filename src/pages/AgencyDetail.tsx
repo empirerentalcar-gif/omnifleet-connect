@@ -4,6 +4,7 @@ import { MapPin, Car, Banknote, Shield, Clock, AlertCircle, User, ArrowRight, Lo
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import SEO from "@/components/SEO";
+import { Helmet } from "react-helmet-async";
 import { logVehicleFetchFailure, logVehicleFetchEmpty } from "@/lib/telemetry";
 import { SafeImage, PhotoFallback } from "@/components/SafeImage";
 
@@ -160,6 +161,24 @@ const AgencyDetail = () => {
         path={`/agency/${id}`}
         ready={!loading}
       />
+      <Helmet>
+        <script type="application/ld+json">{JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "AutoRental",
+          name: agency.name,
+          description: agency.story,
+          url: `https://zuvio.us/agency/${id}`,
+          image: agency.photos.length ? agency.photos : undefined,
+          priceRange: `$${agency.startingPrice}+/day`,
+          paymentAccepted: agency.cashAccepted ? "Cash, Credit Card" : "Credit Card",
+          address: agency.city || agency.state ? {
+            "@type": "PostalAddress",
+            addressLocality: agency.city || undefined,
+            addressRegion: agency.state || undefined,
+            addressCountry: "US",
+          } : undefined,
+        })}</script>
+      </Helmet>
 
       <main className="pt-8 pb-16">
         <div className="container mx-auto px-4">
