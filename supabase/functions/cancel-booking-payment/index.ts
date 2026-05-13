@@ -92,9 +92,13 @@ serve(async (req) => {
     // Fire-and-forget renter notification email
     try {
       const supabaseUrl = Deno.env.get("SUPABASE_URL") ?? "";
+      const cronSecret = Deno.env.get("CRON_SECRET") ?? "";
       await fetch(`${supabaseUrl}/functions/v1/send-renter-booking-status`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          "x-cron-secret": cronSecret,
+        },
         body: JSON.stringify({ booking_id, status: "declined", reason }),
       });
     } catch (e) {
