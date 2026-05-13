@@ -35,13 +35,11 @@ const Hero = () => {
           </div>
 
           <h1 className="font-display text-4xl md:text-6xl lg:text-7xl font-bold mb-6 leading-tight">
-            List Your Independent Rental Cars in Las Vegas & Nationwide
-            <br />
-            <span className="text-gradient">— Keep Full Control</span>
+            Everything you need to run your independent rental brand—contracts, payments, and fleet management—in one place
           </h1>
 
           <p className="text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto mb-10">
-            Zuvio connects independent rental car owners, agencies, and Turo hosts with real customers actively looking to rent — without corporate restrictions, pricing control, or middlemen.
+            Zuvio helps independent car rental owners and agencies manage listings, accept direct bookings, and grow without platform restrictions.
           </p>
 
           <div className="flex flex-wrap justify-center gap-x-8 gap-y-3 mb-10">
