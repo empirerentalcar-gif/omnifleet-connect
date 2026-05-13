@@ -1,6 +1,7 @@
 import { Facebook, Youtube, Mail, Phone } from "lucide-react";
 import { Link } from "react-router-dom";
 import zuvioLogo from "@/assets/zuvio-logo.png";
+import StripeBadge from "./StripeBadge";
 
 const Footer = () => {
   return (
