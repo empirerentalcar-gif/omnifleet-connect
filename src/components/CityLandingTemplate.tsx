@@ -26,7 +26,7 @@ export interface CityLandingConfig {
     intro?: string;
     regulations: string[];
     restaurants: { name: string; note: string }[];
-    popularCars: { type: string; reason: string }[];
+    popularCars: { type: string; note: string }[];
   };
 }
 
@@ -297,7 +297,7 @@ const CityLandingTemplate = ({ config }: { config: CityLandingConfig }) => {
                   {localFlavor.popularCars.map((c) => (
                     <li key={c.type} className="text-sm">
                       <p className="font-semibold text-foreground">{c.type}</p>
-                      <p className="text-muted-foreground leading-relaxed">{c.reason}</p>
+                      <p className="text-muted-foreground leading-relaxed">{c.note}</p>
                     </li>
                   ))}
                 </ul>
