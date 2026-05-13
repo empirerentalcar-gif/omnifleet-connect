@@ -5,7 +5,7 @@ const StripeBadge = () => {
     <a
       href="https://stripe.com"
       target="_blank"
-      rel="noopener noreferrer"
+      rel="nofollow noopener noreferrer"
       aria-label="Powered by Stripe - secure payment processing"
       className="inline-flex items-center gap-2 opacity-70 hover:opacity-100 transition-opacity"
     >
