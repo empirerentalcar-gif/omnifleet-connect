@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { useSearchParams, useNavigate, Link, useLocation as useRouterLocation } from "react-router-dom";
+import { useSearchParams, useNavigate, Link } from "react-router-dom";
 import { MapPin, Calendar, Car, Search, Banknote } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
@@ -8,79 +8,9 @@ import { supabase } from "@/integrations/supabase/client";
 import CitySelector from "@/components/CitySelector";
 import { logVehicleFetchFailure, logVehicleFetchEmpty } from "@/lib/telemetry";
 import { SafeImage } from "@/components/SafeImage";
+import { useTranslation } from "react-i18next";
 
 const vehicleTypes = ["All", "Sedan", "SUV", "Truck", "Van", "Compact", "Luxury"];
-
-type Lang = "en" | "es";
-
-const translations = {
-  en: {
-    seoTitle: "Search Car Rentals | ZUVIO",
-    seoDescription:
-      "Search independent car rental agencies near you. Filter by location, vehicle type, and cash-friendly options.",
-    heading: "Search Car Rentals",
-    subtitle: "Independent agencies • Cash-friendly options",
-    cityLabel: "City / Zip",
-    cityPlaceholder: "Select a city",
-    pickupLabel: "Pickup Date",
-    dropoffLabel: "Drop-off Date",
-    searchBtn: "Search",
-    vehicleTypeLabels: {
-      All: "All",
-      Sedan: "Sedan",
-      SUV: "SUV",
-      Truck: "Truck",
-      Van: "Van",
-      Compact: "Compact",
-      Luxury: "Luxury",
-    } as Record<string, string>,
-    resultsCount: (n: number, loc: string) =>
-      `${n} ${n === 1 ? "vehicle" : "vehicles"} found${loc ? ` near ${loc}` : ""}.`,
-    cashBadge: "Cash",
-    locationTBD: "Location TBD",
-    perDay: "/day",
-    viewDetails: "View Details & Reserve",
-    emptyTitleNone: "No vehicles available yet",
-    emptyTitleFiltered: "No vehicles match your filters",
-    emptyBodyNone: "We're actively onboarding new agencies. Check back soon!",
-    emptyBodyFiltered: (n: number) =>
-      `Try clearing your filters to see all ${n} ${n === 1 ? "vehicle" : "vehicles"}.`,
-    resetBtn: "Reset Filters",
-  },
-  es: {
-    seoTitle: "Alquiler de Autos en Miami | ZUVIO",
-    seoDescription:
-      "Busca agencias independientes de alquiler de autos cerca de ti. Filtra por ubicación, tipo de vehículo y opciones que aceptan efectivo.",
-    heading: "Alquiler de Autos en Miami",
-    subtitle: "Agencias independientes • Aceptan efectivo",
-    cityLabel: "Ciudad / Código Postal",
-    cityPlaceholder: "Selecciona una ciudad",
-    pickupLabel: "Recogida",
-    dropoffLabel: "Entrega",
-    searchBtn: "Buscar",
-    vehicleTypeLabels: {
-      All: "Todos",
-      Sedan: "Sedán",
-      SUV: "SUV",
-      Truck: "Camioneta",
-      Van: "Van",
-      Compact: "Compacto",
-      Luxury: "Lujo",
-    } as Record<string, string>,
-    resultsCount: (n: number, loc: string) =>
-      `${n} ${n === 1 ? "auto" : "autos"} encontrados${loc ? ` cerca de ${loc}` : ""}.`,
-    cashBadge: "Efectivo",
-    locationTBD: "Ubicación por confirmar",
-    perDay: "/día",
-    viewDetails: "Reservar Ahora",
-    emptyTitleNone: "No se encontraron autos disponibles",
-    emptyTitleFiltered: "No se encontraron autos disponibles",
-    emptyBodyNone: "Estamos incorporando nuevas agencias. ¡Vuelve pronto!",
-    emptyBodyFiltered: (n: number) =>
-      `Borra los filtros para ver los ${n} ${n === 1 ? "auto" : "autos"} disponibles.`,
-    resetBtn: "Borrar todo",
-  },
-} as const;
 
 interface VehicleCard {
   id: string;
@@ -97,16 +27,10 @@ interface VehicleCard {
   image: string | null;
 }
 
-interface SearchResultsProps {
-  lang?: Lang;
-}
-
-const SearchResults = ({ lang: langProp }: SearchResultsProps = {}) => {
+const SearchResults = () => {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
-  const routerLocation = useRouterLocation();
-  const lang: Lang = langProp ?? (routerLocation.pathname.startsWith("/buscar") ? "es" : "en");
-  const t = translations[lang];
+  const { t } = useTranslation();
   const [location, setLocation] = useState(searchParams.get("location") || "");
   const [pickupDate, setPickupDate] = useState(searchParams.get("pickup") || "");
   const [dropoffDate, setDropoffDate] = useState(searchParams.get("dropoff") || "");
