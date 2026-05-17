@@ -13,7 +13,14 @@
     "clearAll": "Clear all",
     "reset": "Reset Filters",
     "perDay": "/day",
-    "cash": "Cash"
+    "cash": "Cash",
+    "back": "Back",
+    "continue": "Continue",
+    "cancel": "Cancel",
+    "submit": "Submit",
+    "save": "Save",
+    "yes": "Yes",
+    "no": "No"
   },
   "nav": {
     "findRentals": "Find Rentals",
@@ -64,6 +71,169 @@
       "bullet4": "Built for independent owners",
       "ctaPrimary": "Start Getting Booking Requests",
       "ctaSecondary": "List My Rental Business"
+    },
+    "problem": {
+      "badge": "The Problem",
+      "title": "Why Independent Owners Lose Money on Big Rental Platforms",
+      "items": [
+        "They control your pricing",
+        "They take a percentage of your earnings",
+        "They own your customer relationships",
+        "They can suspend your account without warning"
+      ],
+      "solutionBadge": "The Zuvio Difference",
+      "solutionTitle": "The Zuvio Difference",
+      "solutionTitleAccent": "More Bookings, No Middleman",
+      "solutionIntro": "Zuvio is not a rental company. It is a visibility and booking engine built for independent owners.",
+      "solutionItems": [
+        "You stay in control",
+        "Customers contact you directly",
+        "You set your own rules",
+        "You run your business your way"
+      ]
+    },
+    "whoFor": {
+      "title": "Built for Owners Who Want",
+      "titleAccent": "More Control & More Income",
+      "items": [
+        "Independent rental agencies",
+        "Turo hosts",
+        "Individuals with 2+ vehicles",
+        "Fleet owners scaling locally"
+      ],
+      "footer": "If you own vehicles,",
+      "footerAccent": "Zuvio helps you monetize them."
+    },
+    "money": {
+      "badge": "Revenue Engine",
+      "title": "Get More Visibility for Your Car Rental Business —",
+      "titleAccent": "Locally & Nationwide",
+      "items": [
+        "Receive direct reservation requests",
+        "Get discovered in your city",
+        "Build repeat customers",
+        "Accept cash or your preferred payment method",
+        "Keep full control of pricing and policies"
+      ],
+      "footer": "This is",
+      "footerAccent": "YOUR",
+      "footerTail": "business — not ours."
+    },
+    "competitor": {
+      "badge": "Comparison",
+      "title": "Why Not Just Use Turo or",
+      "titleAccent": "Big Rental Platforms?",
+      "traditionalLabel": "Traditional Platforms",
+      "zuvioLabel": "Zuvio",
+      "traditional": [
+        "Take a cut of your revenue",
+        "Control your pricing",
+        "Own your customer data",
+        "Limit how you operate"
+      ],
+      "zuvio": [
+        "No pricing control",
+        "No forced policies",
+        "Direct customer communication",
+        "Built for independent operators"
+      ],
+      "footer": "You don't work for the platform —",
+      "footerAccent": "the platform works for you."
+    },
+    "howItWorks": {
+      "title": "How It",
+      "titleAccent": "Works",
+      "subtitle": "Simple for renters. Powerful for owners.",
+      "forOwners": "For Owners",
+      "forRenters": "For Renters",
+      "ownerSteps": [
+        "Create your profile",
+        "List your vehicles or services",
+        "Receive booking requests",
+        "Approve or decline",
+        "Handle payment your way"
+      ],
+      "renterSteps": [
+        "Search by city or ZIP",
+        "Connect directly with owners",
+        "Book without corporate hassle"
+      ],
+      "ownerFooter": "You keep your policies. You keep your customers.",
+      "renterFooter": "No corporate runaround. No hidden surprises."
+    },
+    "cityExpansion": {
+      "badge": "Expanding Nationwide",
+      "title": "Independent Car Rentals Available Nationwide —",
+      "titleAccent": "Las Vegas, Phoenix, Miami & More",
+      "subtitle": "Be the first agency listed in your city and gain early visibility before competitors join.",
+      "cta": "Claim Your City"
+    },
+    "social": {
+      "title": "What Independent Car Rental Owners Are",
+      "titleAccent": "Saying About Zuvio",
+      "testimonials": [
+        {
+          "quote": "I was tired of platforms taking a cut and controlling my prices. With Zuvio, I set my own rates and customers call me directly. My bookings have increased since joining.",
+          "name": "Marcus T.",
+          "role": "Independent Fleet Owner · Las Vegas, NV"
+        },
+        {
+          "quote": "As a Turo host I was always worried about account suspensions. Zuvio gave me a second channel where I'm in full control. It's exactly what independent owners need.",
+          "name": "Daniela R.",
+          "role": "Turo Host & Agency Owner · Miami, FL"
+        },
+        {
+          "quote": "The setup was simple and I started getting calls within the first week. No complicated onboarding, no corporate policies — just business.",
+          "name": "James K.",
+          "role": "Small Fleet Owner · Dallas, TX"
+        }
+      ]
+    },
+    "trust": {
+      "title": "Built for",
+      "titleAccent": "Independent Businesses",
+      "items": [
+        "Verified agency profiles",
+        "Direct communication",
+        "No platform interference",
+        "No hidden surprises"
+      ]
+    },
+    "ownerFaq": {
+      "badge": "Owner FAQ",
+      "title": "Questions from",
+      "titleAccent": "Owners",
+      "items": [
+        { "q": "Do I keep my phone number?", "a": "Absolutely. Zuvio never replaces your phone number. Customers can call you directly. We simply route new reservation leads your way — you stay in full control of every conversation." },
+        { "q": "Who handles payment?", "a": "You do. Zuvio does not process payments on your behalf. You collect payment however you prefer — cash, card, Zelle, or any method you choose. Your money, your terms." },
+        { "q": "Can I decline bookings?", "a": "Yes. You have full authority to accept or decline any reservation request. If a vehicle isn't available or the timing doesn't work, simply decline — no penalties, no questions asked." },
+        { "q": "How fast can I start?", "a": "Most owners go live within 24 hours. Once your profile and vehicle listings are approved, you'll start appearing in search results immediately." },
+        { "q": "What are the fees?", "a": "$79/month + 5% per confirmed booking. Founding members get 60 days free and their rate locked for life. No hidden fees. No long-term contracts. Cancel anytime." },
+        { "q": "Can I list multiple vehicles?", "a": "Yes. You can manage multiple vehicles and locations from a single dashboard. Each vehicle gets its own listing with pricing, photos, and availability." }
+      ]
+    },
+    "objections": {
+      "title": "Common Questions from",
+      "titleAccent": "Independent Car Rental Owners",
+      "items": [
+        { "q": "\"I already use Turo\"", "a": ["You don't need to replace Turo.", "Most Zuvio members use it **alongside their existing platforms** to increase bookings and reduce dependence on a single source.", "Zuvio simply adds another stream of customers — **one you control.**"] },
+        { "q": "\"I don't want to pay monthly fees\"", "a": ["That's exactly why the model is designed this way.", "If Zuvio brings you just **1–2 additional bookings per month**, it covers your cost. **Everything beyond that is profit.**", "And because there are no contracts, you only continue if it's working."] },
+        { "q": "\"I'm too busy to manage another platform\"", "a": ["Zuvio is designed to work alongside your current system.", "You receive booking requests, approve or decline them, and communicate directly with customers — **no complicated setup or workflow changes.**"] },
+        { "q": "\"What if I don't get bookings?\"", "a": ["That's why we offer **60 days risk-free.**", "If it doesn't bring value to your business, you simply don't continue.", "There's no long-term commitment."] },
+        { "q": "\"I don't have a large fleet\"", "a": ["You don't need one.", "Many independent owners with just a few vehicles use Zuvio to **increase utilization** and generate additional income."] }
+      ],
+      "footer": "Zuvio is built to help independent rental owners grow —",
+      "footerAccent": "without giving up control.",
+      "ctaPrimary": "Start Getting Booking Requests",
+      "ctaSecondary": "Lock My Founding Rate"
+    },
+    "finalCta": {
+      "title": "Start Turning Your Vehicles Into",
+      "titleAccent": "Income",
+      "pricing": "$79/month + 5% per confirmed booking. 60 days free for founding members. Limited availability.",
+      "risk": "Try it risk-free for 60 days. If it doesn't bring value, you don't continue.",
+      "ctaPrimary": "Lock My Founding Rate",
+      "ctaSecondary": "Start Getting Booking Requests"
     }
   },
   "search": {
@@ -95,6 +265,533 @@
       "Compact": "Compact",
       "Luxury": "Luxury"
     }
+  },
+  "vehicle": {
+    "seoTitle": "{{label}} for rent | ZUVIO",
+    "seoDescription": "Reserve a {{label}} from {{agency}} on ZUVIO. Cash-friendly options.",
+    "loadingAlt": "Loading vehicle",
+    "notAvailable": "Vehicle not available",
+    "notAvailableBody": "It may have been removed or is no longer listed.",
+    "browse": "Browse vehicles",
+    "back": "Back to search",
+    "locationTBD": "Location TBD",
+    "seats": "{{count}} seats",
+    "about": "About this vehicle",
+    "features": "Features",
+    "independentAgency": "Independent agency",
+    "cashAccepted": "Cash accepted",
+    "viewAgency": "View agency profile →",
+    "bookingDetails": "Booking details",
+    "requirements": "Requirements",
+    "deposit": "Deposit",
+    "cancellation": "Cancellation",
+    "perDay": "/ day",
+    "authNote": "Card authorized at booking, charged when the agency confirms.",
+    "reserveBtn": "Reserve this vehicle",
+    "feeNote": "A 5% platform fee is included in the total. No charge until your booking is confirmed by the agency."
+  },
+  "reserveDrawer": {
+    "title": "Reserve {{label}}",
+    "descForm": "Your card will be authorized — not charged — until the agency confirms.",
+    "descPay": "Securely save your card. Authorization happens before pickup.",
+    "pickup": "Pickup",
+    "dropoff": "Drop-off",
+    "fullName": "Full name",
+    "email": "Email",
+    "phone": "Phone",
+    "daysSummary": "{{count}} day × ${{rate}}/day",
+    "daysSummary_other": "{{count}} days × ${{rate}}/day",
+    "feeIncluded": "5% platform fee included",
+    "continue": "Continue to payment",
+    "continuing": "Continuing…",
+    "stripeSecured": "Secured by Stripe.",
+    "totalLine": "Total ({{count}} day)",
+    "totalLine_other": "Total ({{count}} days)",
+    "payNote": "We'll authorize your card now. You won't be charged until the agency confirms your booking.",
+    "saveNote": "We'll save your card now and authorize the charge 7 days before pickup. You won't be charged until the agency confirms.",
+    "processing": "Processing…",
+    "authorizeBtn": "Authorize card",
+    "saveBtn": "Save card",
+    "errPickDates": "Pick valid dates",
+    "errCouldntStart": "Couldn't start booking",
+    "errPayment": "Payment failed",
+    "submitted": "Booking submitted!",
+    "submittedSetup": "Your card is saved. The agency will be notified and your card will be authorized 7 days before pickup.",
+    "submittedPay": "Your card is authorized. The agency will confirm shortly."
+  },
+  "reserveRequest": {
+    "seoTitle": "Reserve with {{agency}} | ZUVIO",
+    "seoDescription": "Request a car rental reservation with {{agency}} through ZUVIO.",
+    "title": "Request a Reservation",
+    "with": "with",
+    "fullName": "Full Name",
+    "fullNamePh": "John Doe",
+    "phone": "Phone Number",
+    "phonePh": "(555) 123-4567",
+    "email": "Email",
+    "emailOpt": "(optional, for updates)",
+    "emailPh": "you@email.com",
+    "pickup": "Pickup Date",
+    "dropoff": "Drop-off Date",
+    "vehicleType": "Vehicle Type",
+    "selectType": "Select a type...",
+    "notes": "Additional Notes",
+    "notesOpt": "(optional)",
+    "notesPh": "Any special requests, preferences, or questions...",
+    "cancelNotice": "Cancellation requires contacting the agency directly by phone.",
+    "cancelNoticeRest": "No online cancellations are available. The agency's phone number will be provided in your confirmation.",
+    "sending": "Sending Request...",
+    "submit": "Submit Reservation Request",
+    "errInvalid": "Invalid input",
+    "errFailed": "Reservation failed:",
+    "defaultAgency": "the Agency"
+  },
+  "confirmed": {
+    "seoTitle": "Reservation Confirmed | ZUVIO",
+    "seoDescription": "Your reservation request has been sent successfully.",
+    "title": "Request Sent!",
+    "body": "Your reservation request has been sent to <agency/>. They will contact you directly to confirm availability and finalize your booking.",
+    "whatNext": "What happens next?",
+    "step1": "The agency reviews your request and checks availability.",
+    "step2": "You'll receive a call or email confirming your reservation.",
+    "step3": "Show up with required documents and enjoy your ride!",
+    "home": "Back to Home",
+    "more": "Search More Agencies",
+    "defaultAgency": "the Agency"
+  },
+  "auth": {
+    "signIn": {
+      "seoTitle": "Sign In | ZUVIO",
+      "seoDescription": "Sign in to your ZUVIO rental agency dashboard.",
+      "title": "Sign In",
+      "welcome": "Welcome back to Zuvio",
+      "email": "Email",
+      "emailPh": "you@example.com",
+      "password": "Password",
+      "passwordPh": "••••••••",
+      "submit": "Sign In",
+      "submitting": "Signing in...",
+      "forgot": "Forgot Password?",
+      "noAccount": "Don't have an account?",
+      "signUp": "Sign Up",
+      "errInvalid": "Invalid email or password.",
+      "errFail": "Sign in failed",
+      "validation": "Validation error",
+      "needEmail": "Enter your email",
+      "needEmailDesc": "Please enter your email address first, then click Forgot Password.",
+      "resetSent": "Check your email",
+      "resetSentDesc": "A password reset link has been sent if an account exists.",
+      "errInvalidEmail": "Invalid email address",
+      "errEmailTooLong": "Email too long",
+      "errPwRequired": "Password is required",
+      "errPwTooLong": "Password too long"
+    },
+    "signUp": {
+      "seoTitle": "Sign Up | ZUVIO",
+      "seoDescription": "Create a ZUVIO account to list your independent car rental business.",
+      "title": "Create Account",
+      "founding": "Founding Member Program",
+      "foundingSub": "60 days FREE + exclusive pricing locked forever",
+      "spots": "Only 50 spots available",
+      "afterTrial": "After trial: <strong>$79/month + 5% per confirmed booking</strong> (locked forever)",
+      "afterTrialPlain": "After trial: <strong>$79/month + 5% per confirmed booking</strong>",
+      "startTrial": "Start your <strong>60-day FREE trial</strong>",
+      "regCode": "Registration Code",
+      "regCodePh": "Enter your registration code",
+      "businessName": "Business Name",
+      "businessNamePh": "Your rental business name",
+      "email": "Email",
+      "emailPh": "you@example.com",
+      "password": "Password",
+      "passwordPh": "••••••••",
+      "submit": "Sign Up",
+      "submitting": "Creating account...",
+      "haveAccount": "Already have an account?",
+      "signIn": "Sign In",
+      "pwReq": "Password requirements",
+      "pwRule": {
+        "length": "At least 8 characters",
+        "uppercase": "One uppercase letter (A–Z)",
+        "lowercase": "One lowercase letter (a–z)",
+        "number": "One number (0–9)",
+        "special": "One special character (!@#$…)"
+      },
+      "errCodeReq": "Registration code is required",
+      "errCodeLong": "Registration code too long",
+      "errBizReq": "Business name is required",
+      "errBizLong": "Business name too long",
+      "errEmail": "Invalid email address",
+      "errEmailLong": "Email too long",
+      "errPwShort": "Password must be at least 8 characters",
+      "errPwLong": "Password too long",
+      "errPwUpper": "Password must contain an uppercase letter",
+      "errPwLower": "Password must contain a lowercase letter",
+      "errPwNumber": "Password must contain a number",
+      "errPwSpecial": "Password must contain a special character",
+      "errCode": "Invalid registration code",
+      "errCodeDesc": "The code you entered is invalid or expired.",
+      "validation": "Validation error",
+      "pwTitle": "Password does not meet requirements",
+      "failed": "Sign up failed",
+      "checkEmail": "Check your email",
+      "checkEmailDesc": "We sent you a confirmation link to verify your account.",
+      "friendly": {
+        "default": "Unable to create account. Please try again.",
+        "exists": "An account with this email already exists. Try signing in or use a different email.",
+        "leaked": "This password has appeared in a known data breach. Please choose a different password.",
+        "rate": "Too many sign-up attempts. Please wait a few minutes and try again.",
+        "invalidEmail": "That email address was rejected. Please double-check it and try again.",
+        "server": "We hit a server error creating your account. Please contact team@zuvio.us so we can help."
+      }
+    },
+    "reset": {
+      "seoTitle": "Reset Password | ZUVIO",
+      "seoDescription": "Set a new password for your ZUVIO account.",
+      "title": "Set New Password",
+      "subtitle": "Enter your new password below.",
+      "newPassword": "New Password",
+      "confirm": "Confirm Password",
+      "submit": "Update Password",
+      "updating": "Updating…",
+      "verifying": "Verifying reset link…",
+      "tooShort": "Password too short",
+      "tooShortDesc": "Must be at least 8 characters.",
+      "mismatch": "Passwords do not match",
+      "failed": "Reset failed",
+      "updated": "Password updated",
+      "updatedDesc": "You can now sign in with your new password."
+    }
+  },
+  "pricing": {
+    "seoTitle": "Pricing | ZUVIO — Plans for Independent Rental Agencies",
+    "seoDescription": "Simple, transparent pricing for independent car rental agencies. No setup fees. Zuvio only succeeds when you do. See our plans.",
+    "title": "Simple, Transparent Pricing for",
+    "titleAccent": "Independent Car Rental Agencies",
+    "intro": "ZUVIO is built to help independent rental agencies grow regional visibility and generate more reservation opportunities — while staying fully in control of their business.",
+    "noFees": "No hidden fees. No long-term contracts. No loss of control.",
+    "standardTier": "Future Tier",
+    "comingSoon": "COMING SOON",
+    "standardPlan": "Standard Growth Plan",
+    "perMonth": "/month",
+    "plus7": "+ 7% per confirmed booking",
+    "standardFeatures": [
+      "Everything in Founding Plan",
+      "Priority regional placement",
+      "Featured agency badge",
+      "Enhanced analytics dashboard"
+    ],
+    "successTitle": "We Only Succeed When Your Car Rental Agency Does",
+    "successBody": "ZUVIO earns a small percentage only when you receive bookings. This ensures we are motivated to bring real, qualified reservation opportunities to your agency.",
+    "successQuote": "If you don't grow — we don't grow.",
+    "riskFree": "Try it risk-free for 60 days. If it doesn't bring value, you don't continue.",
+    "noSetup": "No Setup Fees",
+    "noContracts": "No Contracts",
+    "cancelAny": "Cancel Anytime",
+    "faqTitle": "Car Rental Agency Pricing FAQs",
+    "faqs": [
+      { "q": "Do I lose control of my pricing?", "a": "No. You control daily rates, deposits, requirements, and vehicle availability. ZUVIO does not dictate pricing." },
+      { "q": "Can customers cancel without calling me?", "a": "No. All cancellations require direct phone contact with your agency. You maintain control of your reservation policies." },
+      { "q": "Do I have to accept every reservation request?", "a": "No. You approve or decline each request." },
+      { "q": "Does ZUVIO replace my brand?", "a": "No. Your agency name, phone number, and identity remain front and center. ZUVIO increases your visibility — it does not replace your brand." },
+      { "q": "How do I get paid?", "a": "Customers pay you directly according to your payment policies. ZUVIO collects its booking fee only on confirmed reservations." },
+      { "q": "What if I don't see results?", "a": "Try it risk-free for 60 days. If it doesn't bring value, you don't continue. No long-term contracts." },
+      { "q": "How is this different from large corporate platforms?", "a": "ZUVIO focuses only on independent rental agencies, keeps cancellation control with owners, encourages direct communication, and builds regional visibility for local businesses. We are a network — not a replacement." }
+    ],
+    "lockBtn": "Lock My Founding Rate"
+  },
+  "faq": {
+    "seoTitle": "FAQ | ZUVIO — Independent Car Rental Questions Answered",
+    "seoDescription": "Got questions about renting or listing cars on Zuvio? Find answers to the most common questions from renters and independent agencies.",
+    "title": "Independent Car Rental FAQs — Zuvio Las Vegas & Nationwide",
+    "subtitle": "Find answers to common questions about renting from independent agencies and joining the ZUVIO network.",
+    "cat": {
+      "renters": "For Renters",
+      "agencies": "For Agencies",
+      "agenciesAlt": "For Rental Agencies",
+      "general": "General"
+    },
+    "ctaTitle": "Still Have Questions About Renting or Listing Cars on Zuvio?",
+    "ctaBody": "Can't find the answer you're looking for? Our support team is ready to help.",
+    "ctaBtn": "Contact Support",
+    "renters": [
+      { "q": "What is ZUVIO and how does it work?", "a": "ZUVIO is a nationwide platform that connects customers with independent car rental agencies across the United States. Think of us as a one-stop shop where you can discover and book from local, independent rental businesses that you might not otherwise find.\n\nWe work by aggregating rental options from independent agencies into a single, easy-to-use platform. You search for rentals in your area, compare options from different agencies, and book directly through ZUVIO." },
+      { "q": "Can I pay with cash or without a credit card?", "a": "Yes! Many independent agencies on ZUVIO accept cash payments and don't require credit cards. This is one of the major advantages of renting from independent agencies versus large corporate chains.\n\nWhen browsing rentals, you can filter specifically for agencies that accept cash or debit cards. Payment requirements are clearly displayed on each listing so you know exactly what to expect before booking." },
+      { "q": "How do I book a rental through ZUVIO?", "a": "Booking is simple and takes just a few minutes:\n\n• Enter your location, pickup date, and return date\n• Browse available vehicles from independent agencies\n• Select the rental that fits your needs\n• Complete your reservation through our secure booking system\n• Receive instant confirmation with pickup details\n\nAfter booking, you'll get the agency's contact information and location so you can pick up your vehicle at the scheduled time." },
+      { "q": "Are the rental agencies on ZUVIO legitimate and safe?", "a": "Absolutely. Every agency on ZUVIO goes through a verification process before being listed. We verify business licenses, insurance coverage, and legitimate operations.\n\nAdditionally, all agencies have customer reviews and ratings visible on their profiles. You can read experiences from other renters before making your decision, just like you would on any reputable platform." },
+      { "q": "What's the difference between ZUVIO and major rental chains?", "a": "ZUVIO connects you with independent, locally-owned rental agencies rather than corporate chains. Key differences include:\n\n• Personalized Service: Work directly with business owners who care about your experience\n• Flexible Terms: Many agencies accept cash, offer negotiable terms, and have more flexible policies\n• Support Local: Your rental dollars support local business owners in your community\n• Better Value: Independent agencies often have competitive pricing without sacrificing quality" },
+      { "q": "What if I have a problem with my rental?", "a": "For issues during your rental, contact the agency directly using the information provided in your booking confirmation. Independent agencies typically respond quickly and work hard to resolve any concerns.\n\nIf you're unable to resolve an issue with the agency, ZUVIO customer support is here to help mediate and ensure a fair outcome. We take customer satisfaction seriously and work with our partner agencies to maintain high standards." },
+      { "q": "Do I need insurance to rent a car through ZUVIO?", "a": "Insurance requirements vary by agency and state. Most agencies require proof of insurance coverage, either through your personal auto policy, credit card coverage, or by purchasing insurance from the agency.\n\nInsurance options and requirements are clearly stated in each listing. Many agencies offer affordable insurance options if you need coverage for your rental period." }
+    ],
+    "agencies": [
+      { "q": "How much does it cost to join ZUVIO?", "a": "ZUVIO offers one simple plan:\n\n• Founding Member Plan: $79/month + 5% per confirmed booking\n• 60 days free for founding members (limited to the first 50 agencies)\n• Your rate is locked for life once you join\n\nNo hidden fees. No long-term contracts. Cancel anytime. You keep full control of your business." },
+      { "q": "What do I need to get started as an agency partner?", "a": "To join ZUVIO, you'll need:\n\n• Valid business license for car rental operations\n• Proof of liability insurance\n• Photos and details of your rental fleet\n• Business contact information and location\n\nThe signup process is straightforward and our team helps you get set up quickly. Most agencies are live on the platform within a few days." },
+      { "q": "How do I manage bookings and availability?", "a": "ZUVIO provides an easy-to-use dashboard where you can:\n\n• Update vehicle availability in real-time\n• View and manage incoming reservations\n• Set pricing and rental terms\n• Communicate with customers\n• Track your bookings and revenue\n\nYou have complete control over your inventory and can block out dates, adjust pricing, or make changes anytime." },
+      { "q": "Can I set my own prices and rental policies?", "a": "Absolutely! You maintain complete control over your business. You set:\n\n• Daily, weekly, and monthly rental rates\n• Security deposit requirements\n• Mileage limits and policies\n• Payment methods accepted (cash, credit, debit)\n• Age requirements and driver restrictions\n• Insurance options and requirements\n\nZUVIO is simply the platform that connects you with customers. You run your business your way." },
+      { "q": "How quickly will I start getting bookings?", "a": "Booking volume varies based on your location, fleet size, and pricing. Many agencies receive their first booking within the first week of going live.\n\nTo maximize bookings, we recommend:\n\n• Uploading quality photos of your vehicles\n• Setting competitive pricing\n• Clearly describing your rental terms and what makes your agency special\n• Responding quickly to customer inquiries\n• Encouraging satisfied customers to leave reviews" },
+      { "q": "What support does ZUVIO provide to agencies?", "a": "We're committed to your success. ZUVIO provides:\n\n• Dedicated customer support team\n• Help with platform setup and optimization\n• Marketing to drive customers to the platform\n• Regular platform updates and improvements\n• Resources and best practices for maximizing bookings\n• Dispute resolution assistance when needed" }
+    ],
+    "general": [
+      { "q": "Where is ZUVIO available?", "a": "ZUVIO operates nationwide across the United States. We're actively partnering with independent car rental agencies in all 50 states.\n\nCoverage varies by location — some areas have many agency options while we're still growing in others. Enter your location on our search page to see available agencies near you." },
+      { "q": "How does ZUVIO make money?", "a": "ZUVIO charges partner agencies $79/month plus a 5% fee on confirmed bookings. This ensures we only succeed when our partners succeed.\n\nFor renters, using ZUVIO is completely free. We never charge customers booking fees or mark up rental prices." },
+      { "q": "Is my personal information secure?", "a": "Yes. ZUVIO takes data security seriously. We use industry-standard encryption to protect your personal and payment information. We never sell your data to third parties.\n\nWhen you book a rental, we share only the necessary information with the agency (name, contact info, reservation details) to complete your rental." },
+      { "q": "Can I cancel or modify my reservation?", "a": "Cancellation and modification policies are set by each individual rental agency and are clearly displayed when you book. Policies vary but many agencies offer free cancellation up to 24-48 hours before pickup.\n\nTo modify or cancel a reservation, contact the agency directly using the information in your booking confirmation." },
+      { "q": "How can I contact ZUVIO support?", "a": "We're here to help! You can reach our support team through:\n\n• Email: team@zuvio.us\n• Phone: Available on our Contact page\n\nWe typically respond to all inquiries within 24 hours, often much sooner." }
+    ]
+  },
+  "about": {
+    "seoTitle": "About ZUVIO | Empowering Independent Car Rental Agencies",
+    "seoDescription": "Zuvio is the independent car rental network built for owners who want more bookings, full control, and no corporate middlemen. Learn our story.",
+    "title": "About Zuvio — The Independent Car Rental Network",
+    "subtitle": "Empowering independent car rental agencies and connecting them with customers who value local service and flexibility.",
+    "missionTitle": "Our Mission: Empower Independent Car Rental Owners Nationwide",
+    "missionBody": "ZUVIO exists to level the playing field for independent car rental agencies competing in a market dominated by national chains. We believe that local businesses deserve access to the same technology and customer reach as corporate giants, while maintaining their independence and personal touch.",
+    "tagBox": "Independent Car Rentals. One Network.",
+    "tagBoxBody": "We're building a nationwide platform where independent rental agencies can thrive, and customers can discover the benefits of renting local.",
+    "storyTitle": "How Zuvio Was Built for Independent Car Rental Agencies",
+    "story": [
+      "The idea for ZUVIO was born from a simple observation: while national car rental chains have sophisticated booking platforms and massive marketing budgets, independent rental agencies struggle to be discovered by customers who would actually prefer their personalized service and flexible terms.",
+      "We saw talented business owners with quality vehicles and exceptional customer service being overshadowed simply because they lacked the digital infrastructure to compete. Customers looking for cash rentals, flexible policies, or just wanting to support local businesses couldn't easily find these independent agencies.",
+      "ZUVIO changes that. We've created a dedicated platform that puts independent car rental agencies on equal footing with the big chains, giving them the tools to showcase their services to customers across America who are actively seeking alternatives to corporate rentals.",
+      "Today, we're building a community of independent rental agencies and customers who value quality service, local business, and flexibility over corporate standardization."
+    ],
+    "valuesTitle": "What We Believe",
+    "valuesSub": "Our core values guide everything we do at ZUVIO",
+    "values": [
+      { "title": "Support Independence", "desc": "We champion independent businesses and believe local entrepreneurs deserve the tools to succeed against corporate competition." },
+      { "title": "Fair Competition", "desc": "Small businesses shouldn't be disadvantaged by lack of technology. We provide enterprise-grade tools at accessible pricing." },
+      { "title": "Quality Service", "desc": "We believe personalized service from local agencies creates better experiences than one-size-fits-all corporate policies." },
+      { "title": "Innovation", "desc": "We continuously improve our platform to give agencies and customers the best possible experience." },
+      { "title": "Trust & Transparency", "desc": "We build trust through honest communication, transparent pricing, and verified agency listings." },
+      { "title": "Community", "desc": "We're creating a nationwide community of independent agencies and customers who value local business." }
+    ],
+    "diffTitle": "The Zuvio Difference — Direct Bookings, No Big Platform Middleman",
+    "diffs": [
+      { "title": "Built for Independents", "desc": "Unlike generic listing sites, ZUVIO is designed specifically for independent car rental agencies and their unique needs." },
+      { "title": "Two-Sided Marketplace", "desc": "We serve both agencies and customers, creating a win-win ecosystem where local businesses connect with customers seeking their services." },
+      { "title": "Flexible Solutions", "desc": "We understand that agencies offer cash rentals, varied policies, and personalized service. Our platform supports this flexibility." },
+      { "title": "Agency Empowerment", "desc": "Agencies maintain full control over pricing, policies, and customer relationships. We provide the platform, you run your business." },
+      { "title": "Customer Focus", "desc": "We attract customers specifically looking for independent agencies, not just anyone needing a rental car." },
+      { "title": "Continuous Growth", "desc": "We're constantly adding features, expanding our network, and improving the platform based on agency and customer feedback." }
+    ],
+    "stats": [
+      { "number": "50+", "label": "States Covered" },
+      { "number": "100%", "label": "Independent Agencies" },
+      { "number": "24/7", "label": "Platform Availability" },
+      { "number": "1", "label": "Mission: Your Success" }
+    ],
+    "joinTitle": "Join the Fastest-Growing Independent Car Rental Network",
+    "joinBody": "ZUVIO is more than a platform—it's a movement to support independent businesses and give customers better rental options. Whether you're an agency owner looking to grow or a customer seeking personalized service, we invite you to be part of our community.",
+    "ctaTitle": "Be Part of the ZUVIO Network",
+    "ctaBody": "Join us in revolutionizing the car rental industry, one independent agency at a time.",
+    "findRental": "Find a Rental",
+    "becomePartner": "Become a Partner"
+  },
+  "howItWorksPage": {
+    "seoTitle": "How ZUVIO Works | Rent from Independent Car Rental Agencies",
+    "seoDescription": "Learn how to rent a car directly from independent agencies on Zuvio. Cash-friendly options, no big platform markups. Book in minutes.",
+    "title": "How to Rent a Car from Independent Agencies in Las Vegas & Nationwide",
+    "subtitle": "Renting from independent car rental agencies has never been easier. Follow our simple three-step process to find the perfect rental.",
+    "introTitle": "Your Complete Guide to Booking Independent Car Rentals",
+    "introBody": "ZUVIO connects you with trusted independent car rental agencies across the United States. Whether you need flexible payment options, personalized service, or want to support local businesses, we make it simple to find and book the perfect rental vehicle.",
+    "steps": [
+      { "title": "Search for Rentals Near You", "desc": "Start by entering your location, pickup dates, and preferred vehicle type. ZUVIO will instantly show you all available rentals from independent agencies in your area.", "subTitle": "What You Can Do:", "details": ["Search by city, zip code, or airport", "Filter by vehicle type, price range, and amenities", "See agencies that accept cash payments", "View agencies with no credit card requirements", "Check real-time availability across all local agencies"] },
+      { "title": "Compare and Choose Your Rental", "desc": "Browse through available options and compare vehicles, prices, and agency reviews. Each listing provides detailed information to help you make the best choice.", "subTitle": "Information You'll See:", "details": ["Vehicle details, photos, and features", "Pricing with no hidden fees", "Agency location and contact information", "Customer reviews and ratings", "Payment options accepted (cash, credit, debit)", "Rental terms and conditions", "Insurance and protection options"] },
+      { "title": "Book and Pick Up Your Vehicle", "desc": "Once you've found the perfect rental, complete your reservation through ZUVIO. You'll receive instant confirmation and all the details you need for pickup.", "subTitle": "The Booking Process:", "details": ["Secure your reservation with instant confirmation", "Receive pickup location and directions", "Get agency contact information for any questions", "Review required documents (license, insurance proof, etc.)", "Arrive at the agency to complete paperwork and pick up your vehicle", "Drive away with your rental and enjoy personalized service"] }
+    ],
+    "featuresTitle": "Why Rent a Car Through Zuvio Instead of the Big Platforms?",
+    "features": [
+      { "title": "Flexible Payment", "desc": "Many agencies accept cash, debit cards, or credit cards. No credit card? No problem with our network of independent agencies." },
+      { "title": "Support Local", "desc": "Every rental supports independent business owners in your community. Keep your money local and get better service." },
+      { "title": "Personal Touch", "desc": "Work directly with agency owners who care about your experience. Skip the corporate bureaucracy and get real customer service." },
+      { "title": "Transparent Pricing", "desc": "See all costs upfront with no surprise fees. Independent agencies pride themselves on honest, straightforward pricing." },
+      { "title": "Variety of Vehicles", "desc": "From economy cars to SUVs and vans, find exactly what you need from agencies with diverse fleets." },
+      { "title": "Convenient Locations", "desc": "Access rentals near airports, city centers, and neighborhoods across the country. Find an agency close to you." }
+    ],
+    "ctaTitle": "Find Cash-Friendly Car Rentals Near You — Book Direct Today",
+    "ctaBody": "Search our network of independent car rental agencies and discover the ZUVIO difference today.",
+    "ctaBtn": "Start Your Search"
+  },
+  "forAgencies": {
+    "seoTitle": "Independent Car Rental Agencies | Get More Bookings with Zuvio",
+    "seoDescription": "Get more car rental bookings for your independent agency. Zuvio connects you with real customers in Las Vegas & nationwide. No middlemen.",
+    "heroTitle": "Get More Car Rental Bookings for Independent Agencies in",
+    "heroTitleAccent": "Las Vegas & Beyond",
+    "heroSubtitle": "Zuvio helps independent car rental agencies attract direct customers, increase bookings, and grow revenue — while keeping full control of pricing, policies, and operations.",
+    "heroBullets": ["Direct customer communication", "No corporate restrictions", "Built for independent agencies"],
+    "ctaFounding": "Become a Founding Member",
+    "ctaStart": "Start Getting Booking Requests",
+    "noContracts": "No contracts. Cancel anytime.",
+    "moneyBadge": "Revenue Engine",
+    "moneyTitle": "More Car Rental Bookings =",
+    "moneyTitleAccent": "More Revenue for Your Agency",
+    "moneyBody": "Even a few additional bookings per month can cover your cost and increase your total income.",
+    "moneyItems": ["Fill unused inventory", "Increase monthly revenue", "Reduce reliance on one platform"],
+    "moneyFooter": "Zuvio is designed to",
+    "moneyFooterAccent": "pay for itself quickly.",
+    "problemTitle": "Why Independent Car Rental Agencies",
+    "problemTitleAccent": "Struggle to Compete Online",
+    "problemItems": ["Corporate chains dominate search results", "Independent agencies are hard to find", "Platforms control pricing and customers"],
+    "solutionTitle": "Zuvio Levels the Playing Field for",
+    "solutionTitleAccent": "Independent Rental Agencies",
+    "solutionBody": "Zuvio gives independent agencies the visibility and tools needed to compete — without taking control away from you.",
+    "solutionItems": ["Get discovered by local and traveling customers", "Receive direct booking requests", "Maintain full independence"],
+    "featuresTitle": "Built for",
+    "featuresTitleAccent": "Independent Rental Agencies",
+    "features": ["Increased visibility", "Direct customer communication", "Owner-controlled approvals", "Flexible payment options", "Booking request management", "Full control of your business"],
+    "howTitle": "How It",
+    "howTitleAccent": "Works",
+    "howSteps": ["Create your profile", "List your vehicles", "Receive booking requests", "Approve or decline", "Serve customers your way"],
+    "pricingTitle": "Simple,",
+    "pricingTitleAccent": "Transparent Pricing",
+    "pricingSub": "No hidden fees. No contracts. No loss of control.",
+    "successTitle": "We Only Succeed",
+    "successTitleAccent": "When You Do",
+    "successBody": "Zuvio earns a small percentage only when you receive bookings.",
+    "successQuote": "If you don't grow —",
+    "successQuoteAccent": "we don't grow.",
+    "noSetup": "No setup fees",
+    "noLong": "No long contracts",
+    "cancel": "Cancel anytime",
+    "controlTitle": "You Stay in",
+    "controlTitleAccent": "Control",
+    "controlItems": ["You set pricing", "You control policies", "You manage your customers"],
+    "urgencyTitle": "Limited Founding Member Spots for Independent Car Rental Agencies",
+    "urgencyBody": "We are onboarding a limited number of agencies to ensure strong visibility and performance.",
+    "finalTitle": "Start Getting More Bookings",
+    "finalTitleAccent": "— On Your Terms",
+    "finalPricing": "$79/month + 5% per confirmed booking. 60 days free for founding members. Limited availability.",
+    "finalRisk": "Try it risk-free for 60 days. If it doesn't bring value, you don't continue.",
+    "finalLock": "Lock My Founding Rate",
+    "finalGet": "Get My First Bookings"
+  },
+  "ownerBenefits": {
+    "seoTitle": "Owner Benefits | ZUVIO — Grow Your Rental Business",
+    "seoDescription": "See why independent car rental owners choose Zuvio. More bookings, full pricing control, direct customer contact, and no middlemen nationwide.",
+    "heroTitle": "Grow Your Independent Car Rental Business in Las Vegas with",
+    "heroTitleAccent": "Zuvio",
+    "heroBody1": "Independent rental agencies are the backbone of local transportation — but too often, they're invisible online.",
+    "heroBody2": "ZUVIO was built to change that.",
+    "heroBody3": "We connect customers directly to independent rental owners like you — while you stay fully in control of your pricing, policies, and operations.",
+    "whatTitle": "What Zuvio Does for",
+    "whatTitleAccent": "Independent Car Rental Owners",
+    "benefits": [
+      {
+        "title": "Regional & National Visibility",
+        "description": "Your agency becomes discoverable by customers searching:",
+        "points": ["By city or zip code", "For cash-friendly rentals", "For flexible deposit options", "For local alternatives to corporate chains"],
+        "footer": "We bring regional attention to your business without you increasing ad spend."
+      },
+      {
+        "title": "More Reservation Opportunities",
+        "description": "ZUVIO allows customers to search, request reservations, request extensions, and contact you directly. You decide whether to accept or decline.",
+        "points": ["You control deposits", "You control requirements", "You control cancellation policies"],
+        "footer": "We don't take over your business — we amplify it."
+      },
+      {
+        "title": "24/7 Digital Presence",
+        "description": "Even when your office is closed, customers can:",
+        "points": ["View your listing", "Submit reservation requests", "See vehicle categories", "Review your requirements"],
+        "footer": "That means you're generating leads around the clock."
+      },
+      {
+        "title": "Direct Customer Communication",
+        "description": "Unlike large corporate platforms:",
+        "points": ["Cancellations require direct phone contact", "Customers speak to you", "You build repeat relationships"],
+        "footer": "We help you grow your brand — not replace it."
+      },
+      {
+        "title": "Marketing Without the Overhead",
+        "description": "ZUVIO invests in:",
+        "points": ["Regional marketing campaigns", "Search visibility", "Platform promotion"],
+        "footer": "You benefit from collective exposure under one network."
+      }
+    ],
+    "whyTitle": "Why Independent Car Rental Owners",
+    "whyTitleAccent": "Choose Zuvio",
+    "why": ["Increased inbound calls", "Expanded regional reach", "Better visibility against corporate chains", "More consistent booking flow", "Digital credibility"],
+    "controlChip": "Your Business, Your Rules",
+    "controlTitle": "You Stay in",
+    "controlTitleAccent": "Control",
+    "doesNot": "ZUVIO does <strong>not</strong>:",
+    "controlItems": ["Control your pricing", "Dictate your policies", "Override your approval process", "Replace your brand"],
+    "independent": "You remain independent.",
+    "weProvide": "We provide the network.",
+    "ctaTitle": "Ready to Grow Your Car Rental Agency? Join Zuvio Today",
+    "ctaApply": "Apply to Join ZUVIO",
+    "ctaCall": "Schedule a Call"
+  },
+  "cities": {
+    "seoTitle": "All Cities | Car Rentals from Local Agencies | ZUVIO",
+    "seoDescription": "Browse car rental agencies in major cities across the United States. Find independent, local car rentals in Las Vegas, Miami, Los Angeles, and more.",
+    "label": "City directory",
+    "title": "Find Car Rentals by City",
+    "subtitle": "Browse independent car rental agencies in major cities across the United States. Support local businesses and save money on your next trip.",
+    "linkPrefix": "Car Rentals in"
+  },
+  "cityLanding": {
+    "seoTitle": "Independent Car Rentals in {{city}}, {{state}} | Zuvio",
+    "seoDescription": "Find independent car rentals in {{city}}. Book direct from local agencies, pay with cash, and skip the big rental counters.",
+    "heroSubtitle": "Skip the big rental counters and book direct from trusted independent agencies in {{city}}. Cash-friendly options available.",
+    "searchBtn": "Search {{city}} Car Rentals",
+    "listBtn": "List Your Cars in {{city}}",
+    "sec1Body": "Many independent agencies in {{city}} accept cash, debit cards, and flexible payment methods — no credit card required.",
+    "sec1Items": ["Cash accepted", "No credit card needed", "Direct owner contact"],
+    "sec2Body": "Why wait in long airport lines? Book directly with local {{city}} agencies who offer personalized service and competitive rates.",
+    "sec2Items": ["Skip long airport lines", "Get personalized service", "Support local businesses", "Flexible pickup locations"],
+    "sec3Body": "Own rental cars in {{city}}? Get discovered by local and visiting renters. Keep full control of pricing, policies, and customer communication.",
+    "sec3Cta": "Join Zuvio in {{city}}",
+    "sec4Steps": [
+      { "title": "Search", "desc": "Enter {{city}} as your location and browse available agencies." },
+      { "title": "Compare", "desc": "View vehicle options, pricing, and payment methods accepted." },
+      { "title": "Book Direct", "desc": "Submit a reservation request and connect directly with the agency." }
+    ],
+    "sec5Body": "Independent agencies offer better prices, flexible payment, and personal service. No corporate red tape.",
+    "sec5Items": ["Lower rates than big brands", "Cash & debit accepted", "Flexible rental terms", "Personalized customer service"],
+    "sec6Body": "Browse sedans, SUVs, trucks, vans, and more from local agencies in {{city}}.",
+    "vehicleTypes": ["Sedans", "SUVs", "Trucks", "Vans"],
+    "localBadge": "Local Knowledge",
+    "localTitle": "Renting a Car in {{city}}: What Locals Know",
+    "rules": "Local Driving Rules",
+    "worthDrive": "Worth the Drive",
+    "whatDrives": "What {{city}} Drives",
+    "readyTitle": "Ready to Get Started in",
+    "finalSearch": "Search {{city}} Car Rentals",
+    "finalList": "List Your Cars in {{city}}"
+  },
+  "blog": {
+    "seoTitle": "The Independent Lane | Car Rental Industry Blog by Zuvio",
+    "seoDescription": "Tips and insights for independent car rental agency owners. Grow your business, get more bookings, and stay ahead — brought to you by Zuvio.",
+    "title": "The Independent Lane",
+    "by": "by Zuvio",
+    "subtitle": "Rent Cars. Make Money. Skip the Middleman.",
+    "readMore": "Read More",
+    "back": "Back to Blog",
+    "share": "Share this article",
+    "shareFb": "Share this article on Facebook",
+    "shareLink": "Copy link to this article",
+    "ctaTitle": "Ready to grow your rental business?",
+    "ctaBody": "Join Zuvio as a Founding Member today.",
+    "ctaCode": "Use code <strong>FOUNDING50</strong> at signup — only 50 spots available.",
+    "ctaBtn": "Become a Founding Member"
+  },
+  "notFound": {
+    "seoTitle": "Page Not Found | Zuvio",
+    "seoDescription": "The page you're looking for doesn't exist or may have moved. Browse Zuvio's independent car rental agencies and vehicles instead.",
+    "title": "404",
+    "body": "Oops! Page not found",
+    "home": "Return to Home"
+  },
+  "turo": {
+    "seoTitle": "Turo Alternative for Hosts | Get Direct Bookings with Zuvio",
+    "seoDescription": "Las Vegas Turo hosts: get more bookings & keep full control. Zuvio helps you diversify beyond Turo and earn more from your rental fleet.",
+    "heroBadge": "Built for Turo hosts ready to grow",
+    "heroTitle": "Las Vegas Turo Hosts: Get More Bookings",
+    "heroTitleAccent": "& Keep More Control with Zuvio",
+    "heroSubtitle": "Zuvio helps you attract direct customers, grow beyond Turo, and build a rental business you actually control.",
+    "heroBullets": ["Get bookings outside of Turo", "Keep your pricing and policies", "Build your own customer base", "No platform interference"],
+    "ctaDirect": "Start Getting Direct Bookings",
+    "ctaPricing": "See Pricing",
+    "noContracts": "No contracts. Cancel anytime."
   },
   "language": {
     "switchTo": "Switch language",
