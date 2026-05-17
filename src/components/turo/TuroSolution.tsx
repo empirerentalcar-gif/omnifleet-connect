@@ -1,26 +1,22 @@
-// TODO: i18n — no matching keys in en.json/es.json for this component yet; strings remain English.
 import { CheckCircle2 } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
-const bullets = [
-  "Direct booking requests",
-  "Direct communication",
-  "Your pricing, your rules",
-  "Build repeat business",
-];
-
-const TuroSolution = () => (
+const TuroSolution = () => {
+  const { t } = useTranslation();
+  const bullets = t("turo.solution.items", { returnObjects: true }) as string[];
+  return (
   <section className="py-20 md:py-28 relative overflow-hidden">
     <div className="absolute inset-0 bg-gradient-to-b from-background via-accent/5 to-background" />
     <div className="container mx-auto px-4 relative max-w-3xl">
       <div className="text-center mb-12">
         <span className="inline-block px-4 py-2 rounded-full bg-accent/10 text-accent text-sm font-medium mb-4">
-          The Solution
+          {t("turo.solution.badge")}
         </span>
         <h2 className="font-display text-3xl md:text-5xl font-bold mb-4">
-          Zuvio Helps Las Vegas Turo Hosts <span className="text-gradient">Take Back Control</span>
+          {t("turo.solution.title")} <span className="text-gradient">{t("turo.solution.titleAccent")}</span>
         </h2>
         <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-          Zuvio works alongside Turo — helping you generate direct bookings and build long-term customers.
+          {t("turo.solution.subtitle")}
         </p>
       </div>
 
@@ -34,10 +30,11 @@ const TuroSolution = () => (
       </div>
 
       <p className="text-center text-xl font-bold text-foreground">
-        Use Turo. <span className="text-gradient">Grow with Zuvio.</span>
+        {t("turo.solution.footer")} <span className="text-gradient">{t("turo.solution.footerAccent")}</span>
       </p>
     </div>
   </section>
-);
+  );
+};
 
 export default TuroSolution;

@@ -1,23 +1,20 @@
-// TODO: i18n — no matching keys in en.json/es.json for this component yet; strings remain English.
 import { CheckCircle2 } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
-const benefits = [
-  "Increase bookings",
-  "Build independence",
-  "Grow your customer base",
-];
-
-const TuroObjection = () => (
+const TuroObjection = () => {
+  const { t } = useTranslation();
+  const benefits = t("turo.objection.benefits", { returnObjects: true }) as string[];
+  return (
   <section className="py-20 md:py-28 relative overflow-hidden">
     <div className="absolute inset-0 bg-gradient-to-b from-background via-accent/5 to-background" />
     <div className="container mx-auto px-4 relative max-w-3xl">
       <div className="text-center mb-10">
         <h2 className="font-display text-3xl md:text-4xl font-bold mb-4">
-          Do I Have to <span className="text-gradient">Leave Turo?</span>
+          {t("turo.objection.title")} <span className="text-gradient">{t("turo.objection.titleAccent")}</span>
         </h2>
-        <p className="text-xl text-foreground font-semibold mb-2">No.</p>
+        <p className="text-xl text-foreground font-semibold mb-2">{t("turo.objection.no")}</p>
         <p className="text-lg text-muted-foreground">
-          Zuvio works alongside Turo. Use both to:
+          {t("turo.objection.intro")}
         </p>
       </div>
 
@@ -31,6 +28,7 @@ const TuroObjection = () => (
       </div>
     </div>
   </section>
-);
+  );
+};
 
 export default TuroObjection;

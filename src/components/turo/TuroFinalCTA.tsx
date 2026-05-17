@@ -1,9 +1,10 @@
-// TODO: i18n — no matching keys in en.json/es.json for this component yet; strings remain English.
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 const TuroFinalCTA = () => {
+  const { t } = useTranslation();
   const navigate = useNavigate();
 
   return (
@@ -14,15 +15,15 @@ const TuroFinalCTA = () => {
 
       <div className="container mx-auto px-4 relative z-10 text-center">
         <h2 className="font-display text-3xl md:text-5xl lg:text-6xl font-bold mb-6">
-          Start Getting More Bookings
+          {t("turo.finalCta.title")}
           <br />
-          <span className="text-gradient">— On Your Terms</span>
+          <span className="text-gradient">{t("turo.finalCta.titleAccent")}</span>
         </h2>
         <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-2">
-          $79/month + 5% per confirmed booking. 60 days free for founding members. Limited availability.
+          {t("turo.finalCta.pricing")}
         </p>
         <p className="text-sm text-muted-foreground mb-8">
-          Try it risk-free for 60 days. If it doesn't bring value, you don't continue.
+          {t("turo.finalCta.risk")}
         </p>
 
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
@@ -32,7 +33,7 @@ const TuroFinalCTA = () => {
             className="group text-base"
             onClick={() => navigate("/signup")}
           >
-            <span>Lock My Founding Rate</span>
+            <span>{t("turo.finalCta.lockRate")}</span>
             <ArrowRight className="h-5 w-5 group-hover:translate-x-1 transition-transform" />
           </Button>
           <Button
@@ -41,7 +42,7 @@ const TuroFinalCTA = () => {
             className="text-base border-accent/30 hover:bg-accent/10"
             onClick={() => navigate("/signup")}
           >
-            Get My First Bookings
+            {t("turo.finalCta.getBookings")}
           </Button>
         </div>
       </div>

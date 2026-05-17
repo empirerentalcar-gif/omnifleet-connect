@@ -1,31 +1,18 @@
-// TODO: i18n — no matching keys in en.json/es.json for this component yet; strings remain English.
 import { Quote } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
-const testimonials = [
-  {
-    quote: "I was tired of Turo taking a cut and controlling my prices. With Zuvio, I set my own rates and customers call me directly. My bookings have increased since joining.",
-    name: "Marcus T.",
-    role: "Turo Host & Fleet Owner · Las Vegas, NV",
-  },
-  {
-    quote: "As a Turo host I was always worried about account suspensions. Zuvio gave me a second channel where I'm in full control. It's exactly what independent owners need.",
-    name: "Daniela R.",
-    role: "Turo Host & Agency Owner · Miami, FL",
-  },
-  {
-    quote: "The setup was simple and I started getting calls within the first week. No complicated onboarding, no corporate policies — just business.",
-    name: "James K.",
-    role: "Small Fleet Owner · Dallas, TX",
-  },
-];
+type Testimonial = { quote: string; name: string; role: string };
 
-const TuroTestimonials = () => (
+const TuroTestimonials = () => {
+  const { t } = useTranslation();
+  const testimonials = t("turo.testimonials.items", { returnObjects: true }) as Testimonial[];
+  return (
   <section className="py-20 md:py-28 relative overflow-hidden">
     <div className="absolute inset-0 bg-gradient-to-b from-background via-secondary/10 to-background" />
     <div className="container mx-auto px-4 relative">
       <div className="text-center mb-14">
         <h2 className="font-display text-3xl md:text-5xl font-bold mb-4">
-          What Hosts Are <span className="text-gradient">Saying</span>
+          {t("turo.testimonials.title")} <span className="text-gradient">{t("turo.testimonials.titleAccent")}</span>
         </h2>
       </div>
 
@@ -43,6 +30,7 @@ const TuroTestimonials = () => (
       </div>
     </div>
   </section>
-);
+  );
+};
 
 export default TuroTestimonials;

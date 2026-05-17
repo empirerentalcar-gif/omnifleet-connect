@@ -1,19 +1,18 @@
-// TODO: i18n — no matching keys in en.json/es.json for this component yet; strings remain English.
-const steps = [
-  { num: "01", title: "Create your profile", desc: "Set up your agency or host profile in minutes." },
-  { num: "02", title: "List your vehicles", desc: "Add your cars with pricing, photos, and policies." },
-  { num: "03", title: "Receive booking requests", desc: "Customers find you and submit reservation requests." },
-  { num: "04", title: "Approve or decline", desc: "You choose which bookings to accept." },
-  { num: "05", title: "Handle payment your way", desc: "Cash, card, Zelle — your payment, your rules." },
-];
+import { useTranslation } from "react-i18next";
 
-const TuroHowItWorks = () => (
+type Step = { title: string; desc: string };
+
+const TuroHowItWorks = () => {
+  const { t } = useTranslation();
+  const rawSteps = t("turo.howItWorks.steps", { returnObjects: true }) as Step[];
+  const steps = rawSteps.map((s, i) => ({ ...s, num: String(i + 1).padStart(2, "0") }));
+  return (
   <section className="py-20 md:py-28 relative overflow-hidden">
     <div className="absolute inset-0 bg-gradient-to-b from-background via-secondary/10 to-background" />
     <div className="container mx-auto px-4 relative max-w-3xl">
       <div className="text-center mb-14">
         <h2 className="font-display text-3xl md:text-5xl font-bold mb-4">
-          How It <span className="text-gradient">Works</span>
+          {t("turo.howItWorks.title")} <span className="text-gradient">{t("turo.howItWorks.titleAccent")}</span>
         </h2>
       </div>
 
@@ -30,6 +29,7 @@ const TuroHowItWorks = () => (
       </div>
     </div>
   </section>
-);
+  );
+};
 
 export default TuroHowItWorks;
