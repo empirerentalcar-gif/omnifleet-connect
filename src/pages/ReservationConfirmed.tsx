@@ -1,16 +1,18 @@
 import { useSearchParams, useNavigate } from "react-router-dom";
+import { useTranslation, Trans } from "react-i18next";
 import { CheckCircle, Phone, Mail, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import SEO from "@/components/SEO";
 
 const ReservationConfirmed = () => {
+  const { t } = useTranslation();
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
-  const agencyName = searchParams.get("agency") || "the Agency";
+  const agencyName = searchParams.get("agency") || t('confirmed.defaultAgency');
 
   return (
     <div className="min-h-screen bg-background">
-      <SEO title="Reservation Confirmed | ZUVIO" description="Your reservation request has been sent successfully." path="/reservation-confirmed" noindex />
+      <SEO title={t('confirmed.seoTitle')} description={t('confirmed.seoDescription')} path="/reservation-confirmed" noindex />
 <main className="pt-8 pb-16">
         <div className="container mx-auto px-4 max-w-xl">
           <div className="glass-card glow-border rounded-2xl p-8 md:p-12 text-center animate-slide-up">
@@ -18,28 +20,29 @@ const ReservationConfirmed = () => {
               <CheckCircle className="h-10 w-10 text-accent" />
             </div>
 
-            <h1 className="font-display text-3xl md:text-4xl font-bold mb-4">Request Sent!</h1>
+            <h1 className="font-display text-3xl md:text-4xl font-bold mb-4">{t('confirmed.title')}</h1>
 
             <p className="text-lg text-muted-foreground mb-8">
-              Your reservation request has been sent to{" "}
-              <span className="text-primary font-semibold">{agencyName}</span>.
-              They will contact you directly to confirm availability and finalize your booking.
+              <Trans
+                i18nKey="confirmed.body"
+                components={{ agency: <span className="text-primary font-semibold">{agencyName}</span> }}
+              />
             </p>
 
             <div className="glass-card rounded-xl p-6 mb-8 text-left space-y-4">
-              <h3 className="font-display font-bold text-sm uppercase tracking-wider text-muted-foreground">What happens next?</h3>
+              <h3 className="font-display font-bold text-sm uppercase tracking-wider text-muted-foreground">{t('confirmed.whatNext')}</h3>
               <div className="space-y-3">
                 <div className="flex items-start gap-3">
                   <span className="w-6 h-6 rounded-full bg-primary/20 text-primary text-xs font-bold flex items-center justify-center shrink-0 mt-0.5">1</span>
-                  <p className="text-sm text-muted-foreground">The agency reviews your request and checks availability.</p>
+                  <p className="text-sm text-muted-foreground">{t('confirmed.step1')}</p>
                 </div>
                 <div className="flex items-start gap-3">
                   <span className="w-6 h-6 rounded-full bg-primary/20 text-primary text-xs font-bold flex items-center justify-center shrink-0 mt-0.5">2</span>
-                  <p className="text-sm text-muted-foreground">You'll receive a call or email confirming your reservation.</p>
+                  <p className="text-sm text-muted-foreground">{t('confirmed.step2')}</p>
                 </div>
                 <div className="flex items-start gap-3">
                   <span className="w-6 h-6 rounded-full bg-primary/20 text-primary text-xs font-bold flex items-center justify-center shrink-0 mt-0.5">3</span>
-                  <p className="text-sm text-muted-foreground">Show up with required documents and enjoy your ride!</p>
+                  <p className="text-sm text-muted-foreground">{t('confirmed.step3')}</p>
                 </div>
               </div>
             </div>
@@ -51,7 +54,7 @@ const ReservationConfirmed = () => {
                 className="flex-1 group"
                 onClick={() => navigate("/")}
               >
-                Back to Home
+                {t('confirmed.home')}
                 <ArrowRight className="h-5 w-5 group-hover:translate-x-1 transition-transform" />
               </Button>
               <Button
@@ -60,7 +63,7 @@ const ReservationConfirmed = () => {
                 className="flex-1 border-accent/30 hover:bg-accent/10"
                 onClick={() => navigate("/search")}
               >
-                Search More Agencies
+                {t('confirmed.more')}
               </Button>
             </div>
           </div>

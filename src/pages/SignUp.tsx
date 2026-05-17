@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { useTranslation, Trans } from 'react-i18next';
 import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -9,20 +10,6 @@ import { z } from 'zod';
 import SEO from '@/components/SEO';
 import { Crown, Check, X } from 'lucide-react';
 
-const signUpSchema = z.object({
-  registrationCode: z.string().trim().min(1, 'Registration code is required').max(100, 'Registration code too long'),
-  businessName: z.string().trim().min(1, 'Business name is required').max(200, 'Business name too long'),
-  email: z.string().trim().email('Invalid email address').max(255, 'Email too long'),
-  password: z
-    .string()
-    .min(8, 'Password must be at least 8 characters')
-    .max(128, 'Password too long')
-    .regex(/[A-Z]/, 'Password must contain an uppercase letter')
-    .regex(/[a-z]/, 'Password must contain a lowercase letter')
-    .regex(/[0-9]/, 'Password must contain a number')
-    .regex(/[^A-Za-z0-9]/, 'Password must contain a special character'),
-});
-
 const checkPasswordRules = (pw: string) => ({
   length: pw.length >= 8,
   uppercase: /[A-Z]/.test(pw),
@@ -31,15 +18,29 @@ const checkPasswordRules = (pw: string) => ({
   special: /[^A-Za-z0-9]/.test(pw),
 });
 
-const PASSWORD_RULE_LABELS: { key: keyof ReturnType<typeof checkPasswordRules>; label: string }[] = [
-  { key: 'length', label: 'At least 8 characters' },
-  { key: 'uppercase', label: 'One uppercase letter (A–Z)' },
-  { key: 'lowercase', label: 'One lowercase letter (a–z)' },
-  { key: 'number', label: 'One number (0–9)' },
-  { key: 'special', label: 'One special character (!@#$…)' },
+const PASSWORD_RULE_KEYS: { key: keyof ReturnType<typeof checkPasswordRules>; tKey: string }[] = [
+  { key: 'length', tKey: 'auth.signUp.pwRule.length' },
+  { key: 'uppercase', tKey: 'auth.signUp.pwRule.uppercase' },
+  { key: 'lowercase', tKey: 'auth.signUp.pwRule.lowercase' },
+  { key: 'number', tKey: 'auth.signUp.pwRule.number' },
+  { key: 'special', tKey: 'auth.signUp.pwRule.special' },
 ];
 
 const SignUp = () => {
+  const { t } = useTranslation();
+  const signUpSchema = z.object({
+    registrationCode: z.string().trim().min(1, t('auth.signUp.errCodeReq')).max(100, t('auth.signUp.errCodeLong')),
+    businessName: z.string().trim().min(1, t('auth.signUp.errBizReq')).max(200, t('auth.signUp.errBizLong')),
+    email: z.string().trim().email(t('auth.signUp.errEmail')).max(255, t('auth.signUp.errEmailLong')),
+    password: z
+      .string()
+      .min(8, t('auth.signUp.errPwShort'))
+      .max(128, t('auth.signUp.errPwLong'))
+      .regex(/[A-Z]/, t('auth.signUp.errPwUpper'))
+      .regex(/[a-z]/, t('auth.signUp.errPwLower'))
+      .regex(/[0-9]/, t('auth.signUp.errPwNumber'))
+      .regex(/[^A-Za-z0-9]/, t('auth.signUp.errPwSpecial')),
+  });
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [registrationCode, setRegistrationCode] = useState('');
@@ -66,13 +67,13 @@ const SignUp = () => {
       const passwordErrors = result.error.errors.filter((err) => err.path[0] === 'password');
       if (passwordErrors.length > 0) {
         toast({
-          title: 'Password does not meet requirements',
+          title: t('auth.signUp.pwTitle'),
           description: passwordErrors.map((err) => `• ${err.message}`).join('\n'),
           variant: 'destructive',
         });
       } else {
         toast({
-          title: 'Validation error',
+          title: t('auth.signUp.validation'),
           description: result.error.errors[0].message,
           variant: 'destructive',
         });
@@ -102,8 +103,8 @@ const SignUp = () => {
 
     if (!codeType) {
       toast({
-        title: 'Invalid registration code',
-        description: 'The code you entered is invalid or expired.',
+        title: t('auth.signUp.errCode'),
+        description: t('auth.signUp.errCodeDesc'),
         variant: 'destructive',
       });
       setLoading(false);
@@ -125,22 +126,22 @@ const SignUp = () => {
     if (error) {
       console.error('[SignUp] supabase.auth.signUp error:', error);
       const raw = error.message || '';
-      let friendly = raw || 'Unable to create account. Please try again.';
+      let friendly = raw || t('auth.signUp.friendly.default');
 
       if (/already registered|already been registered|user already/i.test(raw)) {
-        friendly = 'An account with this email already exists. Try signing in or use a different email.';
+        friendly = t('auth.signUp.friendly.exists');
       } else if (/password/i.test(raw) && /pwned|leaked|compromis/i.test(raw)) {
-        friendly = 'This password has appeared in a known data breach. Please choose a different password.';
+        friendly = t('auth.signUp.friendly.leaked');
       } else if (/rate limit|too many/i.test(raw)) {
-        friendly = 'Too many sign-up attempts. Please wait a few minutes and try again.';
+        friendly = t('auth.signUp.friendly.rate');
       } else if (/invalid.*email|email.*invalid/i.test(raw)) {
-        friendly = 'That email address was rejected. Please double-check it and try again.';
+        friendly = t('auth.signUp.friendly.invalidEmail');
       } else if (/database error|unexpected_failure|saving new user/i.test(raw)) {
-        friendly = 'We hit a server error creating your account. Please contact team@zuvio.us so we can help.';
+        friendly = t('auth.signUp.friendly.server');
       }
 
       toast({
-        title: 'Sign up failed',
+        title: t('auth.signUp.failed'),
         description: friendly,
         variant: 'destructive',
       });
@@ -191,8 +192,8 @@ const SignUp = () => {
     trackFormSubmission('signup_form');
 
     toast({
-      title: 'Check your email',
-      description: 'We sent you a confirmation link to verify your account.',
+      title: t('auth.signUp.checkEmail'),
+      description: t('auth.signUp.checkEmailDesc'),
     });
     setLoading(false);
   };
@@ -202,32 +203,32 @@ const SignUp = () => {
       <SEO title="Sign Up | ZUVIO" description="Create a ZUVIO account to list your independent car rental business." path="/signup" noindex />
       <div className="w-full max-w-md space-y-8">
         <div className="text-center">
-          <h1 className="text-2xl font-bold text-foreground">Create Account</h1>
+          <h1 className="text-2xl font-bold text-foreground">{t('auth.signUp.title')}</h1>
           {foundingCount !== null && foundingCount < 50 ? (
             <div className="mt-3 space-y-2">
               <div className="flex items-center justify-center gap-2">
                 <Crown className="h-5 w-5 text-amber-500" />
-                <span className="font-semibold text-amber-600">Founding Member Program</span>
+                <span className="font-semibold text-amber-600">{t('auth.signUp.founding')}</span>
               </div>
               <p className="text-sm text-muted-foreground">
-                60 days FREE + exclusive pricing locked forever
+                {t('auth.signUp.foundingSub')}
               </p>
               <div className="flex flex-col items-center gap-1">
                 <Badge variant="secondary" className="text-sm">
-                  Only 50 spots available
+                  {t('auth.signUp.spots')}
                 </Badge>
                 <p className="text-xs text-muted-foreground">
-                  After trial: <strong>$79/month + 5% per confirmed booking</strong> (locked forever)
+                  <Trans i18nKey="auth.signUp.afterTrial" components={{ strong: <strong /> }} />
                 </p>
               </div>
             </div>
           ) : (
             <div className="mt-3 space-y-2">
               <p className="text-sm text-muted-foreground">
-                Start your <strong>60-day FREE trial</strong>
+                <Trans i18nKey="auth.signUp.startTrial" components={{ strong: <strong /> }} />
               </p>
               <p className="text-xs text-muted-foreground">
-                After trial: <strong>$79/month + 5% per confirmed booking</strong>
+                <Trans i18nKey="auth.signUp.afterTrialPlain" components={{ strong: <strong /> }} />
               </p>
             </div>
           )}
@@ -236,7 +237,7 @@ const SignUp = () => {
         <form onSubmit={handleSignUp} className="space-y-4">
           <div>
             <label htmlFor="registration-code" className="block text-sm font-medium text-foreground mb-1">
-              Registration Code
+              {t('auth.signUp.regCode')}
             </label>
             <Input
               id="registration-code"
@@ -244,13 +245,13 @@ const SignUp = () => {
               value={registrationCode}
               onChange={(e) => setRegistrationCode(e.target.value)}
               required
-              placeholder="Enter your registration code"
+              placeholder={t('auth.signUp.regCodePh')}
             />
           </div>
 
           <div>
             <label htmlFor="business-name" className="block text-sm font-medium text-foreground mb-1">
-              Business Name
+              {t('auth.signUp.businessName')}
             </label>
             <Input
               id="business-name"
@@ -258,13 +259,13 @@ const SignUp = () => {
               value={businessName}
               onChange={(e) => setBusinessName(e.target.value)}
               required
-              placeholder="Your rental business name"
+              placeholder={t('auth.signUp.businessNamePh')}
             />
           </div>
 
           <div>
             <label htmlFor="email" className="block text-sm font-medium text-foreground mb-1">
-              Email
+              {t('auth.signUp.email')}
             </label>
             <Input
               id="email"
@@ -272,13 +273,13 @@ const SignUp = () => {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
-              placeholder="you@example.com"
+              placeholder={t('auth.signUp.emailPh')}
             />
           </div>
 
           <div>
             <label htmlFor="password" className="block text-sm font-medium text-foreground mb-1">
-              Password
+              {t('auth.signUp.password')}
             </label>
             <Input
               id="password"
@@ -287,12 +288,12 @@ const SignUp = () => {
               onChange={(e) => setPassword(e.target.value)}
               required
               minLength={8}
-              placeholder="••••••••"
+              placeholder={t('auth.signUp.passwordPh')}
             />
-            <ul className="mt-2 space-y-1" aria-label="Password requirements">
+            <ul className="mt-2 space-y-1" aria-label={t('auth.signUp.pwReq')}>
               {(() => {
                 const rules = checkPasswordRules(password);
-                return PASSWORD_RULE_LABELS.map(({ key, label }) => {
+                return PASSWORD_RULE_KEYS.map(({ key, tKey }) => {
                   const ok = rules[key];
                   return (
                     <li
@@ -306,7 +307,7 @@ const SignUp = () => {
                       ) : (
                         <X className="h-3.5 w-3.5" aria-hidden="true" />
                       )}
-                      <span>{label}</span>
+                      <span>{t(tKey)}</span>
                     </li>
                   );
                 });
@@ -315,14 +316,14 @@ const SignUp = () => {
           </div>
 
           <Button type="submit" className="w-full" disabled={loading}>
-            {loading ? 'Creating account...' : 'Sign Up'}
+            {loading ? t('auth.signUp.submitting') : t('auth.signUp.submit')}
           </Button>
         </form>
 
         <p className="text-center text-sm text-muted-foreground">
-          Already have an account?{' '}
+          {t('auth.signUp.haveAccount')}{' '}
           <Link to="/signin" className="text-primary hover:underline">
-            Sign In
+            {t('auth.signUp.signIn')}
           </Link>
         </p>
       </div>
