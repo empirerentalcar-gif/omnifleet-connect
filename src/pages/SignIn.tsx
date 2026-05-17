@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -12,12 +13,12 @@ const checkIsAdmin = async (userId: string): Promise<boolean> => {
   return !!data;
 };
 
-const signInSchema = z.object({
-  email: z.string().trim().email('Invalid email address').max(255, 'Email too long'),
-  password: z.string().min(1, 'Password is required').max(128, 'Password too long'),
-});
-
 const SignIn = () => {
+  const { t } = useTranslation();
+  const signInSchema = z.object({
+    email: z.string().trim().email(t('auth.signIn.errInvalidEmail')).max(255, t('auth.signIn.errEmailTooLong')),
+    password: z.string().min(1, t('auth.signIn.errPwRequired')).max(128, t('auth.signIn.errPwTooLong')),
+  });
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
@@ -31,7 +32,7 @@ const SignIn = () => {
     const result = signInSchema.safeParse({ email, password });
     if (!result.success) {
       toast({
-        title: 'Validation error',
+        title: t('auth.signIn.validation'),
         description: result.error.errors[0].message,
         variant: 'destructive',
       });
@@ -46,8 +47,8 @@ const SignIn = () => {
 
     if (error) {
       toast({
-        title: 'Sign in failed',
-        description: 'Invalid email or password.',
+        title: t('auth.signIn.errFail'),
+        description: t('auth.signIn.errInvalid'),
         variant: 'destructive',
       });
       setLoading(false);
@@ -68,16 +69,16 @@ const SignIn = () => {
       <SEO title="Sign In | ZUVIO" description="Sign in to your ZUVIO rental agency dashboard." path="/signin" noindex />
       <div className="w-full max-w-md space-y-8">
         <div className="text-center">
-          <h1 className="text-2xl font-bold text-foreground">Sign In</h1>
+          <h1 className="text-2xl font-bold text-foreground">{t('auth.signIn.title')}</h1>
           <p className="mt-2 text-sm text-muted-foreground">
-            Welcome back to Zuvio
+            {t('auth.signIn.welcome')}
           </p>
         </div>
 
         <form onSubmit={handleSignIn} className="space-y-4">
           <div>
             <label htmlFor="email" className="block text-sm font-medium text-foreground mb-1">
-              Email
+              {t('auth.signIn.email')}
             </label>
             <Input
               id="email"
@@ -85,13 +86,13 @@ const SignIn = () => {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
-              placeholder="you@example.com"
+              placeholder={t('auth.signIn.emailPh')}
             />
           </div>
 
           <div>
             <label htmlFor="password" className="block text-sm font-medium text-foreground mb-1">
-              Password
+              {t('auth.signIn.password')}
             </label>
             <Input
               id="password"
@@ -99,12 +100,12 @@ const SignIn = () => {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
-              placeholder="••••••••"
+              placeholder={t('auth.signIn.passwordPh')}
             />
           </div>
 
           <Button type="submit" className="w-full" disabled={loading}>
-            {loading ? 'Signing in...' : 'Sign In'}
+            {loading ? t('auth.signIn.submitting') : t('auth.signIn.submit')}
           </Button>
         </form>
 
@@ -113,7 +114,7 @@ const SignIn = () => {
             type="button"
             onClick={async () => {
               if (!email.trim()) {
-                toast({ title: 'Enter your email', description: 'Please enter your email address first, then click Forgot Password.', variant: 'destructive' });
+                toast({ title: t('auth.signIn.needEmail'), description: t('auth.signIn.needEmailDesc'), variant: 'destructive' });
                 return;
               }
               const { error } = await supabase.auth.resetPasswordForEmail(email.trim(), {
@@ -122,17 +123,17 @@ const SignIn = () => {
               if (error) {
                 toast({ title: 'Error', description: error.message, variant: 'destructive' });
               } else {
-                toast({ title: 'Check your email', description: 'A password reset link has been sent if an account exists.' });
+                toast({ title: t('auth.signIn.resetSent'), description: t('auth.signIn.resetSentDesc') });
               }
             }}
             className="text-sm text-primary hover:underline"
           >
-            Forgot Password?
+            {t('auth.signIn.forgot')}
           </button>
           <p className="text-sm text-muted-foreground">
-            Don't have an account?{' '}
+            {t('auth.signIn.noAccount')}{' '}
             <Link to="/signup" className="text-primary hover:underline">
-              Sign Up
+              {t('auth.signIn.signUp')}
             </Link>
           </p>
         </div>
