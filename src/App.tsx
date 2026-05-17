@@ -7,6 +7,7 @@ import { HelmetProvider } from "react-helmet-async";
 import { lazy, Suspense } from "react";
 import { useLocation } from "react-router-dom";
 import Index from "./pages/Index";
+import Header from "./components/Header";
 import Footer from "./components/Footer";
 import RentalCTA from "./components/RentalCTA";
 import ScrollToTop from "./components/ScrollToTop";
@@ -61,6 +62,7 @@ const GlobalLayout = () => {
 
   return (
     <>
+      <Header />
       <Suspense fallback={<LazyFallback />}>
         <Routes>
           <Route path="/" element={<Index />} />

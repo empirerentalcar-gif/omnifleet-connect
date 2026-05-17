@@ -23,7 +23,6 @@ const LanguageToggle = ({ className }: LanguageToggleProps) => {
     <div
       role="group"
       aria-label={t("language.switchTo")}
-      style={{ outline: "2px solid red" }}
       className={cn(
         "inline-flex items-center gap-1 rounded-full p-1 bg-[#0d1b2e] border border-white/10",
         className,
