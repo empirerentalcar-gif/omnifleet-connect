@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { useSearchParams, useNavigate, Link } from "react-router-dom";
-import { MapPin, Calendar, Car, Search, Banknote } from "lucide-react";
+import { MapPin, Car, Search, Banknote } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
 import SEO from "@/components/SEO";
