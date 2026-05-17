@@ -1,6 +1,7 @@
 // Updated Supabase connection - April 2026
 import { useState } from "react";
 import { useParams, useSearchParams, useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { User, Phone, Calendar, Car, AlertCircle, ArrowRight, Mail } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
@@ -39,10 +40,11 @@ const reservationSchema = z.object({
 }).refine(d => d.dropoff_date > d.pickup_date, { message: "Drop-off must be after pickup", path: ["dropoff_date"] });
 
 const ReserveRequest = () => {
+  const { t } = useTranslation();
   const { agencyId } = useParams();
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
-  const agencyName = searchParams.get("agency") || "the Agency";
+  const agencyName = searchParams.get("agency") || t('reserveRequest.defaultAgency');
 
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
@@ -72,7 +74,7 @@ const ReserveRequest = () => {
       });
 
       if (!parsed.success) {
-        const firstError = parsed.error.errors[0]?.message || "Invalid input";
+        const firstError = parsed.error.errors[0]?.message || t('reserveRequest.errInvalid');
         toast.error(firstError);
         setSubmitting(false);
         return;
@@ -91,7 +93,7 @@ const ReserveRequest = () => {
       });
 
       if (error) {
-        toast.error(`Reservation failed: ${formatBackendError(error)}`);
+        toast.error(`${t('reserveRequest.errFailed')} ${formatBackendError(error)}`);
         setSubmitting(false);
         return;
       }
@@ -130,7 +132,7 @@ const ReserveRequest = () => {
       navigate(`/reservation-confirmed?agency=${encodeURIComponent(agencyName)}`);
     } catch (err: any) {
       console.error("Reservation submit error:", err);
-      toast.error(`Reservation failed: ${formatBackendError(err || {})}`);
+      toast.error(`${t('reserveRequest.errFailed')} ${formatBackendError(err || {})}`);
       setSubmitting(false);
     }
   };
@@ -139,43 +141,43 @@ const ReserveRequest = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <SEO title={`Reserve with ${agencyName} | ZUVIO`} description={`Request a car rental reservation with ${agencyName} through ZUVIO.`} path={`/reserve/${agencyId}`} noindex />
+      <SEO title={t('reserveRequest.seoTitle', { agency: agencyName })} description={t('reserveRequest.seoDescription', { agency: agencyName })} path={`/reserve/${agencyId}`} noindex />
 <main className="pt-8 pb-16">
         <div className="container mx-auto px-4 max-w-2xl">
           <div className="text-center mb-8 animate-slide-up">
-            <h1 className="font-display text-3xl md:text-4xl font-bold mb-2">Request a Reservation</h1>
+            <h1 className="font-display text-3xl md:text-4xl font-bold mb-2">{t('reserveRequest.title')}</h1>
             <p className="text-muted-foreground">
-              with <span className="text-primary font-semibold">{agencyName}</span>
+              {t('reserveRequest.with')} <span className="text-primary font-semibold">{agencyName}</span>
             </p>
           </div>
 
           <form onSubmit={handleSubmit} className="glass-card glow-border rounded-2xl p-6 md:p-8 space-y-6 animate-slide-up delay-100">
             {/* Name */}
             <div>
-              <label className="block text-xs font-medium text-muted-foreground mb-2 uppercase tracking-wider">Full Name</label>
+              <label className="block text-xs font-medium text-muted-foreground mb-2 uppercase tracking-wider">{t('reserveRequest.fullName')}</label>
               <div className="relative">
                 <User className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-primary" />
-                <input type="text" placeholder="John Doe" value={name} onChange={(e) => setName(e.target.value)} required maxLength={100}
+                <input type="text" placeholder={t('reserveRequest.fullNamePh')} value={name} onChange={(e) => setName(e.target.value)} required maxLength={100}
                   className="w-full bg-secondary/50 border border-border rounded-xl pl-11 pr-4 py-3.5 text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all" />
               </div>
             </div>
 
             {/* Phone */}
             <div>
-              <label className="block text-xs font-medium text-muted-foreground mb-2 uppercase tracking-wider">Phone Number</label>
+              <label className="block text-xs font-medium text-muted-foreground mb-2 uppercase tracking-wider">{t('reserveRequest.phone')}</label>
               <div className="relative">
                 <Phone className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-primary" />
-                <input type="tel" placeholder="(555) 123-4567" value={phone} onChange={(e) => setPhone(e.target.value)} required maxLength={20}
+                <input type="tel" placeholder={t('reserveRequest.phonePh')} value={phone} onChange={(e) => setPhone(e.target.value)} required maxLength={20}
                   className="w-full bg-secondary/50 border border-border rounded-xl pl-11 pr-4 py-3.5 text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all" />
               </div>
             </div>
 
             {/* Email (optional — for notifications) */}
             <div>
-              <label className="block text-xs font-medium text-muted-foreground mb-2 uppercase tracking-wider">Email <span className="text-muted-foreground/60">(optional, for updates)</span></label>
+              <label className="block text-xs font-medium text-muted-foreground mb-2 uppercase tracking-wider">{t('reserveRequest.email')} <span className="text-muted-foreground/60">{t('reserveRequest.emailOpt')}</span></label>
               <div className="relative">
                 <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-primary" />
-                <input type="email" placeholder="you@email.com" value={email} onChange={(e) => setEmail(e.target.value)} maxLength={100}
+                <input type="email" placeholder={t('reserveRequest.emailPh')} value={email} onChange={(e) => setEmail(e.target.value)} maxLength={100}
                   className="w-full bg-secondary/50 border border-border rounded-xl pl-11 pr-4 py-3.5 text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all" />
               </div>
             </div>
@@ -183,7 +185,7 @@ const ReserveRequest = () => {
             {/* Dates */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label className="block text-xs font-medium text-muted-foreground mb-2 uppercase tracking-wider">Pickup Date</label>
+                <label className="block text-xs font-medium text-muted-foreground mb-2 uppercase tracking-wider">{t('reserveRequest.pickup')}</label>
                 <div className="relative">
                   <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-primary" />
                   <input type="date" value={pickupDate} onChange={(e) => setPickupDate(e.target.value)} required min={today}
@@ -191,7 +193,7 @@ const ReserveRequest = () => {
                 </div>
               </div>
               <div>
-                <label className="block text-xs font-medium text-muted-foreground mb-2 uppercase tracking-wider">Drop-off Date</label>
+                <label className="block text-xs font-medium text-muted-foreground mb-2 uppercase tracking-wider">{t('reserveRequest.dropoff')}</label>
                 <div className="relative">
                   <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-accent" />
                   <input type="date" value={dropoffDate} onChange={(e) => setDropoffDate(e.target.value)} required
@@ -202,14 +204,14 @@ const ReserveRequest = () => {
 
             {/* Vehicle Type */}
             <div>
-              <label className="block text-xs font-medium text-muted-foreground mb-2 uppercase tracking-wider">Vehicle Type</label>
+              <label className="block text-xs font-medium text-muted-foreground mb-2 uppercase tracking-wider">{t('reserveRequest.vehicleType')}</label>
               <div className="relative">
                 <Car className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-primary" />
                 <select value={vehicleType} onChange={(e) => setVehicleType(e.target.value)} required
                   className="w-full bg-secondary/50 border border-border rounded-xl pl-11 pr-4 py-3.5 text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all appearance-none">
-                  <option value="">Select a type...</option>
-                  {vehicleTypes.map((t) => (
-                    <option key={t} value={t}>{t}</option>
+                  <option value="">{t('reserveRequest.selectType')}</option>
+                  {vehicleTypes.map((vt) => (
+                    <option key={vt} value={vt}>{t(`search.type.${vt}`, vt)}</option>
                   ))}
                 </select>
               </div>
@@ -217,9 +219,9 @@ const ReserveRequest = () => {
 
             {/* Additional Notes */}
             <div>
-              <label className="block text-xs font-medium text-muted-foreground mb-2 uppercase tracking-wider">Additional Notes <span className="text-muted-foreground/60">(optional)</span></label>
+              <label className="block text-xs font-medium text-muted-foreground mb-2 uppercase tracking-wider">{t('reserveRequest.notes')} <span className="text-muted-foreground/60">{t('reserveRequest.notesOpt')}</span></label>
               <textarea
-                placeholder="Any special requests, preferences, or questions..."
+                placeholder={t('reserveRequest.notesPh')}
                 value={notes}
                 onChange={(e) => setNotes(e.target.value)}
                 maxLength={500}
@@ -233,13 +235,13 @@ const ReserveRequest = () => {
             <div className="flex items-start gap-3 p-4 rounded-xl bg-destructive/5 border border-destructive/20">
               <AlertCircle className="h-5 w-5 text-destructive shrink-0 mt-0.5" />
               <p className="text-sm text-muted-foreground">
-                <strong className="text-foreground">Cancellation requires contacting the agency directly by phone.</strong>{" "}
-                No online cancellations are available. The agency's phone number will be provided in your confirmation.
+                <strong className="text-foreground">{t('reserveRequest.cancelNotice')}</strong>{" "}
+                {t('reserveRequest.cancelNoticeRest')}
               </p>
             </div>
 
             <Button type="submit" variant="hero" size="lg" className="w-full group" disabled={!isValid || submitting}>
-              {submitting ? "Sending Request..." : "Submit Reservation Request"}
+              {submitting ? t('reserveRequest.sending') : t('reserveRequest.submit')}
               <ArrowRight className="h-5 w-5 group-hover:translate-x-1 transition-transform" />
             </Button>
           </form>
