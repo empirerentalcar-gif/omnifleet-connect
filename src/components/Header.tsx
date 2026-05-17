@@ -67,6 +67,7 @@ const Header = () => {
 
           {/* Desktop Actions */}
           <div className="hidden md:flex items-center gap-3">
+            <span style={{color: "red", fontWeight: "bold", fontSize: "20px"}}>TEST</span>
             <LanguageToggle />
             {!loading && user ? (
               <>
