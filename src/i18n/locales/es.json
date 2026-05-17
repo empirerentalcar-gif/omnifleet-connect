@@ -204,23 +204,74 @@
       "title": "Preguntas de",
       "titleAccent": "dueños",
       "items": [
-        { "q": "¿Mantengo mi número de teléfono?", "a": "Claro que sí. Zuvio nunca reemplaza tu número. Los clientes te pueden llamar directo. Nosotros solo te enviamos las solicitudes de reserva — tú mantienes el control de cada conversación." },
-        { "q": "¿Quién maneja los pagos?", "a": "Tú. Zuvio no procesa pagos por ti. Tú cobras como quieras — efectivo, tarjeta, Zelle o lo que prefieras. Tu plata, tus reglas." },
-        { "q": "¿Puedo rechazar reservas?", "a": "Sí. Tú tienes toda la autoridad para aceptar o rechazar cualquier solicitud. Si un carro no está disponible o no te cuadra el horario, simplemente rechazas — sin penalidades ni preguntas." },
-        { "q": "¿Qué tan rápido puedo empezar?", "a": "La mayoría de los dueños quedan activos en menos de 24 horas. Una vez aprobado tu perfil y tus carros, empiezas a aparecer en los resultados de búsqueda al instante." },
-        { "q": "¿Cuáles son las tarifas?", "a": "$79 al mes + 5% por reserva confirmada. Los miembros fundadores reciben 60 días gratis y su tarifa queda fija de por vida. Sin tarifas escondidas. Sin contratos largos. Cancela cuando quieras." },
-        { "q": "¿Puedo publicar varios carros?", "a": "Sí. Puedes manejar varios carros y ubicaciones desde un solo panel. Cada carro tiene su propia publicación con precios, fotos y disponibilidad." }
+        {
+          "q": "¿Mantengo mi número de teléfono?",
+          "a": "Claro que sí. Zuvio nunca reemplaza tu número. Los clientes te pueden llamar directo. Nosotros solo te enviamos las solicitudes de reserva — tú mantienes el control de cada conversación."
+        },
+        {
+          "q": "¿Quién maneja los pagos?",
+          "a": "Tú. Zuvio no procesa pagos por ti. Tú cobras como quieras — efectivo, tarjeta, Zelle o lo que prefieras. Tu plata, tus reglas."
+        },
+        {
+          "q": "¿Puedo rechazar reservas?",
+          "a": "Sí. Tú tienes toda la autoridad para aceptar o rechazar cualquier solicitud. Si un carro no está disponible o no te cuadra el horario, simplemente rechazas — sin penalidades ni preguntas."
+        },
+        {
+          "q": "¿Qué tan rápido puedo empezar?",
+          "a": "La mayoría de los dueños quedan activos en menos de 24 horas. Una vez aprobado tu perfil y tus carros, empiezas a aparecer en los resultados de búsqueda al instante."
+        },
+        {
+          "q": "¿Cuáles son las tarifas?",
+          "a": "$79 al mes + 5% por reserva confirmada. Los miembros fundadores reciben 60 días gratis y su tarifa queda fija de por vida. Sin tarifas escondidas. Sin contratos largos. Cancela cuando quieras."
+        },
+        {
+          "q": "¿Puedo publicar varios carros?",
+          "a": "Sí. Puedes manejar varios carros y ubicaciones desde un solo panel. Cada carro tiene su propia publicación con precios, fotos y disponibilidad."
+        }
       ]
     },
     "objections": {
       "title": "Preguntas comunes de",
       "titleAccent": "dueños de renta independientes",
       "items": [
-        { "q": "\"Yo ya uso Turo\"", "a": ["No tienes que reemplazar Turo.", "La mayoría de los miembros de Zuvio lo usan **junto a las plataformas que ya tienen** para subir reservas y no depender de una sola fuente.", "Zuvio simplemente te da otro flujo de clientes — **uno que tú controlas.**"] },
-        { "q": "\"No quiero pagar mensualidad\"", "a": ["Por eso justamente el modelo está hecho así.", "Si Zuvio te trae solo **1 o 2 reservas más al mes**, cubre el costo. **Todo lo que esté arriba es ganancia.**", "Y como no hay contratos, solo sigues si te está funcionando."] },
-        { "q": "\"Estoy muy ocupado para manejar otra plataforma\"", "a": ["Zuvio está diseñado para trabajar con lo que ya tienes.", "Recibes solicitudes, las apruebas o rechazas, y hablas directo con los clientes — **sin setup complicado ni cambios en tu forma de trabajar.**"] },
-        { "q": "\"¿Y si no me llegan reservas?\"", "a": ["Por eso te damos **60 días sin riesgo.**", "Si no te trae valor a tu negocio, simplemente no sigues.", "No hay compromiso a largo plazo."] },
-        { "q": "\"No tengo una flota grande\"", "a": ["No la necesitas.", "Muchos dueños independientes con pocos carros usan Zuvio para **aprovechar mejor su flota** y generar ingresos extra."] }
+        {
+          "q": "\"Yo ya uso Turo\"",
+          "a": [
+            "No tienes que reemplazar Turo.",
+            "La mayoría de los miembros de Zuvio lo usan **junto a las plataformas que ya tienen** para subir reservas y no depender de una sola fuente.",
+            "Zuvio simplemente te da otro flujo de clientes — **uno que tú controlas.**"
+          ]
+        },
+        {
+          "q": "\"No quiero pagar mensualidad\"",
+          "a": [
+            "Por eso justamente el modelo está hecho así.",
+            "Si Zuvio te trae solo **1 o 2 reservas más al mes**, cubre el costo. **Todo lo que esté arriba es ganancia.**",
+            "Y como no hay contratos, solo sigues si te está funcionando."
+          ]
+        },
+        {
+          "q": "\"Estoy muy ocupado para manejar otra plataforma\"",
+          "a": [
+            "Zuvio está diseñado para trabajar con lo que ya tienes.",
+            "Recibes solicitudes, las apruebas o rechazas, y hablas directo con los clientes — **sin setup complicado ni cambios en tu forma de trabajar.**"
+          ]
+        },
+        {
+          "q": "\"¿Y si no me llegan reservas?\"",
+          "a": [
+            "Por eso te damos **60 días sin riesgo.**",
+            "Si no te trae valor a tu negocio, simplemente no sigues.",
+            "No hay compromiso a largo plazo."
+          ]
+        },
+        {
+          "q": "\"No tengo una flota grande\"",
+          "a": [
+            "No la necesitas.",
+            "Muchos dueños independientes con pocos carros usan Zuvio para **aprovechar mejor su flota** y generar ingresos extra."
+          ]
+        }
       ],
       "footer": "Zuvio está hecho para que los dueños independientes crezcan —",
       "footerAccent": "sin perder el control.",
@@ -489,13 +540,34 @@
     "cancelAny": "Cancela cuando quieras",
     "faqTitle": "Preguntas frecuentes sobre precios",
     "faqs": [
-      { "q": "¿Pierdo el control de mis precios?", "a": "No. Tú controlas las tarifas diarias, los depósitos, los requisitos y la disponibilidad de tus carros. ZUVIO no impone precios." },
-      { "q": "¿Los clientes pueden cancelar sin llamarme?", "a": "No. Todas las cancelaciones requieren llamada directa a tu agencia. Tú mantienes el control de tus reglas de reserva." },
-      { "q": "¿Tengo que aceptar todas las solicitudes?", "a": "No. Tú apruebas o rechazas cada solicitud." },
-      { "q": "¿ZUVIO reemplaza mi marca?", "a": "No. El nombre, el teléfono y la identidad de tu agencia siguen al frente. ZUVIO suma visibilidad — no reemplaza tu marca." },
-      { "q": "¿Cómo cobro?", "a": "Los clientes te pagan directo según tus reglas de pago. ZUVIO solo cobra su tarifa sobre las reservas confirmadas." },
-      { "q": "¿Y si no veo resultados?", "a": "Pruébalo 60 días sin riesgo. Si no te trae valor, no sigues. Sin contratos largos." },
-      { "q": "¿Cómo se diferencia esto de las grandes plataformas?", "a": "ZUVIO se enfoca solo en agencias independientes, deja el control de cancelaciones en los dueños, fomenta la comunicación directa y construye visibilidad regional para los negocios locales. Somos una red — no un reemplazo." }
+      {
+        "q": "¿Pierdo el control de mis precios?",
+        "a": "No. Tú controlas las tarifas diarias, los depósitos, los requisitos y la disponibilidad de tus carros. ZUVIO no impone precios."
+      },
+      {
+        "q": "¿Los clientes pueden cancelar sin llamarme?",
+        "a": "No. Todas las cancelaciones requieren llamada directa a tu agencia. Tú mantienes el control de tus reglas de reserva."
+      },
+      {
+        "q": "¿Tengo que aceptar todas las solicitudes?",
+        "a": "No. Tú apruebas o rechazas cada solicitud."
+      },
+      {
+        "q": "¿ZUVIO reemplaza mi marca?",
+        "a": "No. El nombre, el teléfono y la identidad de tu agencia siguen al frente. ZUVIO suma visibilidad — no reemplaza tu marca."
+      },
+      {
+        "q": "¿Cómo cobro?",
+        "a": "Los clientes te pagan directo según tus reglas de pago. ZUVIO solo cobra su tarifa sobre las reservas confirmadas."
+      },
+      {
+        "q": "¿Y si no veo resultados?",
+        "a": "Pruébalo 60 días sin riesgo. Si no te trae valor, no sigues. Sin contratos largos."
+      },
+      {
+        "q": "¿Cómo se diferencia esto de las grandes plataformas?",
+        "a": "ZUVIO se enfoca solo en agencias independientes, deja el control de cancelaciones en los dueños, fomenta la comunicación directa y construye visibilidad regional para los negocios locales. Somos una red — no un reemplazo."
+      }
     ],
     "lockBtn": "Asegura mi tarifa de fundador"
   },
@@ -514,28 +586,82 @@
     "ctaBody": "¿No encuentras la respuesta que buscas? Nuestro equipo de soporte está listo para ayudarte.",
     "ctaBtn": "Contactar soporte",
     "renters": [
-      { "q": "¿Qué es ZUVIO y cómo funciona?", "a": "ZUVIO es una plataforma a nivel nacional que conecta clientes con agencias independientes de renta de carros en todo Estados Unidos. Somos una ventanilla única donde puedes descubrir y reservar con negocios locales que de otra forma sería difícil encontrar.\n\nFuncionamos reuniendo las opciones de renta de agencias independientes en una sola plataforma fácil de usar. Buscas rentas en tu zona, comparas opciones de diferentes agencias y reservas directo a través de ZUVIO." },
-      { "q": "¿Puedo pagar con efectivo o sin tarjeta de crédito?", "a": "¡Sí! Muchas agencias independientes en ZUVIO aceptan efectivo y no requieren tarjeta de crédito. Esa es una de las grandes ventajas frente a las cadenas corporativas.\n\nAl buscar rentas, puedes filtrar específicamente por agencias que aceptan efectivo o tarjeta de débito. Los requisitos de pago se muestran claramente en cada publicación." },
-      { "q": "¿Cómo reservo una renta a través de ZUVIO?", "a": "Reservar es fácil y toma pocos minutos:\n\n• Pon tu ubicación, fecha de recogida y fecha de entrega\n• Mira los carros disponibles de agencias independientes\n• Elige el que te funcione\n• Completa tu reserva con nuestro sistema seguro\n• Recibe confirmación al instante con los detalles de recogida\n\nDespués de reservar, recibes el teléfono y dirección de la agencia para que recojas tu carro a la hora pactada." },
-      { "q": "¿Las agencias en ZUVIO son legítimas y seguras?", "a": "Totalmente. Cada agencia en ZUVIO pasa por un proceso de verificación antes de ser publicada. Verificamos licencias de negocio, cobertura de seguro y operaciones legítimas.\n\nAdemás, todas las agencias tienen reseñas y calificaciones visibles en sus perfiles. Puedes leer las experiencias de otros clientes antes de decidir." },
-      { "q": "¿Cuál es la diferencia entre ZUVIO y las grandes cadenas?", "a": "ZUVIO te conecta con agencias independientes y locales en lugar de cadenas corporativas. Diferencias clave:\n\n• Servicio personalizado: tratas directo con dueños que se preocupan por tu experiencia\n• Condiciones flexibles: muchas aceptan efectivo, negocian términos y tienen reglas más flexibles\n• Apoyo a lo local: tu plata se queda con dueños locales\n• Mejor valor: precios competitivos sin sacrificar calidad" },
-      { "q": "¿Qué pasa si tengo un problema con mi renta?", "a": "Para cualquier problema durante tu renta, contacta directo a la agencia con la información en tu confirmación. Las agencias independientes suelen responder rápido y trabajan duro para resolver cualquier inquietud.\n\nSi no logras resolverlo, el soporte de ZUVIO está aquí para mediar." },
-      { "q": "¿Necesito seguro para rentar a través de ZUVIO?", "a": "Los requisitos de seguro varían por agencia y estado. La mayoría requiere prueba de seguro, ya sea con tu póliza personal, la cobertura de tu tarjeta de crédito o seguro de la misma agencia.\n\nLas opciones de seguro están claras en cada publicación." }
+      {
+        "q": "¿Qué es ZUVIO y cómo funciona?",
+        "a": "ZUVIO es una plataforma a nivel nacional que conecta clientes con agencias independientes de renta de carros en todo Estados Unidos. Somos una ventanilla única donde puedes descubrir y reservar con negocios locales que de otra forma sería difícil encontrar.\n\nFuncionamos reuniendo las opciones de renta de agencias independientes en una sola plataforma fácil de usar. Buscas rentas en tu zona, comparas opciones de diferentes agencias y reservas directo a través de ZUVIO."
+      },
+      {
+        "q": "¿Puedo pagar con efectivo o sin tarjeta de crédito?",
+        "a": "¡Sí! Muchas agencias independientes en ZUVIO aceptan efectivo y no requieren tarjeta de crédito. Esa es una de las grandes ventajas frente a las cadenas corporativas.\n\nAl buscar rentas, puedes filtrar específicamente por agencias que aceptan efectivo o tarjeta de débito. Los requisitos de pago se muestran claramente en cada publicación."
+      },
+      {
+        "q": "¿Cómo reservo una renta a través de ZUVIO?",
+        "a": "Reservar es fácil y toma pocos minutos:\n\n• Pon tu ubicación, fecha de recogida y fecha de entrega\n• Mira los carros disponibles de agencias independientes\n• Elige el que te funcione\n• Completa tu reserva con nuestro sistema seguro\n• Recibe confirmación al instante con los detalles de recogida\n\nDespués de reservar, recibes el teléfono y dirección de la agencia para que recojas tu carro a la hora pactada."
+      },
+      {
+        "q": "¿Las agencias en ZUVIO son legítimas y seguras?",
+        "a": "Totalmente. Cada agencia en ZUVIO pasa por un proceso de verificación antes de ser publicada. Verificamos licencias de negocio, cobertura de seguro y operaciones legítimas.\n\nAdemás, todas las agencias tienen reseñas y calificaciones visibles en sus perfiles. Puedes leer las experiencias de otros clientes antes de decidir."
+      },
+      {
+        "q": "¿Cuál es la diferencia entre ZUVIO y las grandes cadenas?",
+        "a": "ZUVIO te conecta con agencias independientes y locales en lugar de cadenas corporativas. Diferencias clave:\n\n• Servicio personalizado: tratas directo con dueños que se preocupan por tu experiencia\n• Condiciones flexibles: muchas aceptan efectivo, negocian términos y tienen reglas más flexibles\n• Apoyo a lo local: tu plata se queda con dueños locales\n• Mejor valor: precios competitivos sin sacrificar calidad"
+      },
+      {
+        "q": "¿Qué pasa si tengo un problema con mi renta?",
+        "a": "Para cualquier problema durante tu renta, contacta directo a la agencia con la información en tu confirmación. Las agencias independientes suelen responder rápido y trabajan duro para resolver cualquier inquietud.\n\nSi no logras resolverlo, el soporte de ZUVIO está aquí para mediar."
+      },
+      {
+        "q": "¿Necesito seguro para rentar a través de ZUVIO?",
+        "a": "Los requisitos de seguro varían por agencia y estado. La mayoría requiere prueba de seguro, ya sea con tu póliza personal, la cobertura de tu tarjeta de crédito o seguro de la misma agencia.\n\nLas opciones de seguro están claras en cada publicación."
+      }
     ],
     "agencies": [
-      { "q": "¿Cuánto cuesta unirme a ZUVIO?", "a": "ZUVIO ofrece un plan simple:\n\n• Plan Miembro Fundador: $79/mes + 5% por reserva confirmada\n• 60 días gratis para fundadores (limitado a las primeras 50 agencias)\n• Tu tarifa queda fija de por vida al unirte\n\nSin tarifas escondidas. Sin contratos largos. Cancela cuando quieras." },
-      { "q": "¿Qué necesito para empezar como agencia socia?", "a": "Para unirte a ZUVIO necesitas:\n\n• Licencia de negocio vigente para renta de carros\n• Prueba de seguro de responsabilidad\n• Fotos y detalles de tu flota\n• Información de contacto y ubicación del negocio\n\nEl registro es directo y nuestro equipo te ayuda a quedar activo rápido." },
-      { "q": "¿Cómo manejo reservas y disponibilidad?", "a": "ZUVIO te da un panel fácil donde puedes:\n\n• Actualizar disponibilidad en tiempo real\n• Ver y manejar reservas entrantes\n• Poner precios y condiciones\n• Comunicarte con los clientes\n• Llevar el control de reservas y ganancias\n\nTienes control total de tu inventario." },
-      { "q": "¿Puedo poner mis precios y reglas?", "a": "¡Claro! Tú mantienes el control total del negocio. Tú decides:\n\n• Tarifas diarias, semanales y mensuales\n• Requisitos de depósito de seguridad\n• Límites de kilometraje\n• Métodos de pago (efectivo, crédito, débito)\n• Requisitos de edad y restricciones\n• Opciones y requisitos de seguro" },
-      { "q": "¿Qué tan rápido empiezan a llegar reservas?", "a": "El volumen varía según tu ubicación, tamaño de flota y precios. Muchas agencias reciben su primera reserva en la primera semana.\n\nRecomendaciones:\n\n• Sube fotos de calidad de tus carros\n• Pon precios competitivos\n• Describe claramente tus condiciones\n• Responde rápido a los clientes\n• Pide reseñas a los clientes contentos" },
-      { "q": "¿Qué soporte ofrece ZUVIO a las agencias?", "a": "Estamos comprometidos con tu éxito. ZUVIO ofrece:\n\n• Equipo de soporte dedicado\n• Ayuda con setup y optimización\n• Marketing para traer clientes a la plataforma\n• Mejoras continuas\n• Mejores prácticas para maximizar reservas\n• Apoyo en resolución de disputas" }
+      {
+        "q": "¿Cuánto cuesta unirme a ZUVIO?",
+        "a": "ZUVIO ofrece un plan simple:\n\n• Plan Miembro Fundador: $79/mes + 5% por reserva confirmada\n• 60 días gratis para fundadores (limitado a las primeras 50 agencias)\n• Tu tarifa queda fija de por vida al unirte\n\nSin tarifas escondidas. Sin contratos largos. Cancela cuando quieras."
+      },
+      {
+        "q": "¿Qué necesito para empezar como agencia socia?",
+        "a": "Para unirte a ZUVIO necesitas:\n\n• Licencia de negocio vigente para renta de carros\n• Prueba de seguro de responsabilidad\n• Fotos y detalles de tu flota\n• Información de contacto y ubicación del negocio\n\nEl registro es directo y nuestro equipo te ayuda a quedar activo rápido."
+      },
+      {
+        "q": "¿Cómo manejo reservas y disponibilidad?",
+        "a": "ZUVIO te da un panel fácil donde puedes:\n\n• Actualizar disponibilidad en tiempo real\n• Ver y manejar reservas entrantes\n• Poner precios y condiciones\n• Comunicarte con los clientes\n• Llevar el control de reservas y ganancias\n\nTienes control total de tu inventario."
+      },
+      {
+        "q": "¿Puedo poner mis precios y reglas?",
+        "a": "¡Claro! Tú mantienes el control total del negocio. Tú decides:\n\n• Tarifas diarias, semanales y mensuales\n• Requisitos de depósito de seguridad\n• Límites de kilometraje\n• Métodos de pago (efectivo, crédito, débito)\n• Requisitos de edad y restricciones\n• Opciones y requisitos de seguro"
+      },
+      {
+        "q": "¿Qué tan rápido empiezan a llegar reservas?",
+        "a": "El volumen varía según tu ubicación, tamaño de flota y precios. Muchas agencias reciben su primera reserva en la primera semana.\n\nRecomendaciones:\n\n• Sube fotos de calidad de tus carros\n• Pon precios competitivos\n• Describe claramente tus condiciones\n• Responde rápido a los clientes\n• Pide reseñas a los clientes contentos"
+      },
+      {
+        "q": "¿Qué soporte ofrece ZUVIO a las agencias?",
+        "a": "Estamos comprometidos con tu éxito. ZUVIO ofrece:\n\n• Equipo de soporte dedicado\n• Ayuda con setup y optimización\n• Marketing para traer clientes a la plataforma\n• Mejoras continuas\n• Mejores prácticas para maximizar reservas\n• Apoyo en resolución de disputas"
+      }
     ],
     "general": [
-      { "q": "¿Dónde está disponible ZUVIO?", "a": "ZUVIO opera en todo Estados Unidos. Estamos sumando agencias en los 50 estados.\n\nLa cobertura varía por zona. Pon tu ubicación en la página de búsqueda para ver las agencias disponibles cerca de ti." },
-      { "q": "¿Cómo gana plata ZUVIO?", "a": "ZUVIO cobra a las agencias $79/mes más 5% por reserva confirmada. Eso asegura que solo ganamos cuando nuestros socios ganan.\n\nPara quienes rentan, usar ZUVIO es totalmente gratis. Nunca cobramos tarifas a los clientes ni inflamos los precios." },
-      { "q": "¿Mi información personal está segura?", "a": "Sí. ZUVIO toma en serio la seguridad. Usamos encriptación estándar de la industria. Nunca vendemos tus datos.\n\nAl reservar, solo compartimos con la agencia la información necesaria (nombre, contacto, detalles de la reserva)." },
-      { "q": "¿Puedo cancelar o modificar mi reserva?", "a": "Las políticas de cancelación y modificación las pone cada agencia y se ven claramente al reservar. Muchas ofrecen cancelación gratis hasta 24–48 horas antes de la recogida.\n\nPara cancelar o modificar, contacta directo a la agencia con la información de tu confirmación." },
-      { "q": "¿Cómo contacto el soporte de ZUVIO?", "a": "¡Estamos aquí para ayudarte! Nos puedes contactar por:\n\n• Correo: team@zuvio.us\n• Teléfono: disponible en nuestra página de Contacto\n\nRespondemos en menos de 24 horas, normalmente mucho antes." }
+      {
+        "q": "¿Dónde está disponible ZUVIO?",
+        "a": "ZUVIO opera en todo Estados Unidos. Estamos sumando agencias en los 50 estados.\n\nLa cobertura varía por zona. Pon tu ubicación en la página de búsqueda para ver las agencias disponibles cerca de ti."
+      },
+      {
+        "q": "¿Cómo gana plata ZUVIO?",
+        "a": "ZUVIO cobra a las agencias $79/mes más 5% por reserva confirmada. Eso asegura que solo ganamos cuando nuestros socios ganan.\n\nPara quienes rentan, usar ZUVIO es totalmente gratis. Nunca cobramos tarifas a los clientes ni inflamos los precios."
+      },
+      {
+        "q": "¿Mi información personal está segura?",
+        "a": "Sí. ZUVIO toma en serio la seguridad. Usamos encriptación estándar de la industria. Nunca vendemos tus datos.\n\nAl reservar, solo compartimos con la agencia la información necesaria (nombre, contacto, detalles de la reserva)."
+      },
+      {
+        "q": "¿Puedo cancelar o modificar mi reserva?",
+        "a": "Las políticas de cancelación y modificación las pone cada agencia y se ven claramente al reservar. Muchas ofrecen cancelación gratis hasta 24–48 horas antes de la recogida.\n\nPara cancelar o modificar, contacta directo a la agencia con la información de tu confirmación."
+      },
+      {
+        "q": "¿Cómo contacto el soporte de ZUVIO?",
+        "a": "¡Estamos aquí para ayudarte! Nos puedes contactar por:\n\n• Correo: team@zuvio.us\n• Teléfono: disponible en nuestra página de Contacto\n\nRespondemos en menos de 24 horas, normalmente mucho antes."
+      }
     ]
   },
   "about": {
@@ -557,27 +683,75 @@
     "valuesTitle": "En qué creemos",
     "valuesSub": "Nuestros valores guían todo lo que hacemos en ZUVIO",
     "values": [
-      { "title": "Apoyar la independencia", "desc": "Defendemos a los negocios independientes y creemos que los emprendedores locales merecen las herramientas para competir con los corporativos." },
-      { "title": "Competencia justa", "desc": "Los negocios pequeños no deberían estar en desventaja por falta de tecnología. Damos herramientas de nivel empresarial a precios accesibles." },
-      { "title": "Servicio de calidad", "desc": "Creemos que el servicio personalizado de agencias locales crea mejores experiencias que las políticas corporativas genéricas." },
-      { "title": "Innovación", "desc": "Mejoramos la plataforma constantemente para dar la mejor experiencia a agencias y clientes." },
-      { "title": "Confianza y transparencia", "desc": "Construimos confianza con comunicación honesta, precios transparentes y agencias verificadas." },
-      { "title": "Comunidad", "desc": "Estamos creando una comunidad nacional de agencias independientes y clientes que valoran lo local." }
+      {
+        "title": "Apoyar la independencia",
+        "desc": "Defendemos a los negocios independientes y creemos que los emprendedores locales merecen las herramientas para competir con los corporativos."
+      },
+      {
+        "title": "Competencia justa",
+        "desc": "Los negocios pequeños no deberían estar en desventaja por falta de tecnología. Damos herramientas de nivel empresarial a precios accesibles."
+      },
+      {
+        "title": "Servicio de calidad",
+        "desc": "Creemos que el servicio personalizado de agencias locales crea mejores experiencias que las políticas corporativas genéricas."
+      },
+      {
+        "title": "Innovación",
+        "desc": "Mejoramos la plataforma constantemente para dar la mejor experiencia a agencias y clientes."
+      },
+      {
+        "title": "Confianza y transparencia",
+        "desc": "Construimos confianza con comunicación honesta, precios transparentes y agencias verificadas."
+      },
+      {
+        "title": "Comunidad",
+        "desc": "Estamos creando una comunidad nacional de agencias independientes y clientes que valoran lo local."
+      }
     ],
     "diffTitle": "La diferencia Zuvio — reservas directas, sin intermediarios",
     "diffs": [
-      { "title": "Hecho para independientes", "desc": "A diferencia de los sitios genéricos, ZUVIO está diseñado específicamente para las agencias independientes y sus necesidades únicas." },
-      { "title": "Mercado de dos lados", "desc": "Servimos a agencias y a clientes, creando un ecosistema gana-gana donde los negocios locales conectan con quienes buscan sus servicios." },
-      { "title": "Soluciones flexibles", "desc": "Entendemos que las agencias aceptan efectivo, tienen reglas variadas y dan servicio personalizado. Nuestra plataforma apoya esa flexibilidad." },
-      { "title": "Empoderamiento de la agencia", "desc": "Las agencias mantienen el control total sobre precios, reglas y relaciones con clientes. Nosotros damos la plataforma, tú manejas tu negocio." },
-      { "title": "Enfoque en el cliente", "desc": "Atraemos clientes que específicamente buscan agencias independientes, no cualquiera que necesita un carro." },
-      { "title": "Crecimiento constante", "desc": "Siempre estamos agregando funciones, ampliando nuestra red y mejorando la plataforma con la retroalimentación de agencias y clientes." }
+      {
+        "title": "Hecho para independientes",
+        "desc": "A diferencia de los sitios genéricos, ZUVIO está diseñado específicamente para las agencias independientes y sus necesidades únicas."
+      },
+      {
+        "title": "Mercado de dos lados",
+        "desc": "Servimos a agencias y a clientes, creando un ecosistema gana-gana donde los negocios locales conectan con quienes buscan sus servicios."
+      },
+      {
+        "title": "Soluciones flexibles",
+        "desc": "Entendemos que las agencias aceptan efectivo, tienen reglas variadas y dan servicio personalizado. Nuestra plataforma apoya esa flexibilidad."
+      },
+      {
+        "title": "Empoderamiento de la agencia",
+        "desc": "Las agencias mantienen el control total sobre precios, reglas y relaciones con clientes. Nosotros damos la plataforma, tú manejas tu negocio."
+      },
+      {
+        "title": "Enfoque en el cliente",
+        "desc": "Atraemos clientes que específicamente buscan agencias independientes, no cualquiera que necesita un carro."
+      },
+      {
+        "title": "Crecimiento constante",
+        "desc": "Siempre estamos agregando funciones, ampliando nuestra red y mejorando la plataforma con la retroalimentación de agencias y clientes."
+      }
     ],
     "stats": [
-      { "number": "50+", "label": "Estados cubiertos" },
-      { "number": "100%", "label": "Agencias independientes" },
-      { "number": "24/7", "label": "Disponibilidad de la plataforma" },
-      { "number": "1", "label": "Misión: tu éxito" }
+      {
+        "number": "50+",
+        "label": "Estados cubiertos"
+      },
+      {
+        "number": "100%",
+        "label": "Agencias independientes"
+      },
+      {
+        "number": "24/7",
+        "label": "Disponibilidad de la plataforma"
+      },
+      {
+        "number": "1",
+        "label": "Misión: tu éxito"
+      }
     ],
     "joinTitle": "Únete a la red de renta de carros independiente que más rápido crece",
     "joinBody": "ZUVIO es más que una plataforma — es un movimiento para apoyar los negocios independientes y dar a los clientes mejores opciones de renta. Ya seas dueño de agencia buscando crecer o cliente buscando servicio personalizado, queremos que seas parte de la comunidad.",
@@ -594,18 +768,72 @@
     "introTitle": "Tu guía completa para reservar renta de carros independiente",
     "introBody": "ZUVIO te conecta con agencias independientes de confianza en todo Estados Unidos. Ya sea que necesites opciones de pago flexibles, servicio personalizado o quieras apoyar lo local, hacemos fácil encontrar y reservar el carro perfecto.",
     "steps": [
-      { "title": "Busca rentas cerca de ti", "desc": "Empieza poniendo tu ubicación, fechas y tipo de carro preferido. ZUVIO te muestra al instante todas las rentas disponibles de agencias independientes en tu zona.", "subTitle": "Lo que puedes hacer:", "details": ["Buscar por ciudad, código postal o aeropuerto", "Filtrar por tipo de carro, precio y características", "Ver agencias que aceptan efectivo", "Ver agencias que no requieren tarjeta de crédito", "Revisar disponibilidad en tiempo real"] },
-      { "title": "Compara y elige tu renta", "desc": "Mira las opciones disponibles y compara carros, precios y reseñas. Cada publicación te da información detallada para que elijas bien.", "subTitle": "Información que vas a ver:", "details": ["Detalles, fotos y características del carro", "Precios sin tarifas escondidas", "Ubicación y contacto de la agencia", "Reseñas y calificaciones", "Métodos de pago aceptados (efectivo, crédito, débito)", "Términos y condiciones", "Opciones de seguro y protección"] },
-      { "title": "Reserva y recoge tu carro", "desc": "Una vez que encuentres la renta perfecta, completa tu reserva con ZUVIO. Recibes confirmación al instante con todos los detalles para la recogida.", "subTitle": "El proceso de reserva:", "details": ["Asegura tu reserva con confirmación inmediata", "Recibe la ubicación y direcciones para recogida", "Obtén el contacto de la agencia para cualquier pregunta", "Revisa los documentos requeridos (licencia de conducir, prueba de seguro, etc.)", "Llega a la agencia para completar el papeleo y recoger tu carro", "Disfruta tu renta con servicio personalizado"] }
+      {
+        "title": "Busca rentas cerca de ti",
+        "desc": "Empieza poniendo tu ubicación, fechas y tipo de carro preferido. ZUVIO te muestra al instante todas las rentas disponibles de agencias independientes en tu zona.",
+        "subTitle": "Lo que puedes hacer:",
+        "details": [
+          "Buscar por ciudad, código postal o aeropuerto",
+          "Filtrar por tipo de carro, precio y características",
+          "Ver agencias que aceptan efectivo",
+          "Ver agencias que no requieren tarjeta de crédito",
+          "Revisar disponibilidad en tiempo real"
+        ]
+      },
+      {
+        "title": "Compara y elige tu renta",
+        "desc": "Mira las opciones disponibles y compara carros, precios y reseñas. Cada publicación te da información detallada para que elijas bien.",
+        "subTitle": "Información que vas a ver:",
+        "details": [
+          "Detalles, fotos y características del carro",
+          "Precios sin tarifas escondidas",
+          "Ubicación y contacto de la agencia",
+          "Reseñas y calificaciones",
+          "Métodos de pago aceptados (efectivo, crédito, débito)",
+          "Términos y condiciones",
+          "Opciones de seguro y protección"
+        ]
+      },
+      {
+        "title": "Reserva y recoge tu carro",
+        "desc": "Una vez que encuentres la renta perfecta, completa tu reserva con ZUVIO. Recibes confirmación al instante con todos los detalles para la recogida.",
+        "subTitle": "El proceso de reserva:",
+        "details": [
+          "Asegura tu reserva con confirmación inmediata",
+          "Recibe la ubicación y direcciones para recogida",
+          "Obtén el contacto de la agencia para cualquier pregunta",
+          "Revisa los documentos requeridos (licencia de conducir, prueba de seguro, etc.)",
+          "Llega a la agencia para completar el papeleo y recoger tu carro",
+          "Disfruta tu renta con servicio personalizado"
+        ]
+      }
     ],
     "featuresTitle": "¿Por qué rentar con Zuvio en lugar de las grandes plataformas?",
     "features": [
-      { "title": "Pago flexible", "desc": "Muchas agencias aceptan efectivo, débito o crédito. ¿Sin tarjeta de crédito? No hay problema con nuestra red de agencias independientes." },
-      { "title": "Apoya lo local", "desc": "Cada renta apoya a dueños independientes en tu comunidad. Tu plata se queda local y recibes mejor servicio." },
-      { "title": "Trato personal", "desc": "Trata directo con los dueños que se preocupan por tu experiencia. Sin burocracia corporativa." },
-      { "title": "Precios transparentes", "desc": "Ves todos los costos por adelantado, sin tarifas sorpresa. Las agencias independientes se enorgullecen de su pricing honesto." },
-      { "title": "Variedad de carros", "desc": "Desde económicos hasta SUVs y vans, encuentra exactamente lo que necesitas." },
-      { "title": "Ubicaciones convenientes", "desc": "Accede a rentas cerca de aeropuertos, centros y barrios en todo el país." }
+      {
+        "title": "Pago flexible",
+        "desc": "Muchas agencias aceptan efectivo, débito o crédito. ¿Sin tarjeta de crédito? No hay problema con nuestra red de agencias independientes."
+      },
+      {
+        "title": "Apoya lo local",
+        "desc": "Cada renta apoya a dueños independientes en tu comunidad. Tu plata se queda local y recibes mejor servicio."
+      },
+      {
+        "title": "Trato personal",
+        "desc": "Trata directo con los dueños que se preocupan por tu experiencia. Sin burocracia corporativa."
+      },
+      {
+        "title": "Precios transparentes",
+        "desc": "Ves todos los costos por adelantado, sin tarifas sorpresa. Las agencias independientes se enorgullecen de su pricing honesto."
+      },
+      {
+        "title": "Variedad de carros",
+        "desc": "Desde económicos hasta SUVs y vans, encuentra exactamente lo que necesitas."
+      },
+      {
+        "title": "Ubicaciones convenientes",
+        "desc": "Accede a rentas cerca de aeropuertos, centros y barrios en todo el país."
+      }
     ],
     "ctaTitle": "Encuentra rentas que aceptan efectivo cerca de ti — Reserva directo hoy",
     "ctaBody": "Busca en nuestra red de agencias independientes y descubre la diferencia ZUVIO hoy mismo.",
@@ -617,7 +845,11 @@
     "heroTitle": "Más reservas para agencias independientes de renta en",
     "heroTitleAccent": "Las Vegas y más allá",
     "heroSubtitle": "Zuvio ayuda a las agencias independientes a atraer clientes directos, aumentar reservas y crecer en ingresos — manteniendo el control total de precios, reglas y operaciones.",
-    "heroBullets": ["Comunicación directa con tus clientes", "Sin restricciones corporativas", "Hecho para agencias independientes"],
+    "heroBullets": [
+      "Comunicación directa con tus clientes",
+      "Sin restricciones corporativas",
+      "Hecho para agencias independientes"
+    ],
     "ctaFounding": "Sé miembro fundador",
     "ctaStart": "Empieza a recibir reservas",
     "noContracts": "Sin contratos. Cancela cuando quieras.",
@@ -625,22 +857,47 @@
     "moneyTitle": "Más reservas =",
     "moneyTitleAccent": "más ingresos para tu agencia",
     "moneyBody": "Con solo unas pocas reservas extra al mes ya cubres el costo y subes tus ingresos totales.",
-    "moneyItems": ["Llena tu inventario desocupado", "Sube los ingresos del mes", "Reduce la dependencia de una sola plataforma"],
+    "moneyItems": [
+      "Llena tu inventario desocupado",
+      "Sube los ingresos del mes",
+      "Reduce la dependencia de una sola plataforma"
+    ],
     "moneyFooter": "Zuvio está diseñado para",
     "moneyFooterAccent": "pagarse solo rápido.",
     "problemTitle": "Por qué las agencias independientes",
     "problemTitleAccent": "batallan para competir en línea",
-    "problemItems": ["Las cadenas corporativas dominan los buscadores", "Las agencias independientes son difíciles de encontrar", "Las plataformas controlan precios y clientes"],
+    "problemItems": [
+      "Las cadenas corporativas dominan los buscadores",
+      "Las agencias independientes son difíciles de encontrar",
+      "Las plataformas controlan precios y clientes"
+    ],
     "solutionTitle": "Zuvio nivela la cancha para",
     "solutionTitleAccent": "las agencias independientes",
     "solutionBody": "Zuvio le da a las agencias independientes la visibilidad y las herramientas para competir — sin quitarte el control.",
-    "solutionItems": ["Que te encuentren clientes locales y viajeros", "Recibe reservas directas", "Mantén tu independencia total"],
+    "solutionItems": [
+      "Que te encuentren clientes locales y viajeros",
+      "Recibe reservas directas",
+      "Mantén tu independencia total"
+    ],
     "featuresTitle": "Hecho para",
     "featuresTitleAccent": "agencias independientes de renta",
-    "features": ["Más visibilidad", "Comunicación directa con clientes", "Aprobaciones controladas por el dueño", "Opciones de pago flexibles", "Manejo de solicitudes de reserva", "Control total de tu negocio"],
+    "features": [
+      "Más visibilidad",
+      "Comunicación directa con clientes",
+      "Aprobaciones controladas por el dueño",
+      "Opciones de pago flexibles",
+      "Manejo de solicitudes de reserva",
+      "Control total de tu negocio"
+    ],
     "howTitle": "Cómo",
     "howTitleAccent": "funciona",
-    "howSteps": ["Crea tu perfil", "Publica tus carros", "Recibe solicitudes de reserva", "Aprueba o rechaza", "Atiende a los clientes a tu manera"],
+    "howSteps": [
+      "Crea tu perfil",
+      "Publica tus carros",
+      "Recibe solicitudes de reserva",
+      "Aprueba o rechaza",
+      "Atiende a los clientes a tu manera"
+    ],
     "pricingTitle": "Precios",
     "pricingTitleAccent": "simples y transparentes",
     "pricingSub": "Sin tarifas escondidas. Sin contratos. Sin perder el control.",
@@ -654,7 +911,11 @@
     "cancel": "Cancela cuando quieras",
     "controlTitle": "Tú mantienes el",
     "controlTitleAccent": "control",
-    "controlItems": ["Tú pones los precios", "Tú controlas las reglas", "Tú manejas tus clientes"],
+    "controlItems": [
+      "Tú pones los precios",
+      "Tú controlas las reglas",
+      "Tú manejas tus clientes"
+    ],
     "urgencyTitle": "Cupos limitados de miembro fundador para agencias independientes",
     "urgencyBody": "Estamos integrando un número limitado de agencias para asegurar fuerte visibilidad y rendimiento.",
     "finalTitle": "Empieza a recibir más reservas",
@@ -678,42 +939,75 @@
       {
         "title": "Visibilidad regional y nacional",
         "description": "Tu agencia se vuelve visible para clientes que buscan:",
-        "points": ["Por ciudad o código postal", "Rentas que aceptan efectivo", "Opciones de depósito flexibles", "Alternativas locales a las cadenas corporativas"],
+        "points": [
+          "Por ciudad o código postal",
+          "Rentas que aceptan efectivo",
+          "Opciones de depósito flexibles",
+          "Alternativas locales a las cadenas corporativas"
+        ],
         "footer": "Te traemos atención regional sin que tengas que subir el gasto en publicidad."
       },
       {
         "title": "Más oportunidades de reserva",
         "description": "ZUVIO permite que los clientes busquen, soliciten reservas, pidan extensiones y te contacten directo. Tú decides aceptar o rechazar.",
-        "points": ["Tú controlas los depósitos", "Tú controlas los requisitos", "Tú controlas las reglas de cancelación"],
+        "points": [
+          "Tú controlas los depósitos",
+          "Tú controlas los requisitos",
+          "Tú controlas las reglas de cancelación"
+        ],
         "footer": "No tomamos tu negocio — lo amplificamos."
       },
       {
         "title": "Presencia digital 24/7",
         "description": "Incluso cuando tu oficina está cerrada, los clientes pueden:",
-        "points": ["Ver tu publicación", "Enviar solicitudes de reserva", "Ver categorías de carros", "Revisar tus requisitos"],
+        "points": [
+          "Ver tu publicación",
+          "Enviar solicitudes de reserva",
+          "Ver categorías de carros",
+          "Revisar tus requisitos"
+        ],
         "footer": "Eso significa que estás generando clientes potenciales todo el tiempo."
       },
       {
         "title": "Comunicación directa con el cliente",
         "description": "A diferencia de las grandes plataformas:",
-        "points": ["Las cancelaciones requieren llamada directa", "Los clientes hablan contigo", "Construyes relaciones que vuelven"],
+        "points": [
+          "Las cancelaciones requieren llamada directa",
+          "Los clientes hablan contigo",
+          "Construyes relaciones que vuelven"
+        ],
         "footer": "Te ayudamos a crecer tu marca — no a reemplazarla."
       },
       {
         "title": "Marketing sin gastos extra",
         "description": "ZUVIO invierte en:",
-        "points": ["Campañas de marketing regional", "Visibilidad en buscadores", "Promoción de la plataforma"],
+        "points": [
+          "Campañas de marketing regional",
+          "Visibilidad en buscadores",
+          "Promoción de la plataforma"
+        ],
         "footer": "Te beneficias de la exposición colectiva bajo una sola red."
       }
     ],
     "whyTitle": "Por qué los dueños independientes",
     "whyTitleAccent": "eligen Zuvio",
-    "why": ["Más llamadas entrantes", "Alcance regional ampliado", "Mejor visibilidad frente a las cadenas", "Flujo de reservas más constante", "Credibilidad digital"],
+    "why": [
+      "Más llamadas entrantes",
+      "Alcance regional ampliado",
+      "Mejor visibilidad frente a las cadenas",
+      "Flujo de reservas más constante",
+      "Credibilidad digital"
+    ],
     "controlChip": "Tu negocio, tus reglas",
     "controlTitle": "Tú mantienes el",
     "controlTitleAccent": "control",
     "doesNot": "ZUVIO <strong>no</strong>:",
-    "controlItems": ["Controla tus precios", "Impone tus reglas", "Pasa por encima de tus aprobaciones", "Reemplaza tu marca"],
+    "controlItems": [
+      "Controla tus precios",
+      "Impone tus reglas",
+      "Pasa por encima de tus aprobaciones",
+      "Reemplaza tu marca"
+    ],
     "independent": "Tú sigues siendo independiente.",
     "weProvide": "Nosotros damos la red.",
     "ctaTitle": "¿Listo para crecer tu agencia? Únete a Zuvio hoy",
@@ -735,20 +1029,48 @@
     "searchBtn": "Buscar renta en {{city}}",
     "listBtn": "Publica tus carros en {{city}}",
     "sec1Body": "Muchas agencias independientes en {{city}} aceptan efectivo, tarjeta de débito y métodos de pago flexibles — sin necesidad de tarjeta de crédito.",
-    "sec1Items": ["Aceptan efectivo", "Sin tarjeta de crédito", "Contacto directo con el dueño"],
+    "sec1Items": [
+      "Aceptan efectivo",
+      "Sin tarjeta de crédito",
+      "Contacto directo con el dueño"
+    ],
     "sec2Body": "¿Por qué esperar en las filas del aeropuerto? Reserva directo con agencias locales de {{city}} que ofrecen servicio personalizado y tarifas competitivas.",
-    "sec2Items": ["Olvídate de las filas del aeropuerto", "Servicio personalizado", "Apoya negocios locales", "Ubicaciones de recogida flexibles"],
+    "sec2Items": [
+      "Olvídate de las filas del aeropuerto",
+      "Servicio personalizado",
+      "Apoya negocios locales",
+      "Ubicaciones de recogida flexibles"
+    ],
     "sec3Body": "¿Tienes carros de renta en {{city}}? Que te encuentren clientes locales y visitantes. Mantén control total de precios, reglas y comunicación.",
     "sec3Cta": "Únete a Zuvio en {{city}}",
     "sec4Steps": [
-      { "title": "Busca", "desc": "Pon {{city}} como ubicación y mira las agencias disponibles." },
-      { "title": "Compara", "desc": "Ve opciones de carros, precios y métodos de pago aceptados." },
-      { "title": "Reserva directo", "desc": "Envía una solicitud de reserva y conéctate directo con la agencia." }
+      {
+        "title": "Busca",
+        "desc": "Pon {{city}} como ubicación y mira las agencias disponibles."
+      },
+      {
+        "title": "Compara",
+        "desc": "Ve opciones de carros, precios y métodos de pago aceptados."
+      },
+      {
+        "title": "Reserva directo",
+        "desc": "Envía una solicitud de reserva y conéctate directo con la agencia."
+      }
     ],
     "sec5Body": "Las agencias independientes ofrecen mejores precios, pago flexible y servicio personal. Sin trabas corporativas.",
-    "sec5Items": ["Tarifas más bajas que las grandes marcas", "Aceptan efectivo y débito", "Condiciones de renta flexibles", "Servicio personalizado"],
+    "sec5Items": [
+      "Tarifas más bajas que las grandes marcas",
+      "Aceptan efectivo y débito",
+      "Condiciones de renta flexibles",
+      "Servicio personalizado"
+    ],
     "sec6Body": "Explora sedanes, SUVs, camionetas, vans y más de agencias locales en {{city}}.",
-    "vehicleTypes": ["Sedanes", "SUVs", "Camionetas", "Vans"],
+    "vehicleTypes": [
+      "Sedanes",
+      "SUVs",
+      "Camionetas",
+      "Vans"
+    ],
     "localBadge": "Conocimiento local",
     "localTitle": "Rentar un carro en {{city}}: lo que saben los locales",
     "rules": "Reglas de manejo locales",
@@ -788,10 +1110,173 @@
     "heroTitle": "Hosts de Turo en Las Vegas: recibe más reservas",
     "heroTitleAccent": "y mantén el control con Zuvio",
     "heroSubtitle": "Zuvio te ayuda a atraer clientes directos, crecer más allá de Turo y construir un negocio de renta que tú controlas.",
-    "heroBullets": ["Recibe reservas fuera de Turo", "Mantén tus precios y reglas", "Construye tu propia base de clientes", "Sin trabas de plataforma"],
+    "heroBullets": [
+      "Recibe reservas fuera de Turo",
+      "Mantén tus precios y reglas",
+      "Construye tu propia base de clientes",
+      "Sin trabas de plataforma"
+    ],
     "ctaDirect": "Empieza a recibir reservas directas",
     "ctaPricing": "Ver precios",
-    "noContracts": "Sin contratos. Cancela cuando quieras."
+    "noContracts": "Sin contratos. Cancela cuando quieras.",
+    "pain": {
+      "badge": "El riesgo",
+      "title": "El riesgo de depender solo de Turo",
+      "titleAccent": "para tu ingreso de renta de carros",
+      "items": [
+        "Las comisiones reducen tus ganancias",
+        "No controlas los precios",
+        "Tu cuenta puede ser restringida",
+        "Los clientes no son tuyos"
+      ],
+      "footer": "Si una sola plataforma controla tu ingreso, tu negocio",
+      "footerAccent": "no es del todo tuyo."
+    },
+    "solution": {
+      "badge": "La solución",
+      "title": "Zuvio ayuda a los hosts de Turo a",
+      "titleAccent": "retomar el control",
+      "subtitle": "Zuvio trabaja junto a Turo — te ayuda a generar reservas directas y crear clientes de largo plazo.",
+      "items": [
+        "Solicitudes de reserva directas",
+        "Comunicación directa con el cliente",
+        "Tus precios, tus reglas",
+        "Construye clientes que regresan"
+      ],
+      "footer": "Usa Turo.",
+      "footerAccent": "Crece con Zuvio."
+    },
+    "money": {
+      "badge": "Ingresos",
+      "title": "Gana más con tus carros de renta —",
+      "titleAccent": "y quédate con más de lo que produces",
+      "subtitle": "Una o dos reservas extra pueden cubrir todo tu costo mensual.",
+      "items": [
+        "Llena los días libres del calendario",
+        "Captura demanda fuera de la plataforma",
+        "Aumenta los clientes que regresan",
+        "Depende menos de las comisiones de plataforma"
+      ],
+      "footer": "Zuvio está hecho para pagarse solo — rapidito."
+    },
+    "comparison": {
+      "title": "Turo vs.",
+      "titleAccent": "Zuvio",
+      "turoItems": [
+        "Controlado por la plataforma",
+        "Las comisiones reducen el margen",
+        "Poca propiedad sobre el cliente"
+      ],
+      "zuvioItems": [
+        "Tú controlas todo",
+        "Relación directa con el cliente",
+        "Hecho para tu independencia"
+      ],
+      "footer": "Los hosts inteligentes no dependen de una sola plataforma.",
+      "footerAccent": "Diversifican."
+    },
+    "calculator": {
+      "badge": "💰 Calculadora de ganancias",
+      "title": "Mira lo que los hosts de renta de carros pueden",
+      "titleAccent": "ganar con Zuvio",
+      "subtitle": "Calcula cuánto ingreso extra puedes generar con solo unas reservas más al mes.",
+      "pricePerDay": "Precio promedio por día de renta",
+      "rentalLength": "Duración promedio de la renta (días)",
+      "additionalBookings": "Reservas adicionales al mes con Zuvio",
+      "day": "día",
+      "days": "días",
+      "booking": "reserva",
+      "bookings": "reservas",
+      "monthlyRevenue": "Ingreso mensual estimado",
+      "bookingFee": "Comisión de Zuvio por reserva (5%)",
+      "subscriptionCost": "Costo de suscripción",
+      "netIncome": "Tu ingreso adicional neto",
+      "conversion": "🔥 Con apenas 1 o 2 reservas cubres tu costo mensual.",
+      "conversionAccent": "Todo lo demás es ganancia.",
+      "ctaStart": "Empieza a recibir estas reservas",
+      "ctaFounding": "Hazte miembro fundador"
+    },
+    "testimonials": {
+      "title": "Lo que dicen",
+      "titleAccent": "los hosts",
+      "items": [
+        {
+          "quote": "Estaba cansado de que Turo se llevara su parte y controlara mis precios. Con Zuvio, yo pongo mis tarifas y los clientes me llaman directo. Mis reservas han subido desde que entré.",
+          "name": "Marcus T.",
+          "role": "Host de Turo y dueño de flota · Las Vegas, NV"
+        },
+        {
+          "quote": "Como host de Turo siempre andaba preocupada por que me suspendieran la cuenta. Zuvio me dio un segundo canal donde tengo el control total. Es justo lo que los dueños independientes necesitamos.",
+          "name": "Daniela R.",
+          "role": "Host de Turo y dueña de agencia · Miami, FL"
+        },
+        {
+          "quote": "Montarlo fue facilito y empecé a recibir llamadas en la primera semana. Sin onboarding complicado, sin políticas corporativas — puro negocio.",
+          "name": "James K.",
+          "role": "Dueño de flota pequeña · Dallas, TX"
+        }
+      ]
+    },
+    "howItWorks": {
+      "title": "Cómo",
+      "titleAccent": "funciona",
+      "steps": [
+        {
+          "title": "Crea tu perfil",
+          "desc": "Arma tu perfil de agencia o host en minutos."
+        },
+        {
+          "title": "Sube tus carros",
+          "desc": "Agrega tus carros con precios, fotos y reglas."
+        },
+        {
+          "title": "Recibe solicitudes de reserva",
+          "desc": "Los clientes te encuentran y te mandan solicitudes."
+        },
+        {
+          "title": "Aprueba o rechaza",
+          "desc": "Tú decides qué reservas aceptar."
+        },
+        {
+          "title": "Cobra a tu manera",
+          "desc": "Efectivo, tarjeta, Zelle — tu cobro, tus reglas."
+        }
+      ]
+    },
+    "bookingFee": {
+      "title": "Por qué cobramos una",
+      "titleAccent": "pequeña comisión por reserva",
+      "body": "Zuvio solo gana cuando tú ganas. Cobramos un porcentaje pequeño de las reservas confirmadas para mantenernos motivados en traerte oportunidades reales y calificadas.",
+      "footer": "Si tú no creces —",
+      "footerAccent": "nosotros no crecemos.",
+      "noSetup": "Sin cargos de instalación",
+      "noLongContracts": "Sin contratos largos",
+      "cancelAnytime": "Cancela cuando quieras"
+    },
+    "objection": {
+      "title": "¿Tengo que",
+      "titleAccent": "dejar Turo?",
+      "no": "No.",
+      "intro": "Zuvio funciona junto con Turo. Usa los dos para:",
+      "benefits": [
+        "Aumentar tus reservas",
+        "Construir tu independencia",
+        "Crecer tu base de clientes"
+      ]
+    },
+    "pricingSection": {
+      "title": "Precios",
+      "titleAccent": "claros y transparentes",
+      "subtitle": "Sin cargos ocultos. Sin contratos. Sin perder el control."
+    },
+    "finalCta": {
+      "title": "Empieza a recibir más reservas",
+      "titleAccent": "— bajo tus reglas",
+      "pricing": "$79/mes + 5% por reserva confirmada. 60 días gratis para miembros fundadores. Cupo limitado.",
+      "risk": "Pruébalo sin riesgo por 60 días. Si no te aporta valor, no sigues.",
+      "lockRate": "Reservar mi tarifa fundadora",
+      "getBookings": "Conseguir mis primeras reservas"
+    }
   },
   "language": {
     "switchTo": "Cambiar idioma",
