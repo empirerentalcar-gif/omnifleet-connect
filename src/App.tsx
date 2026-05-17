@@ -71,6 +71,7 @@ const GlobalLayout = () => {
           <Route path="/owner-benefits" element={<OwnerBenefits />} />
           <Route path="/pricing" element={<Pricing />} />
           <Route path="/search" element={<SearchResults />} />
+          <Route path="/buscar" element={<SearchResults lang="es" />} />
           <Route path="/agency/:id" element={<AgencyDetail />} />
           <Route path="/reserve/:agencyId" element={<ReserveRequest />} />
           <Route path="/reservation-confirmed" element={<ReservationConfirmed />} />

@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { useSearchParams, useNavigate, Link } from "react-router-dom";
+import { useSearchParams, useNavigate, Link, useLocation as useRouterLocation } from "react-router-dom";
 import { MapPin, Calendar, Car, Search, Banknote } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
@@ -10,6 +10,77 @@ import { logVehicleFetchFailure, logVehicleFetchEmpty } from "@/lib/telemetry";
 import { SafeImage } from "@/components/SafeImage";
 
 const vehicleTypes = ["All", "Sedan", "SUV", "Truck", "Van", "Compact", "Luxury"];
+
+type Lang = "en" | "es";
+
+const translations = {
+  en: {
+    seoTitle: "Search Car Rentals | ZUVIO",
+    seoDescription:
+      "Search independent car rental agencies near you. Filter by location, vehicle type, and cash-friendly options.",
+    heading: "Search Car Rentals",
+    subtitle: "Independent agencies • Cash-friendly options",
+    cityLabel: "City / Zip",
+    cityPlaceholder: "Select a city",
+    pickupLabel: "Pickup Date",
+    dropoffLabel: "Drop-off Date",
+    searchBtn: "Search",
+    vehicleTypeLabels: {
+      All: "All",
+      Sedan: "Sedan",
+      SUV: "SUV",
+      Truck: "Truck",
+      Van: "Van",
+      Compact: "Compact",
+      Luxury: "Luxury",
+    } as Record<string, string>,
+    resultsCount: (n: number, loc: string) =>
+      `${n} ${n === 1 ? "vehicle" : "vehicles"} found${loc ? ` near ${loc}` : ""}.`,
+    cashBadge: "Cash",
+    locationTBD: "Location TBD",
+    perDay: "/day",
+    viewDetails: "View Details & Reserve",
+    emptyTitleNone: "No vehicles available yet",
+    emptyTitleFiltered: "No vehicles match your filters",
+    emptyBodyNone: "We're actively onboarding new agencies. Check back soon!",
+    emptyBodyFiltered: (n: number) =>
+      `Try clearing your filters to see all ${n} ${n === 1 ? "vehicle" : "vehicles"}.`,
+    resetBtn: "Reset Filters",
+  },
+  es: {
+    seoTitle: "Alquiler de Autos en Miami | ZUVIO",
+    seoDescription:
+      "Busca agencias independientes de alquiler de autos cerca de ti. Filtra por ubicación, tipo de vehículo y opciones que aceptan efectivo.",
+    heading: "Alquiler de Autos en Miami",
+    subtitle: "Agencias independientes • Aceptan efectivo",
+    cityLabel: "Ciudad / Código Postal",
+    cityPlaceholder: "Selecciona una ciudad",
+    pickupLabel: "Recogida",
+    dropoffLabel: "Entrega",
+    searchBtn: "Buscar",
+    vehicleTypeLabels: {
+      All: "Todos",
+      Sedan: "Sedán",
+      SUV: "SUV",
+      Truck: "Camioneta",
+      Van: "Van",
+      Compact: "Compacto",
+      Luxury: "Lujo",
+    } as Record<string, string>,
+    resultsCount: (n: number, loc: string) =>
+      `${n} ${n === 1 ? "auto" : "autos"} encontrados${loc ? ` cerca de ${loc}` : ""}.`,
+    cashBadge: "Efectivo",
+    locationTBD: "Ubicación por confirmar",
+    perDay: "/día",
+    viewDetails: "Reservar Ahora",
+    emptyTitleNone: "No se encontraron autos disponibles",
+    emptyTitleFiltered: "No se encontraron autos disponibles",
+    emptyBodyNone: "Estamos incorporando nuevas agencias. ¡Vuelve pronto!",
+    emptyBodyFiltered: (n: number) =>
+      `Borra los filtros para ver los ${n} ${n === 1 ? "auto" : "autos"} disponibles.`,
+    resetBtn: "Borrar todo",
+  },
+} as const;
 
 interface VehicleCard {
   id: string;
@@ -26,9 +97,16 @@ interface VehicleCard {
   image: string | null;
 }
 
-const SearchResults = () => {
+interface SearchResultsProps {
+  lang?: Lang;
+}
+
+const SearchResults = ({ lang: langProp }: SearchResultsProps = {}) => {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
+  const routerLocation = useRouterLocation();
+  const lang: Lang = langProp ?? (routerLocation.pathname.startsWith("/buscar") ? "es" : "en");
+  const t = translations[lang];
   const [location, setLocation] = useState(searchParams.get("location") || "");
   const [pickupDate, setPickupDate] = useState(searchParams.get("pickup") || "");
   const [dropoffDate, setDropoffDate] = useState(searchParams.get("dropoff") || "");
@@ -121,32 +199,32 @@ const SearchResults = () => {
   return (
     <div className="min-h-screen" style={{ backgroundColor: "#0d1b2e" }}>
       <SEO
-        title="Search Car Rentals | ZUVIO"
-        description="Search independent car rental agencies near you. Filter by location, vehicle type, and cash-friendly options."
-        path="/search"
+        title={t.seoTitle}
+        description={t.seoDescription}
+        path={lang === "es" ? "/buscar" : "/search"}
       />
 
       {/* Hero Section */}
       <section className="pt-10 pb-10 border-b-2 border-[#2dd4bf]/40" style={{ backgroundColor: "#0d1b2e" }}>
         <div className="container mx-auto px-4">
           <div className="text-center mb-8">
-            <h1 className="text-3xl md:text-4xl font-bold text-white mb-2">Search Car Rentals</h1>
-            <p className="text-white/50 text-base">Independent agencies • Cash-friendly options</p>
+            <h1 className="text-3xl md:text-4xl font-bold text-white mb-2">{t.heading}</h1>
+            <p className="text-white/50 text-base">{t.subtitle}</p>
           </div>
 
           {/* Search Bar */}
           <div className="max-w-4xl mx-auto rounded-2xl p-1" style={{ backgroundColor: "#1a2d45", border: "1px solid rgba(45,212,191,0.3)" }}>
             <div className="flex flex-col md:flex-row items-stretch">
               <div className="flex-1 p-4 border-b md:border-b-0 md:border-r border-white/10">
-                <label className="block text-[10px] uppercase tracking-widest text-white/40 mb-1 font-medium">City / Zip</label>
+                <label className="block text-[10px] uppercase tracking-widest text-white/40 mb-1 font-medium">{t.cityLabel}</label>
                 <CitySelector
                   value={location}
                   onChange={setLocation}
-                  placeholder="Select a city"
+                  placeholder={t.cityPlaceholder}
                 />
               </div>
               <div className="flex-1 p-4 border-b md:border-b-0 md:border-r border-white/10">
-                <label className="block text-[10px] uppercase tracking-widest text-white/40 mb-1 font-medium">Pickup Date</label>
+                <label className="block text-[10px] uppercase tracking-widest text-white/40 mb-1 font-medium">{t.pickupLabel}</label>
                 <input
                   type="date"
                   value={pickupDate}
@@ -155,7 +233,7 @@ const SearchResults = () => {
                 />
               </div>
               <div className="flex-1 p-4 border-b md:border-b-0 md:border-r border-white/10">
-                <label className="block text-[10px] uppercase tracking-widest text-white/40 mb-1 font-medium">Drop-off Date</label>
+                <label className="block text-[10px] uppercase tracking-widest text-white/40 mb-1 font-medium">{t.dropoffLabel}</label>
                 <input
                   type="date"
                   value={dropoffDate}
@@ -173,7 +251,7 @@ const SearchResults = () => {
                 >
                   <span className="flex items-center gap-2 justify-center">
                     <Search className="h-4 w-4" />
-                    Search
+                    {t.searchBtn}
                   </span>
                 </button>
               </div>
@@ -199,7 +277,7 @@ const SearchResults = () => {
                   if (vehicleType !== type) e.currentTarget.style.borderColor = "rgba(255,255,255,0.2)";
                 }}
               >
-                {type}
+                {t.vehicleTypeLabels[type] ?? type}
               </button>
             ))}
           </div>
@@ -226,9 +304,7 @@ const SearchResults = () => {
             </div>
           ) : (
             <>
-              <p className="text-white/40 text-sm mb-6">
-                {filtered.length} {filtered.length === 1 ? "vehicle" : "vehicles"} found{location ? ` near ${location}` : ""}.
-              </p>
+              <p className="text-white/40 text-sm mb-6">{t.resultsCount(filtered.length, location)}</p>
 
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" style={{ display: "grid" }}>
                 {filtered.map((v) => {
@@ -250,7 +326,7 @@ const SearchResults = () => {
                           {v.cashAccepted && (
                             <span className="shrink-0 inline-flex items-center gap-1 px-2 py-1 rounded-full text-[10px] font-semibold"
                               style={{ backgroundColor: "rgba(45,212,191,0.15)", color: "#2dd4bf", border: "1px solid rgba(45,212,191,0.3)" }}>
-                              <Banknote className="h-3 w-3" /> Cash
+                              <Banknote className="h-3 w-3" /> {t.cashBadge}
                             </span>
                           )}
                         </div>
@@ -259,19 +335,19 @@ const SearchResults = () => {
                         </Link>
                         <p className="text-white/40 text-xs flex items-center gap-1 mb-3">
                           <MapPin className="h-3 w-3" />
-                          {v.city || "Location TBD"}{v.state ? `, ${v.state}` : ""}
+                          {v.city || t.locationTBD}{v.state ? `, ${v.state}` : ""}
                           {v.vehicleType && <span className="ml-2 px-1.5 py-0.5 rounded text-[10px]" style={{ backgroundColor: "rgba(255,255,255,0.06)" }}>{v.vehicleType}</span>}
                         </p>
                         <div className="flex items-baseline gap-1 mb-4 mt-auto">
                           <span className="text-2xl font-bold" style={{ color: "#2dd4bf" }}>${v.dailyRate}</span>
-                          <span className="text-white/40 text-sm">/day</span>
+                          <span className="text-white/40 text-sm">{t.perDay}</span>
                         </div>
                         <button
                           onClick={() => navigate(`/vehicles/${v.id}`)}
                           className="w-full py-2.5 rounded-lg font-bold text-sm transition-colors"
                           style={{ backgroundColor: "#2dd4bf", color: "#0d1b2e" }}
                         >
-                          View Details & Reserve
+                          {t.viewDetails}
                         </button>
                       </div>
                     </div>
@@ -283,12 +359,10 @@ const SearchResults = () => {
                 <div className="text-center py-16 rounded-xl" style={{ backgroundColor: "#132640", border: "1px solid rgba(255,255,255,0.08)" }}>
                   <Car className="h-16 w-16 mx-auto mb-4" style={{ color: "rgba(255,255,255,0.15)" }} />
                   <p className="text-xl font-bold text-white mb-2">
-                    {vehicles.length === 0 ? "No vehicles available yet" : "No vehicles match your filters"}
+                    {vehicles.length === 0 ? t.emptyTitleNone : t.emptyTitleFiltered}
                   </p>
                   <p className="text-white/40 mb-6">
-                    {vehicles.length === 0
-                      ? "We're actively onboarding new agencies. Check back soon!"
-                      : `Try clearing your filters to see all ${vehicles.length} ${vehicles.length === 1 ? "vehicle" : "vehicles"}.`}
+                    {vehicles.length === 0 ? t.emptyBodyNone : t.emptyBodyFiltered(vehicles.length)}
                   </p>
                   {vehicles.length > 0 && (
                     <button
@@ -298,7 +372,7 @@ const SearchResults = () => {
                       onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "#5eead4")}
                       onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "#2dd4bf")}
                     >
-                      Reset Filters
+                      {t.resetBtn}
                     </button>
                   )}
                 </div>
