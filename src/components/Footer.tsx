@@ -1,9 +1,11 @@
 import { Facebook, Youtube, Mail, Phone } from "lucide-react";
 import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import zuvioLogo from "@/assets/zuvio-logo.png";
 import StripeBadge from "./StripeBadge";
 
 const Footer = () => {
+  const { t } = useTranslation();
   return (
     <footer className="border-t border-[#1a2d4a]" style={{ backgroundColor: "#0d1b2e" }}>
       <div className="container mx-auto px-4 py-16">
@@ -14,12 +16,12 @@ const Footer = () => {
               <img src={zuvioLogo} alt="Zuvio" className="h-12 w-auto object-contain" width={160} height={48} loading="lazy" decoding="async" />
             </Link>
             <p className="text-[#8899aa] mb-6 max-w-sm">
-              Connecting renters with trusted independent rental agencies nationwide. Cash-friendly options. Full owner control.
+              {t("footer.tagline")}
             </p>
             <div className="flex gap-4">
               {[
-                { Icon: Facebook, label: "Follow ZUVIO on Facebook", href: "https://www.facebook.com/profile.php?id=61587809278822" },
-                { Icon: Youtube, label: "Follow ZUVIO on YouTube", href: "https://www.youtube.com/@SilverPathAISecureSmartAfter50" },
+                { Icon: Facebook, label: t("footer.followFacebook"), href: "https://www.facebook.com/profile.php?id=61587809278822" },
+                { Icon: Youtube, label: t("footer.followYoutube"), href: "https://www.youtube.com/@SilverPathAISecureSmartAfter50" },
               ].map(({ Icon, label, href }, i) => (
                 <a
                   key={i}
@@ -37,13 +39,13 @@ const Footer = () => {
 
           {/* For Renters */}
           <div>
-            <h3 className="font-display font-bold mb-6 text-white">For Renters</h3>
+            <h3 className="font-display font-bold mb-6 text-white">{t("footer.forRenters")}</h3>
             <ul className="space-y-3">
-              <li><Link to="/search" className="text-[#2dd4bf] hover:text-[#5eead4] transition-colors">Search Vehicles</Link></li>
-              <li><Link to="/how-it-works" className="text-[#2dd4bf] hover:text-[#5eead4] transition-colors">How It Works</Link></li>
-              <li><Link to="/faq" className="text-[#2dd4bf] hover:text-[#5eead4] transition-colors">FAQs</Link></li>
+              <li><Link to="/search" className="text-[#2dd4bf] hover:text-[#5eead4] transition-colors">{t("footer.searchVehicles")}</Link></li>
+              <li><Link to="/how-it-works" className="text-[#2dd4bf] hover:text-[#5eead4] transition-colors">{t("footer.howItWorks")}</Link></li>
+              <li><Link to="/faq" className="text-[#2dd4bf] hover:text-[#5eead4] transition-colors">{t("footer.faqs")}</Link></li>
             </ul>
-            <h4 className="font-display font-bold mt-6 mb-3 text-white text-sm">Browse Cities</h4>
+            <h4 className="font-display font-bold mt-6 mb-3 text-white text-sm">{t("footer.browseCities")}</h4>
             <ul className="space-y-3">
               <li><Link to="/las-vegas" className="text-[#2dd4bf] hover:text-[#5eead4] transition-colors">Las Vegas</Link></li>
               <li><Link to="/phoenix" className="text-[#2dd4bf] hover:text-[#5eead4] transition-colors">Phoenix</Link></li>
@@ -51,38 +53,38 @@ const Footer = () => {
               <li><Link to="/houston" className="text-[#2dd4bf] hover:text-[#5eead4] transition-colors">Houston</Link></li>
               <li><Link to="/miami" className="text-[#2dd4bf] hover:text-[#5eead4] transition-colors">Miami</Link></li>
               <li><Link to="/new-york" className="text-[#2dd4bf] hover:text-[#5eead4] transition-colors">New York</Link></li>
-              <li><Link to="/cities" className="text-[#2dd4bf] hover:text-[#5eead4] transition-colors">All Cities</Link></li>
+              <li><Link to="/cities" className="text-[#2dd4bf] hover:text-[#5eead4] transition-colors">{t("footer.allCities")}</Link></li>
             </ul>
           </div>
 
           {/* For Agencies */}
           <div>
-            <h3 className="font-display font-bold mb-6 text-white">For Agencies</h3>
+            <h3 className="font-display font-bold mb-6 text-white">{t("footer.forAgencies")}</h3>
             <ul className="space-y-3">
-              <li><Link to="/for-agencies" className="text-[#2dd4bf] hover:text-[#5eead4] transition-colors">For Agencies</Link></li>
-              <li><Link to="/owner-benefits" className="text-[#2dd4bf] hover:text-[#5eead4] transition-colors">Owner Benefits</Link></li>
-              <li><Link to="/pricing" className="text-[#2dd4bf] hover:text-[#5eead4] transition-colors">Pricing</Link></li>
-              <li><Link to="/for-turo-hosts" className="text-[#2dd4bf] hover:text-[#5eead4] transition-colors">Turo Host?</Link></li>
-              <li><Link to="/signup" className="text-[#2dd4bf] hover:text-[#5eead4] transition-colors">Join Zuvio</Link></li>
-              <li><Link to="/signin" className="text-[#2dd4bf] hover:text-[#5eead4] transition-colors">Owner Sign In</Link></li>
+              <li><Link to="/for-agencies" className="text-[#2dd4bf] hover:text-[#5eead4] transition-colors">{t("footer.forAgencies")}</Link></li>
+              <li><Link to="/owner-benefits" className="text-[#2dd4bf] hover:text-[#5eead4] transition-colors">{t("footer.ownerBenefits")}</Link></li>
+              <li><Link to="/pricing" className="text-[#2dd4bf] hover:text-[#5eead4] transition-colors">{t("footer.pricing")}</Link></li>
+              <li><Link to="/for-turo-hosts" className="text-[#2dd4bf] hover:text-[#5eead4] transition-colors">{t("footer.turoHost")}</Link></li>
+              <li><Link to="/signup" className="text-[#2dd4bf] hover:text-[#5eead4] transition-colors">{t("footer.joinZuvio")}</Link></li>
+              <li><Link to="/signin" className="text-[#2dd4bf] hover:text-[#5eead4] transition-colors">{t("footer.ownerSignIn")}</Link></li>
             </ul>
           </div>
 
           {/* Zuvio */}
           <div>
-            <h3 className="font-display font-bold mb-6 text-white">Zuvio</h3>
+            <h3 className="font-display font-bold mb-6 text-white">{t("footer.zuvio")}</h3>
             <ul className="space-y-3">
-              <li><Link to="/about" className="text-[#2dd4bf] hover:text-[#5eead4] transition-colors">About Us</Link></li>
-              <li><Link to="/blog" className="text-[#2dd4bf] hover:text-[#5eead4] transition-colors">Blog</Link></li>
-              <li><Link to="/privacy" className="text-[#2dd4bf] hover:text-[#5eead4] transition-colors">Privacy Policy</Link></li>
-              <li><Link to="/terms" className="text-[#2dd4bf] hover:text-[#5eead4] transition-colors">Terms of Service</Link></li>
-              <li><Link to="/cancellation-policy" className="text-[#2dd4bf] hover:text-[#5eead4] transition-colors">Cancellation Policy</Link></li>
+              <li><Link to="/about" className="text-[#2dd4bf] hover:text-[#5eead4] transition-colors">{t("footer.aboutUs")}</Link></li>
+              <li><Link to="/blog" className="text-[#2dd4bf] hover:text-[#5eead4] transition-colors">{t("footer.blog")}</Link></li>
+              <li><Link to="/privacy" className="text-[#2dd4bf] hover:text-[#5eead4] transition-colors">{t("footer.privacy")}</Link></li>
+              <li><Link to="/terms" className="text-[#2dd4bf] hover:text-[#5eead4] transition-colors">{t("footer.terms")}</Link></li>
+              <li><Link to="/cancellation-policy" className="text-[#2dd4bf] hover:text-[#5eead4] transition-colors">{t("footer.cancellation")}</Link></li>
             </ul>
           </div>
 
           {/* Contact */}
           <div>
-            <h3 className="font-display font-bold mb-6 text-white">Contact</h3>
+            <h3 className="font-display font-bold mb-6 text-white">{t("footer.contact")}</h3>
             <ul className="space-y-3">
               <li>
                 <a href="mailto:team@zuvio.us" className="flex items-center gap-3 text-[#2dd4bf] hover:text-[#5eead4] transition-colors">
@@ -109,12 +111,12 @@ const Footer = () => {
         {/* Bottom Bar */}
         <div className="border-t border-[#1a2d4a] mt-12 pt-8 flex flex-col md:flex-row justify-between md:justify-start items-center gap-4">
           <p className="w-full text-center md:w-auto md:text-left md:mr-auto text-sm text-[#8899aa]">
-            © 2026 Zuvio. All rights reserved.
+            {t("footer.copyright")}
           </p>
           <div className="flex items-center gap-4 md:contents">
             <StripeBadge />
             <Link to="/admin" className="text-sm text-white/40 hover:text-white/60 transition-colors">
-              Team Login
+              {t("footer.teamLogin")}
             </Link>
           </div>
         </div>

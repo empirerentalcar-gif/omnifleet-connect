@@ -1,16 +1,17 @@
 import { Button } from "@/components/ui/button";
 import { ArrowRight, CheckCircle2 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-
-const bulletPoints = [
-  "Keep your pricing and policies",
-  "Customers contact you directly",
-  "No platform interference",
-  "Built for independent owners",
-];
+import { useTranslation } from "react-i18next";
 
 const Hero = () => {
   const navigate = useNavigate();
+  const { t } = useTranslation();
+  const bulletPoints = [
+    t("home.hero.bullet1"),
+    t("home.hero.bullet2"),
+    t("home.hero.bullet3"),
+    t("home.hero.bullet4"),
+  ];
 
   return (
     <section className="relative min-h-screen flex flex-col justify-center pt-20 pb-16 overflow-hidden">
@@ -31,15 +32,15 @@ const Hero = () => {
         <div className="max-w-4xl mx-auto text-center animate-slide-up">
           <div className="inline-flex items-center gap-2 glass-card rounded-full px-4 py-2 mb-8">
             <span className="w-2 h-2 bg-accent rounded-full animate-pulse" />
-            <span className="text-sm text-muted-foreground">Independent car rental platform for owners</span>
+            <span className="text-sm text-muted-foreground">{t("home.hero.badge")}</span>
           </div>
 
           <h1 className="font-display text-4xl md:text-6xl lg:text-7xl font-bold mb-6 leading-tight">
-            Everything you need to run your independent rental brand—contracts, payments, and fleet management—in one place
+            {t("home.hero.title")}
           </h1>
 
           <p className="text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto mb-10">
-            Zuvio helps independent car rental owners and agencies manage listings, accept direct bookings, and grow without platform restrictions.
+            {t("home.hero.subtitle")}
           </p>
 
           <div className="flex flex-wrap justify-center gap-x-8 gap-y-3 mb-10">
@@ -58,7 +59,7 @@ const Hero = () => {
               className="group text-base"
               onClick={() => navigate("/signup")}
             >
-              <span>Start Getting Booking Requests</span>
+              <span>{t("home.hero.ctaPrimary")}</span>
               <ArrowRight className="h-5 w-5 group-hover:translate-x-1 transition-transform" />
             </Button>
             <Button
@@ -67,7 +68,7 @@ const Hero = () => {
               className="text-base border-accent/30 hover:bg-accent/10"
               onClick={() => navigate("/pricing")}
             >
-              <span>List My Rental Business</span>
+              <span>{t("home.hero.ctaSecondary")}</span>
             </Button>
           </div>
         </div>

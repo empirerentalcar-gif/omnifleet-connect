@@ -4,6 +4,8 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { useUserRole } from "@/hooks/useUserRole";
+import { useTranslation } from "react-i18next";
+import LanguageToggle from "@/components/LanguageToggle";
 import zuvioLogo from "@/assets/zuvio-logo.png";
 
 const Header = () => {
@@ -11,6 +13,7 @@ const Header = () => {
   const navigate = useNavigate();
   const { user, loading, signOut } = useAuth();
   const { isAdmin } = useUserRole();
+  const { t } = useTranslation();
 
   const handleSignOut = async () => {
     await signOut();
@@ -33,62 +36,63 @@ const Header = () => {
               decoding="async"
             />
             <span className="hidden sm:block text-[10px] md:text-xs text-muted-foreground font-medium tracking-wide leading-tight border-l border-border/50 pl-3">
-              Independent Rentals.<br />One Network.
+              {t("nav.tagline")}
             </span>
           </a>
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center gap-8">
             <a href="/search" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
-              Find Rentals
+              {t("nav.findRentals")}
             </a>
             <a href="/how-it-works" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
-              How It Works
+              {t("nav.howItWorks")}
             </a>
             <a href="/for-agencies" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
-              For Agencies
+              {t("nav.forAgencies")}
             </a>
             <a href="/pricing" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
-              Pricing
+              {t("nav.pricing")}
             </a>
             <a href="/faq" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
-              FAQ
+              {t("nav.faq")}
             </a>
             <a href="/about" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
-              About
+              {t("nav.about")}
             </a>
             <a href="/blog" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
-              Blog
+              {t("nav.blog")}
             </a>
           </nav>
 
           {/* Desktop Actions */}
           <div className="hidden md:flex items-center gap-3">
+            <LanguageToggle />
             {!loading && user ? (
               <>
                 {isAdmin && (
                   <Button variant="ghost" size="sm" onClick={() => navigate('/admin')}>
                     <Shield className="h-4 w-4 mr-1" />
-                    Team Login
+                    {t("nav.teamLogin")}
                   </Button>
                 )}
                 {!isAdmin && (
                   <Button variant="ghost" size="sm" onClick={() => navigate('/dashboard')}>
-                    Dashboard
+                    {t("nav.dashboard")}
                   </Button>
                 )}
                 <Button variant="ghost" size="sm" onClick={handleSignOut}>
                   <LogOut className="h-4 w-4 mr-1" />
-                  Sign Out
+                  {t("common.signOut")}
                 </Button>
               </>
             ) : (
               <>
                 <Button variant="ghost" size="sm" onClick={() => navigate('/signin')}>
-                  Sign In
+                  {t("common.signIn")}
                 </Button>
                 <Button variant="default" size="sm" onClick={() => navigate('/signup')}>
-                  Get Started
+                  {t("common.getStarted")}
                 </Button>
               </>
             )}
@@ -108,52 +112,53 @@ const Header = () => {
           <div className="md:hidden py-4 border-t border-border/30">
             <nav className="flex flex-col gap-4">
               <a href="/search" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
-                Find Rentals
+                {t("nav.findRentals")}
               </a>
               <a href="/how-it-works" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
-                How It Works
+                {t("nav.howItWorks")}
               </a>
               <a href="/for-agencies" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
-                For Agencies
+                {t("nav.forAgencies")}
               </a>
               <a href="/pricing" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
-                Pricing
+                {t("nav.pricing")}
               </a>
               <a href="/faq" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
-                FAQ
+                {t("nav.faq")}
               </a>
               <a href="/about" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
-                About
+                {t("nav.about")}
               </a>
               <a href="/blog" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
-                Blog
+                {t("nav.blog")}
               </a>
+              <div className="pt-2"><LanguageToggle /></div>
               <div className="flex gap-3 pt-4 border-t border-border/30">
                 {!loading && user ? (
                   <>
                     {isAdmin && (
                       <Button variant="ghost" size="sm" className="flex-1" onClick={() => { navigate('/admin'); setMobileMenuOpen(false); }}>
                         <Shield className="h-4 w-4 mr-1" />
-                        Team Login
+                        {t("nav.teamLogin")}
                       </Button>
                     )}
                     {!isAdmin && (
                       <Button variant="ghost" size="sm" className="flex-1" onClick={() => { navigate('/dashboard'); setMobileMenuOpen(false); }}>
-                        Dashboard
+                        {t("nav.dashboard")}
                       </Button>
                     )}
                     <Button variant="ghost" size="sm" className="flex-1" onClick={handleSignOut}>
                       <LogOut className="h-4 w-4 mr-1" />
-                      Sign Out
+                      {t("common.signOut")}
                     </Button>
                   </>
                 ) : (
                   <>
                     <Button variant="ghost" size="sm" className="flex-1" onClick={() => { navigate('/signin'); setMobileMenuOpen(false); }}>
-                      Sign In
+                      {t("common.signIn")}
                     </Button>
                     <Button variant="default" size="sm" className="flex-1" onClick={() => { navigate('/signup'); setMobileMenuOpen(false); }}>
-                      Get Started
+                      {t("common.getStarted")}
                     </Button>
                   </>
                 )}
