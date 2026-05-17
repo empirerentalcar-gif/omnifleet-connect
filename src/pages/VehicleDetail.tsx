@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { supabase } from "@/integrations/supabase/client";
 import SEO from "@/components/SEO";
 import { Helmet } from "react-helmet-async";
@@ -34,6 +35,7 @@ type VehicleRow = {
 };
 
 const VehicleDetail = () => {
+  const { t } = useTranslation();
   const { id } = useParams<{ id: string }>();
   const [vehicle, setVehicle] = useState<VehicleRow | null>(null);
   const [loading, setLoading] = useState(true);
@@ -75,9 +77,9 @@ const VehicleDetail = () => {
   if (!vehicle) {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center px-4" style={{ backgroundColor: "#0d1b2e" }}>
-        <h1 className="text-2xl font-bold text-white mb-2">Vehicle not available</h1>
-        <p className="text-white/60 mb-6">It may have been removed or is no longer listed.</p>
-        <Link to="/search"><Button style={{ backgroundColor: "#2dd4bf", color: "#0d1b2e" }}>Browse vehicles</Button></Link>
+        <h1 className="text-2xl font-bold text-white mb-2">{t('vehicle.notAvailable')}</h1>
+        <p className="text-white/60 mb-6">{t('vehicle.notAvailableBody')}</p>
+        <Link to="/search"><Button style={{ backgroundColor: "#2dd4bf", color: "#0d1b2e" }}>{t('vehicle.browse')}</Button></Link>
       </div>
     );
   }
@@ -117,8 +119,8 @@ const VehicleDetail = () => {
   return (
     <div className="min-h-screen" style={{ backgroundColor: "#0d1b2e" }}>
       <SEO
-        title={`${label} for rent | ZUVIO`}
-        description={`Reserve a ${label} from ${vehicle.business_name ?? "an independent agency"} on ZUVIO. Cash-friendly options.`}
+        title={t('vehicle.seoTitle', { label })}
+        description={t('vehicle.seoDescription', { label, agency: vehicle.business_name ?? t('vehicle.independentAgency') })}
         path={`/vehicles/${vehicle.id}`}
         ready={!loading}
       />
@@ -127,7 +129,7 @@ const VehicleDetail = () => {
       </Helmet>
       <main className="container mx-auto px-4 pt-8 pb-16 max-w-6xl">
         <Link to="/search" className="inline-flex items-center gap-2 text-white/60 hover:text-[#2dd4bf] text-sm mb-6">
-          <ArrowLeft className="h-4 w-4" /> Back to search
+          <ArrowLeft className="h-4 w-4" /> {t('vehicle.back')}
         </Link>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -159,14 +161,14 @@ const VehicleDetail = () => {
               <h1 className="text-3xl font-bold text-white mb-1">{label}</h1>
               <p className="text-white/50 text-sm flex items-center gap-1">
                 <MapPin className="h-3.5 w-3.5" />
-                {vehicle.location_city || "Location TBD"}{vehicle.location_state ? `, ${vehicle.location_state}` : ""}
+                {vehicle.location_city || t('vehicle.locationTBD')}{vehicle.location_state ? `, ${vehicle.location_state}` : ""}
               </p>
             </div>
 
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
               {[
                 { icon: Car, label: vehicle.vehicle_type },
-                { icon: Users, label: vehicle.seats ? `${vehicle.seats} seats` : "—" },
+                { icon: Users, label: vehicle.seats ? t('vehicle.seats', { count: vehicle.seats }) : "—" },
                 { icon: Gauge, label: vehicle.transmission ?? "—" },
                 { icon: Fuel, label: vehicle.fuel_type ?? "—" },
               ].map((item, i) => (
@@ -179,14 +181,14 @@ const VehicleDetail = () => {
 
             {vehicle.description && (
               <section>
-                <h2 className="text-lg font-bold text-white mb-2">About this vehicle</h2>
+                <h2 className="text-lg font-bold text-white mb-2">{t('vehicle.about')}</h2>
                 <p className="text-white/70 text-sm whitespace-pre-line">{vehicle.description}</p>
               </section>
             )}
 
             {vehicle.features?.length ? (
               <section>
-                <h2 className="text-lg font-bold text-white mb-2">Features</h2>
+                <h2 className="text-lg font-bold text-white mb-2">{t('vehicle.features')}</h2>
                 <div className="flex flex-wrap gap-2">
                   {vehicle.features.map((f) => (
                     <span key={f} className="px-3 py-1 rounded-full text-xs text-white/70" style={{ backgroundColor: "rgba(255,255,255,0.06)" }}>{f}</span>
@@ -196,29 +198,29 @@ const VehicleDetail = () => {
             ) : null}
 
             <section className="rounded-xl p-5" style={{ backgroundColor: "#132640", border: "1px solid rgba(255,255,255,0.08)" }}>
-              <h2 className="text-lg font-bold text-white mb-2">{vehicle.business_name ?? "Independent agency"}</h2>
+              <h2 className="text-lg font-bold text-white mb-2">{vehicle.business_name ?? t('vehicle.independentAgency')}</h2>
               {vehicle.owner_story && (
                 <p className="text-white/70 text-sm whitespace-pre-line mb-3">{vehicle.owner_story}</p>
               )}
               {vehicle.cash_accepted && (
                 <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full text-[10px] font-semibold" style={{ backgroundColor: "rgba(45,212,191,0.15)", color: "#2dd4bf", border: "1px solid rgba(45,212,191,0.3)" }}>
-                  <Banknote className="h-3 w-3" /> Cash accepted
+                  <Banknote className="h-3 w-3" /> {t('vehicle.cashAccepted')}
                 </span>
               )}
-              <Link to={`/agency/${vehicle.profile_id}`} className="block mt-3 text-sm text-[#2dd4bf] hover:underline">View agency profile →</Link>
+              <Link to={`/agency/${vehicle.profile_id}`} className="block mt-3 text-sm text-[#2dd4bf] hover:underline">{t('vehicle.viewAgency')}</Link>
             </section>
 
             {(vehicle.requirements?.length || vehicle.deposit_info || vehicle.cancellation_policy) && (
               <section className="rounded-xl p-5 space-y-3 text-sm text-white/70" style={{ backgroundColor: "#132640", border: "1px solid rgba(255,255,255,0.08)" }}>
-                <h2 className="text-lg font-bold text-white">Booking details</h2>
+                <h2 className="text-lg font-bold text-white">{t('vehicle.bookingDetails')}</h2>
                 {vehicle.requirements?.length ? (
                   <div>
-                    <p className="font-semibold text-white/90 mb-1">Requirements</p>
+                    <p className="font-semibold text-white/90 mb-1">{t('vehicle.requirements')}</p>
                     <ul className="list-disc pl-5 space-y-1">{vehicle.requirements.map((r) => <li key={r}>{r}</li>)}</ul>
                   </div>
                 ) : null}
-                {vehicle.deposit_info && <div><p className="font-semibold text-white/90 mb-1">Deposit</p><p>{vehicle.deposit_info}</p></div>}
-                {vehicle.cancellation_policy && <div><p className="font-semibold text-white/90 mb-1">Cancellation</p><p>{vehicle.cancellation_policy}</p></div>}
+                {vehicle.deposit_info && <div><p className="font-semibold text-white/90 mb-1">{t('vehicle.deposit')}</p><p>{vehicle.deposit_info}</p></div>}
+                {vehicle.cancellation_policy && <div><p className="font-semibold text-white/90 mb-1">{t('vehicle.cancellation')}</p><p>{vehicle.cancellation_policy}</p></div>}
               </section>
             )}
           </div>
@@ -228,13 +230,13 @@ const VehicleDetail = () => {
             <div className="lg:sticky lg:top-24 rounded-2xl p-6 space-y-4" style={{ backgroundColor: "#132640", border: "1px solid rgba(45,212,191,0.3)" }}>
               <div className="flex items-baseline gap-1">
                 <span className="text-3xl font-bold" style={{ color: "#2dd4bf" }}>${vehicle.daily_rate}</span>
-                <span className="text-white/50">/ day</span>
+                <span className="text-white/50">{t('vehicle.perDay')}</span>
               </div>
-              <p className="text-white/60 text-sm flex items-center gap-1.5"><Calendar className="h-4 w-4" /> Card authorized at booking, charged when the agency confirms.</p>
+              <p className="text-white/60 text-sm flex items-center gap-1.5"><Calendar className="h-4 w-4" /> {t('vehicle.authNote')}</p>
               <Button onClick={() => setReserveOpen(true)} className="w-full text-base h-12 font-bold" style={{ backgroundColor: "#2dd4bf", color: "#0d1b2e" }}>
-                Reserve this vehicle
+                {t('vehicle.reserveBtn')}
               </Button>
-              <p className="text-white/50 text-xs">A 5% platform fee is included in the total. No charge until your booking is confirmed by the agency.</p>
+              <p className="text-white/50 text-xs">{t('vehicle.feeNote')}</p>
             </div>
           </aside>
         </div>
