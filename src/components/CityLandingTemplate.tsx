@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import SEO from "@/components/SEO";
+import { useTranslation } from "react-i18next";
 import {
   ArrowRight,
   CheckCircle2,
@@ -32,13 +33,20 @@ export interface CityLandingConfig {
 
 const CityLandingTemplate = ({ config }: { config: CityLandingConfig }) => {
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const { slug, cityName, state, stateAbbr, h1, h2s, description: customDescription, localFlavor } = config;
+  const sec1Items = t("cityLanding.sec1Items", { returnObjects: true }) as string[];
+  const sec2Items = t("cityLanding.sec2Items", { returnObjects: true }) as string[];
+  const sec4Steps = t("cityLanding.sec4Steps", { returnObjects: true }) as Array<{ title: string; desc: string }>;
+  const sec5Items = t("cityLanding.sec5Items", { returnObjects: true }) as string[];
+  const vehicleTypes = t("cityLanding.vehicleTypes", { returnObjects: true }) as string[];
+  const sec1Icons = [DollarSign, ShieldCheck, Users];
 
   return (
     <div className="min-h-screen bg-background">
       <SEO
-        title={`Independent Car Rentals in ${cityName}, ${stateAbbr} | Zuvio`}
-        description={customDescription || `Find independent car rentals in ${cityName}. Book direct from local agencies, pay with cash, and skip the big rental counters.`}
+        title={t("cityLanding.seoTitle", { city: cityName, state: stateAbbr })}
+        description={customDescription || t("cityLanding.seoDescription", { city: cityName })}
         path={`/${slug}`}
       />
       <script
@@ -74,7 +82,7 @@ const CityLandingTemplate = ({ config }: { config: CityLandingConfig }) => {
             </h1>
 
             <p className="text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto mb-10">
-              Skip the big rental counters and book direct from trusted independent agencies in {cityName}. Cash-friendly options available.
+              {t("cityLanding.heroSubtitle", { city: cityName })}
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
@@ -85,7 +93,7 @@ const CityLandingTemplate = ({ config }: { config: CityLandingConfig }) => {
                 onClick={() => navigate(`/search?location=${encodeURIComponent(cityName)}`)}
               >
                 <Search className="h-5 w-5" />
-                <span>Search {cityName} Car Rentals</span>
+                <span>{t("cityLanding.searchBtn", { city: cityName })}</span>
                 <ArrowRight className="h-5 w-5 group-hover:translate-x-1 transition-transform" />
               </Button>
               <Button
@@ -94,7 +102,7 @@ const CityLandingTemplate = ({ config }: { config: CityLandingConfig }) => {
                 className="text-base border-accent/30 hover:bg-accent/10"
                 onClick={() => navigate("/for-agencies")}
               >
-                List Your Cars in {cityName}
+                {t("cityLanding.listBtn", { city: cityName })}
               </Button>
             </div>
           </div>
@@ -107,19 +115,18 @@ const CityLandingTemplate = ({ config }: { config: CityLandingConfig }) => {
         <div className="container mx-auto px-4 relative max-w-3xl text-center">
           <h2 className="font-display text-3xl md:text-5xl font-bold mb-6">{h2s[0]}</h2>
           <p className="text-lg text-muted-foreground mb-10">
-            Many independent agencies in {cityName} accept cash, debit cards, and flexible payment methods — no credit card required.
+            {t("cityLanding.sec1Body", { city: cityName })}
           </p>
           <div className="grid sm:grid-cols-3 gap-6">
-            {[
-              { icon: DollarSign, text: "Cash accepted" },
-              { icon: ShieldCheck, text: "No credit card needed" },
-              { icon: Users, text: "Direct owner contact" },
-            ].map(({ icon: Icon, text }) => (
-              <div key={text} className="glass-card rounded-xl p-6 flex flex-col items-center gap-3">
-                <Icon className="h-8 w-8 text-accent" />
-                <p className="font-semibold text-foreground">{text}</p>
-              </div>
-            ))}
+            {sec1Items.map((text, i) => {
+              const Icon = sec1Icons[i] ?? DollarSign;
+              return (
+                <div key={text} className="glass-card rounded-xl p-6 flex flex-col items-center gap-3">
+                  <Icon className="h-8 w-8 text-accent" />
+                  <p className="font-semibold text-foreground">{text}</p>
+                </div>
+              );
+            })}
           </div>
         </div>
       </section>
@@ -129,15 +136,10 @@ const CityLandingTemplate = ({ config }: { config: CityLandingConfig }) => {
         <div className="container mx-auto px-4 max-w-3xl text-center">
           <h2 className="font-display text-3xl md:text-5xl font-bold mb-6">{h2s[1]}</h2>
           <p className="text-lg text-muted-foreground mb-10">
-            Why wait in long airport lines? Book directly with local {cityName} agencies who offer personalized service and competitive rates.
+            {t("cityLanding.sec2Body", { city: cityName })}
           </p>
           <div className="glass-card glow-border rounded-2xl p-8 md:p-10 space-y-4">
-            {[
-              "Skip long airport lines",
-              "Get personalized service",
-              "Support local businesses",
-              "Flexible pickup locations",
-            ].map((item) => (
+            {sec2Items.map((item) => (
               <div key={item} className="flex items-center gap-3">
                 <CheckCircle2 className="h-5 w-5 text-accent shrink-0" />
                 <p className="text-foreground font-medium text-lg">{item}</p>
@@ -153,7 +155,7 @@ const CityLandingTemplate = ({ config }: { config: CityLandingConfig }) => {
         <div className="container mx-auto px-4 relative max-w-3xl text-center">
           <h2 className="font-display text-3xl md:text-5xl font-bold mb-6">{h2s[2]}</h2>
           <p className="text-lg text-muted-foreground mb-10">
-            Own rental cars in {cityName}? Get discovered by local and visiting renters. Keep full control of pricing, policies, and customer communication.
+            {t("cityLanding.sec3Body", { city: cityName })}
           </p>
           <Button
             variant="hero"
@@ -161,7 +163,7 @@ const CityLandingTemplate = ({ config }: { config: CityLandingConfig }) => {
             className="group text-base"
             onClick={() => navigate("/signup")}
           >
-            <span>Join Zuvio in {cityName}</span>
+            <span>{t("cityLanding.sec3Cta", { city: cityName })}</span>
             <ArrowRight className="h-5 w-5 group-hover:translate-x-1 transition-transform" />
           </Button>
         </div>
@@ -172,19 +174,19 @@ const CityLandingTemplate = ({ config }: { config: CityLandingConfig }) => {
         <div className="container mx-auto px-4 max-w-3xl">
           <h2 className="font-display text-3xl md:text-5xl font-bold text-center mb-14">{h2s[3]}</h2>
           <div className="space-y-6">
-            {[
-              { num: "01", title: "Search", desc: `Enter ${cityName} as your location and browse available agencies.` },
-              { num: "02", title: "Compare", desc: "View vehicle options, pricing, and payment methods accepted." },
-              { num: "03", title: "Book Direct", desc: "Submit a reservation request and connect directly with the agency." },
-            ].map((step) => (
-              <div key={step.num} className="glass-card rounded-xl p-6 flex items-start gap-5">
-                <span className="text-2xl font-bold text-accent shrink-0">{step.num}</span>
-                <div>
-                  <h3 className="font-bold text-foreground text-lg mb-1">{step.title}</h3>
-                  <p className="text-muted-foreground">{step.desc}</p>
+            {sec4Steps.map((step, i) => {
+              const num = String(i + 1).padStart(2, "0");
+              const desc = i === 0 ? t("cityLanding.sec4Steps.0.desc", { city: cityName }) : step.desc;
+              return (
+                <div key={num} className="glass-card rounded-xl p-6 flex items-start gap-5">
+                  <span className="text-2xl font-bold text-accent shrink-0">{num}</span>
+                  <div>
+                    <h3 className="font-bold text-foreground text-lg mb-1">{step.title}</h3>
+                    <p className="text-muted-foreground">{desc}</p>
+                  </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
       </section>
@@ -195,15 +197,10 @@ const CityLandingTemplate = ({ config }: { config: CityLandingConfig }) => {
         <div className="container mx-auto px-4 relative max-w-3xl text-center">
           <h2 className="font-display text-3xl md:text-5xl font-bold mb-6">{h2s[4]}</h2>
           <p className="text-lg text-muted-foreground mb-10">
-            Independent agencies offer better prices, flexible payment, and personal service. No corporate red tape.
+            {t("cityLanding.sec5Body")}
           </p>
           <div className="grid sm:grid-cols-2 gap-6">
-            {[
-              "Lower rates than big brands",
-              "Cash & debit accepted",
-              "Flexible rental terms",
-              "Personalized customer service",
-            ].map((item) => (
+            {sec5Items.map((item) => (
               <div key={item} className="glass-card rounded-xl p-5 flex items-center gap-3">
                 <CheckCircle2 className="h-5 w-5 text-accent shrink-0" />
                 <p className="text-foreground font-medium">{item}</p>
@@ -218,10 +215,10 @@ const CityLandingTemplate = ({ config }: { config: CityLandingConfig }) => {
         <div className="container mx-auto px-4 max-w-3xl text-center">
           <h2 className="font-display text-3xl md:text-5xl font-bold mb-6">{h2s[5]}</h2>
           <p className="text-lg text-muted-foreground mb-10">
-            Browse sedans, SUVs, trucks, vans, and more from local agencies in {cityName}.
+            {t("cityLanding.sec6Body", { city: cityName })}
           </p>
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-            {["Sedans", "SUVs", "Trucks", "Vans"].map((type) => (
+            {vehicleTypes.map((type) => (
               <div key={type} className="glass-card rounded-xl p-6 flex flex-col items-center gap-3">
                 <Car className="h-8 w-8 text-accent" />
                 <p className="font-semibold text-foreground">{type}</p>
@@ -238,10 +235,10 @@ const CityLandingTemplate = ({ config }: { config: CityLandingConfig }) => {
           <div className="container mx-auto px-4 relative max-w-5xl">
             <div className="text-center mb-14">
               <span className="inline-block px-4 py-2 rounded-full bg-accent/10 text-accent text-sm font-medium mb-4">
-                Local Knowledge
+                {t("cityLanding.localBadge")}
               </span>
               <h2 className="font-display text-3xl md:text-5xl font-bold mb-4">
-                Renting a Car in {cityName}: What Locals Know
+                {t("cityLanding.localTitle", { city: cityName })}
               </h2>
               {localFlavor.intro && (
                 <p className="text-lg text-muted-foreground max-w-3xl mx-auto">{localFlavor.intro}</p>
@@ -255,7 +252,7 @@ const CityLandingTemplate = ({ config }: { config: CityLandingConfig }) => {
                   <div className="p-2 rounded-lg bg-primary/10">
                     <Scale className="h-5 w-5 text-primary" />
                   </div>
-                  <h3 className="font-bold text-foreground text-lg">Local Driving Rules</h3>
+                  <h3 className="font-bold text-foreground text-lg">{t("cityLanding.rules")}</h3>
                 </div>
                 <ul className="space-y-3">
                   {localFlavor.regulations.map((r) => (
@@ -273,7 +270,7 @@ const CityLandingTemplate = ({ config }: { config: CityLandingConfig }) => {
                   <div className="p-2 rounded-lg bg-accent/10">
                     <UtensilsCrossed className="h-5 w-5 text-accent" />
                   </div>
-                  <h3 className="font-bold text-foreground text-lg">Worth the Drive</h3>
+                  <h3 className="font-bold text-foreground text-lg">{t("cityLanding.worthDrive")}</h3>
                 </div>
                 <ul className="space-y-3">
                   {localFlavor.restaurants.map((r) => (
@@ -291,7 +288,7 @@ const CityLandingTemplate = ({ config }: { config: CityLandingConfig }) => {
                   <div className="p-2 rounded-lg bg-primary/10">
                     <Car className="h-5 w-5 text-primary" />
                   </div>
-                  <h3 className="font-bold text-foreground text-lg">What {cityName} Drives</h3>
+                  <h3 className="font-bold text-foreground text-lg">{t("cityLanding.whatDrives", { city: cityName })}</h3>
                 </div>
                 <ul className="space-y-3">
                   {localFlavor.popularCars.map((c) => (
@@ -312,7 +309,7 @@ const CityLandingTemplate = ({ config }: { config: CityLandingConfig }) => {
         <div className="absolute inset-0 bg-gradient-hero" />
         <div className="container mx-auto px-4 relative z-10 text-center">
           <h2 className="font-display text-3xl md:text-5xl font-bold mb-8">
-            Ready to Get Started in <span className="text-gradient">{cityName}</span>?
+            {t("cityLanding.readyTitle")} <span className="text-gradient">{cityName}</span>?
           </h2>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button
@@ -322,7 +319,7 @@ const CityLandingTemplate = ({ config }: { config: CityLandingConfig }) => {
               onClick={() => navigate(`/search?location=${encodeURIComponent(cityName)}`)}
             >
               <Search className="h-5 w-5" />
-              <span>Search {cityName} Car Rentals</span>
+              <span>{t("cityLanding.finalSearch", { city: cityName })}</span>
               <ArrowRight className="h-5 w-5 group-hover:translate-x-1 transition-transform" />
             </Button>
             <Button
@@ -331,7 +328,7 @@ const CityLandingTemplate = ({ config }: { config: CityLandingConfig }) => {
               className="text-base border-accent/30 hover:bg-accent/10"
               onClick={() => navigate("/for-agencies")}
             >
-              List Your Cars in {cityName}
+              {t("cityLanding.finalList", { city: cityName })}
             </Button>
           </div>
         </div>
