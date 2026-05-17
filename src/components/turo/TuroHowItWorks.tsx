@@ -1,3 +1,4 @@
+{/* TODO: i18n — no matching keys in en.json/es.json for this component yet; strings remain English. */}
 const steps = [
   { num: "01", title: "Create your profile", desc: "Set up your agency or host profile in minutes." },
   { num: "02", title: "List your vehicles", desc: "Add your cars with pricing, photos, and policies." },
