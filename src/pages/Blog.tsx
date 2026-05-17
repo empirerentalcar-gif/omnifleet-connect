@@ -3,8 +3,10 @@ import { ArrowRight, Calendar } from "lucide-react";
 import { Helmet } from "react-helmet-async";
 import { blogPosts } from "@/lib/blog-data";
 import { Button } from "@/components/ui/button";
+import { useTranslation } from "react-i18next";
 
 const Blog = () => {
+  const { t, i18n } = useTranslation();
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "Blog",
@@ -30,17 +32,11 @@ const Blog = () => {
   return (
     <>
       <Helmet>
-        <title>The Independent Lane | Car Rental Industry Blog by Zuvio</title>
-        <meta
-          name="description"
-          content="Tips and insights for independent car rental agency owners. Grow your business, get more bookings, and stay ahead — brought to you by Zuvio."
-        />
+        <title>{t("blog.seoTitle")}</title>
+        <meta name="description" content={t("blog.seoDescription")} />
         <link rel="canonical" href="https://zuvio.us/blog" />
-        <meta property="og:title" content="The Independent Lane | Car Rental Industry Blog by Zuvio" />
-        <meta
-          property="og:description"
-          content="Tips and insights for independent car rental agency owners. Grow your business, get more bookings, and stay ahead — brought to you by Zuvio."
-        />
+        <meta property="og:title" content={t("blog.seoTitle")} />
+        <meta property="og:description" content={t("blog.seoDescription")} />
         <meta property="og:url" content="https://zuvio.us/blog" />
         <script type="application/ld+json">{JSON.stringify(jsonLd)}</script>
       </Helmet>
@@ -50,11 +46,11 @@ const Blog = () => {
           <div className="absolute inset-0 bg-gradient-to-b from-primary/5 via-transparent to-transparent" />
           <div className="container mx-auto px-4 relative z-10 text-center max-w-3xl">
             <h1 className="font-display text-4xl md:text-5xl lg:text-6xl font-bold mb-4">
-              The Independent Lane{" "}
-              <span className="text-gradient">by Zuvio</span>
+              {t("blog.title")}{" "}
+              <span className="text-gradient">{t("blog.by")}</span>
             </h1>
             <p className="text-lg md:text-xl text-muted-foreground">
-              Rent Cars. Make Money. Skip the Middleman.
+              {t("blog.subtitle")}
             </p>
           </div>
         </section>
@@ -72,7 +68,7 @@ const Blog = () => {
                   <div className="flex items-center gap-2 text-xs text-muted-foreground mb-3">
                     <Calendar className="h-3.5 w-3.5" />
                     <time dateTime={post.date}>
-                      {new Date(post.date).toLocaleDateString("en-US", {
+                      {new Date(post.date).toLocaleDateString(i18n.language === "es" ? "es-US" : "en-US", {
                         year: "numeric",
                         month: "long",
                         day: "numeric",
@@ -86,7 +82,7 @@ const Blog = () => {
                     {post.excerpt}
                   </p>
                   <span className="inline-flex items-center gap-1.5 text-sm font-semibold text-primary group-hover:gap-2.5 transition-all">
-                    Read More <ArrowRight className="h-4 w-4" />
+                    {t("blog.readMore")} <ArrowRight className="h-4 w-4" />
                   </span>
                 </Link>
               ))}
