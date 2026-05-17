@@ -1,4 +1,4 @@
-{/* TODO: i18n — no matching keys in en.json/es.json for this component yet; strings remain English. */}
+// TODO: i18n — no matching keys in en.json/es.json for this component yet; strings remain English.
 import { Quote } from "lucide-react";
 
 const testimonials = [
