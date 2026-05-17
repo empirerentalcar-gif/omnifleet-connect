@@ -4,8 +4,10 @@ import { ArrowLeft, ArrowRight, Calendar, Facebook, Link2, Check } from "lucide-
 import { Helmet } from "react-helmet-async";
 import { getPostBySlug } from "@/lib/blog-data";
 import { Button } from "@/components/ui/button";
+import { useTranslation, Trans } from "react-i18next";
 
 const BlogPost = () => {
+  const { t, i18n } = useTranslation();
   const { slug } = useParams<{ slug: string }>();
   const post = slug ? getPostBySlug(slug) : undefined;
   const [copied, setCopied] = useState(false);
@@ -54,7 +56,7 @@ const BlogPost = () => {
             className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors mb-8"
           >
             <ArrowLeft className="h-4 w-4" />
-            Back to Blog
+            {t("blog.back")}
           </Link>
 
           {/* Title */}
@@ -66,7 +68,7 @@ const BlogPost = () => {
           <div className="flex items-center gap-2 text-sm text-muted-foreground mb-10">
             <Calendar className="h-4 w-4" />
             <time dateTime={post.date}>
-              {new Date(post.date).toLocaleDateString("en-US", {
+              {new Date(post.date).toLocaleDateString(i18n.language === "es" ? "es-US" : "en-US", {
                 year: "numeric",
                 month: "long",
                 day: "numeric",
@@ -89,14 +91,14 @@ const BlogPost = () => {
           {/* Share this article */}
           <div className="mt-12 pt-8 border-t border-border">
             <h2 className="font-display text-lg font-semibold mb-4 text-foreground">
-              Share this article
+              {t("blog.share")}
             </h2>
             <div className="flex gap-3">
               <a
                 href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(postUrl)}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                aria-label="Share this article on Facebook"
+                aria-label={t("blog.shareFb")}
                 className="w-10 h-10 rounded-xl bg-secondary flex items-center justify-center text-muted-foreground hover:text-primary hover:bg-secondary/80 transition-colors"
               >
                 <Facebook className="h-5 w-5" />
@@ -104,7 +106,7 @@ const BlogPost = () => {
               <button
                 type="button"
                 onClick={handleCopy}
-                aria-label="Copy link to this article"
+                aria-label={t("blog.shareLink")}
                 className="w-10 h-10 rounded-xl bg-secondary flex items-center justify-center text-muted-foreground hover:text-primary hover:bg-secondary/80 transition-colors"
               >
                 {copied ? <Check className="h-5 w-5" /> : <Link2 className="h-5 w-5" />}
@@ -115,13 +117,13 @@ const BlogPost = () => {
           {/* CTA */}
           <div className="mt-16 glass-card rounded-2xl p-8 md:p-10 text-center">
             <h2 className="font-display text-2xl md:text-3xl font-bold mb-4">
-              Ready to grow your rental business?
+              {t("blog.ctaTitle")}
             </h2>
             <p className="text-muted-foreground mb-4">
-              Join Zuvio as a Founding Member today.
+              {t("blog.ctaBody")}
             </p>
             <p className="text-sm font-semibold text-primary mb-6">
-              Use code <span className="font-bold">FOUNDING50</span> at signup — only 50 spots available.
+              <Trans i18nKey="blog.ctaCode" components={{ strong: <span className="font-bold" /> }} />
             </p>
             <Button
               variant="hero"
@@ -129,7 +131,7 @@ const BlogPost = () => {
               className="group text-base"
               onClick={() => (window.location.href = "/signup")}
             >
-              <span>Become a Founding Member</span>
+              <span>{t("blog.ctaBtn")}</span>
               <ArrowRight className="h-5 w-5 group-hover:translate-x-1 transition-transform" />
             </Button>
           </div>
