@@ -1282,5 +1282,11 @@
     "switchTo": "Cambiar idioma",
     "english": "Inglés",
     "spanish": "Español"
+  },
+  "rentalCta": {
+    "title": "¿Buscando rentar un carro?",
+    "subtitle": "Busca en agencias independientes de verdad cerca de ti — sin el recargo de las marcas grandes.",
+    "searchVehicles": "Buscar carros",
+    "browseCities": "Ver ciudades"
   }
 }

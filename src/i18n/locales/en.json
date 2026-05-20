@@ -1282,5 +1282,11 @@
     "switchTo": "Switch language",
     "english": "English",
     "spanish": "Spanish"
+  },
+  "rentalCta": {
+    "title": "Looking to Rent a Car?",
+    "subtitle": "Search from real independent agencies near you — no big box markup.",
+    "searchVehicles": "Search Vehicles",
+    "browseCities": "Browse Cities"
   }
 }
