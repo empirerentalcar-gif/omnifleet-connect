@@ -1,6 +1,6 @@
 import { useEffect, useState, useMemo } from 'react';
-import { Link } from 'react-router-dom';
-import { Building2, CheckCircle, Clock, XCircle, ArrowRight, KeyRound, MapPin, Car, Crown, AlertTriangle } from 'lucide-react';
+import { Link, useNavigate } from 'react-router-dom';
+import { Building2, CheckCircle, Clock, XCircle, ArrowRight, KeyRound, MapPin, Car, Crown, AlertTriangle, LogOut } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAdmin } from '@/hooks/useAdmin';
 import { useIdleSignOut } from '@/hooks/useIdleSignOut';
@@ -45,6 +45,7 @@ interface KPIs {
 const AdminDashboard = () => {
   const { isAdmin, loading: adminLoading } = useAdmin();
   useIdleSignOut();
+  const navigate = useNavigate();
   const [agencies, setAgencies] = useState<Agency[]>([]);
   const [kpis, setKPIs] = useState<KPIs>({ total: 0, pending: 0, activeApproved: 0, inactive: 0, totalVehicles: 0, foundingMembers: 0, activeTrial: 0, paymentRequired: 0 });
   const [loading, setLoading] = useState(true);
@@ -155,6 +156,11 @@ const AdminDashboard = () => {
     fetchData();
   };
 
+  const handleLogout = async () => {
+    await supabase.auth.signOut();
+    navigate('/signin', { replace: true });
+  };
+
   if (adminLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-background">
@@ -191,6 +197,15 @@ const AdminDashboard = () => {
                 <span className="truncate">Invite Codes</span>
               </Button>
             </Link>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handleLogout}
+              className="flex-1 sm:flex-none w-full sm:w-auto"
+            >
+              <LogOut className="mr-2 h-4 w-4 shrink-0" />
+              <span className="truncate">Log Out</span>
+            </Button>
             <Link to="/admin/agencies" className="flex-1 sm:flex-none min-w-0">
               <Button variant="outline" size="sm" className="w-full sm:w-auto">
                 <span className="truncate">Agencies</span>
