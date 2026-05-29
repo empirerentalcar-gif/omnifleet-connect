@@ -120,6 +120,9 @@ const Footer = () => {
             </Link>
           </div>
         </div>
+        <p className="text-center text-xs mt-4" style={{ color: "hsl(162 79% 49% / 0.7)" }}>
+          Licensed, Bonded & Insured
+        </p>
       </div>
     </footer>
   );
