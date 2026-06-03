@@ -856,6 +856,18 @@ const AdminAgencies = () => {
                                   <MessageSquare className="h-4 w-4" />
                                 </Button>
                               </CollapsibleTrigger>
+                              {agency.is_founding_member && (
+                                <Button
+                                  size="icon"
+                                  variant="ghost"
+                                  className="text-destructive hover:text-destructive hover:bg-destructive/10"
+                                  onClick={() => setRemoveFoundingTarget(agency)}
+                                  title="Remove founding member (cancels Stripe sub, detaches card, deletes customer, frees slot)"
+                                  aria-label="Remove founding member"
+                                >
+                                  <Trash2 className="h-4 w-4" />
+                                </Button>
+                              )}
                             </div>
                           </TableCell>
                         </TableRow>
