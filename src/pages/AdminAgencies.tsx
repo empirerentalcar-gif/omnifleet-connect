@@ -969,6 +969,49 @@ const AdminAgencies = () => {
         </AlertDialogContent>
       </AlertDialog>
 
+      <AlertDialog
+        open={!!removeFoundingTarget}
+        onOpenChange={(open) => !open && !removingFounding && setRemoveFoundingTarget(null)}
+      >
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Remove Founding Member?</AlertDialogTitle>
+            <AlertDialogDescription asChild>
+              <div className="space-y-2">
+                <p>
+                  This will permanently remove <strong>{removeFoundingTarget?.agency_name}</strong>
+                  {removeFoundingTarget?.founding_member_number != null && (
+                    <> (Founding Member #{removeFoundingTarget.founding_member_number})</>
+                  )} and perform the following actions:
+                </p>
+                <ul className="list-disc pl-5 text-sm">
+                  <li>Cancel any active Stripe subscription</li>
+                  <li>Detach saved payment method(s)</li>
+                  <li>Delete the Stripe customer record</li>
+                  <li>Delete all bookings tied to this agency</li>
+                  <li>Free up the founding member slot for reuse</li>
+                  <li>Log every action to the admin audit log with a timestamp</li>
+                </ul>
+                <p className="text-destructive font-medium">This cannot be undone.</p>
+              </div>
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel disabled={removingFounding}>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={(e) => {
+                e.preventDefault();
+                confirmRemoveFoundingMember();
+              }}
+              disabled={removingFounding}
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            >
+              {removingFounding ? 'Removing…' : 'Remove Founding Member'}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
       {/* Assign Owner Dialog */}
       <Dialog open={!!assignTarget} onOpenChange={(open) => !open && setAssignTarget(null)}>
         <DialogContent className="sm:max-w-md">
