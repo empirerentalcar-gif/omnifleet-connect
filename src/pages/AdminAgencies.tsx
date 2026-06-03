@@ -17,6 +17,7 @@ import {
   AlertTriangle,
   UserPlus,
   Filter,
+  Trash2,
 } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { Badge } from '@/components/ui/badge';
@@ -176,6 +177,8 @@ const AdminAgencies = () => {
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editData, setEditData] = useState<Partial<Agency>>({});
   const [deactivateTarget, setDeactivateTarget] = useState<Agency | null>(null);
+  const [removeFoundingTarget, setRemoveFoundingTarget] = useState<Agency | null>(null);
+  const [removingFounding, setRemovingFounding] = useState(false);
   const [sortKey, setSortKey] = useState<SortKey>('created_at');
   const [sortDir, setSortDir] = useState<SortDir>('desc');
 
@@ -443,6 +446,31 @@ const AdminAgencies = () => {
     if (!deactivateTarget) return;
     await performToggle(deactivateTarget, 'active', false);
     setDeactivateTarget(null);
+  };
+
+  const confirmRemoveFoundingMember = async () => {
+    if (!removeFoundingTarget) return;
+    setRemovingFounding(true);
+    try {
+      const { data, error } = await supabase.functions.invoke('remove-founding-member', {
+        body: { agency_id: removeFoundingTarget.id },
+      });
+      if (error) throw error;
+      if (data && (data as { error?: string }).error) {
+        throw new Error((data as { error: string }).error);
+      }
+      toast({
+        title: 'Founding member removed',
+        description: `${removeFoundingTarget.agency_name} deleted. Stripe subscription, card, and customer cleared. Founding slot freed.`,
+      });
+      setRemoveFoundingTarget(null);
+      fetchAgencies();
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : String(err);
+      toast({ title: 'Removal failed', description: msg, variant: 'destructive' });
+    } finally {
+      setRemovingFounding(false);
+    }
   };
 
   const startEdit = (agency: Agency) => {
@@ -828,6 +856,18 @@ const AdminAgencies = () => {
                                   <MessageSquare className="h-4 w-4" />
                                 </Button>
                               </CollapsibleTrigger>
+                              {agency.is_founding_member && (
+                                <Button
+                                  size="icon"
+                                  variant="ghost"
+                                  className="text-destructive hover:text-destructive hover:bg-destructive/10"
+                                  onClick={() => setRemoveFoundingTarget(agency)}
+                                  title="Remove founding member (cancels Stripe sub, detaches card, deletes customer, frees slot)"
+                                  aria-label="Remove founding member"
+                                >
+                                  <Trash2 className="h-4 w-4" />
+                                </Button>
+                              )}
                             </div>
                           </TableCell>
                         </TableRow>
@@ -925,6 +965,49 @@ const AdminAgencies = () => {
           <AlertDialogFooter>
             <AlertDialogCancel>Cancel</AlertDialogCancel>
             <AlertDialogAction onClick={confirmDeactivate}>Deactivate</AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
+      <AlertDialog
+        open={!!removeFoundingTarget}
+        onOpenChange={(open) => !open && !removingFounding && setRemoveFoundingTarget(null)}
+      >
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Remove Founding Member?</AlertDialogTitle>
+            <AlertDialogDescription asChild>
+              <div className="space-y-2">
+                <p>
+                  This will permanently remove <strong>{removeFoundingTarget?.agency_name}</strong>
+                  {removeFoundingTarget?.founding_member_number != null && (
+                    <> (Founding Member #{removeFoundingTarget.founding_member_number})</>
+                  )} and perform the following actions:
+                </p>
+                <ul className="list-disc pl-5 text-sm">
+                  <li>Cancel any active Stripe subscription</li>
+                  <li>Detach saved payment method(s)</li>
+                  <li>Delete the Stripe customer record</li>
+                  <li>Delete all bookings tied to this agency</li>
+                  <li>Free up the founding member slot for reuse</li>
+                  <li>Log every action to the admin audit log with a timestamp</li>
+                </ul>
+                <p className="text-destructive font-medium">This cannot be undone.</p>
+              </div>
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel disabled={removingFounding}>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={(e) => {
+                e.preventDefault();
+                confirmRemoveFoundingMember();
+              }}
+              disabled={removingFounding}
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            >
+              {removingFounding ? 'Removing…' : 'Remove Founding Member'}
+            </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
