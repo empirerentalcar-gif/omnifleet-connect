@@ -177,6 +177,8 @@ const AdminAgencies = () => {
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editData, setEditData] = useState<Partial<Agency>>({});
   const [deactivateTarget, setDeactivateTarget] = useState<Agency | null>(null);
+  const [removeFoundingTarget, setRemoveFoundingTarget] = useState<Agency | null>(null);
+  const [removingFounding, setRemovingFounding] = useState(false);
   const [sortKey, setSortKey] = useState<SortKey>('created_at');
   const [sortDir, setSortDir] = useState<SortDir>('desc');
 
