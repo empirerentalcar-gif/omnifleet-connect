@@ -448,6 +448,31 @@ const AdminAgencies = () => {
     setDeactivateTarget(null);
   };
 
+  const confirmRemoveFoundingMember = async () => {
+    if (!removeFoundingTarget) return;
+    setRemovingFounding(true);
+    try {
+      const { data, error } = await supabase.functions.invoke('remove-founding-member', {
+        body: { agency_id: removeFoundingTarget.id },
+      });
+      if (error) throw error;
+      if (data && (data as { error?: string }).error) {
+        throw new Error((data as { error: string }).error);
+      }
+      toast({
+        title: 'Founding member removed',
+        description: `${removeFoundingTarget.agency_name} deleted. Stripe subscription, card, and customer cleared. Founding slot freed.`,
+      });
+      setRemoveFoundingTarget(null);
+      fetchAgencies();
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : String(err);
+      toast({ title: 'Removal failed', description: msg, variant: 'destructive' });
+    } finally {
+      setRemovingFounding(false);
+    }
+  };
+
   const startEdit = (agency: Agency) => {
     setEditingId(agency.id);
     setEditData({
