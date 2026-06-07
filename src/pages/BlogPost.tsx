@@ -145,7 +145,7 @@ const BlogPost = () => {
               >
                 <ArrowLeft className="h-4 w-4" />
                 {t("blog.back")}
-            </Link>
+              </Link>
             <Button asChild variant="outline" size="default" className="gap-1.5">
               <Link to="/">
                 <ArrowLeft className="h-4 w-4" />
