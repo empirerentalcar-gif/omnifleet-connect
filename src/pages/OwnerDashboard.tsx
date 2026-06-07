@@ -1063,7 +1063,7 @@ const OwnerDashboard = () => {
                           <div className="flex items-center justify-between mb-2">
                             <p className="text-xs font-semibold">Pre-upload checklist</p>
                             <p className="text-[10px] text-muted-foreground">
-                              JPG/PNG/WEBP · ≤10MB · max {MAX_PHOTOS - (v.images || []).length} more
+                             JPG/PNG/WEBP/HEIC · ≤10MB · max {MAX_PHOTOS - (v.images || []).length} more
                             </p>
                           </div>
                           <ul className="space-y-1.5">
@@ -1137,7 +1137,7 @@ const OwnerDashboard = () => {
                           />
                           <div className="flex flex-col items-center justify-center gap-1 py-4 rounded-lg border border-dashed border-border/60 text-muted-foreground hover:border-primary/50 hover:text-primary transition-colors">
                             <ImagePlus className="h-5 w-5" />
-                            <span className="text-xs">Upload up to 5 photos (JPG/PNG/WEBP, max 10MB each)</span>
+                           <span className="text-xs">Upload up to 5 photos (JPG/PNG/WEBP/HEIC, max 10MB each)</span>
                           </div>
                         </label>
                       ) : (
