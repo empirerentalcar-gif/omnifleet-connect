@@ -94,9 +94,8 @@ const SignIn = () => {
             <label htmlFor="password" className="block text-sm font-medium text-foreground mb-1">
               {t('auth.signIn.password')}
             </label>
-            <Input
+            <PasswordInput
               id="password"
-              type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
