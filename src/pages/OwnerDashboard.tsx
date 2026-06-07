@@ -974,9 +974,15 @@ const OwnerDashboard = () => {
                         <Label>Model</Label>
                         <Select
                           value={modelSelectValue}
-                          onValueChange={(v) =>
-                            setVehicleForm({ ...vehicleForm, model: v === OTHER_MODEL ? "" : v })
-                          }
+                          onValueChange={(v) => {
+                            if (v === OTHER_MODEL) {
+                              setModelIsOther(true);
+                              setVehicleForm({ ...vehicleForm, model: "" });
+                            } else {
+                              setModelIsOther(false);
+                              setVehicleForm({ ...vehicleForm, model: v });
+                            }
+                          }}
                           disabled={!vehicleForm.make}
                         >
                           <SelectTrigger><SelectValue placeholder={vehicleForm.make ? "Select model" : "Select make first"} /></SelectTrigger>
@@ -987,7 +993,7 @@ const OwnerDashboard = () => {
                             <SelectItem value={OTHER_MODEL}>Other</SelectItem>
                           </SelectContent>
                         </Select>
-                        {isOtherModel || (modelSelectValue === OTHER_MODEL) ? (
+                        {showOtherInput ? (
                           <Input
                             className="mt-2"
                             value={vehicleForm.model}
