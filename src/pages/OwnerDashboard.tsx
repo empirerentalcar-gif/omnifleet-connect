@@ -1037,7 +1037,7 @@ const OwnerDashboard = () => {
                           <label className="cursor-pointer">
                             <input
                               type="file"
-                              accept="image/jpeg,image/png,image/webp,.jpg,.jpeg,.png,.webp"
+                              accept="image/jpeg,image/png,image/webp,image/heic,image/heif,.jpg,.jpeg,.png,.webp,.heic,.heif"
                               multiple
                               className="hidden"
                               disabled={uploadingPhotoId === v.id}
