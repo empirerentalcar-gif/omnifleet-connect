@@ -5,7 +5,6 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Link, useLocation } from "react-router-dom";
 import { HelmetProvider } from "react-helmet-async";
 import { lazy, Suspense } from "react";
-import { useLocation } from "react-router-dom";
 import Index from "./pages/Index";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
