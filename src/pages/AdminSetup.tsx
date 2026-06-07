@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { PasswordInput } from '@/components/ui/password-input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { useToast } from '@/hooks/use-toast';
@@ -191,7 +192,7 @@ const AdminSetup = () => {
             </div>
             <div className="space-y-2">
               <Label>Password</Label>
-              <Input type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
+              <PasswordInput value={password} onChange={(e) => setPassword(e.target.value)} />
             </div>
             <Button className="w-full" onClick={handleSignIn} disabled={submitting}>
               {submitting ? 'Signing in…' : 'Sign In & Continue'}
@@ -223,7 +224,7 @@ const AdminSetup = () => {
             </div>
             <div className="space-y-2">
               <Label htmlFor="password">Password</Label>
-              <Input id="password" type="password" required minLength={6} value={password} onChange={(e) => setPassword(e.target.value)} />
+              <PasswordInput id="password" required minLength={6} value={password} onChange={(e) => setPassword(e.target.value)} />
             </div>
             <Button type="submit" className="w-full" disabled={submitting}>
               {submitting ? 'Creating account…' : 'Create Admin Account'}

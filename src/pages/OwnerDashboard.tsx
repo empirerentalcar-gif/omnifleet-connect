@@ -48,6 +48,12 @@ import { useToast } from "@/hooks/use-toast";
 import { format } from "date-fns";
 import { SafeImage } from "@/components/SafeImage";
 import { cn } from "@/lib/utils";
+import {
+  VEHICLE_MAKES,
+  VEHICLE_MAKES_MODELS,
+  VEHICLE_YEARS,
+  OTHER_MODEL,
+} from "@/lib/vehicle-makes";
 import { StripeConnectCard } from "@/components/owner/StripeConnectCard";
 import { SubscriptionCard } from "@/components/owner/SubscriptionCard";
 import { BookingsSection } from "@/components/owner/BookingsSection";
@@ -131,6 +137,7 @@ const OwnerDashboard = () => {
   const [editingVehicle, setEditingVehicle] = useState<Vehicle | null>(null);
   const [vehicleForm, setVehicleForm] = useState(emptyVehicle);
   const [savingVehicle, setSavingVehicle] = useState(false);
+  const [modelIsOther, setModelIsOther] = useState(false);
 
   useEffect(() => {
     if (authLoading) return;
@@ -256,6 +263,7 @@ const OwnerDashboard = () => {
     }
     setEditingVehicle(null);
     setVehicleForm(emptyVehicle);
+    setModelIsOther(false);
     setVehicleDialogOpen(true);
   };
 
@@ -271,6 +279,8 @@ const OwnerDashboard = () => {
       location_city: v.location_city || "",
       location_state: v.location_state || "",
     });
+    const known = VEHICLE_MAKES_MODELS[v.make] || [];
+    setModelIsOther(!!v.model && !known.includes(v.model));
     setVehicleDialogOpen(true);
   };
 
@@ -523,7 +533,16 @@ const OwnerDashboard = () => {
 
   const pending = reservations.filter((r) => r.status === "pending");
   const active = reservations.filter((r) => ["approved", "vehicle_ready"].includes(r.status));
-  const isFormValid = vehicleForm.make && vehicleForm.model && vehicleForm.year > 1900 && vehicleForm.daily_rate > 0;
+  const rateValid = vehicleForm.daily_rate >= 1 && vehicleForm.daily_rate <= 9999;
+  const isFormValid =
+    !!vehicleForm.make &&
+    !!vehicleForm.model &&
+    vehicleForm.year > 1900 &&
+    rateValid;
+  const knownModels = vehicleForm.make ? VEHICLE_MAKES_MODELS[vehicleForm.make] || [] : [];
+  const modelIsKnown = !!vehicleForm.model && knownModels.includes(vehicleForm.model);
+  const showOtherInput = modelIsOther || (!!vehicleForm.model && !modelIsKnown);
+  const modelSelectValue = modelIsKnown ? vehicleForm.model : showOtherInput ? OTHER_MODEL : "";
 
   return (
     <div className="min-h-screen bg-background">
@@ -922,25 +941,90 @@ const OwnerDashboard = () => {
                     <DialogTitle>{editingVehicle ? "Edit Vehicle" : "Add Vehicle"}</DialogTitle>
                   </DialogHeader>
                   <div className="space-y-4 pt-2">
-                    <div className="grid grid-cols-2 gap-3">
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                      <div>
+                        <Label>Year</Label>
+                        <Select
+                          value={vehicleForm.year ? String(vehicleForm.year) : ""}
+                          onValueChange={(v) =>
+                            { setVehicleForm({ ...vehicleForm, year: parseInt(v, 10), make: "", model: "" }); setModelIsOther(false); }
+                          }
+                        >
+                          <SelectTrigger><SelectValue placeholder="Select year" /></SelectTrigger>
+                          <SelectContent className="max-h-72">
+                            {VEHICLE_YEARS.map((y) => (
+                              <SelectItem key={y} value={String(y)}>{y}</SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </div>
                       <div>
                         <Label>Make</Label>
-                        <Input value={vehicleForm.make} onChange={(e) => setVehicleForm({ ...vehicleForm, make: e.target.value })} placeholder="Toyota" />
+                        <Select
+                          value={vehicleForm.make}
+                          onValueChange={(v) => { setVehicleForm({ ...vehicleForm, make: v, model: "" }); setModelIsOther(false); }}
+                          disabled={!vehicleForm.year}
+                        >
+                          <SelectTrigger><SelectValue placeholder={vehicleForm.year ? "Select make" : "Select year first"} /></SelectTrigger>
+                          <SelectContent className="max-h-72">
+                            {VEHICLE_MAKES.map((m) => (
+                              <SelectItem key={m} value={m}>{m}</SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
                       </div>
                       <div>
                         <Label>Model</Label>
-                        <Input value={vehicleForm.model} onChange={(e) => setVehicleForm({ ...vehicleForm, model: e.target.value })} placeholder="Camry" />
+                        <Select
+                          value={modelSelectValue}
+                          onValueChange={(v) => {
+                            if (v === OTHER_MODEL) {
+                              setModelIsOther(true);
+                              setVehicleForm({ ...vehicleForm, model: "" });
+                            } else {
+                              setModelIsOther(false);
+                              setVehicleForm({ ...vehicleForm, model: v });
+                            }
+                          }}
+                          disabled={!vehicleForm.make}
+                        >
+                          <SelectTrigger><SelectValue placeholder={vehicleForm.make ? "Select model" : "Select make first"} /></SelectTrigger>
+                          <SelectContent className="max-h-72">
+                            {knownModels.map((m) => (
+                              <SelectItem key={m} value={m}>{m}</SelectItem>
+                            ))}
+                            <SelectItem value={OTHER_MODEL}>Other</SelectItem>
+                          </SelectContent>
+                        </Select>
+                        {showOtherInput ? (
+                          <Input
+                            className="mt-2"
+                            value={vehicleForm.model}
+                            onChange={(e) => setVehicleForm({ ...vehicleForm, model: e.target.value })}
+                            placeholder="Enter model"
+                          />
+                        ) : null}
                       </div>
                     </div>
-                    <div className="grid grid-cols-2 gap-3">
-                      <div>
-                        <Label>Year</Label>
-                        <Input type="number" value={vehicleForm.year} onChange={(e) => setVehicleForm({ ...vehicleForm, year: parseInt(e.target.value) || 0 })} />
+                    <div>
+                      <Label>Daily Rate</Label>
+                      <div className="flex items-stretch">
+                        <span className="inline-flex items-center px-3 rounded-l-md border border-r-0 border-input bg-muted text-muted-foreground text-sm">$</span>
+                        <Input
+                          type="number"
+                          inputMode="numeric"
+                          min={1}
+                          max={9999}
+                          step={1}
+                          placeholder="e.g. 49"
+                          className="rounded-l-none"
+                          value={vehicleForm.daily_rate || ""}
+                          onChange={(e) => setVehicleForm({ ...vehicleForm, daily_rate: parseInt(e.target.value, 10) || 0 })}
+                        />
                       </div>
-                      <div>
-                        <Label>Daily Rate ($)</Label>
-                        <Input type="number" value={vehicleForm.daily_rate} onChange={(e) => setVehicleForm({ ...vehicleForm, daily_rate: parseFloat(e.target.value) || 0 })} />
-                      </div>
+                      {vehicleForm.daily_rate > 0 && !rateValid && (
+                        <p className="text-xs text-destructive mt-1">Please enter a daily rate between $1 and $9,999</p>
+                      )}
                     </div>
                     <div className="grid grid-cols-2 gap-3">
                       <div>
