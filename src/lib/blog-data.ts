@@ -5,6 +5,7 @@ export interface BlogPost {
   date: string; // ISO date
   metaDescription: string;
   content: string; // HTML string
+  category?: string;
 }
 
 export const blogPosts: BlogPost[] = [
