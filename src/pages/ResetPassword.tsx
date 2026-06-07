@@ -73,11 +73,11 @@ const ResetPassword = () => {
         <form onSubmit={handleReset} className="space-y-4">
           <div>
             <label htmlFor="password" className="block text-sm font-medium text-foreground mb-1">{t('auth.reset.newPassword')}</label>
-            <Input id="password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} required placeholder="••••••••" />
+            <PasswordInput id="password" value={password} onChange={(e) => setPassword(e.target.value)} required placeholder="••••••••" />
           </div>
           <div>
             <label htmlFor="confirmPassword" className="block text-sm font-medium text-foreground mb-1">{t('auth.reset.confirm')}</label>
-            <Input id="confirmPassword" type="password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} required placeholder="••••••••" />
+            <PasswordInput id="confirmPassword" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} required placeholder="••••••••" />
           </div>
           <Button type="submit" className="w-full" disabled={loading}>
             {loading ? t('auth.reset.updating') : t('auth.reset.submit')}
