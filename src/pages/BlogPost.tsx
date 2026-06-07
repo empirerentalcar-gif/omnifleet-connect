@@ -135,6 +135,34 @@ const BlogPost = () => {
               <ArrowRight className="h-5 w-5 group-hover:translate-x-1 transition-transform" />
             </Button>
           </div>
+
+          {/* Blog Post Navigation Footer */}
+          <nav className="mt-12 pt-8 border-t border-border" aria-label="Blog post navigation">
+            <div className="flex flex-wrap justify-between gap-4 mb-6">
+              <Link
+                to="/blog"
+                className="inline-flex items-center gap-1.5 text-sm font-semibold text-primary hover:text-primary/80 transition-colors"
+              >
+                <ArrowLeft className="h-4 w-4" />
+                {t("blog.back")}
+              </Link>
+              <Link
+                to="/"
+                className="inline-flex items-center gap-1.5 text-sm font-semibold text-primary hover:text-primary/80 transition-colors"
+              >
+                <ArrowLeft className="h-4 w-4" />
+                Back to Home
+              </Link>
+            </div>
+            <div className="flex flex-wrap gap-3">
+              <Button asChild variant="hero" size="default">
+                <Link to="/search">Search Available Cars</Link>
+              </Button>
+              <Button asChild variant="outline" size="default">
+                <Link to="/for-agencies">List Your Fleet on Zuvio</Link>
+              </Button>
+            </div>
+          </nav>
         </article>
       </main>
 
