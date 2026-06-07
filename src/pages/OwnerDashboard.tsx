@@ -537,8 +537,9 @@ const OwnerDashboard = () => {
     vehicleForm.year > 1900 &&
     rateValid;
   const knownModels = vehicleForm.make ? VEHICLE_MAKES_MODELS[vehicleForm.make] || [] : [];
-  const isOtherModel = !!vehicleForm.make && !!vehicleForm.model && !knownModels.includes(vehicleForm.model);
-  const modelSelectValue = !vehicleForm.model ? "" : isOtherModel ? OTHER_MODEL : vehicleForm.model;
+  const modelIsKnown = !!vehicleForm.model && knownModels.includes(vehicleForm.model);
+  const showOtherInput = modelIsOther || (!!vehicleForm.model && !modelIsKnown);
+  const modelSelectValue = modelIsKnown ? vehicleForm.model : showOtherInput ? OTHER_MODEL : "";
 
   return (
     <div className="min-h-screen bg-background">
