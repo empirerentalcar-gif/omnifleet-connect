@@ -48,6 +48,12 @@ import { useToast } from "@/hooks/use-toast";
 import { format } from "date-fns";
 import { SafeImage } from "@/components/SafeImage";
 import { cn } from "@/lib/utils";
+import {
+  VEHICLE_MAKES,
+  VEHICLE_MAKES_MODELS,
+  VEHICLE_YEARS,
+  OTHER_MODEL,
+} from "@/lib/vehicle-makes";
 import { StripeConnectCard } from "@/components/owner/StripeConnectCard";
 import { SubscriptionCard } from "@/components/owner/SubscriptionCard";
 import { BookingsSection } from "@/components/owner/BookingsSection";
