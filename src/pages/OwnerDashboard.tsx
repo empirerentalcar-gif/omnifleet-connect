@@ -137,6 +137,7 @@ const OwnerDashboard = () => {
   const [editingVehicle, setEditingVehicle] = useState<Vehicle | null>(null);
   const [vehicleForm, setVehicleForm] = useState(emptyVehicle);
   const [savingVehicle, setSavingVehicle] = useState(false);
+  const [modelIsOther, setModelIsOther] = useState(false);
 
   useEffect(() => {
     if (authLoading) return;
