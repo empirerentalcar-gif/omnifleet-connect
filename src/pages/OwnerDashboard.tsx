@@ -404,12 +404,35 @@ const OwnerDashboard = () => {
     const wrongType = all.filter(
       (f) => !heic.includes(f) && !ALLOWED.includes(f.type.toLowerCase()) && !/\.(jpe?g|png|webp)$/i.test(f.name),
     );
+    // Convert iPhone HEIC/HEIF photos to JPEG client-side so uploads succeed.
+    const convertedHeic: File[] = [];
+    const failedHeic: File[] = [];
     if (heic.length) {
-      toast({
-        title: "iPhone HEIC photos not supported",
-        description: `Open the photo on your phone, tap Share → Save to Files (or email it to yourself) — it will convert to JPG. Then upload again.`,
-        variant: "destructive",
-      });
+      toast({ title: "Converting iPhone photos…", description: `Converting ${heic.length} HEIC photo(s) to JPG.` });
+      try {
+        const { default: heic2any } = await import("heic2any");
+        for (const f of heic) {
+          try {
+            const out = await heic2any({ blob: f, toType: "image/jpeg", quality: 0.85 });
+            const blob = Array.isArray(out) ? out[0] : (out as Blob);
+            const newName = f.name.replace(/\.(heic|heif)$/i, ".jpg") || `${Date.now()}.jpg`;
+            convertedHeic.push(new File([blob], newName, { type: "image/jpeg" }));
+          } catch (err) {
+            console.error("HEIC conversion failed", f.name, err);
+            failedHeic.push(f);
+          }
+        }
+      } catch (err) {
+        console.error("heic2any load failed", err);
+        failedHeic.push(...heic);
+      }
+      if (failedHeic.length) {
+        toast({
+          title: "Some iPhone photos couldn't convert",
+          description: `${failedHeic.map((f) => f.name).join(", ")}. Open on your phone, Share → Save to Files to convert manually, then try again.`,
+          variant: "destructive",
+        });
+      }
     }
     if (tooLarge.length) {
       toast({
@@ -425,7 +448,16 @@ const OwnerDashboard = () => {
         variant: "destructive",
       });
     }
-    const valid = all.filter((f) => !heic.includes(f) && !tooLarge.includes(f) && !wrongType.includes(f));
+    const nonHeicValid = all.filter((f) => !heic.includes(f) && !tooLarge.includes(f) && !wrongType.includes(f));
+    // Re-check size on converted JPEGs (they can grow); keep ones within limit.
+    const convertedValid = convertedHeic.filter((f) => {
+      if (f.size > MAX_BYTES) {
+        toast({ title: "Converted photo too large", description: `${f.name} exceeds 10MB after conversion.`, variant: "destructive" });
+        return false;
+      }
+      return true;
+    });
+    const valid = [...nonHeicValid, ...convertedValid];
     const toUpload = valid.slice(0, remaining);
     if (valid.length > remaining) {
       toast({
@@ -1005,7 +1037,7 @@ const OwnerDashboard = () => {
                           <label className="cursor-pointer">
                             <input
                               type="file"
-                              accept="image/jpeg,image/png,image/webp,.jpg,.jpeg,.png,.webp"
+                              accept="image/jpeg,image/png,image/webp,image/heic,image/heif,.jpg,.jpeg,.png,.webp,.heic,.heif"
                               multiple
                               className="hidden"
                               disabled={uploadingPhotoId === v.id}
@@ -1031,7 +1063,7 @@ const OwnerDashboard = () => {
                           <div className="flex items-center justify-between mb-2">
                             <p className="text-xs font-semibold">Pre-upload checklist</p>
                             <p className="text-[10px] text-muted-foreground">
-                              JPG/PNG/WEBP · ≤10MB · max {MAX_PHOTOS - (v.images || []).length} more
+                             JPG/PNG/WEBP/HEIC · ≤10MB · max {MAX_PHOTOS - (v.images || []).length} more
                             </p>
                           </div>
                           <ul className="space-y-1.5">
@@ -1105,7 +1137,7 @@ const OwnerDashboard = () => {
                           />
                           <div className="flex flex-col items-center justify-center gap-1 py-4 rounded-lg border border-dashed border-border/60 text-muted-foreground hover:border-primary/50 hover:text-primary transition-colors">
                             <ImagePlus className="h-5 w-5" />
-                            <span className="text-xs">Upload up to 5 photos (JPG/PNG/WEBP, max 10MB each)</span>
+                           <span className="text-xs">Upload up to 5 photos (JPG/PNG/WEBP/HEIC, max 10MB each)</span>
                           </div>
                         </label>
                       ) : (
