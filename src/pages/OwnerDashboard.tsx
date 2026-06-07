@@ -529,7 +529,15 @@ const OwnerDashboard = () => {
 
   const pending = reservations.filter((r) => r.status === "pending");
   const active = reservations.filter((r) => ["approved", "vehicle_ready"].includes(r.status));
-  const isFormValid = vehicleForm.make && vehicleForm.model && vehicleForm.year > 1900 && vehicleForm.daily_rate > 0;
+  const rateValid = vehicleForm.daily_rate >= 1 && vehicleForm.daily_rate <= 9999;
+  const isFormValid =
+    !!vehicleForm.make &&
+    !!vehicleForm.model &&
+    vehicleForm.year > 1900 &&
+    rateValid;
+  const knownModels = vehicleForm.make ? VEHICLE_MAKES_MODELS[vehicleForm.make] || [] : [];
+  const isOtherModel = !!vehicleForm.make && !!vehicleForm.model && !knownModels.includes(vehicleForm.model);
+  const modelSelectValue = !vehicleForm.model ? "" : isOtherModel ? OTHER_MODEL : vehicleForm.model;
 
   return (
     <div className="min-h-screen bg-background">
