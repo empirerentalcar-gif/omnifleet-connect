@@ -263,6 +263,7 @@ const OwnerDashboard = () => {
     }
     setEditingVehicle(null);
     setVehicleForm(emptyVehicle);
+    setModelIsOther(false);
     setVehicleDialogOpen(true);
   };
 
@@ -278,6 +279,8 @@ const OwnerDashboard = () => {
       location_city: v.location_city || "",
       location_state: v.location_state || "",
     });
+    const known = VEHICLE_MAKES_MODELS[v.make] || [];
+    setModelIsOther(!!v.model && !known.includes(v.model));
     setVehicleDialogOpen(true);
   };
 
@@ -944,7 +947,7 @@ const OwnerDashboard = () => {
                         <Select
                           value={vehicleForm.year ? String(vehicleForm.year) : ""}
                           onValueChange={(v) =>
-                            setVehicleForm({ ...vehicleForm, year: parseInt(v, 10), make: "", model: "" })
+                            { setVehicleForm({ ...vehicleForm, year: parseInt(v, 10), make: "", model: "" }); setModelIsOther(false); }
                           }
                         >
                           <SelectTrigger><SelectValue placeholder="Select year" /></SelectTrigger>
@@ -959,7 +962,7 @@ const OwnerDashboard = () => {
                         <Label>Make</Label>
                         <Select
                           value={vehicleForm.make}
-                          onValueChange={(v) => setVehicleForm({ ...vehicleForm, make: v, model: "" })}
+                          onValueChange={(v) => { setVehicleForm({ ...vehicleForm, make: v, model: "" }); setModelIsOther(false); }}
                           disabled={!vehicleForm.year}
                         >
                           <SelectTrigger><SelectValue placeholder={vehicleForm.year ? "Select make" : "Select year first"} /></SelectTrigger>
