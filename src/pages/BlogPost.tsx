@@ -145,14 +145,13 @@ const BlogPost = () => {
               >
                 <ArrowLeft className="h-4 w-4" />
                 {t("blog.back")}
-              </Link>
-              <Link
-                to="/"
-                className="inline-flex items-center gap-1.5 text-sm font-semibold text-primary hover:text-primary/80 transition-colors"
-              >
+            </Link>
+            <Button asChild variant="outline" size="default" className="gap-1.5">
+              <Link to="/">
                 <ArrowLeft className="h-4 w-4" />
                 Back to Home
               </Link>
+            </Button>
             </div>
             <div className="flex flex-wrap gap-3">
               <Button asChild variant="hero" size="default">

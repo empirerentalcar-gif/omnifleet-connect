@@ -2,7 +2,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Link, useLocation } from "react-router-dom";
 import { HelmetProvider } from "react-helmet-async";
 import { lazy, Suspense } from "react";
 import { useLocation } from "react-router-dom";
@@ -105,6 +105,16 @@ const GlobalLayout = () => {
       </Suspense>
       {isHomePage && <RentalCTA />}
       <Footer />
+
+      {/* Floating "Find a Car Now" button — hidden on /search */}
+      {location.pathname !== "/search" && (
+        <Link
+          to="/search"
+          className="fixed bottom-6 right-6 z-50 inline-flex items-center justify-center gap-2 rounded-lg text-sm font-bold bg-gradient-primary text-primary-foreground shadow-xl hover:scale-105 transition-transform duration-200 px-4 py-2.5 sm:px-6 sm:py-3"
+        >
+          Find a Car Now
+        </Link>
+      )}
     </>
   );
 };

@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { ArrowRight, CheckCircle2 } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 
 const Hero = () => {
@@ -39,9 +39,22 @@ const Hero = () => {
             {t("home.hero.title")}
           </h1>
 
-          <p className="text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto mb-10">
+          <p className="text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto mb-6">
             {t("home.hero.subtitle")}
           </p>
+
+          <div className="flex justify-center mb-8">
+            <Button
+              variant="hero"
+              className="group text-lg font-bold px-8 py-4 h-auto shadow-lg w-full sm:w-auto"
+              asChild
+            >
+              <Link to="/search">
+                Find a Car Now
+                <ArrowRight className="h-5 w-5 group-hover:translate-x-1 transition-transform" />
+              </Link>
+            </Button>
+          </div>
 
           <div className="flex flex-wrap justify-center gap-x-8 gap-y-3 mb-10">
             {bulletPoints.map((point) => (
