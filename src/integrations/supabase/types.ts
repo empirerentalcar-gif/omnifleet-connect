@@ -109,6 +109,7 @@ export type Database = {
           last_payout_failure_message: string | null
           last_payout_status: string | null
           owner_user_id: string | null
+          payment_settings: Json
           phone: string | null
           state: string | null
           stripe_charges_enabled: boolean
@@ -144,6 +145,7 @@ export type Database = {
           last_payout_failure_message?: string | null
           last_payout_status?: string | null
           owner_user_id?: string | null
+          payment_settings?: Json
           phone?: string | null
           state?: string | null
           stripe_charges_enabled?: boolean
@@ -179,6 +181,7 @@ export type Database = {
           last_payout_failure_message?: string | null
           last_payout_status?: string | null
           owner_user_id?: string | null
+          payment_settings?: Json
           phone?: string | null
           state?: string | null
           stripe_charges_enabled?: boolean
@@ -714,6 +717,7 @@ export type Database = {
           location_state: string | null
           make: string
           model: string
+          payment_settings: Json | null
           profile_id: string
           seats: number | null
           status: Database["public"]["Enums"]["vehicle_status"]
@@ -734,6 +738,7 @@ export type Database = {
           location_state?: string | null
           make: string
           model: string
+          payment_settings?: Json | null
           profile_id: string
           seats?: number | null
           status?: Database["public"]["Enums"]["vehicle_status"]
@@ -754,6 +759,7 @@ export type Database = {
           location_state?: string | null
           make?: string
           model?: string
+          payment_settings?: Json | null
           profile_id?: string
           seats?: number | null
           status?: Database["public"]["Enums"]["vehicle_status"]
@@ -776,6 +782,7 @@ export type Database = {
     Views: {
       available_vehicles_public: {
         Row: {
+          agency_payment_settings: Json | null
           agency_photos: string[] | null
           business_name: string | null
           cancellation_policy: string | null
@@ -796,6 +803,7 @@ export type Database = {
           requirements: string[] | null
           seats: number | null
           transmission: string | null
+          vehicle_payment_settings: Json | null
           vehicle_type: string | null
           year: number | null
         }
