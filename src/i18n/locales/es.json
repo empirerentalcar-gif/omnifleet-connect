@@ -1334,5 +1334,21 @@
     "subtitle": "Busca en agencias independientes de verdad cerca de ti — sin el recargo de las marcas grandes.",
     "searchVehicles": "Buscar carros",
     "browseCities": "Ver ciudades"
+  },
+  "ownerDashboard": {
+    "setupBanner": {
+      "message": "¡Casi listo! Configure sus métodos de pago y tarifas aceptados antes de que sus vehículos salgan en vivo para que los arrendatarios sepan cómo pagarle.",
+      "cta": "Completar configuración →"
+    },
+    "vehicleBanner": {
+      "message": "Nueva función: La configuración de pagos y tarifas ya está disponible. Este vehículo está heredando los valores predeterminados de su agencia. Revise y personalice las tarifas para este vehículo si es necesario.",
+      "review": "Revisar tarifas ▾",
+      "dismiss": "Se ve bien, descartar"
+    },
+    "feeBadges": {
+      "notConfigured": "⚠️ Tarifas no configuradas",
+      "usingDefaults": "📋 Usando valores de la agencia",
+      "customSet": "✏️ Tarifas personalizadas"
+    }
   }
 }
