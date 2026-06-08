@@ -18,13 +18,28 @@ export const useAdmin = () => {
     }
 
     const checkAdmin = async () => {
-      const { data, error } = await supabase.rpc('has_role', {
-        _user_id: user.id,
-        _role: 'admin',
-      });
+      // Retry once on transient error so a freshly authenticated admin
+      // is not incorrectly bounced off the admin dashboard.
+      let data: boolean | null = null;
+      let error: unknown = null;
+      for (let attempt = 0; attempt < 2; attempt++) {
+        const res = await supabase.rpc('has_role', {
+          _user_id: user.id,
+          _role: 'admin',
+        });
+        data = res.data as boolean | null;
+        error = res.error;
+        if (!error) break;
+        await new Promise((r) => setTimeout(r, 250));
+      }
 
-      if (error || !data) {
-        navigate('/', { replace: true });
+      if (error) {
+        console.error('Admin role check failed:', error);
+        navigate('/dashboard', { replace: true });
+        return;
+      }
+      if (!data) {
+        navigate('/dashboard', { replace: true });
         return;
       }
 
