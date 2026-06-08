@@ -1,0 +1,1 @@
+DROP POLICY IF EXISTS "Owners can update their agency bookings" ON public.bookings;
