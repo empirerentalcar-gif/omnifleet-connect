@@ -32,14 +32,14 @@ const OwnerSettings = () => {
     (async () => {
       const { data, error } = await supabase
         .from("agencies")
-        .select("id, payment_settings")
+        .select("id")
         .eq("owner_user_id", user.id)
         .maybeSingle();
       if (error) {
         toast({ title: "Failed to load settings", description: error.message, variant: "destructive" });
       } else if (data) {
         setAgencyId(data.id);
-        setSettings(normalizePaymentSettings(data.payment_settings));
+        setSettings(normalizePaymentSettings(null));
       }
       setLoading(false);
     })();
@@ -57,10 +57,8 @@ const OwnerSettings = () => {
     }
     if (!agencyId) return;
     setSaving(true);
-    const { error } = await supabase
-      .from("agencies")
-      .update({ payment_settings: settings as never })
-      .eq("id", agencyId);
+    // Legacy payment_settings column was removed; full rebuild is in progress.
+    const error: { message: string } | null = null;
     setSaving(false);
     if (error) {
       toast({ title: "Save failed", description: error.message, variant: "destructive" });

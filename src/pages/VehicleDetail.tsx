@@ -38,8 +38,16 @@ type VehicleRow = {
   cancellation_policy: string | null;
   deposit_info: string | null;
   requirements: string[] | null;
-  vehicle_payment_settings: unknown | null;
-  agency_payment_settings: unknown | null;
+  vehicle_payment_methods: unknown | null;
+  agency_payment_methods: unknown | null;
+  vehicle_payment_restrictions: string | null;
+  agency_payment_restrictions: string | null;
+  vehicle_fee_settings: unknown | null;
+  agency_fee_settings: unknown | null;
+  vehicle_tax_rate: number | null;
+  agency_tax_rate: number | null;
+  vehicle_custom_fees: unknown | null;
+  agency_custom_fees: unknown | null;
 };
 
 const VehicleDetail = () => {
@@ -94,10 +102,8 @@ const VehicleDetail = () => {
 
   const photos = vehicle.images?.length ? vehicle.images : [];
   const label = `${vehicle.year} ${vehicle.make} ${vehicle.model}`;
-  const paymentSettings = resolveSettings(
-    vehicle.vehicle_payment_settings,
-    vehicle.agency_payment_settings,
-  );
+  // New schema rebuild in progress — pass empty until UI is rewired.
+  const paymentSettings = resolveSettings(null, null);
 
   const productJsonLd = {
     "@context": "https://schema.org",

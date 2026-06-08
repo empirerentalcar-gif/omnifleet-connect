@@ -96,10 +96,13 @@ export type Database = {
           approved: boolean
           city: string | null
           created_at: string
+          custom_fees: Json
           day40_reminder_sent: boolean
           day50_reminder_sent: boolean
           day60_notice_sent: boolean
           email: string | null
+          fee_settings: Json
+          fees_setup_complete: boolean
           founding_member_number: number | null
           grace_period_end: string | null
           id: string
@@ -109,7 +112,8 @@ export type Database = {
           last_payout_failure_message: string | null
           last_payout_status: string | null
           owner_user_id: string | null
-          payment_settings: Json
+          payment_methods: Json
+          payment_restrictions: string | null
           phone: string | null
           state: string | null
           stripe_charges_enabled: boolean
@@ -120,6 +124,7 @@ export type Database = {
           stripe_subscription_id: string | null
           subscription_current_period_end: string | null
           subscription_status: string
+          tax_rate: number
           trial_end_date: string | null
           trial_start_date: string | null
           updated_at: string
@@ -132,10 +137,13 @@ export type Database = {
           approved?: boolean
           city?: string | null
           created_at?: string
+          custom_fees?: Json
           day40_reminder_sent?: boolean
           day50_reminder_sent?: boolean
           day60_notice_sent?: boolean
           email?: string | null
+          fee_settings?: Json
+          fees_setup_complete?: boolean
           founding_member_number?: number | null
           grace_period_end?: string | null
           id?: string
@@ -145,7 +153,8 @@ export type Database = {
           last_payout_failure_message?: string | null
           last_payout_status?: string | null
           owner_user_id?: string | null
-          payment_settings?: Json
+          payment_methods?: Json
+          payment_restrictions?: string | null
           phone?: string | null
           state?: string | null
           stripe_charges_enabled?: boolean
@@ -156,6 +165,7 @@ export type Database = {
           stripe_subscription_id?: string | null
           subscription_current_period_end?: string | null
           subscription_status?: string
+          tax_rate?: number
           trial_end_date?: string | null
           trial_start_date?: string | null
           updated_at?: string
@@ -168,10 +178,13 @@ export type Database = {
           approved?: boolean
           city?: string | null
           created_at?: string
+          custom_fees?: Json
           day40_reminder_sent?: boolean
           day50_reminder_sent?: boolean
           day60_notice_sent?: boolean
           email?: string | null
+          fee_settings?: Json
+          fees_setup_complete?: boolean
           founding_member_number?: number | null
           grace_period_end?: string | null
           id?: string
@@ -181,7 +194,8 @@ export type Database = {
           last_payout_failure_message?: string | null
           last_payout_status?: string | null
           owner_user_id?: string | null
-          payment_settings?: Json
+          payment_methods?: Json
+          payment_restrictions?: string | null
           phone?: string | null
           state?: string | null
           stripe_charges_enabled?: boolean
@@ -192,6 +206,7 @@ export type Database = {
           stripe_subscription_id?: string | null
           subscription_current_period_end?: string | null
           subscription_status?: string
+          tax_rate?: number
           trial_end_date?: string | null
           trial_start_date?: string | null
           updated_at?: string
@@ -707,9 +722,12 @@ export type Database = {
       vehicles: {
         Row: {
           created_at: string
+          custom_fees_override: Json | null
           daily_rate: number
           description: string | null
           features: string[] | null
+          fee_settings_override: Json | null
+          fees_banner_dismissed: boolean
           fuel_type: string | null
           id: string
           images: string[] | null
@@ -717,10 +735,12 @@ export type Database = {
           location_state: string | null
           make: string
           model: string
-          payment_settings: Json | null
+          payment_methods_override: Json | null
+          payment_restrictions_override: string | null
           profile_id: string
           seats: number | null
           status: Database["public"]["Enums"]["vehicle_status"]
+          tax_rate_override: number | null
           transmission: string | null
           updated_at: string
           vehicle_type: string
@@ -728,9 +748,12 @@ export type Database = {
         }
         Insert: {
           created_at?: string
+          custom_fees_override?: Json | null
           daily_rate: number
           description?: string | null
           features?: string[] | null
+          fee_settings_override?: Json | null
+          fees_banner_dismissed?: boolean
           fuel_type?: string | null
           id?: string
           images?: string[] | null
@@ -738,10 +761,12 @@ export type Database = {
           location_state?: string | null
           make: string
           model: string
-          payment_settings?: Json | null
+          payment_methods_override?: Json | null
+          payment_restrictions_override?: string | null
           profile_id: string
           seats?: number | null
           status?: Database["public"]["Enums"]["vehicle_status"]
+          tax_rate_override?: number | null
           transmission?: string | null
           updated_at?: string
           vehicle_type: string
@@ -749,9 +774,12 @@ export type Database = {
         }
         Update: {
           created_at?: string
+          custom_fees_override?: Json | null
           daily_rate?: number
           description?: string | null
           features?: string[] | null
+          fee_settings_override?: Json | null
+          fees_banner_dismissed?: boolean
           fuel_type?: string | null
           id?: string
           images?: string[] | null
@@ -759,10 +787,12 @@ export type Database = {
           location_state?: string | null
           make?: string
           model?: string
-          payment_settings?: Json | null
+          payment_methods_override?: Json | null
+          payment_restrictions_override?: string | null
           profile_id?: string
           seats?: number | null
           status?: Database["public"]["Enums"]["vehicle_status"]
+          tax_rate_override?: number | null
           transmission?: string | null
           updated_at?: string
           vehicle_type?: string
@@ -782,8 +812,12 @@ export type Database = {
     Views: {
       available_vehicles_public: {
         Row: {
-          agency_payment_settings: Json | null
+          agency_custom_fees: Json | null
+          agency_fee_settings: Json | null
+          agency_payment_methods: Json | null
+          agency_payment_restrictions: string | null
           agency_photos: string[] | null
+          agency_tax_rate: number | null
           business_name: string | null
           cancellation_policy: string | null
           cash_accepted: boolean | null
@@ -803,7 +837,11 @@ export type Database = {
           requirements: string[] | null
           seats: number | null
           transmission: string | null
-          vehicle_payment_settings: Json | null
+          vehicle_custom_fees: Json | null
+          vehicle_fee_settings: Json | null
+          vehicle_payment_methods: Json | null
+          vehicle_payment_restrictions: string | null
+          vehicle_tax_rate: number | null
           vehicle_type: string | null
           year: number | null
         }
@@ -866,6 +904,15 @@ export type Database = {
       validate_invite_code: {
         Args: { code_to_check: string }
         Returns: boolean
+      }
+      validate_payment_fee_payload: {
+        Args: {
+          _custom_fees: Json
+          _fee_settings: Json
+          _restrictions: string
+          _tax_rate: number
+        }
+        Returns: undefined
       }
     }
     Enums: {

@@ -188,14 +188,14 @@ const OwnerDashboard = () => {
       // Fetch trial info from agencies
       const { data: agencyData } = await supabase
         .from('agencies')
-        .select('id, subscription_status, trial_end_date, grace_period_end, is_founding_member, founding_member_number, payment_settings')
+        .select('id, subscription_status, trial_end_date, grace_period_end, is_founding_member, founding_member_number')
         .eq('owner_user_id', user.id)
         .single();
 
       if (agencyData) {
         // BookingsSection needs the agencies.id (not profiles.id)
         setAgencyId(agencyData.id);
-        setAgencyDefaults(normalizePaymentSettings((agencyData as { payment_settings?: unknown }).payment_settings));
+        setAgencyDefaults(normalizePaymentSettings(null));
         const daysLeft = agencyData.trial_end_date
           ? Math.ceil((new Date(agencyData.trial_end_date).getTime() - Date.now()) / (1000 * 60 * 60 * 24))
           : null;
@@ -219,7 +219,7 @@ const OwnerDashboard = () => {
           .order("created_at", { ascending: false }),
         supabase
           .from("vehicles")
-          .select("id, make, model, year, vehicle_type, daily_rate, status, location_city, location_state, images, payment_settings")
+          .select("id, make, model, year, vehicle_type, daily_rate, status, location_city, location_state, images")
           .eq("profile_id", profileData.id)
           .order("created_at", { ascending: false }),
       ]);
