@@ -41,28 +41,32 @@ const SignIn = () => {
       return;
     }
 
-    const { error } = await supabase.auth.signInWithPassword({
+    const { data: signInData, error } = await supabase.auth.signInWithPassword({
       email: result.data.email,
       password: result.data.password,
     });
 
-    if (error) {
+    if (error || !signInData?.user) {
       toast({
         title: t('auth.signIn.errFail'),
         description: t('auth.signIn.errInvalid'),
         variant: 'destructive',
       });
       setLoading(false);
-    } else {
-      // Check if user is admin and redirect accordingly
-      const { data: { user: signedInUser } } = await supabase.auth.getUser();
-      if (signedInUser && await checkIsAdmin(signedInUser.id)) {
-        navigate('/admin');
-      } else {
-        navigate('/dashboard');
-      }
-      setLoading(false);
+      return;
     }
+
+    // Role-based redirect using the freshly authenticated user id.
+    // Use { replace: true } so the SignIn page is removed from history.
+    const userId = signInData.user.id;
+    let isAdmin = false;
+    try {
+      isAdmin = await checkIsAdmin(userId);
+    } catch (e) {
+      console.error('Role check failed after sign-in:', e);
+    }
+    navigate(isAdmin ? '/admin' : '/dashboard', { replace: true });
+    setLoading(false);
   };
 
   return (
