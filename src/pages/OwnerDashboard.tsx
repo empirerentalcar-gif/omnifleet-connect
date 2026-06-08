@@ -204,13 +204,14 @@ const OwnerDashboard = () => {
       // Fetch trial info from agencies
       const { data: agencyData } = await supabase
         .from('agencies')
-        .select('id, subscription_status, trial_end_date, grace_period_end, is_founding_member, founding_member_number, payment_methods, payment_restrictions, fee_settings, tax_rate, custom_fees')
+        .select('id, subscription_status, trial_end_date, grace_period_end, is_founding_member, founding_member_number, payment_methods, payment_restrictions, fee_settings, tax_rate, custom_fees, fees_setup_complete')
         .eq('owner_user_id', user.id)
         .single();
 
       if (agencyData) {
         // BookingsSection needs the agencies.id (not profiles.id)
         setAgencyId(agencyData.id);
+        setFeesSetupComplete(!!agencyData.fees_setup_complete);
         const pm = agencyData.payment_methods;
         const methods = Array.isArray(pm)
           ? pm
@@ -254,7 +255,7 @@ const OwnerDashboard = () => {
           .order("created_at", { ascending: false }),
         supabase
           .from("vehicles")
-          .select("id, make, model, year, vehicle_type, daily_rate, status, location_city, location_state, images, payment_methods_override, payment_restrictions_override, fee_settings_override, tax_rate_override, custom_fees_override")
+          .select("id, make, model, year, vehicle_type, daily_rate, status, location_city, location_state, images, payment_methods_override, payment_restrictions_override, fee_settings_override, tax_rate_override, custom_fees_override, fees_banner_dismissed")
           .eq("profile_id", profileData.id)
           .order("created_at", { ascending: false }),
       ]);
