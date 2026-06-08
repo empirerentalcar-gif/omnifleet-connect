@@ -354,6 +354,35 @@ const OwnerDashboard = () => {
     setVehicleDialogOpen(true);
   };
 
+  const openEditVehicleWithFees = (v: Vehicle) => {
+    openEditVehicle(v);
+    setFeeSectionOpen(true);
+  };
+
+  const dismissVehicleBanner = async (vehicleId: string) => {
+    const { error } = await supabase
+      .from("vehicles")
+      .update({ fees_banner_dismissed: true })
+      .eq("id", vehicleId);
+    if (error) {
+      toast({ title: "Could not dismiss", description: error.message, variant: "destructive" });
+      return;
+    }
+    setVehicles((prev) =>
+      prev.map((v) => (v.id === vehicleId ? { ...v, fees_banner_dismissed: true } : v)),
+    );
+  };
+
+  const vehicleHasOverrides = (v: Vehicle) => {
+    return (
+      v.payment_methods_override !== null ||
+      v.payment_restrictions_override !== null ||
+      v.fee_settings_override !== null ||
+      v.tax_rate_override !== null ||
+      v.custom_fees_override !== null
+    );
+  };
+
   const saveVehicle = async () => {
     if (!profile) return;
     const overrideErrors = validateVehicleOverrides(vehicleOverrides);
