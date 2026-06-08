@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import SEO from "@/components/SEO";
@@ -45,6 +46,7 @@ import {
   AlertCircle,
   Settings,
   ChevronDown,
+  CreditCard,
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { format } from "date-fns";
@@ -109,6 +111,7 @@ type Vehicle = {
   fee_settings_override: unknown | null;
   tax_rate_override: number | null;
   custom_fees_override: unknown | null;
+  fees_banner_dismissed: boolean | null;
 };
 
 type Profile = {
