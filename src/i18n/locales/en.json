@@ -339,7 +339,7 @@
     "perDay": "/ day",
     "authNote": "Card authorized at booking, charged when the agency confirms.",
     "reserveBtn": "Reserve this vehicle",
-    "feeNote": "A 5% platform fee is included in the total. No charge until your booking is confirmed by the agency."
+    "feeNote": "No booking fees for renters. Ever. You're only charged once the agency confirms your booking."
   },
   "reserveDrawer": {
     "title": "Reserve {{label}}",
@@ -352,7 +352,7 @@
     "phone": "Phone",
     "daysSummary": "{{count}} day × ${{rate}}/day",
     "daysSummary_other": "{{count}} days × ${{rate}}/day",
-    "feeIncluded": "5% platform fee included",
+    "feeIncluded": "No booking fees — you only pay the daily rate.",
     "continue": "Continue to payment",
     "continuing": "Continuing…",
     "stripeSecured": "Secured by Stripe.",
