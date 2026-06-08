@@ -1334,5 +1334,21 @@
     "subtitle": "Search from real independent agencies near you — no big box markup.",
     "searchVehicles": "Search Vehicles",
     "browseCities": "Browse Cities"
+  },
+  "ownerDashboard": {
+    "setupBanner": {
+      "message": "Almost ready! Configure your accepted payment methods and fees before your vehicles go live so renters know how to pay you.",
+      "cta": "Complete Setup →"
+    },
+    "vehicleBanner": {
+      "message": "New Feature: Payment & Fee Settings are now available. This vehicle is currently inheriting your agency defaults. Review and customize fees for this vehicle if needed.",
+      "review": "Review Fees ▾",
+      "dismiss": "Looks good, dismiss"
+    },
+    "feeBadges": {
+      "notConfigured": "⚠️ Fees not configured",
+      "usingDefaults": "📋 Using agency defaults",
+      "customSet": "✏️ Custom fees set"
+    }
   }
 }
