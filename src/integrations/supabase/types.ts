@@ -870,6 +870,16 @@ export type Database = {
         }
         Returns: boolean
       }
+      get_agency_payment_defaults: {
+        Args: { _profile_id: string }
+        Returns: {
+          custom_fees: Json
+          fee_settings: Json
+          payment_methods: Json
+          payment_restrictions: string
+          tax_rate: number
+        }[]
+      }
       get_founding_member_count: { Args: never; Returns: number }
       get_public_agencies: {
         Args: never
