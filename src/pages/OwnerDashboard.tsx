@@ -1234,12 +1234,68 @@ const OwnerDashboard = () => {
               <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
                 {vehicles.map((v) => (
                   <div key={v.id} className="glass-card rounded-xl p-5 group">
+                    {feesSetupComplete && v.fees_banner_dismissed === null && (
+                      <div className="mb-3 rounded-lg p-3 border bg-blue-50 border-blue-200 dark:bg-blue-900/30 dark:border-blue-700">
+                        <div className="flex items-start gap-2">
+                          <CreditCard className="h-4 w-4 text-blue-600 dark:text-blue-400 mt-0.5 shrink-0" />
+                          <p className="text-xs text-blue-900 dark:text-blue-100 flex-1">
+                            {t("ownerDashboard.vehicleBanner.message")}
+                          </p>
+                        </div>
+                        <div className="flex flex-wrap gap-2 mt-2">
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            className="h-7 text-xs border-blue-300 dark:border-blue-700"
+                            onClick={() => openEditVehicleWithFees(v)}
+                          >
+                            {t("ownerDashboard.vehicleBanner.review")}
+                          </Button>
+                          <Button
+                            size="sm"
+                            variant="ghost"
+                            className="h-7 text-xs text-blue-700 dark:text-blue-300 hover:bg-blue-100 dark:hover:bg-blue-900/50"
+                            onClick={() => dismissVehicleBanner(v.id)}
+                          >
+                            {t("ownerDashboard.vehicleBanner.dismiss")}
+                          </Button>
+                        </div>
+                      </div>
+                    )}
                     <div className="flex items-start justify-between">
                       <div>
                         <p className="font-semibold">
                           {v.year} {v.make} {v.model}
                         </p>
                         <p className="text-sm text-muted-foreground capitalize">{v.vehicle_type}</p>
+                        {(() => {
+                          if (!feesSetupComplete) {
+                            return (
+                              <Link
+                                to="/owner/settings"
+                                className="inline-block mt-1.5 text-xs font-medium px-2 py-0.5 rounded-full bg-amber-100 text-amber-800 border border-amber-200 dark:bg-amber-900/40 dark:text-amber-200 dark:border-amber-700 hover:opacity-80"
+                              >
+                                {t("ownerDashboard.feeBadges.notConfigured")}
+                              </Link>
+                            );
+                          }
+                          const hasOverrides = vehicleHasOverrides(v);
+                          return (
+                            <button
+                              type="button"
+                              onClick={() => openEditVehicleWithFees(v)}
+                              className={`inline-block mt-1.5 text-xs font-medium px-2 py-0.5 rounded-full border hover:opacity-80 ${
+                                hasOverrides
+                                  ? "bg-blue-100 text-blue-800 border-blue-200 dark:bg-blue-900/40 dark:text-blue-200 dark:border-blue-700"
+                                  : "bg-secondary text-muted-foreground border-border"
+                              }`}
+                            >
+                              {hasOverrides
+                                ? t("ownerDashboard.feeBadges.customSet")
+                                : t("ownerDashboard.feeBadges.usingDefaults")}
+                            </button>
+                          );
+                        })()}
                       </div>
                       <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
                         <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => openEditVehicle(v)} aria-label="Edit vehicle">
