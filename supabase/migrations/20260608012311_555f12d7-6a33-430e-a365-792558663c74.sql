@@ -1,0 +1,4 @@
+ALTER TABLE public.agencies ADD COLUMN IF NOT EXISTS payment_settings JSONB NOT NULL DEFAULT '{}'::jsonb;
+ALTER TABLE public.vehicles ADD COLUMN IF NOT EXISTS payment_settings JSONB;
+COMMENT ON COLUMN public.agencies.payment_settings IS 'Agency-level defaults: { payment_methods: string[], other_payment_text: string, payment_restrictions: string, tax_rate: number, fees: { security_deposit: {enabled, amount, collection_method}, airport_fee: {enabled, amount}, additional_driver: {enabled, amount}, young_driver: {enabled, amount}, late_return: {enabled, amount}, cleaning: {enabled, amount}, fuel: {enabled, amount}, toll: {enabled, amount}, insurance: {enabled, amount} }, custom_fees: [{label, amount, frequency}] }';
+COMMENT ON COLUMN public.vehicles.payment_settings IS 'Per-vehicle override of agency.payment_settings. Same schema. NULL means use agency defaults.';
