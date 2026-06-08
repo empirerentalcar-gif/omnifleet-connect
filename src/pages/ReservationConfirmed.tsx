@@ -47,6 +47,19 @@ const ReservationConfirmed = () => {
               </div>
             </div>
 
+            <div
+              role="note"
+              className="rounded-lg p-4 mb-6 text-left text-sm border border-sky-400/30 bg-sky-400/10 text-sky-100"
+            >
+              <p className="font-semibold mb-1">A note on fees and taxes</p>
+              <p>
+                The amount charged to your payment method today covers your vehicle
+                reservation only. Additional fees and applicable taxes will be collected
+                directly by the agency at pickup. Your agency will confirm the final total
+                before your rental begins.
+              </p>
+            </div>
+
             <div className="flex flex-col sm:flex-row gap-3">
               <Button
                 variant="hero"
