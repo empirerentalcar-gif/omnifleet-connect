@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import SEO from "@/components/SEO";
@@ -43,6 +43,8 @@ import {
   ImagePlus,
   Check,
   AlertCircle,
+  Settings,
+  ChevronDown,
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { format } from "date-fns";
@@ -58,6 +60,18 @@ import { StripeConnectCard } from "@/components/owner/StripeConnectCard";
 import { SubscriptionCard } from "@/components/owner/SubscriptionCard";
 import { BookingsSection } from "@/components/owner/BookingsSection";
 import { Sparkles } from "lucide-react";
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/components/ui/collapsible";
+import { PaymentSettingsForm } from "@/components/payment/PaymentSettingsForm";
+import { PriceBreakdown } from "@/components/payment/PriceBreakdown";
+import {
+  emptyPaymentSettings,
+  normalizePaymentSettings,
+  type PaymentSettings,
+} from "@/lib/payment-settings";
 
 type Reservation = {
   id: string;
@@ -84,6 +98,7 @@ type Vehicle = {
   location_city: string | null;
   location_state: string | null;
   images: string[] | null;
+  payment_settings: unknown | null;
 };
 
 type Profile = {
@@ -138,6 +153,10 @@ const OwnerDashboard = () => {
   const [vehicleForm, setVehicleForm] = useState(emptyVehicle);
   const [savingVehicle, setSavingVehicle] = useState(false);
   const [modelIsOther, setModelIsOther] = useState(false);
+  const [agencyDefaults, setAgencyDefaults] = useState<PaymentSettings>(emptyPaymentSettings());
+  const [vehiclePaymentSettings, setVehiclePaymentSettings] =
+    useState<PaymentSettings>(emptyPaymentSettings());
+  const [feeSectionOpen, setFeeSectionOpen] = useState(false);
 
   useEffect(() => {
     if (authLoading) return;
@@ -169,13 +188,14 @@ const OwnerDashboard = () => {
       // Fetch trial info from agencies
       const { data: agencyData } = await supabase
         .from('agencies')
-        .select('id, subscription_status, trial_end_date, grace_period_end, is_founding_member, founding_member_number')
+        .select('id, subscription_status, trial_end_date, grace_period_end, is_founding_member, founding_member_number, payment_settings')
         .eq('owner_user_id', user.id)
         .single();
 
       if (agencyData) {
         // BookingsSection needs the agencies.id (not profiles.id)
         setAgencyId(agencyData.id);
+        setAgencyDefaults(normalizePaymentSettings((agencyData as { payment_settings?: unknown }).payment_settings));
         const daysLeft = agencyData.trial_end_date
           ? Math.ceil((new Date(agencyData.trial_end_date).getTime() - Date.now()) / (1000 * 60 * 60 * 24))
           : null;
@@ -199,7 +219,7 @@ const OwnerDashboard = () => {
           .order("created_at", { ascending: false }),
         supabase
           .from("vehicles")
-          .select("id, make, model, year, vehicle_type, daily_rate, status, location_city, location_state, images")
+          .select("id, make, model, year, vehicle_type, daily_rate, status, location_city, location_state, images, payment_settings")
           .eq("profile_id", profileData.id)
           .order("created_at", { ascending: false }),
       ]);
@@ -264,6 +284,8 @@ const OwnerDashboard = () => {
     setEditingVehicle(null);
     setVehicleForm(emptyVehicle);
     setModelIsOther(false);
+    setVehiclePaymentSettings(agencyDefaults);
+    setFeeSectionOpen(false);
     setVehicleDialogOpen(true);
   };
 
@@ -281,6 +303,14 @@ const OwnerDashboard = () => {
     });
     const known = VEHICLE_MAKES_MODELS[v.make] || [];
     setModelIsOther(!!v.model && !known.includes(v.model));
+    const hasOverride =
+      v.payment_settings &&
+      typeof v.payment_settings === "object" &&
+      Object.keys(v.payment_settings as object).length > 0;
+    setVehiclePaymentSettings(
+      hasOverride ? normalizePaymentSettings(v.payment_settings) : agencyDefaults,
+    );
+    setFeeSectionOpen(false);
     setVehicleDialogOpen(true);
   };
 
@@ -300,6 +330,7 @@ const OwnerDashboard = () => {
           status: vehicleForm.status as any,
           location_city: vehicleForm.location_city || null,
           location_state: vehicleForm.location_state || null,
+          payment_settings: vehiclePaymentSettings as never,
         })
         .eq("id", editingVehicle.id);
 
@@ -321,6 +352,7 @@ const OwnerDashboard = () => {
         status: vehicleForm.status as any,
         location_city: vehicleForm.location_city || null,
         location_state: vehicleForm.location_state || null,
+        payment_settings: vehiclePaymentSettings as never,
       });
 
       if (error) {
