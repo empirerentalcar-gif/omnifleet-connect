@@ -339,7 +339,53 @@
     "perDay": "/ day",
     "authNote": "Card authorized at booking, charged when the agency confirms.",
     "reserveBtn": "Reserve this vehicle",
-    "feeNote": "No booking fees for renters. Ever. You're only charged once the agency confirms your booking."
+    "feeNote": "No booking fees for renters. Ever. You're only charged once the agency confirms your booking.",
+    "payments": {
+      "accepted": "Accepted Payments",
+      "ariaBadge": "{{method}} payments accepted",
+      "depositLine": "🔒 Security Deposit: {{amount}} — {{method}} — Refundable at return",
+      "pickupHeader": "📋 Pickup Requirements",
+      "seeBreakdown": "See full fee breakdown",
+      "hideBreakdown": "Hide full fee breakdown",
+      "taxableBadge": "Taxable",
+      "noFees": "No additional fees for this vehicle.",
+      "estimatedTax": "Estimated Tax ({{rate}}%): calculated at booking",
+      "bottomNote": "Final total confirmed by the agency at pickup. Fees shown are estimates. Security deposit collected separately.",
+      "frequencyPerDay": "per day",
+      "frequencyPerRental": "per rental",
+      "frequencyPerHour": "per hour",
+      "method": {
+        "cash": "Cash",
+        "debit_card": "Debit Card",
+        "venmo": "Venmo",
+        "zelle": "Zelle",
+        "cash_app": "Cash App",
+        "prepaid_card": "Prepaid Card",
+        "apple_pay": "Apple Pay",
+        "google_pay": "Google Pay",
+        "money_order": "Money Order",
+        "other": "Other"
+      },
+      "deposit": {
+        "same_as_rental": "Same as Rental Payment",
+        "cash_only": "Cash Only",
+        "zelle_only": "Zelle Only",
+        "card_hold_only": "Card Authorization Hold"
+      },
+      "fee": {
+        "security_deposit": "Security Deposit",
+        "cleaning_fee": "Cleaning Fee",
+        "late_return_fee": "Late Return Fee",
+        "fuel_refueling_fee": "Fuel / Refueling Fee",
+        "smoking_fee": "Smoking Fee",
+        "mileage_overage_fee": "Mileage Overage Fee",
+        "toll_pass_fee": "Toll Pass Fee",
+        "young_driver_fee": "Young Driver Fee (under 25)",
+        "additional_driver_fee": "Additional Driver Fee",
+        "airport_fee": "Airport Pickup / Drop-off Fee",
+        "insurance_damage_waiver_fee": "Insurance / Damage Waiver Fee"
+      }
+    }
   },
   "reserveDrawer": {
     "title": "Reserve {{label}}",
