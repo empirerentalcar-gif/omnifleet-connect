@@ -339,7 +339,7 @@
     "perDay": "/ día",
     "authNote": "La tarjeta se autoriza al reservar; se cobra cuando la agencia confirma.",
     "reserveBtn": "Reservar este carro",
-    "feeNote": "El total incluye una tarifa de plataforma del 5%. No te cobramos hasta que la agencia confirme tu reserva."
+    "feeNote": "Sin cargos de reserva para inquilinos. Nunca. Solo se te cobra cuando la agencia confirma tu reserva."
   },
   "reserveDrawer": {
     "title": "Reservar {{label}}",
@@ -352,7 +352,7 @@
     "phone": "Teléfono",
     "daysSummary": "{{count}} día × ${{rate}}/día",
     "daysSummary_other": "{{count}} días × ${{rate}}/día",
-    "feeIncluded": "Incluye 5% de tarifa de plataforma",
+    "feeIncluded": "Sin cargos de reserva — solo pagas la tarifa diaria.",
     "continue": "Continuar al pago",
     "continuing": "Continuando…",
     "stripeSecured": "Pagos seguros con Stripe.",
