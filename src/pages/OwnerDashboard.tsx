@@ -199,14 +199,33 @@ const OwnerDashboard = () => {
       // Fetch trial info from agencies
       const { data: agencyData } = await supabase
         .from('agencies')
-        .select('id, subscription_status, trial_end_date, grace_period_end, is_founding_member, founding_member_number')
+        .select('id, subscription_status, trial_end_date, grace_period_end, is_founding_member, founding_member_number, payment_methods, payment_restrictions, fee_settings, tax_rate, custom_fees')
         .eq('owner_user_id', user.id)
         .single();
 
       if (agencyData) {
         // BookingsSection needs the agencies.id (not profiles.id)
         setAgencyId(agencyData.id);
-        setAgencyDefaults(normalizePaymentSettings(null));
+        const pm = agencyData.payment_methods;
+        const methods = Array.isArray(pm)
+          ? pm
+          : pm && typeof pm === "object" && Array.isArray((pm as { methods?: unknown }).methods)
+            ? (pm as { methods: unknown[] }).methods
+            : [];
+        const otherText =
+          pm && typeof pm === "object" && !Array.isArray(pm) && typeof (pm as { other_text?: unknown }).other_text === "string"
+            ? (pm as { other_text: string }).other_text
+            : "";
+        setAgencyDefaults(
+          normalizePaymentSettings({
+            payment_methods: methods,
+            other_payment_text: otherText,
+            payment_restrictions: agencyData.payment_restrictions,
+            tax_rate: agencyData.tax_rate,
+            fees: agencyData.fee_settings,
+            custom_fees: agencyData.custom_fees,
+          }),
+        );
         const daysLeft = agencyData.trial_end_date
           ? Math.ceil((new Date(agencyData.trial_end_date).getTime() - Date.now()) / (1000 * 60 * 60 * 24))
           : null;
@@ -230,7 +249,7 @@ const OwnerDashboard = () => {
           .order("created_at", { ascending: false }),
         supabase
           .from("vehicles")
-          .select("id, make, model, year, vehicle_type, daily_rate, status, location_city, location_state, images")
+          .select("id, make, model, year, vehicle_type, daily_rate, status, location_city, location_state, images, payment_methods_override, payment_restrictions_override, fee_settings_override, tax_rate_override, custom_fees_override")
           .eq("profile_id", profileData.id)
           .order("created_at", { ascending: false }),
       ]);
@@ -295,7 +314,8 @@ const OwnerDashboard = () => {
     setEditingVehicle(null);
     setVehicleForm(emptyVehicle);
     setModelIsOther(false);
-    setVehiclePaymentSettings(agencyDefaults);
+    setVehicleOverrides(emptyVehicleOverrides());
+    setShowOverrideValidation(false);
     setFeeSectionOpen(false);
     setVehicleDialogOpen(true);
   };
@@ -314,20 +334,34 @@ const OwnerDashboard = () => {
     });
     const known = VEHICLE_MAKES_MODELS[v.make] || [];
     setModelIsOther(!!v.model && !known.includes(v.model));
-    const hasOverride =
-      v.payment_settings &&
-      typeof v.payment_settings === "object" &&
-      Object.keys(v.payment_settings as object).length > 0;
-    setVehiclePaymentSettings(
-      hasOverride ? normalizePaymentSettings(v.payment_settings) : agencyDefaults,
+    setVehicleOverrides(
+      normalizeVehicleOverrides({
+        payment_methods_override: v.payment_methods_override,
+        payment_restrictions_override: v.payment_restrictions_override,
+        fee_settings_override: v.fee_settings_override,
+        tax_rate_override: v.tax_rate_override,
+        custom_fees_override: v.custom_fees_override,
+      }),
     );
+    setShowOverrideValidation(false);
     setFeeSectionOpen(false);
     setVehicleDialogOpen(true);
   };
 
   const saveVehicle = async () => {
     if (!profile) return;
+    const overrideErrors = validateVehicleOverrides(vehicleOverrides);
+    if (overrideErrors.length > 0) {
+      setShowOverrideValidation(true);
+      toast({
+        title: "Please fix override errors",
+        description: overrideErrors[0],
+        variant: "destructive",
+      });
+      return;
+    }
     setSavingVehicle(true);
+    const overridePayload = overridesToDb(vehicleOverrides) as unknown as Record<string, never>;
 
     if (editingVehicle) {
       const { error } = await supabase
@@ -341,7 +375,7 @@ const OwnerDashboard = () => {
           status: vehicleForm.status as any,
           location_city: vehicleForm.location_city || null,
           location_state: vehicleForm.location_state || null,
-          payment_settings: vehiclePaymentSettings as never,
+          ...overridePayload,
         })
         .eq("id", editingVehicle.id);
 
@@ -363,7 +397,7 @@ const OwnerDashboard = () => {
         status: vehicleForm.status as any,
         location_city: vehicleForm.location_city || null,
         location_state: vehicleForm.location_state || null,
-        payment_settings: vehiclePaymentSettings as never,
+        ...overridePayload,
       });
 
       if (error) {
