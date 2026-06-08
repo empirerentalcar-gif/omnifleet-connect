@@ -148,6 +148,7 @@ const OwnerDashboard = () => {
   const { user, loading: authLoading } = useAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { t } = useTranslation();
 
   const [profile, setProfile] = useState<Profile | null>(null);
   const [agencyId, setAgencyId] = useState<string | null>(null);
@@ -167,6 +168,7 @@ const OwnerDashboard = () => {
   const [savingVehicle, setSavingVehicle] = useState(false);
   const [modelIsOther, setModelIsOther] = useState(false);
   const [agencyDefaults, setAgencyDefaults] = useState<PaymentSettings>(emptyPaymentSettings());
+  const [feesSetupComplete, setFeesSetupComplete] = useState<boolean>(true);
   const [vehicleOverrides, setVehicleOverrides] =
     useState<VehicleOverrides>(emptyVehicleOverrides());
   const [showOverrideValidation, setShowOverrideValidation] = useState(false);
