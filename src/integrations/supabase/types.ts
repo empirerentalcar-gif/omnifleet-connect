@@ -782,6 +782,7 @@ export type Database = {
     Views: {
       available_vehicles_public: {
         Row: {
+          agency_payment_settings: Json | null
           agency_photos: string[] | null
           business_name: string | null
           cancellation_policy: string | null
@@ -802,6 +803,7 @@ export type Database = {
           requirements: string[] | null
           seats: number | null
           transmission: string | null
+          vehicle_payment_settings: Json | null
           vehicle_type: string | null
           year: number | null
         }
