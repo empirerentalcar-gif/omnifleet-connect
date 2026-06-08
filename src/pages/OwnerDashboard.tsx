@@ -642,10 +642,18 @@ const OwnerDashboard = () => {
                   : "Owner Dashboard"}
               </p>
             </div>
-            <Button variant="ghost" size="sm" onClick={fetchData}>
-              <RefreshCw className="h-4 w-4 mr-2" />
-              Refresh
-            </Button>
+            <div className="flex items-center gap-2">
+              <Button variant="outline" size="sm" asChild>
+                <Link to="/owner/settings">
+                  <Settings className="h-4 w-4 mr-2" />
+                  Payment &amp; Fees
+                </Link>
+              </Button>
+              <Button variant="ghost" size="sm" onClick={fetchData}>
+                <RefreshCw className="h-4 w-4 mr-2" />
+                Refresh
+              </Button>
+            </div>
           </div>
 
           {/* Stripe Connect onboarding */}
@@ -968,7 +976,7 @@ const OwnerDashboard = () => {
                     Add Vehicle
                   </Button>
                 </DialogTrigger>
-                <DialogContent className="sm:max-w-md">
+                <DialogContent className="sm:max-w-2xl max-h-[90vh] overflow-y-auto">
                   <DialogHeader>
                     <DialogTitle>{editingVehicle ? "Edit Vehicle" : "Add Vehicle"}</DialogTitle>
                   </DialogHeader>
@@ -1058,6 +1066,37 @@ const OwnerDashboard = () => {
                         <p className="text-xs text-destructive mt-1">Please enter a daily rate between $1 and $9,999</p>
                       )}
                     </div>
+
+                    {/* Payment & Fees for this vehicle */}
+                    <Collapsible open={feeSectionOpen} onOpenChange={setFeeSectionOpen}>
+                      <CollapsibleTrigger asChild>
+                        <button
+                          type="button"
+                          className="w-full flex items-center justify-between rounded-md border border-border bg-secondary/30 hover:bg-secondary/50 px-3 py-2.5 text-sm font-medium"
+                        >
+                          <span>Payment &amp; Fees for This Vehicle</span>
+                          <ChevronDown
+                            className={`h-4 w-4 transition-transform ${feeSectionOpen ? "rotate-180" : ""}`}
+                          />
+                        </button>
+                      </CollapsibleTrigger>
+                      <CollapsibleContent className="pt-3 space-y-4">
+                        <p className="text-xs text-muted-foreground">
+                          Your agency defaults are pre-filled below. You can override them for
+                          this specific vehicle.
+                        </p>
+                        <PaymentSettingsForm
+                          value={vehiclePaymentSettings}
+                          onChange={setVehiclePaymentSettings}
+                        />
+                        <PriceBreakdown
+                          dailyRate={vehicleForm.daily_rate || 0}
+                          settings={vehiclePaymentSettings}
+                          showStepper
+                        />
+                      </CollapsibleContent>
+                    </Collapsible>
+
                     <div className="grid grid-cols-2 gap-3">
                       <div>
                         <Label>Vehicle Type</Label>
