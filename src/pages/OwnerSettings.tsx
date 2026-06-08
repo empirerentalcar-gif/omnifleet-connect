@@ -97,11 +97,11 @@ const OwnerSettings = () => {
     setSaving(true);
 
     const dbPayload = {
-      payment_methods: toDbPaymentMethods(settings),
+      payment_methods: toDbPaymentMethods(settings) as import("@/integrations/supabase/client").Json,
       payment_restrictions: settings.payment_restrictions.trim() || null,
-      fee_settings: settings.fees as unknown as Record<string, unknown>,
+      fee_settings: settings.fees as unknown as import("@/integrations/supabase/client").Json,
       tax_rate: settings.tax_rate,
-      custom_fees: settings.custom_fees as unknown as Record<string, unknown>[],
+      custom_fees: settings.custom_fees as unknown as import("@/integrations/supabase/client").Json,
       fees_setup_complete: true,
     };
 
