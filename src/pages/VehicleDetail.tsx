@@ -8,12 +8,8 @@ import { SafeImage } from "@/components/SafeImage";
 import { Button } from "@/components/ui/button";
 import { ReserveDrawer } from "@/components/vehicle/ReserveDrawer";
 import { Calendar, Car, Fuel, Gauge, MapPin, Users, Banknote, ArrowLeft } from "lucide-react";
-import {
-  AcceptedPaymentBadges,
-  PaymentRestrictionsCallout,
-  FeeSummary,
-} from "@/components/payment/PublicPaymentSummary";
-import { resolveSettings } from "@/lib/payment-settings";
+import { PublicVehiclePaymentSummary } from "@/components/payment/PublicVehiclePaymentSummary";
+import { effectiveSettingsFromPublicRow } from "@/lib/payment-settings";
 
 type VehicleRow = {
   id: string;
@@ -102,8 +98,9 @@ const VehicleDetail = () => {
 
   const photos = vehicle.images?.length ? vehicle.images : [];
   const label = `${vehicle.year} ${vehicle.make} ${vehicle.model}`;
-  // New schema rebuild in progress — pass empty until UI is rewired.
-  const paymentSettings = resolveSettings(null, null);
+  // Always merge agency defaults with vehicle overrides via the shared helper —
+  // never read the raw columns directly on the public page.
+  const paymentSettings = effectiveSettingsFromPublicRow(vehicle);
 
   const productJsonLd = {
     "@context": "https://schema.org",
@@ -228,25 +225,14 @@ const VehicleDetail = () => {
               <Link to={`/agency/${vehicle.profile_id}`} className="block mt-3 text-sm text-[#2dd4bf] hover:underline">{t('vehicle.viewAgency')}</Link>
             </section>
 
-            {(vehicle.requirements?.length || vehicle.deposit_info || vehicle.cancellation_policy) && (
+            {(vehicle.deposit_info || vehicle.cancellation_policy) && (
               <section className="rounded-xl p-5 space-y-3 text-sm text-white/70" style={{ backgroundColor: "#132640", border: "1px solid rgba(255,255,255,0.08)" }}>
                 <h2 className="text-lg font-bold text-white">{t('vehicle.bookingDetails')}</h2>
-                {vehicle.requirements?.length ? (
-                  <div>
-                    <p className="font-semibold text-white/90 mb-1">{t('vehicle.requirements')}</p>
-                    <ul className="list-disc pl-5 space-y-1">{vehicle.requirements.map((r) => <li key={r}>{r}</li>)}</ul>
-                  </div>
-                ) : null}
                 {vehicle.deposit_info && <div><p className="font-semibold text-white/90 mb-1">{t('vehicle.deposit')}</p><p>{vehicle.deposit_info}</p></div>}
                 {vehicle.cancellation_policy && <div><p className="font-semibold text-white/90 mb-1">{t('vehicle.cancellation')}</p><p>{vehicle.cancellation_policy}</p></div>}
               </section>
             )}
 
-            <section className="rounded-xl p-5 space-y-4" style={{ backgroundColor: "#132640", border: "1px solid rgba(255,255,255,0.08)" }}>
-              <AcceptedPaymentBadges settings={paymentSettings} />
-              <PaymentRestrictionsCallout settings={paymentSettings} />
-              <FeeSummary settings={paymentSettings} />
-            </section>
           </div>
 
           {/* Reserve sidebar */}
@@ -257,6 +243,10 @@ const VehicleDetail = () => {
                 <span className="text-white/50">{t('vehicle.perDay')}</span>
               </div>
               <p className="text-white/60 text-sm flex items-center gap-1.5"><Calendar className="h-4 w-4" /> {t('vehicle.authNote')}</p>
+              <PublicVehiclePaymentSummary
+                settings={paymentSettings}
+                pickupRequirements={vehicle.requirements}
+              />
               <Button onClick={() => setReserveOpen(true)} className="w-full text-base h-12 font-bold" style={{ backgroundColor: "#2dd4bf", color: "#0d1b2e" }}>
                 {t('vehicle.reserveBtn')}
               </Button>

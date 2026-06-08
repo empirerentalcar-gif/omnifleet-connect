@@ -239,6 +239,54 @@ export const resolveSettings = (
   return normalizePaymentSettings(agencySettings);
 };
 
+// Resolve effective renter-facing settings from an `available_vehicles_public`
+// row by normalizing the agency defaults and the vehicle overrides, then
+// merging them with the shared `mergeAgencyWithOverrides` helper so the merge
+// logic stays in exactly one place.
+export const effectiveSettingsFromPublicRow = (row: {
+  agency_payment_methods?: unknown;
+  agency_payment_restrictions?: unknown;
+  agency_fee_settings?: unknown;
+  agency_tax_rate?: unknown;
+  agency_custom_fees?: unknown;
+  vehicle_payment_methods?: unknown;
+  vehicle_payment_restrictions?: unknown;
+  vehicle_fee_settings?: unknown;
+  vehicle_tax_rate?: unknown;
+  vehicle_custom_fees?: unknown;
+}): PaymentSettings => {
+  const apm = row.agency_payment_methods;
+  const agencyMethods = Array.isArray(apm)
+    ? apm
+    : apm && typeof apm === "object" && Array.isArray((apm as { methods?: unknown }).methods)
+      ? (apm as { methods: unknown[] }).methods
+      : [];
+  const agencyOtherText =
+    apm && typeof apm === "object" && !Array.isArray(apm) && typeof (apm as { other_text?: unknown }).other_text === "string"
+      ? (apm as { other_text: string }).other_text
+      : "";
+
+  const agencyDefaults = normalizePaymentSettings({
+    payment_methods: agencyMethods,
+    other_payment_text: agencyOtherText,
+    payment_restrictions: row.agency_payment_restrictions,
+    tax_rate: typeof row.agency_tax_rate === "string" ? Number(row.agency_tax_rate) : row.agency_tax_rate,
+    fees: row.agency_fee_settings,
+    custom_fees: row.agency_custom_fees,
+  });
+
+  const overrides = normalizeVehicleOverrides({
+    payment_methods_override: row.vehicle_payment_methods,
+    payment_restrictions_override: row.vehicle_payment_restrictions,
+    fee_settings_override: row.vehicle_fee_settings,
+    tax_rate_override:
+      typeof row.vehicle_tax_rate === "string" ? Number(row.vehicle_tax_rate) : row.vehicle_tax_rate,
+    custom_fees_override: row.vehicle_custom_fees,
+  });
+
+  return mergeAgencyWithOverrides(agencyDefaults, overrides);
+};
+
 // ---- Price Breakdown ----
 
 export type BreakdownLine = {
