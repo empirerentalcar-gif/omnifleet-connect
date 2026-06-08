@@ -65,12 +65,18 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
-import { PaymentSettingsForm } from "@/components/payment/PaymentSettingsForm";
+import { VehiclePaymentOverrideForm } from "@/components/payment/VehiclePaymentOverrideForm";
 import { PriceBreakdown } from "@/components/payment/PriceBreakdown";
 import {
   emptyPaymentSettings,
+  emptyVehicleOverrides,
   normalizePaymentSettings,
+  normalizeVehicleOverrides,
+  mergeAgencyWithOverrides,
+  overridesToDb,
+  validateVehicleOverrides,
   type PaymentSettings,
+  type VehicleOverrides,
 } from "@/lib/payment-settings";
 
 type Reservation = {
@@ -98,7 +104,11 @@ type Vehicle = {
   location_city: string | null;
   location_state: string | null;
   images: string[] | null;
-  payment_settings: unknown | null;
+  payment_methods_override: unknown | null;
+  payment_restrictions_override: string | null;
+  fee_settings_override: unknown | null;
+  tax_rate_override: number | null;
+  custom_fees_override: unknown | null;
 };
 
 type Profile = {
@@ -154,8 +164,9 @@ const OwnerDashboard = () => {
   const [savingVehicle, setSavingVehicle] = useState(false);
   const [modelIsOther, setModelIsOther] = useState(false);
   const [agencyDefaults, setAgencyDefaults] = useState<PaymentSettings>(emptyPaymentSettings());
-  const [vehiclePaymentSettings, setVehiclePaymentSettings] =
-    useState<PaymentSettings>(emptyPaymentSettings());
+  const [vehicleOverrides, setVehicleOverrides] =
+    useState<VehicleOverrides>(emptyVehicleOverrides());
+  const [showOverrideValidation, setShowOverrideValidation] = useState(false);
   const [feeSectionOpen, setFeeSectionOpen] = useState(false);
 
   useEffect(() => {
