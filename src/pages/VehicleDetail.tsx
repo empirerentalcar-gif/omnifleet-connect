@@ -8,6 +8,12 @@ import { SafeImage } from "@/components/SafeImage";
 import { Button } from "@/components/ui/button";
 import { ReserveDrawer } from "@/components/vehicle/ReserveDrawer";
 import { Calendar, Car, Fuel, Gauge, MapPin, Users, Banknote, ArrowLeft } from "lucide-react";
+import {
+  AcceptedPaymentBadges,
+  PaymentRestrictionsCallout,
+  FeeSummary,
+} from "@/components/payment/PublicPaymentSummary";
+import { resolveSettings } from "@/lib/payment-settings";
 
 type VehicleRow = {
   id: string;
@@ -32,6 +38,8 @@ type VehicleRow = {
   cancellation_policy: string | null;
   deposit_info: string | null;
   requirements: string[] | null;
+  vehicle_payment_settings: unknown | null;
+  agency_payment_settings: unknown | null;
 };
 
 const VehicleDetail = () => {
@@ -86,6 +94,10 @@ const VehicleDetail = () => {
 
   const photos = vehicle.images?.length ? vehicle.images : [];
   const label = `${vehicle.year} ${vehicle.make} ${vehicle.model}`;
+  const paymentSettings = resolveSettings(
+    vehicle.vehicle_payment_settings,
+    vehicle.agency_payment_settings,
+  );
 
   const productJsonLd = {
     "@context": "https://schema.org",
@@ -223,6 +235,12 @@ const VehicleDetail = () => {
                 {vehicle.cancellation_policy && <div><p className="font-semibold text-white/90 mb-1">{t('vehicle.cancellation')}</p><p>{vehicle.cancellation_policy}</p></div>}
               </section>
             )}
+
+            <section className="rounded-xl p-5 space-y-4" style={{ backgroundColor: "#132640", border: "1px solid rgba(255,255,255,0.08)" }}>
+              <AcceptedPaymentBadges settings={paymentSettings} />
+              <PaymentRestrictionsCallout settings={paymentSettings} />
+              <FeeSummary settings={paymentSettings} />
+            </section>
           </div>
 
           {/* Reserve sidebar */}
@@ -248,6 +266,7 @@ const VehicleDetail = () => {
         vehicleId={vehicle.id}
         vehicleLabel={label}
         dailyRate={Number(vehicle.daily_rate)}
+        paymentSettings={paymentSettings}
       />
     </div>
   );
