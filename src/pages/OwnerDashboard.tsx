@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import SEO from "@/components/SEO";
@@ -45,6 +46,7 @@ import {
   AlertCircle,
   Settings,
   ChevronDown,
+  CreditCard,
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { format } from "date-fns";
@@ -109,6 +111,7 @@ type Vehicle = {
   fee_settings_override: unknown | null;
   tax_rate_override: number | null;
   custom_fees_override: unknown | null;
+  fees_banner_dismissed: boolean | null;
 };
 
 type Profile = {
@@ -145,6 +148,7 @@ const OwnerDashboard = () => {
   const { user, loading: authLoading } = useAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { t } = useTranslation();
 
   const [profile, setProfile] = useState<Profile | null>(null);
   const [agencyId, setAgencyId] = useState<string | null>(null);
@@ -164,6 +168,7 @@ const OwnerDashboard = () => {
   const [savingVehicle, setSavingVehicle] = useState(false);
   const [modelIsOther, setModelIsOther] = useState(false);
   const [agencyDefaults, setAgencyDefaults] = useState<PaymentSettings>(emptyPaymentSettings());
+  const [feesSetupComplete, setFeesSetupComplete] = useState<boolean>(true);
   const [vehicleOverrides, setVehicleOverrides] =
     useState<VehicleOverrides>(emptyVehicleOverrides());
   const [showOverrideValidation, setShowOverrideValidation] = useState(false);
@@ -199,13 +204,14 @@ const OwnerDashboard = () => {
       // Fetch trial info from agencies
       const { data: agencyData } = await supabase
         .from('agencies')
-        .select('id, subscription_status, trial_end_date, grace_period_end, is_founding_member, founding_member_number, payment_methods, payment_restrictions, fee_settings, tax_rate, custom_fees')
+        .select('id, subscription_status, trial_end_date, grace_period_end, is_founding_member, founding_member_number, payment_methods, payment_restrictions, fee_settings, tax_rate, custom_fees, fees_setup_complete')
         .eq('owner_user_id', user.id)
         .single();
 
       if (agencyData) {
         // BookingsSection needs the agencies.id (not profiles.id)
         setAgencyId(agencyData.id);
+        setFeesSetupComplete(!!agencyData.fees_setup_complete);
         const pm = agencyData.payment_methods;
         const methods = Array.isArray(pm)
           ? pm
@@ -249,7 +255,7 @@ const OwnerDashboard = () => {
           .order("created_at", { ascending: false }),
         supabase
           .from("vehicles")
-          .select("id, make, model, year, vehicle_type, daily_rate, status, location_city, location_state, images, payment_methods_override, payment_restrictions_override, fee_settings_override, tax_rate_override, custom_fees_override")
+          .select("id, make, model, year, vehicle_type, daily_rate, status, location_city, location_state, images, payment_methods_override, payment_restrictions_override, fee_settings_override, tax_rate_override, custom_fees_override, fees_banner_dismissed")
           .eq("profile_id", profileData.id)
           .order("created_at", { ascending: false }),
       ]);
@@ -346,6 +352,35 @@ const OwnerDashboard = () => {
     setShowOverrideValidation(false);
     setFeeSectionOpen(false);
     setVehicleDialogOpen(true);
+  };
+
+  const openEditVehicleWithFees = (v: Vehicle) => {
+    openEditVehicle(v);
+    setFeeSectionOpen(true);
+  };
+
+  const dismissVehicleBanner = async (vehicleId: string) => {
+    const { error } = await supabase
+      .from("vehicles")
+      .update({ fees_banner_dismissed: true })
+      .eq("id", vehicleId);
+    if (error) {
+      toast({ title: "Could not dismiss", description: error.message, variant: "destructive" });
+      return;
+    }
+    setVehicles((prev) =>
+      prev.map((v) => (v.id === vehicleId ? { ...v, fees_banner_dismissed: true } : v)),
+    );
+  };
+
+  const vehicleHasOverrides = (v: Vehicle) => {
+    return (
+      v.payment_methods_override !== null ||
+      v.payment_restrictions_override !== null ||
+      v.fee_settings_override !== null ||
+      v.tax_rate_override !== null ||
+      v.custom_fees_override !== null
+    );
   };
 
   const saveVehicle = async () => {
@@ -626,6 +661,20 @@ const OwnerDashboard = () => {
       <SEO title="Owner Dashboard | ZUVIO" description="Manage your rental vehicles and reservation requests on ZUVIO." path="/dashboard" noindex />
 <main className="pt-6 sm:pt-8 pb-16 overflow-x-hidden">
         <div className="container mx-auto px-4 max-w-6xl">
+          {/* Fees Setup Required Banner */}
+          {!feesSetupComplete && (
+            <div className="rounded-lg p-4 mb-6 border bg-amber-50 border-amber-200 dark:bg-amber-900/30 dark:border-amber-700 flex items-start gap-3">
+              <AlertCircle className="h-5 w-5 text-amber-600 dark:text-amber-400 mt-0.5 shrink-0" />
+              <div className="flex-1 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                <p className="text-sm font-semibold text-amber-900 dark:text-amber-100">
+                  {t("ownerDashboard.setupBanner.message")}
+                </p>
+                <Button asChild size="sm" className="bg-amber-600 hover:bg-amber-700 text-white shrink-0">
+                  <Link to="/owner/settings">{t("ownerDashboard.setupBanner.cta")}</Link>
+                </Button>
+              </div>
+            </div>
+          )}
           {/* Trial Banner */}
           {trialInfo && (
             trialInfo.status === 'payment_required' ||
@@ -1185,12 +1234,68 @@ const OwnerDashboard = () => {
               <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
                 {vehicles.map((v) => (
                   <div key={v.id} className="glass-card rounded-xl p-5 group">
+                    {feesSetupComplete && v.fees_banner_dismissed === null && (
+                      <div className="mb-3 rounded-lg p-3 border bg-blue-50 border-blue-200 dark:bg-blue-900/30 dark:border-blue-700">
+                        <div className="flex items-start gap-2">
+                          <CreditCard className="h-4 w-4 text-blue-600 dark:text-blue-400 mt-0.5 shrink-0" />
+                          <p className="text-xs text-blue-900 dark:text-blue-100 flex-1">
+                            {t("ownerDashboard.vehicleBanner.message")}
+                          </p>
+                        </div>
+                        <div className="flex flex-wrap gap-2 mt-2">
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            className="h-7 text-xs border-blue-300 dark:border-blue-700"
+                            onClick={() => openEditVehicleWithFees(v)}
+                          >
+                            {t("ownerDashboard.vehicleBanner.review")}
+                          </Button>
+                          <Button
+                            size="sm"
+                            variant="ghost"
+                            className="h-7 text-xs text-blue-700 dark:text-blue-300 hover:bg-blue-100 dark:hover:bg-blue-900/50"
+                            onClick={() => dismissVehicleBanner(v.id)}
+                          >
+                            {t("ownerDashboard.vehicleBanner.dismiss")}
+                          </Button>
+                        </div>
+                      </div>
+                    )}
                     <div className="flex items-start justify-between">
                       <div>
                         <p className="font-semibold">
                           {v.year} {v.make} {v.model}
                         </p>
                         <p className="text-sm text-muted-foreground capitalize">{v.vehicle_type}</p>
+                        {(() => {
+                          if (!feesSetupComplete) {
+                            return (
+                              <Link
+                                to="/owner/settings"
+                                className="inline-block mt-1.5 text-xs font-medium px-2 py-0.5 rounded-full bg-amber-100 text-amber-800 border border-amber-200 dark:bg-amber-900/40 dark:text-amber-200 dark:border-amber-700 hover:opacity-80"
+                              >
+                                {t("ownerDashboard.feeBadges.notConfigured")}
+                              </Link>
+                            );
+                          }
+                          const hasOverrides = vehicleHasOverrides(v);
+                          return (
+                            <button
+                              type="button"
+                              onClick={() => openEditVehicleWithFees(v)}
+                              className={`inline-block mt-1.5 text-xs font-medium px-2 py-0.5 rounded-full border hover:opacity-80 ${
+                                hasOverrides
+                                  ? "bg-blue-100 text-blue-800 border-blue-200 dark:bg-blue-900/40 dark:text-blue-200 dark:border-blue-700"
+                                  : "bg-secondary text-muted-foreground border-border"
+                              }`}
+                            >
+                              {hasOverrides
+                                ? t("ownerDashboard.feeBadges.customSet")
+                                : t("ownerDashboard.feeBadges.usingDefaults")}
+                            </button>
+                          );
+                        })()}
                       </div>
                       <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
                         <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => openEditVehicle(v)} aria-label="Edit vehicle">
