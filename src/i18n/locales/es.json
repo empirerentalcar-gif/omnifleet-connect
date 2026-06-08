@@ -339,7 +339,53 @@
     "perDay": "/ día",
     "authNote": "La tarjeta se autoriza al reservar; se cobra cuando la agencia confirma.",
     "reserveBtn": "Reservar este carro",
-    "feeNote": "Sin cargos de reserva para inquilinos. Nunca. Solo se te cobra cuando la agencia confirma tu reserva."
+    "feeNote": "Sin cargos de reserva para inquilinos. Nunca. Solo se te cobra cuando la agencia confirma tu reserva.",
+    "payments": {
+      "accepted": "Métodos de Pago Aceptados",
+      "ariaBadge": "Se acepta pago con {{method}}",
+      "depositLine": "🔒 Depósito de seguridad: {{amount}} — {{method}} — Reembolsable al devolver",
+      "pickupHeader": "📋 Requisitos de Recogida",
+      "seeBreakdown": "Ver desglose completo de tarifas",
+      "hideBreakdown": "Ocultar desglose de tarifas",
+      "taxableBadge": "Con impuesto",
+      "noFees": "Sin tarifas adicionales para este vehículo.",
+      "estimatedTax": "Impuesto estimado ({{rate}}%): calculado al reservar",
+      "bottomNote": "El total final lo confirma la agencia al momento de la recogida. Las tarifas mostradas son estimadas. El depósito de seguridad se cobra por separado.",
+      "frequencyPerDay": "por día",
+      "frequencyPerRental": "por renta",
+      "frequencyPerHour": "por hora",
+      "method": {
+        "cash": "Efectivo",
+        "debit_card": "Tarjeta de débito",
+        "venmo": "Venmo",
+        "zelle": "Zelle",
+        "cash_app": "Cash App",
+        "prepaid_card": "Tarjeta prepagada",
+        "apple_pay": "Apple Pay",
+        "google_pay": "Google Pay",
+        "money_order": "Giro postal",
+        "other": "Otro"
+      },
+      "deposit": {
+        "same_as_rental": "Igual que el pago de la renta",
+        "cash_only": "Solo efectivo",
+        "zelle_only": "Solo Zelle",
+        "card_hold_only": "Retención en tarjeta"
+      },
+      "fee": {
+        "security_deposit": "Depósito de seguridad",
+        "cleaning_fee": "Tarifa de limpieza",
+        "late_return_fee": "Cargo por entrega tardía",
+        "fuel_refueling_fee": "Tarifa de combustible",
+        "smoking_fee": "Cargo por fumar",
+        "mileage_overage_fee": "Cargo por millas excedidas",
+        "toll_pass_fee": "Tarifa de peajes",
+        "young_driver_fee": "Cargo por conductor joven (menor de 25)",
+        "additional_driver_fee": "Cargo por conductor adicional",
+        "airport_fee": "Tarifa de aeropuerto",
+        "insurance_damage_waiver_fee": "Tarifa de seguro / daños"
+      }
+    }
   },
   "reserveDrawer": {
     "title": "Reservar {{label}}",
