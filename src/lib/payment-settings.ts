@@ -362,3 +362,177 @@ export const paymentMethodMeta = (key: PaymentMethodKey) =>
 
 export const hasNonCreditMethod = (s: PaymentSettings) =>
   s.payment_methods.some((m) => NON_CREDIT_METHODS.includes(m));
+
+// ---- Vehicle-level overrides ----
+// Each top-level key may be null, meaning "inherit the agency default for this row".
+// `fees` is a partial map — only overridden fee keys are present; missing keys inherit.
+export type VehicleOverrides = {
+  payment_methods: { methods: PaymentMethodKey[]; other_text: string } | null;
+  payment_restrictions: string | null;
+  tax_rate: number | null;
+  fees: Partial<Record<FeeKey, FeeState>>;
+  custom_fees: CustomFee[] | null;
+};
+
+export const emptyVehicleOverrides = (): VehicleOverrides => ({
+  payment_methods: null,
+  payment_restrictions: null,
+  tax_rate: null,
+  fees: {},
+  custom_fees: null,
+});
+
+export const normalizeVehicleOverrides = (raw: {
+  payment_methods_override?: unknown;
+  payment_restrictions_override?: unknown;
+  tax_rate_override?: unknown;
+  fee_settings_override?: unknown;
+  custom_fees_override?: unknown;
+}): VehicleOverrides => {
+  const base = emptyVehicleOverrides();
+
+  // payment_methods_override may be array or { methods, other_text }
+  if (Array.isArray(raw.payment_methods_override)) {
+    base.payment_methods = {
+      methods: (raw.payment_methods_override as unknown[]).filter(
+        (m): m is string => typeof m === "string",
+      ) as PaymentMethodKey[],
+      other_text: "",
+    };
+  } else if (raw.payment_methods_override && typeof raw.payment_methods_override === "object") {
+    const o = raw.payment_methods_override as Record<string, unknown>;
+    base.payment_methods = {
+      methods: Array.isArray(o.methods)
+        ? ((o.methods as unknown[]).filter((m): m is string => typeof m === "string") as PaymentMethodKey[])
+        : [],
+      other_text: typeof o.other_text === "string" ? o.other_text : "",
+    };
+  }
+
+  if (typeof raw.payment_restrictions_override === "string") {
+    base.payment_restrictions = raw.payment_restrictions_override;
+  }
+
+  if (typeof raw.tax_rate_override === "number" && isFinite(raw.tax_rate_override)) {
+    base.tax_rate = raw.tax_rate_override;
+  } else if (typeof raw.tax_rate_override === "string" && raw.tax_rate_override !== "") {
+    const n = Number(raw.tax_rate_override);
+    if (isFinite(n)) base.tax_rate = n;
+  }
+
+  if (raw.fee_settings_override && typeof raw.fee_settings_override === "object") {
+    const src = raw.fee_settings_override as Record<string, FeeState>;
+    for (const def of FEE_DEFINITIONS) {
+      const existing = src[def.key];
+      if (existing && typeof existing === "object") {
+        const state: FeeState = {
+          enabled: !!existing.enabled,
+          amount: Number(existing.amount) || 0,
+          taxable: !!existing.taxable,
+        };
+        if (def.hasCollectionMethod) {
+          state.collection_method =
+            (existing.collection_method as DepositCollectionMethod) || "same_as_rental";
+        }
+        if (def.hasIncludedMiles) {
+          state.included_miles_per_day = Number(existing.included_miles_per_day) || 0;
+        }
+        base.fees[def.key] = state;
+      }
+    }
+  }
+
+  if (Array.isArray(raw.custom_fees_override)) {
+    base.custom_fees = (raw.custom_fees_override as unknown[])
+      .filter((c): c is CustomFee => !!c && typeof (c as CustomFee).label === "string")
+      .slice(0, MAX_CUSTOM_FEES)
+      .map((c) => ({
+        label: String(c.label).slice(0, MAX_CUSTOM_FEE_LABEL_LENGTH),
+        amount: Number(c.amount) || 0,
+        frequency: c.frequency === "per_day" ? "per_day" : "per_rental",
+      }));
+  }
+
+  return base;
+};
+
+// Merge agency defaults with vehicle overrides into the resolved effective settings.
+export const mergeAgencyWithOverrides = (
+  agency: PaymentSettings,
+  overrides: VehicleOverrides,
+): PaymentSettings => {
+  const fees: PaymentSettings["fees"] = { ...agency.fees };
+  for (const def of FEE_DEFINITIONS) {
+    if (overrides.fees[def.key]) fees[def.key] = overrides.fees[def.key]!;
+  }
+  return {
+    payment_methods: overrides.payment_methods?.methods ?? agency.payment_methods,
+    other_payment_text:
+      overrides.payment_methods?.other_text ?? agency.other_payment_text,
+    payment_restrictions:
+      overrides.payment_restrictions ?? agency.payment_restrictions,
+    tax_rate: overrides.tax_rate ?? agency.tax_rate,
+    fees,
+    custom_fees: overrides.custom_fees ?? agency.custom_fees,
+  };
+};
+
+// Validate vehicle overrides against the same client-side limits as agency settings.
+export const validateVehicleOverrides = (o: VehicleOverrides): string[] => {
+  const errs: string[] = [];
+  if (o.payment_methods) {
+    if (o.payment_methods.methods.length === 0)
+      errs.push("Select at least one accepted payment method for this vehicle.");
+    if (
+      o.payment_methods.methods.includes("other") &&
+      !o.payment_methods.other_text.trim()
+    )
+      errs.push("Please specify the 'Other' payment method.");
+  }
+  if (o.payment_restrictions && o.payment_restrictions.length > MAX_RESTRICTIONS_LENGTH)
+    errs.push(`Payment restrictions must be ${MAX_RESTRICTIONS_LENGTH} characters or fewer.`);
+  if (o.tax_rate !== null && (o.tax_rate < 0 || o.tax_rate > MAX_TAX_RATE))
+    errs.push("Tax rate must be between 0 and 100.");
+  for (const def of FEE_DEFINITIONS) {
+    const s = o.fees[def.key];
+    if (!s || !s.enabled) continue;
+    if (def.key === "security_deposit") {
+      if (s.amount < 0 || s.amount > MAX_DEPOSIT_AMOUNT)
+        errs.push("Security deposits are capped at $5,000.");
+    } else if (s.amount < 0 || s.amount > MAX_FEE_AMOUNT) {
+      errs.push("Fee amounts must be between $0 and $9,999.");
+    }
+    if (
+      def.hasIncludedMiles &&
+      (s.included_miles_per_day === undefined ||
+        s.included_miles_per_day < 0 ||
+        s.included_miles_per_day > MAX_FEE_AMOUNT)
+    )
+      errs.push("Included miles per day must be between 0 and 9,999.");
+  }
+  if (o.custom_fees) {
+    if (o.custom_fees.length > MAX_CUSTOM_FEES)
+      errs.push(`Only up to ${MAX_CUSTOM_FEES} custom fees are allowed.`);
+    for (const cf of o.custom_fees) {
+      if (!cf.label.trim()) errs.push("All custom fees must have a label.");
+      if (cf.label.length > MAX_CUSTOM_FEE_LABEL_LENGTH)
+        errs.push(`Custom fee labels must be ${MAX_CUSTOM_FEE_LABEL_LENGTH} characters or fewer.`);
+      if (cf.amount < 0 || cf.amount > MAX_FEE_AMOUNT)
+        errs.push("Custom fee amounts must be between $0 and $9,999.");
+    }
+  }
+  return errs;
+};
+
+// Convert overrides to the DB column shape (null = inherit).
+export const overridesToDb = (o: VehicleOverrides) => ({
+  payment_methods_override: o.payment_methods
+    ? o.payment_methods.methods.includes("other") && o.payment_methods.other_text.trim()
+      ? { methods: o.payment_methods.methods, other_text: o.payment_methods.other_text.trim() }
+      : o.payment_methods.methods
+    : null,
+  payment_restrictions_override: o.payment_restrictions?.trim() || (o.payment_restrictions === null ? null : null),
+  tax_rate_override: o.tax_rate,
+  fee_settings_override: Object.keys(o.fees).length > 0 ? o.fees : null,
+  custom_fees_override: o.custom_fees,
+});
