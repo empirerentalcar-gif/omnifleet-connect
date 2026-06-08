@@ -15,8 +15,8 @@ import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { getStripe } from "@/lib/stripe";
 import { Loader2, ShieldCheck } from "lucide-react";
-import { PriceBreakdown } from "@/components/payment/PriceBreakdown";
-import { depositCollectionLabel, emptyPaymentSettings, type PaymentSettings } from "@/lib/payment-settings";
+import { BookingFeeBreakdown } from "@/components/payment/BookingFeeBreakdown";
+import { type PaymentSettings } from "@/lib/payment-settings";
 
 interface ReserveDrawerProps {
   open: boolean;
@@ -25,6 +25,8 @@ interface ReserveDrawerProps {
   vehicleLabel: string;
   dailyRate: number;
   paymentSettings?: PaymentSettings;
+  pickupRequirements?: string[] | null;
+  pickupInstructions?: string | null;
 }
 
 type IntentInfo = {
@@ -45,6 +47,8 @@ export const ReserveDrawer = ({
   vehicleLabel,
   dailyRate,
   paymentSettings,
+  pickupRequirements,
+  pickupInstructions,
 }: ReserveDrawerProps) => {
   const { t } = useTranslation();
   const { toast } = useToast();
@@ -75,8 +79,6 @@ export const ReserveDrawer = ({
     return diff > 0 ? diff : 0;
   })();
   const estTotal = days * dailyRate;
-  const settings = paymentSettings ?? emptyPaymentSettings();
-  const depositMethod = settings.fees.security_deposit?.collection_method;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -170,22 +172,13 @@ export const ReserveDrawer = ({
             )}
 
             {days > 0 && (
-              <div className="space-y-2">
-                <PriceBreakdown
-                  dailyRate={dailyRate}
-                  settings={settings}
-                  days={days}
-                  title="Your Estimated Total"
-                  subtitle={`Final amount confirmed by the agency at pickup. Security deposit collected separately via ${depositCollectionLabel(depositMethod)}.`}
-                  className="!bg-white/5 !border-white/10 [&_*]:!text-white/85"
-                />
-                <p className="text-xs text-white/60">
-                  The amount charged to your payment method today covers your vehicle reservation
-                  only. Additional fees and applicable taxes will be collected directly by the
-                  agency at pickup. Your agency will confirm the final total before your rental
-                  begins.
-                </p>
-              </div>
+              <BookingFeeBreakdown
+                dailyRate={dailyRate}
+                days={days}
+                settings={paymentSettings}
+                pickupRequirements={pickupRequirements}
+                pickupInstructions={pickupInstructions}
+              />
             )}
 
             <Button type="submit" disabled={submitting} className="w-full" style={{ backgroundColor: "#2dd4bf", color: "#0d1b2e" }}>

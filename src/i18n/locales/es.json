@@ -1350,5 +1350,30 @@
       "usingDefaults": "📋 Usando valores de la agencia",
       "customSet": "✏️ Tarifas personalizadas"
     }
+  },
+  "bookingBreakdown": {
+    "reservationHeader": "Cargo de reserva (pagado ahora)",
+    "pickupHeader": "Se cobra al recoger por la agencia",
+    "grandTotalHeader": "Total estimado",
+    "dailyRate": "Tarifa diaria",
+    "day": "día",
+    "days": "días",
+    "chargedToday": "Cargado a su tarjeta hoy",
+    "estimatedPickupTotal": "Total estimado al recoger",
+    "excludesDeposit": "(Excluye el depósito de seguridad — se cobra por separado)",
+    "cardPlusPickup": "Cargo en tarjeta + total al recoger",
+    "securityDeposit": "Depósito de seguridad",
+    "refundable": "reembolsable",
+    "estimatedTax": "Impuesto estimado ({{rate}}%)",
+    "noPickupFees": "Sin cargos adicionales — todo está incluido en el cargo a su tarjeta arriba.",
+    "requirementsReminder": "Se aplican requisitos de recogida a este vehículo.",
+    "seeRequirements": "Ver requisitos",
+    "fallback": "Detalles de tarifas no disponibles — su agencia le proporcionará un desglose completo al momento de la recogida.",
+    "notice": {
+      "full": "El monto cargado a su método de pago hoy cubre únicamente su reserva de vehículo. Las tarifas adicionales e impuestos aplicables indicados anteriormente serán cobrados directamente por la agencia al momento de la recogida. También se cobrará un depósito de seguridad reembolsable de {{deposit}} al momento de la recogida mediante {{method}}. Su agencia confirmará el monto final antes de que comience su alquiler.",
+      "depositOnly": "El monto cargado a su método de pago hoy cubre únicamente su reserva de vehículo. Se cobrará un depósito de seguridad reembolsable de {{deposit}} al momento de la recogida mediante {{method}}. Su agencia confirmará el monto final antes de que comience su alquiler.",
+      "feesOnly": "El monto cargado a su método de pago hoy cubre únicamente su reserva de vehículo. Las tarifas adicionales e impuestos aplicables indicados anteriormente serán cobrados directamente por la agencia al momento de la recogida. Su agencia confirmará el monto final antes de que comience su alquiler.",
+      "none": "El monto cargado hoy es su cargo de reserva completo. No se cobrarán tarifas adicionales al momento de la recogida."
+    }
   }
 }

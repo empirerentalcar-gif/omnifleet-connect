@@ -1350,5 +1350,30 @@
       "usingDefaults": "📋 Using agency defaults",
       "customSet": "✏️ Custom fees set"
     }
+  },
+  "bookingBreakdown": {
+    "reservationHeader": "Reservation Charge (paid now)",
+    "pickupHeader": "Collected at Pickup by Agency",
+    "grandTotalHeader": "Grand Total (estimated)",
+    "dailyRate": "Daily Rate",
+    "day": "day",
+    "days": "days",
+    "chargedToday": "Charged to your card today",
+    "estimatedPickupTotal": "Estimated pickup total",
+    "excludesDeposit": "(Excludes security deposit — collected separately)",
+    "cardPlusPickup": "Card charge + pickup total",
+    "securityDeposit": "Security Deposit",
+    "refundable": "refundable",
+    "estimatedTax": "Estimated Tax ({{rate}}%)",
+    "noPickupFees": "No additional fees — all charges included in your card charge above.",
+    "requirementsReminder": "Pickup requirements apply to this vehicle.",
+    "seeRequirements": "See requirements",
+    "fallback": "Fee details unavailable — your agency will provide a full breakdown at pickup.",
+    "notice": {
+      "full": "The amount charged to your payment method today covers your vehicle reservation only. Additional fees and applicable taxes listed above will be collected directly by the agency at pickup. A refundable security deposit of {{deposit}} will also be collected at pickup via {{method}}. Your agency will confirm the final total before your rental begins.",
+      "depositOnly": "The amount charged to your payment method today covers your vehicle reservation only. A refundable security deposit of {{deposit}} will be collected at pickup via {{method}}. Your agency will confirm the final total before your rental begins.",
+      "feesOnly": "The amount charged to your payment method today covers your vehicle reservation only. Additional fees and applicable taxes listed above will be collected directly by the agency at pickup. Your agency will confirm the final total before your rental begins.",
+      "none": "The amount charged today is your complete reservation charge. No additional fees will be collected at pickup."
+    }
   }
 }
