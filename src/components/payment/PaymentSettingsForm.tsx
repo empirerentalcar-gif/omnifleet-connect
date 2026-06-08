@@ -303,14 +303,26 @@ export const PaymentSettingsForm = ({ value, onChange, showValidation }: Props) 
                         </div>
                       </div>
                     )}
-                    <label className="flex items-center gap-2 cursor-pointer select-none">
-                      <Checkbox
-                        checked={state.taxable}
-                        onCheckedChange={(c) => updateFee(def.key, { taxable: !!c })}
-                        aria-label={`${def.label} taxable`}
-                      />
-                      <span className="text-sm">Taxable</span>
-                    </label>
+                    {def.key === "security_deposit" ? (
+                      <label className="flex items-center gap-2 select-none opacity-50 cursor-not-allowed">
+                        <Checkbox
+                          checked={false}
+                          disabled
+                          aria-label="Security deposits are never taxable"
+                          aria-disabled="true"
+                        />
+                        <span className="text-sm">Taxable (security deposits are never taxable)</span>
+                      </label>
+                    ) : (
+                      <label className="flex items-center gap-2 cursor-pointer select-none">
+                        <Checkbox
+                          checked={state.taxable}
+                          onCheckedChange={(c) => updateFee(def.key, { taxable: !!c })}
+                          aria-label={`${def.label} taxable`}
+                        />
+                        <span className="text-sm">Taxable</span>
+                      </label>
+                    )}
                     {amountError && (
                       <p className="text-xs text-destructive">Amount cannot be negative.</p>
                     )}
