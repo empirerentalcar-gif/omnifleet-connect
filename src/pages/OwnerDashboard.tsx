@@ -661,6 +661,20 @@ const OwnerDashboard = () => {
       <SEO title="Owner Dashboard | ZUVIO" description="Manage your rental vehicles and reservation requests on ZUVIO." path="/dashboard" noindex />
 <main className="pt-6 sm:pt-8 pb-16 overflow-x-hidden">
         <div className="container mx-auto px-4 max-w-6xl">
+          {/* Fees Setup Required Banner */}
+          {!feesSetupComplete && (
+            <div className="rounded-lg p-4 mb-6 border bg-amber-50 border-amber-200 dark:bg-amber-900/30 dark:border-amber-700 flex items-start gap-3">
+              <AlertCircle className="h-5 w-5 text-amber-600 dark:text-amber-400 mt-0.5 shrink-0" />
+              <div className="flex-1 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                <p className="text-sm font-semibold text-amber-900 dark:text-amber-100">
+                  {t("ownerDashboard.setupBanner.message")}
+                </p>
+                <Button asChild size="sm" className="bg-amber-600 hover:bg-amber-700 text-white shrink-0">
+                  <Link to="/owner/settings">{t("ownerDashboard.setupBanner.cta")}</Link>
+                </Button>
+              </div>
+            </div>
+          )}
           {/* Trial Banner */}
           {trialInfo && (
             trialInfo.status === 'payment_required' ||
