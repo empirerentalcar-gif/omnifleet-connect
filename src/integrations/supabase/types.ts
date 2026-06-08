@@ -727,7 +727,7 @@ export type Database = {
           description: string | null
           features: string[] | null
           fee_settings_override: Json | null
-          fees_banner_dismissed: boolean
+          fees_banner_dismissed: boolean | null
           fuel_type: string | null
           id: string
           images: string[] | null
@@ -753,7 +753,7 @@ export type Database = {
           description?: string | null
           features?: string[] | null
           fee_settings_override?: Json | null
-          fees_banner_dismissed?: boolean
+          fees_banner_dismissed?: boolean | null
           fuel_type?: string | null
           id?: string
           images?: string[] | null
@@ -779,7 +779,7 @@ export type Database = {
           description?: string | null
           features?: string[] | null
           fee_settings_override?: Json | null
-          fees_banner_dismissed?: boolean
+          fees_banner_dismissed?: boolean | null
           fuel_type?: string | null
           id?: string
           images?: string[] | null
