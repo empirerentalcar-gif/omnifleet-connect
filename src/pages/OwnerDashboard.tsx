@@ -1126,17 +1126,15 @@ const OwnerDashboard = () => {
                         </button>
                       </CollapsibleTrigger>
                       <CollapsibleContent className="pt-3 space-y-4">
-                        <p className="text-xs text-muted-foreground">
-                          Your agency defaults are pre-filled below. You can override them for
-                          this specific vehicle.
-                        </p>
-                        <PaymentSettingsForm
-                          value={vehiclePaymentSettings}
-                          onChange={setVehiclePaymentSettings}
+                        <VehiclePaymentOverrideForm
+                          agencyDefaults={agencyDefaults}
+                          value={vehicleOverrides}
+                          onChange={setVehicleOverrides}
+                          showValidation={showOverrideValidation}
                         />
                         <PriceBreakdown
                           dailyRate={vehicleForm.daily_rate || 0}
-                          settings={vehiclePaymentSettings}
+                          settings={mergeAgencyWithOverrides(agencyDefaults, vehicleOverrides)}
                           showStepper
                         />
                       </CollapsibleContent>
