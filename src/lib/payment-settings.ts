@@ -55,46 +55,51 @@ export const DEPOSIT_COLLECTION_OPTIONS: { value: DepositCollectionMethod; label
 export type FeeFrequency =
   | "per_rental"
   | "per_day"
-  | "per_hour"
-  | "per_trip";
+  | "per_hour";
 
 export type FeeKey =
   | "security_deposit"
+  | "cleaning_fee"
+  | "late_return_fee"
+  | "fuel_refueling_fee"
+  | "smoking_fee"
+  | "mileage_overage_fee"
+  | "toll_pass_fee"
+  | "young_driver_fee"
+  | "additional_driver_fee"
   | "airport_fee"
-  | "additional_driver"
-  | "young_driver"
-  | "late_return"
-  | "cleaning"
-  | "fuel"
-  | "toll"
-  | "insurance";
+  | "insurance_damage_waiver_fee";
 
 export type FeeDef = {
   key: FeeKey;
   label: string;
-  // human-friendly unit description shown in form & summary
   unit: string;
   frequency: FeeFrequency;
   hasCollectionMethod?: boolean;
+  hasIncludedMiles?: boolean;
   refundable?: boolean;
 };
 
 export const FEE_DEFINITIONS: FeeDef[] = [
-  { key: "security_deposit",  label: "Security Deposit",          unit: "refundable",      frequency: "per_rental", hasCollectionMethod: true, refundable: true },
-  { key: "airport_fee",       label: "Airport Pickup/Drop-off",   unit: "per trip",         frequency: "per_trip" },
-  { key: "additional_driver", label: "Additional Driver Fee",     unit: "per day",          frequency: "per_day" },
-  { key: "young_driver",      label: "Young Driver Fee (under 25)", unit: "per day",        frequency: "per_day" },
-  { key: "late_return",       label: "Late Return Fee",           unit: "per hour",         frequency: "per_hour" },
-  { key: "cleaning",          label: "Cleaning Fee",              unit: "per rental",       frequency: "per_rental" },
-  { key: "fuel",              label: "Fuel/Gas Policy Fee",       unit: "per rental",       frequency: "per_rental" },
-  { key: "toll",              label: "Toll Package Fee",          unit: "per day",          frequency: "per_day" },
-  { key: "insurance",         label: "Insurance/Damage Waiver",   unit: "per day",          frequency: "per_day" },
+  { key: "security_deposit", label: "Security Deposit", unit: "refundable", frequency: "per_rental", hasCollectionMethod: true, refundable: true },
+  { key: "cleaning_fee", label: "Cleaning Fee", unit: "per rental", frequency: "per_rental" },
+  { key: "late_return_fee", label: "Late Return Fee", unit: "per hour", frequency: "per_hour" },
+  { key: "fuel_refueling_fee", label: "Fuel/Refueling Fee", unit: "per rental", frequency: "per_rental" },
+  { key: "smoking_fee", label: "Smoking Fee", unit: "per rental", frequency: "per_rental" },
+  { key: "mileage_overage_fee", label: "Mileage Overage Fee", unit: "per mile over included", frequency: "per_day", hasIncludedMiles: true },
+  { key: "toll_pass_fee", label: "Toll Pass Fee", unit: "per day", frequency: "per_day" },
+  { key: "young_driver_fee", label: "Young Driver Fee (under 25)", unit: "per day", frequency: "per_day" },
+  { key: "additional_driver_fee", label: "Additional Driver Fee", unit: "per day", frequency: "per_day" },
+  { key: "airport_fee", label: "Airport Pickup/Drop-off Fee", unit: "per rental", frequency: "per_rental" },
+  { key: "insurance_damage_waiver_fee", label: "Insurance/Damage Waiver Fee", unit: "per day", frequency: "per_day" },
 ];
 
 export type FeeState = {
   enabled: boolean;
   amount: number;
+  taxable: boolean;
   collection_method?: DepositCollectionMethod;
+  included_miles_per_day?: number;
 };
 
 export type CustomFee = {
@@ -113,22 +118,58 @@ export type PaymentSettings = {
 };
 
 export const MAX_CUSTOM_FEES = 3;
+export const MAX_RESTRICTIONS_LENGTH = 500;
+export const MAX_CUSTOM_FEE_LABEL_LENGTH = 40;
+export const MAX_DEPOSIT_AMOUNT = 5000;
+export const MAX_FEE_AMOUNT = 9999;
+export const MAX_TAX_RATE = 100;
+
+const defaultFeeState = (def: FeeDef): FeeState => {
+  const base: FeeState = { enabled: false, amount: 0, taxable: false };
+  if (def.hasCollectionMethod) base.collection_method = "same_as_rental";
+  if (def.hasIncludedMiles) base.included_miles_per_day = 0;
+  return base;
+};
 
 export const emptyPaymentSettings = (): PaymentSettings => ({
   payment_methods: [],
   other_payment_text: "",
   payment_restrictions: "",
   tax_rate: 0,
-  fees: Object.fromEntries(
-    FEE_DEFINITIONS.map((f) => [
-      f.key,
-      f.hasCollectionMethod
-        ? { enabled: false, amount: 0, collection_method: "same_as_rental" as DepositCollectionMethod }
-        : { enabled: false, amount: 0 },
-    ]),
-  ) as Partial<Record<FeeKey, FeeState>>,
+  fees: Object.fromEntries(FEE_DEFINITIONS.map((f) => [f.key, defaultFeeState(f)])) as Partial<Record<FeeKey, FeeState>>,
   custom_fees: [],
 });
+
+// Validate a PaymentSettings object client-side. Returns array of error messages.
+export const validatePaymentSettings = (s: PaymentSettings): string[] => {
+  const errs: string[] = [];
+  if (s.payment_methods.length === 0) errs.push("Select at least one accepted payment method.");
+  if (s.payment_methods.includes("other") && !s.other_payment_text.trim()) errs.push("Please specify the 'Other' payment method.");
+  if (s.payment_restrictions && s.payment_restrictions.length > MAX_RESTRICTIONS_LENGTH) errs.push(`Payment restrictions must be ${MAX_RESTRICTIONS_LENGTH} characters or fewer.`);
+  if (s.tax_rate < 0 || s.tax_rate > MAX_TAX_RATE) errs.push("Tax rate must be between 0 and 100.");
+
+  for (const def of FEE_DEFINITIONS) {
+    const state = s.fees[def.key];
+    if (!state || !state.enabled) continue;
+    if (def.key === "security_deposit") {
+      if (state.amount < 0 || state.amount > MAX_DEPOSIT_AMOUNT) errs.push("Security deposits are capped at $5,000. For higher deposits, please contact renters directly.");
+    } else {
+      if (state.amount < 0 || state.amount > MAX_FEE_AMOUNT) errs.push("Fee amounts must be between $0 and $9,999.");
+    }
+    if (def.hasIncludedMiles && (state.included_miles_per_day === undefined || state.included_miles_per_day < 0 || state.included_miles_per_day > MAX_FEE_AMOUNT)) {
+      errs.push("Included miles per day must be between 0 and 9,999.");
+    }
+  }
+
+  if (s.custom_fees.length > MAX_CUSTOM_FEES) errs.push(`Only up to ${MAX_CUSTOM_FEES} custom fees are allowed.`);
+  for (const cf of s.custom_fees) {
+    if (!cf.label.trim()) errs.push("All custom fees must have a label.");
+    if (cf.label.length > MAX_CUSTOM_FEE_LABEL_LENGTH) errs.push(`Custom fee labels must be ${MAX_CUSTOM_FEE_LABEL_LENGTH} characters or fewer.`);
+    if (cf.amount < 0 || cf.amount > MAX_FEE_AMOUNT) errs.push("Custom fee amounts must be between $0 and $9,999.");
+  }
+
+  return errs;
+};
 
 // Coerce any stored JSONB blob into a well-formed PaymentSettings object.
 export const normalizePaymentSettings = (raw: unknown): PaymentSettings => {
@@ -148,7 +189,7 @@ export const normalizePaymentSettings = (raw: unknown): PaymentSettings => {
           .filter((c): c is CustomFee => !!c && typeof (c as CustomFee).label === "string")
           .slice(0, MAX_CUSTOM_FEES)
           .map((c) => ({
-            label: String(c.label).slice(0, 60),
+            label: String(c.label).slice(0, MAX_CUSTOM_FEE_LABEL_LENGTH),
             amount: Number(c.amount) || 0,
             frequency: c.frequency === "per_day" ? "per_day" : "per_rental",
           }))
@@ -158,20 +199,33 @@ export const normalizePaymentSettings = (raw: unknown): PaymentSettings => {
     for (const def of FEE_DEFINITIONS) {
       const existing = (r.fees as Record<string, FeeState>)[def.key];
       if (existing && typeof existing === "object") {
-        out.fees[def.key] = {
+        const state: FeeState = {
           enabled: !!existing.enabled,
           amount: Number(existing.amount) || 0,
-          ...(def.hasCollectionMethod
-            ? {
-                collection_method:
-                  (existing.collection_method as DepositCollectionMethod) || "same_as_rental",
-              }
-            : {}),
+          taxable: !!existing.taxable,
         };
+        if (def.hasCollectionMethod) {
+          state.collection_method = (existing.collection_method as DepositCollectionMethod) || "same_as_rental";
+        }
+        if (def.hasIncludedMiles) {
+          state.included_miles_per_day = Number(existing.included_miles_per_day) || 0;
+        }
+        out.fees[def.key] = state;
       }
     }
   }
   return out;
+};
+
+// Convert PaymentSettings to DB JSONB shapes
+export const toDbPaymentMethods = (s: PaymentSettings): { methods: PaymentMethodKey[]; other_text?: string } => {
+  const methods = [...s.payment_methods];
+  return { methods, other_text: methods.includes("other") ? s.other_payment_text : undefined };
+};
+
+export const fromDbPaymentMethods = (methods: unknown, otherText?: string | null): PaymentMethodKey[] => {
+  const arr = Array.isArray(methods) ? methods.filter((m): m is string => typeof m === "string") : [];
+  return arr as PaymentMethodKey[];
 };
 
 // Choose vehicle-level settings if present, otherwise agency-level defaults.
@@ -190,9 +244,9 @@ export const resolveSettings = (
 export type BreakdownLine = {
   key: string;
   label: string;
-  detail?: string;        // e.g. "$15/day × 3 days"
-  amount: number;         // dollars
-  refundable?: boolean;   // excluded from estimated total
+  detail?: string; // e.g. "$15/day × 3 days"
+  amount: number; // dollars
+  refundable?: boolean; // excluded from estimated total
   isTax?: boolean;
 };
 
@@ -212,11 +266,7 @@ const feeAmountForDays = (frequency: FeeFrequency, amount: number, days: number)
       return { value: amount * days, detail: `$${amount.toFixed(2)}/day × ${days} day${days === 1 ? "" : "s"}` };
     case "per_rental":
       return { value: amount };
-    case "per_trip":
-      return { value: amount, detail: "per trip" };
     case "per_hour":
-      // Late return fee is only applied if a renter is late; for preview we show
-      // the hourly rate but don't include it in the estimated total.
       return { value: 0, detail: `$${amount.toFixed(2)}/hr if late` };
   }
 };
@@ -263,7 +313,7 @@ export const computeBreakdown = (
       detail,
       amount: value,
     });
-    taxableSubtotal += value;
+    if (state.taxable) taxableSubtotal += value;
   }
 
   for (const [i, cf] of settings.custom_fees.entries()) {
@@ -275,6 +325,7 @@ export const computeBreakdown = (
       detail: cf.frequency === "per_day" ? `$${cf.amount.toFixed(2)}/day × ${safeDays}` : "per rental",
       amount: value,
     });
+    // Custom fees are always taxable in the breakdown
     taxableSubtotal += value;
   }
 
