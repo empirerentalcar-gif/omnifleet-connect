@@ -931,6 +931,12 @@ export type Database = {
           state: string
         }[]
       }
+      get_rented_vehicle_ids: {
+        Args: never
+        Returns: {
+          vehicle_id: string
+        }[]
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
