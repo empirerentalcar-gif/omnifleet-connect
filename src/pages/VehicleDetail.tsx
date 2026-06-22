@@ -53,6 +53,7 @@ const VehicleDetail = () => {
   const [loading, setLoading] = useState(true);
   const [reserveOpen, setReserveOpen] = useState(false);
   const [activePhoto, setActivePhoto] = useState(0);
+  const [isRented, setIsRented] = useState(false);
 
   useEffect(() => {
     let cancelled = false;
@@ -72,6 +73,13 @@ const VehicleDetail = () => {
         setVehicle(data as VehicleRow);
       }
       setLoading(false);
+    })();
+    (async () => {
+      if (!id) return;
+      const { data, error } = await supabase.rpc("get_rented_vehicle_ids");
+      if (cancelled || error) return;
+      const rented = (data ?? []).some((r: any) => r.vehicle_id === id);
+      setIsRented(rented);
     })();
     return () => {
       cancelled = true;
@@ -155,6 +163,25 @@ const VehicleDetail = () => {
                 <SafeImage src={photos[activePhoto]} alt={label} className="w-full h-full object-cover" />
               ) : (
                 <SafeImage src="" alt={label} className="w-full h-full object-cover" />
+              )}
+              {isRented && (
+                <div
+                  aria-label="Currently rented"
+                  className="absolute inset-0 flex items-center justify-center pointer-events-none"
+                  style={{ backgroundColor: "rgba(13,27,46,0.45)" }}
+                >
+                  <span
+                    className="px-5 py-2 rounded-md text-base font-extrabold tracking-widest"
+                    style={{
+                      backgroundColor: "rgba(13,27,46,0.85)",
+                      color: "#fbbf24",
+                      border: "1px solid rgba(251,191,36,0.6)",
+                      letterSpacing: "0.2em",
+                    }}
+                  >
+                    RENTED
+                  </span>
+                </div>
               )}
             </div>
             {photos.length > 1 && (
