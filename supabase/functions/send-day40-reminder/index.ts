@@ -9,6 +9,88 @@ const corsHeaders = {
 
 const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY");
 const FROM_EMAIL = "Zuvio Team <team@zuvio.us>";
+const ALERT_EMAIL = "mixdownent@icloud.com";
+const EMAIL_TYPE = "reactivation_day_40";
+
+const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
+
+const resendPost = async (to: string, subject: string, html: string) => {
+  const res = await fetch("https://api.resend.com/emails", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${RESEND_API_KEY}`,
+    },
+    body: JSON.stringify({ from: FROM_EMAIL, to: [to], subject, html }),
+  });
+  if (!res.ok) throw new Error(`Resend ${res.status}: ${await res.text()}`);
+};
+
+const logAttempt = async (
+  supabase: ReturnType<typeof createClient>,
+  agencyId: string | null,
+  recipient: string,
+  status: "success" | "failed",
+  retryCount: number,
+  errorMessage: string | null,
+) => {
+  try {
+    await supabase.from("email_logs").insert({
+      agency_id: agencyId,
+      email_type: EMAIL_TYPE,
+      recipient,
+      status,
+      retry_count: retryCount,
+      error_message: errorMessage,
+    });
+  } catch (e) {
+    console.error("Failed to insert email_log:", e);
+  }
+};
+
+const sendFailureAlert = async (
+  agencyName: string,
+  errorMessage: string,
+) => {
+  try {
+    await resendPost(
+      ALERT_EMAIL,
+      "Zuvio Email Delivery Failed",
+      `<h2>Zuvio Email Delivery Failed</h2>
+       <p><strong>Agency:</strong> ${agencyName}</p>
+       <p><strong>Email type:</strong> ${EMAIL_TYPE}</p>
+       <p><strong>Error:</strong> ${errorMessage}</p>
+       <p><strong>Timestamp:</strong> ${new Date().toISOString()}</p>`,
+    );
+  } catch (e) {
+    console.error("Failed to send failure alert:", e);
+  }
+};
+
+const sendEmailWithRetry = async (
+  supabase: ReturnType<typeof createClient>,
+  agency: { id: string; agency_name: string },
+  to: string,
+  subject: string,
+  html: string,
+): Promise<boolean> => {
+  const maxAttempts = 3; // 1 initial + 2 retries
+  let lastError = "";
+  for (let attempt = 0; attempt < maxAttempts; attempt++) {
+    try {
+      await resendPost(to, subject, html);
+      await logAttempt(supabase, agency.id, to, "success", attempt, null);
+      return true;
+    } catch (err) {
+      lastError = err instanceof Error ? err.message : String(err);
+      console.error(`[${EMAIL_TYPE}] attempt ${attempt + 1} failed:`, lastError);
+      await logAttempt(supabase, agency.id, to, "failed", attempt, lastError);
+      if (attempt < maxAttempts - 1) await sleep(5000);
+    }
+  }
+  await sendFailureAlert(agency.agency_name, lastError);
+  return false;
+};
 
 const buildEmailHtml = (agencyName: string) => `<!DOCTYPE html>
 <html>
@@ -73,22 +155,6 @@ const buildEmailHtml = (agencyName: string) => `<!DOCTYPE html>
   </div>
 </body>
 </html>`;
-
-const sendEmail = async (to: string, subject: string, html: string) => {
-  const res = await fetch("https://api.resend.com/emails", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${RESEND_API_KEY}`,
-    },
-    body: JSON.stringify({ from: FROM_EMAIL, to: [to], subject, html }),
-  });
-  if (!res.ok) {
-    console.error("Resend error:", await res.text());
-    return false;
-  }
-  return true;
-};
 
 serve(async (req) => {
   if (req.method === "OPTIONS") {
@@ -169,7 +235,9 @@ serve(async (req) => {
         continue;
       }
 
-      const ok = await sendEmail(
+      const ok = await sendEmailWithRetry(
+        supabase,
+        { id: agency.id, agency_name: agency.agency_name },
         agency.email!,
         "⏱ 20 Days Left — Complete Your Zuvio Setup",
         buildEmailHtml(agency.agency_name)

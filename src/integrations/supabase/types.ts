@@ -406,6 +406,47 @@ export type Database = {
           },
         ]
       }
+      email_logs: {
+        Row: {
+          agency_id: string | null
+          email_type: string
+          error_message: string | null
+          id: string
+          recipient: string | null
+          retry_count: number
+          sent_at: string
+          status: string
+        }
+        Insert: {
+          agency_id?: string | null
+          email_type: string
+          error_message?: string | null
+          id?: string
+          recipient?: string | null
+          retry_count?: number
+          sent_at?: string
+          status: string
+        }
+        Update: {
+          agency_id?: string | null
+          email_type?: string
+          error_message?: string | null
+          id?: string
+          recipient?: string | null
+          retry_count?: number
+          sent_at?: string
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "email_logs_agency_id_fkey"
+            columns: ["agency_id"]
+            isOneToOne: false
+            referencedRelation: "agencies"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       invite_codes: {
         Row: {
           active: boolean
