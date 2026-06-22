@@ -1,6 +1,6 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
-import Stripe from "https://esm.sh/stripe@18.5.0?target=deno";
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2.45.0";
+import Stripe from "npm:stripe@17.7.0";
+import { createClient } from "npm:@supabase/supabase-js@2.49.4";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -74,41 +74,62 @@ serve(async (req) => {
       );
     }
 
-    const stripe = new Stripe(stripeKey, { apiVersion: "2025-08-27.basil" });
+    const stripe = new Stripe(stripeKey, {
+      apiVersion: "2025-08-27.basil",
+      httpClient: Stripe.createFetchHttpClient(),
+    });
     const captured = await stripe.paymentIntents.capture(booking.stripe_payment_intent_id);
     log("Captured", { id: captured.id, status: captured.status });
 
-    await supabaseAdmin
+    const latestCharge =
+      (captured as unknown as { latest_charge?: string }).latest_charge ?? null;
+
+    const { error: updateErr } = await supabaseAdmin
       .from("bookings")
       .update({
         payment_status: "succeeded",
         booking_status: "approved",
-        stripe_charge_id:
-          (captured as unknown as { latest_charge?: string }).latest_charge ?? null,
+        stripe_charge_id: latestCharge,
         updated_at: new Date().toISOString(),
       })
       .eq("id", booking_id);
 
-    // Fire-and-forget renter notification email
-    try {
-      const supabaseUrl = Deno.env.get("SUPABASE_URL") ?? "";
-      const cronSecret = Deno.env.get("CRON_SECRET") ?? "";
-      await fetch(`${supabaseUrl}/functions/v1/send-renter-booking-status`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "x-cron-secret": cronSecret,
-        },
-        body: JSON.stringify({ booking_id, status: "approved" }),
+    if (updateErr) {
+      log("DB update failed after capture", {
+        booking_id,
+        pi: captured.id,
+        msg: updateErr.message,
       });
-    } catch (e) {
-      log("status email failed", { msg: (e as Error).message });
+      throw new Error(`Capture succeeded but DB update failed: ${updateErr.message}`);
     }
+    log("DB updated", { booking_id });
 
-    return new Response(JSON.stringify({ ok: true, status: captured.status }), {
-      headers: { ...corsHeaders, "Content-Type": "application/json" },
-      status: 200,
-    });
+    // Build the response BEFORE firing off the notification, so the
+    // client always gets a 200 even if the notification fetch hangs.
+    const response = new Response(
+      JSON.stringify({ ok: true, status: captured.status }),
+      {
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+        status: 200,
+      },
+    );
+
+    // Fire-and-forget renter notification email (not awaited — must not
+    // block or fail the response after Stripe + DB are in sync).
+    const supabaseUrl = Deno.env.get("SUPABASE_URL") ?? "";
+    const cronSecret = Deno.env.get("CRON_SECRET") ?? "";
+    fetch(`${supabaseUrl}/functions/v1/send-renter-booking-status`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "x-cron-secret": cronSecret,
+      },
+      body: JSON.stringify({ booking_id, status: "approved" }),
+    })
+      .then((r) => r.text().then(() => r))
+      .catch((e) => log("status email failed", { msg: (e as Error).message }));
+
+    return response;
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error);
     log("ERROR", { message });
