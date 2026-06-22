@@ -87,21 +87,49 @@ export function StripeConnectCard() {
 
   const startOnboarding = async () => {
     setSubmitting(true);
-    const { data, error } = await supabase.functions.invoke("create-connect-account");
-    setSubmitting(false);
-    if (error || !data?.url) {
-      toast({
-        title: "Could not start Stripe onboarding",
-        description: error?.message ?? "Please try again.",
-        variant: "destructive",
-      });
-      return;
+    try {
+      // Guard: if the agency already has charges enabled on Stripe, skip
+      // re-onboarding (which can fail for fully-active accounts) and just
+      // refresh status.
+      const { data: userRes } = await supabase.auth.getUser();
+      const userId = userRes?.user?.id;
+      if (userId) {
+        const { data: agencyRow } = await supabase
+          .from("agencies")
+          .select("stripe_charges_enabled")
+          .eq("owner_user_id", userId)
+          .maybeSingle();
+        if (agencyRow?.stripe_charges_enabled === true) {
+          toast({
+            title: "Stripe account connected",
+            description: "Your Stripe account is already connected and active.",
+          });
+          setSubmitting(false);
+          await refresh();
+          return;
+        }
+      }
+
+      const { data, error } = await supabase.functions.invoke("create-connect-account");
+      if (error || !data?.url) {
+        toast({
+          title: "Could not start Stripe onboarding",
+          description: error?.message ?? "Please try again.",
+          variant: "destructive",
+        });
+        return;
+      }
+      window.location.href = data.url as string;
+    } finally {
+      // Always clear submitting so stale guards never block retries.
+      setSubmitting(false);
     }
-    window.location.href = data.url as string;
   };
 
   const isActive = status?.status === "active";
   const isRestricted = status?.status === "restricted";
+  const chargesEnabled = status?.charges_enabled === true;
+  const setupComplete = isActive && chargesEnabled;
 
   const badgeClass = isActive
     ? "bg-emerald-500/15 text-emerald-400 border-emerald-500/30"
@@ -127,12 +155,23 @@ export function StripeConnectCard() {
             )}
           </div>
           <p className="text-sm text-muted-foreground">
-            <span className="text-foreground font-medium">Recommended.</span>{" "}
-            Connect a Stripe Express account to start accepting paid bookings and
-            receive renter payouts. Zuvio collects the rental, deducts a 5% platform
-            fee, and pays the remainder directly to your bank on the pickup date.
-            Your listings stay visible during your free trial — Stripe is only required
-            to receive paid bookings.
+            {setupComplete ? (
+              <>
+                <span className="text-foreground font-medium">Your account is connected.</span>{" "}
+                Stripe is active — charges and payouts are enabled. Zuvio collects
+                each rental, deducts the 5% platform fee, and pays the remainder
+                directly to your bank on the pickup date.
+              </>
+            ) : (
+              <>
+                <span className="text-foreground font-medium">Recommended.</span>{" "}
+                Connect a Stripe Express account to start accepting paid bookings and
+                receive renter payouts. Zuvio collects the rental, deducts a 5% platform
+                fee, and pays the remainder directly to your bank on the pickup date.
+                Your listings stay visible during your free trial — Stripe is only required
+                to receive paid bookings.
+              </>
+            )}
           </p>
 
           {status?.requirements?.currently_due && status.requirements.currently_due.length > 0 && (
@@ -208,18 +247,16 @@ export function StripeConnectCard() {
             <RefreshCw className={`h-4 w-4 mr-2 ${loading ? "animate-spin" : ""}`} />
             Refresh
           </Button>
-          <Button onClick={startOnboarding} disabled={submitting || loading}>
-            {submitting ? (
-              <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-            ) : (
-              <ExternalLink className="h-4 w-4 mr-2" />
-            )}
-            {isActive
-              ? "Update Stripe details"
-              : status?.connected
-              ? "Continue onboarding"
-              : "Connect Stripe"}
-          </Button>
+          {!setupComplete && (
+            <Button onClick={startOnboarding} disabled={submitting || loading}>
+              {submitting ? (
+                <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+              ) : (
+                <ExternalLink className="h-4 w-4 mr-2" />
+              )}
+              {status?.connected ? "Continue onboarding" : "Connect Stripe"}
+            </Button>
+          )}
         </div>
       </div>
     </div>
