@@ -53,6 +53,7 @@ const VehicleDetail = () => {
   const [loading, setLoading] = useState(true);
   const [reserveOpen, setReserveOpen] = useState(false);
   const [activePhoto, setActivePhoto] = useState(0);
+  const [isRented, setIsRented] = useState(false);
 
   useEffect(() => {
     let cancelled = false;
@@ -72,6 +73,13 @@ const VehicleDetail = () => {
         setVehicle(data as VehicleRow);
       }
       setLoading(false);
+    })();
+    (async () => {
+      if (!id) return;
+      const { data, error } = await supabase.rpc("get_rented_vehicle_ids");
+      if (cancelled || error) return;
+      const rented = (data ?? []).some((r: any) => r.vehicle_id === id);
+      setIsRented(rented);
     })();
     return () => {
       cancelled = true;
