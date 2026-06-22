@@ -37,17 +37,26 @@ const SearchResults = () => {
   const [vehicleType, setVehicleType] = useState("All");
   const [vehicles, setVehicles] = useState<VehicleCard[]>([]);
   const [loading, setLoading] = useState(true);
+  const [rentedIds, setRentedIds] = useState<Set<string>>(new Set());
   const isMountedRef = useRef(true);
   const latestRequestRef = useRef(0);
 
   useEffect(() => {
     isMountedRef.current = true;
     fetchAgencies();
+    fetchRented();
 
     return () => {
       isMountedRef.current = false;
     };
   }, []);
+
+  const fetchRented = async () => {
+    const { data, error } = await supabase.rpc("get_rented_vehicle_ids");
+    if (error || !isMountedRef.current) return;
+    const ids = new Set<string>((data ?? []).map((r: any) => r.vehicle_id).filter(Boolean));
+    setRentedIds(ids);
+  };
 
   const fetchAgencies = async () => {
     const requestId = ++latestRequestRef.current;
@@ -241,6 +250,25 @@ const SearchResults = () => {
                     >
                       <Link to={`/vehicles/${v.id}`} className="block aspect-video relative" style={{ backgroundColor: "#0d1b2e" }}>
                         <SafeImage src={v.image ?? ""} alt={label} className="w-full h-full object-cover" />
+                        {rentedIds.has(v.id) && (
+                          <div
+                            aria-label="Currently rented"
+                            className="absolute inset-0 flex items-center justify-center pointer-events-none"
+                            style={{ backgroundColor: "rgba(13,27,46,0.45)" }}
+                          >
+                            <span
+                              className="px-4 py-1.5 rounded-md text-sm font-extrabold tracking-widest"
+                              style={{
+                                backgroundColor: "rgba(13,27,46,0.85)",
+                                color: "#fbbf24",
+                                border: "1px solid rgba(251,191,36,0.6)",
+                                letterSpacing: "0.2em",
+                              }}
+                            >
+                              RENTED
+                            </span>
+                          </div>
+                        )}
                       </Link>
                       <div className="p-5 flex flex-col flex-1">
                         <div className="flex items-start justify-between mb-2 gap-2">
