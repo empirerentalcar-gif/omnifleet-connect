@@ -78,18 +78,41 @@ serve(async (req) => {
       apiVersion: "2025-08-27.basil",
       httpClient: Stripe.createFetchHttpClient(),
     });
-    const captured = await stripe.paymentIntents.capture(booking.stripe_payment_intent_id);
-    log("Captured", { id: captured.id, status: captured.status });
+
+    let captured;
+    let alreadyCaptured = false;
+    try {
+      captured = await stripe.paymentIntents.capture(booking.stripe_payment_intent_id);
+      log("Captured", { id: captured.id, status: captured.status });
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : String(err);
+      const code = (err as { code?: string })?.code;
+      const isAlreadyCaptured =
+        /already.*captured/i.test(msg) || code === "payment_intent_unexpected_state";
+      if (!isAlreadyCaptured) throw err;
+
+      // Idempotent reconcile: fetch the PI and verify it's already succeeded
+      log("Capture returned already-captured, reconciling", { pi: booking.stripe_payment_intent_id });
+      captured = await stripe.paymentIntents.retrieve(booking.stripe_payment_intent_id);
+      if (captured.status !== "succeeded") {
+        throw new Error(
+          `PaymentIntent ${captured.id} reported already-captured but status is ${captured.status}`,
+        );
+      }
+      alreadyCaptured = true;
+    }
 
     const latestCharge =
-      (captured as unknown as { latest_charge?: string }).latest_charge ?? null;
+      (captured as unknown as { latest_charge?: string | { id: string } }).latest_charge ?? null;
+    const chargeId =
+      typeof latestCharge === "string" ? latestCharge : latestCharge?.id ?? null;
 
     const { error: updateErr } = await supabaseAdmin
       .from("bookings")
       .update({
         payment_status: "succeeded",
         booking_status: "approved",
-        stripe_charge_id: latestCharge,
+        stripe_charge_id: chargeId,
         updated_at: new Date().toISOString(),
       })
       .eq("id", booking_id);
@@ -102,12 +125,23 @@ serve(async (req) => {
       });
       throw new Error(`Capture succeeded but DB update failed: ${updateErr.message}`);
     }
-    log("DB updated", { booking_id });
+    if (alreadyCaptured) {
+      log(`Booking ${booking_id} was already captured (idempotent reconcile), charge ${chargeId ?? "null"}`);
+    } else {
+      log("DB updated", { booking_id });
+    }
 
     // Build the response BEFORE firing off the notification, so the
     // client always gets a 200 even if the notification fetch hangs.
     const response = new Response(
-      JSON.stringify({ ok: true, status: captured.status }),
+      JSON.stringify({
+        ok: true,
+        status: captured.status,
+        already_captured: alreadyCaptured,
+        message: alreadyCaptured
+          ? "Payment already captured and confirmed. Your payout is processing."
+          : undefined,
+      }),
       {
         headers: { ...corsHeaders, "Content-Type": "application/json" },
         status: 200,
