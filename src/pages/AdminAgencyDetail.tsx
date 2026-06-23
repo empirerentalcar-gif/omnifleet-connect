@@ -559,11 +559,6 @@ const AdminAgencyDetail = () => {
               </Card>
             </div>
 
-            {/* Bookings Table */}
-            <Card>
-              {/* placeholder */}
-            </Card>
-
             {/* Vehicles Management */}
             <Card className="mb-6">
               <CardHeader>
