@@ -18,6 +18,7 @@ import {
   UserPlus,
   Filter,
   Trash2,
+  LayoutDashboard,
 } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { Badge } from '@/components/ui/badge';
@@ -831,6 +832,17 @@ const AdminAgencies = () => {
                           </TableCell>
                           <TableCell className="text-right">
                             <div className="flex gap-1 justify-end">
+                              <Button
+                                asChild
+                                size="icon"
+                                variant="ghost"
+                                title="Monitor agency"
+                                aria-label="Monitor agency"
+                              >
+                                <Link to={`/admin/agencies/${agency.id}`}>
+                                  <LayoutDashboard className="h-4 w-4" />
+                                </Link>
+                              </Button>
                               {editingId === agency.id ? (
                                 <>
                                   <Button size="icon" variant="ghost" onClick={saveEdit} aria-label="Save changes">
