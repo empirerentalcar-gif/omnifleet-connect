@@ -32,6 +32,7 @@ const ForAgencies = lazy(() => import("./pages/ForAgencies"));
 const HowItWorksPage = lazy(() => import("./pages/HowItWorksPage"));
 const AdminDashboardPage = lazy(() => import("./pages/AdminDashboard"));
 const AdminAgenciesPage = lazy(() => import("./pages/AdminAgencies"));
+const AdminAgencyDetailPage = lazy(() => import("./pages/AdminAgencyDetail"));
 const AdminSetupPage = lazy(() => import("./pages/AdminSetup"));
 const AdminInviteCodesPage = lazy(() => import("./pages/AdminInviteCodes"));
 const CityLanding = lazy(() => import("./pages/CityLanding"));
@@ -85,6 +86,7 @@ const GlobalLayout = () => {
           <Route path="/how-it-works" element={<HowItWorksPage />} />
           <Route path="/admin" element={<AdminDashboardPage />} />
           <Route path="/admin/agencies" element={<AdminAgenciesPage />} />
+          <Route path="/admin/agencies/:id" element={<AdminAgencyDetailPage />} />
           <Route path="/admin/setup" element={<AdminSetupPage />} />
           <Route path="/admin/invite-codes" element={<AdminInviteCodesPage />} />
           <Route path="/cities" element={<Cities />} />
