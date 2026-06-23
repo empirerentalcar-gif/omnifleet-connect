@@ -622,11 +622,6 @@ const AdminAgencyDetail = () => {
               </Card>
             </div>
 
-            {/* Vehicles Management */}
-            <Card className="mb-6">
-              {/* PLACEHOLDER_KEEP */}
-            </Card>
-
             {/* Payment & Fees (admin override) */}
             <Card className="mb-6">
               <CardHeader>
@@ -656,7 +651,7 @@ const AdminAgencyDetail = () => {
               </CardContent>
             </Card>
 
-            {/* Vehicles Management (real) */}
+            {/* Vehicles Management */}
             <Card className="mb-6">
               <CardHeader>
                 <CardTitle className="text-lg flex items-center gap-2">
