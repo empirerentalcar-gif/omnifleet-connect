@@ -78,6 +78,32 @@ interface NoteRow {
   created_at: string;
 }
 
+interface VehicleRow {
+  id: string;
+  make: string | null;
+  model: string | null;
+  year: number | null;
+  status: string;
+  location_city: string | null;
+  location_state: string | null;
+}
+
+const vehicleStatuses = ['available', 'inactive', 'maintenance', 'pending_review'];
+
+const vehicleStatusBadge = (status: string) => {
+  const map: Record<string, string> = {
+    available: 'bg-emerald-500/20 text-emerald-600 border-emerald-500/30',
+    inactive: 'bg-muted text-muted-foreground border-border',
+    maintenance: 'bg-amber-500/20 text-amber-600 border-amber-500/30',
+    pending_review: 'bg-sky-500/20 text-sky-600 border-sky-500/30',
+  };
+  return (
+    <Badge className={`${map[status] || 'bg-muted text-muted-foreground border-border'} whitespace-nowrap capitalize`}>
+      {status.replace('_', ' ')}
+    </Badge>
+  );
+};
+
 const fmtMoney = (cents: number) =>
   `$${(cents / 100).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
 
@@ -126,6 +152,8 @@ const AdminAgencyDetail = () => {
   const [agency, setAgency] = useState<Agency | null>(null);
   const [owner, setOwner] = useState<OwnerProfile | null>(null);
   const [vehicleCount, setVehicleCount] = useState<number>(0);
+  const [vehicles, setVehicles] = useState<VehicleRow[]>([]);
+  const [updatingVehicleId, setUpdatingVehicleId] = useState<string | null>(null);
   const [bookings, setBookings] = useState<BookingRow[]>([]);
   const [notes, setNotes] = useState<NoteRow[]>([]);
   const [newNote, setNewNote] = useState('');
@@ -168,17 +196,20 @@ const AdminAgencyDetail = () => {
           .maybeSingle();
         setOwner((prof as OwnerProfile) || null);
         if (prof?.id) {
-          const { count } = await supabase
+          const { data: vehicleData, count } = await supabase
             .from('vehicles')
-            .select('id', { count: 'exact', head: true })
+            .select('id,make,model,year,status,location_city,location_state', { count: 'exact' })
             .eq('profile_id', prof.id);
           setVehicleCount(count || 0);
+          setVehicles((vehicleData as unknown as VehicleRow[]) || []);
         } else {
           setVehicleCount(0);
+          setVehicles([]);
         }
       } else {
         setOwner(null);
         setVehicleCount(0);
+        setVehicles([]);
       }
     }
 
