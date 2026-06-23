@@ -29,6 +29,14 @@ import {
 } from '@/components/ui/table';
 import { toast } from '@/hooks/use-toast';
 import AgencySearchBar, { pushRecentAgency } from '@/components/admin/AgencySearchBar';
+import { PaymentSettingsForm } from '@/components/payment/PaymentSettingsForm';
+import {
+  emptyPaymentSettings,
+  normalizePaymentSettings,
+  toDbPaymentMethods,
+  validatePaymentSettings,
+  type PaymentSettings,
+} from '@/lib/payment-settings';
 
 interface Agency {
   id: string;
@@ -154,6 +162,9 @@ const AdminAgencyDetail = () => {
   const [vehicleCount, setVehicleCount] = useState<number>(0);
   const [vehicles, setVehicles] = useState<VehicleRow[]>([]);
   const [updatingVehicleId, setUpdatingVehicleId] = useState<string | null>(null);
+  const [feeSettings, setFeeSettings] = useState<PaymentSettings>(emptyPaymentSettings());
+  const [showFeeValidation, setShowFeeValidation] = useState(false);
+  const [savingFees, setSavingFees] = useState(false);
   const [bookings, setBookings] = useState<BookingRow[]>([]);
   const [notes, setNotes] = useState<NoteRow[]>([]);
   const [newNote, setNewNote] = useState('');
@@ -187,6 +198,27 @@ const AdminAgencyDetail = () => {
       toast({ title: 'Error loading agency', description: agencyRes.error.message, variant: 'destructive' });
     } else {
       setAgency(agencyRes.data as unknown as Agency);
+      const a = agencyRes.data as any;
+      const apm = a?.payment_methods;
+      const methodsArr = Array.isArray(apm)
+        ? apm
+        : apm && typeof apm === 'object' && Array.isArray(apm.methods)
+        ? apm.methods
+        : [];
+      const otherText =
+        apm && typeof apm === 'object' && !Array.isArray(apm) && typeof apm.other_text === 'string'
+          ? apm.other_text
+          : '';
+      setFeeSettings(
+        normalizePaymentSettings({
+          payment_methods: methodsArr,
+          other_payment_text: otherText,
+          payment_restrictions: a?.payment_restrictions,
+          tax_rate: typeof a?.tax_rate === 'string' ? Number(a.tax_rate) : a?.tax_rate,
+          fees: a?.fee_settings,
+          custom_fees: a?.custom_fees,
+        }),
+      );
       const ownerId = (agencyRes.data as any)?.owner_user_id as string | null;
       if (ownerId) {
         const { data: prof } = await supabase
@@ -216,6 +248,37 @@ const AdminAgencyDetail = () => {
     setBookings((bookingsRes.data as unknown as BookingRow[]) || []);
     setNotes((notesRes.data as NoteRow[]) || []);
     setLoading(false);
+  };
+
+  const saveFeeSettings = async () => {
+    if (!agency) return;
+    setShowFeeValidation(true);
+    const errs = validatePaymentSettings(feeSettings);
+    if (errs.length > 0) {
+      toast({ title: 'Please fix the errors', description: errs[0], variant: 'destructive' });
+      return;
+    }
+    setSavingFees(true);
+    const { error } = await supabase
+      .from('agencies')
+      .update({
+        payment_methods: toDbPaymentMethods(feeSettings) as any,
+        payment_restrictions: feeSettings.payment_restrictions.trim() || null,
+        fee_settings: feeSettings.fees as any,
+        tax_rate: feeSettings.tax_rate,
+        custom_fees: feeSettings.custom_fees as any,
+        fees_setup_complete: true,
+      })
+      .eq('id', agency.id);
+    setSavingFees(false);
+    if (error) {
+      toast({ title: 'Save failed', description: error.message, variant: 'destructive' });
+      return;
+    }
+    toast({
+      title: 'Fees saved',
+      description: `Updated payment & fee defaults for ${agency.agency_name}.`,
+    });
   };
 
   useEffect(() => {
@@ -558,6 +621,35 @@ const AdminAgencyDetail = () => {
                 </CardContent>
               </Card>
             </div>
+
+            {/* Payment & Fees (admin override) */}
+            <Card className="mb-6">
+              <CardHeader>
+                <CardTitle className="text-lg flex items-center gap-2">
+                  <DollarSign className="h-5 w-5" /> Payment & Fees
+                </CardTitle>
+                <p className="text-xs text-muted-foreground mt-1">
+                  Set or fix the agency-wide deposit, smoking fee, and other fee defaults on behalf of this agency.
+                </p>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <PaymentSettingsForm
+                  value={feeSettings}
+                  onChange={setFeeSettings}
+                  showValidation={showFeeValidation}
+                />
+                <div className="flex justify-end">
+                  <Button onClick={saveFeeSettings} disabled={savingFees}>
+                    {savingFees ? (
+                      <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                    ) : (
+                      <Save className="h-4 w-4 mr-2" />
+                    )}
+                    Save fees on behalf of agency
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
 
             {/* Vehicles Management */}
             <Card className="mb-6">
