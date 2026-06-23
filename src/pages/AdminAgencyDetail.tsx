@@ -28,6 +28,7 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { toast } from '@/hooks/use-toast';
+import AgencySearchBar, { pushRecentAgency } from '@/components/admin/AgencySearchBar';
 
 interface Agency {
   id: string;
@@ -184,6 +185,17 @@ const AdminAgencyDetail = () => {
   };
 
   useEffect(() => {
+    if (agency) {
+      pushRecentAgency({
+        id: agency.id,
+        agency_name: agency.agency_name,
+        city: agency.city,
+        state: agency.state,
+      });
+    }
+  }, [agency]);
+
+  useEffect(() => {
     if (!isAdmin) return;
     loadAll();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -254,6 +266,8 @@ const AdminAgencyDetail = () => {
           <ArrowLeft className="h-4 w-4" />
           Back to Agencies
         </Link>
+
+        <AgencySearchBar />
 
         {loading || !agency ? (
           <div className="space-y-6">
