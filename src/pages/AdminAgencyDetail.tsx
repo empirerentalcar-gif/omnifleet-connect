@@ -624,6 +624,40 @@ const AdminAgencyDetail = () => {
 
             {/* Vehicles Management */}
             <Card className="mb-6">
+              {/* PLACEHOLDER_KEEP */}
+            </Card>
+
+            {/* Payment & Fees (admin override) */}
+            <Card className="mb-6">
+              <CardHeader>
+                <CardTitle className="text-lg flex items-center gap-2">
+                  <DollarSign className="h-5 w-5" /> Payment & Fees
+                </CardTitle>
+                <p className="text-xs text-muted-foreground mt-1">
+                  Set or fix the agency-wide deposit, smoking fee, and other fee defaults on behalf of this agency.
+                </p>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <PaymentSettingsForm
+                  value={feeSettings}
+                  onChange={setFeeSettings}
+                  showValidation={showFeeValidation}
+                />
+                <div className="flex justify-end">
+                  <Button onClick={saveFeeSettings} disabled={savingFees}>
+                    {savingFees ? (
+                      <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                    ) : (
+                      <Save className="h-4 w-4 mr-2" />
+                    )}
+                    Save fees on behalf of agency
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Vehicles Management (real) */}
+            <Card className="mb-6">
               <CardHeader>
                 <CardTitle className="text-lg flex items-center gap-2">
                   <Car className="h-5 w-5" /> Vehicles
