@@ -78,6 +78,32 @@ interface NoteRow {
   created_at: string;
 }
 
+interface VehicleRow {
+  id: string;
+  make: string | null;
+  model: string | null;
+  year: number | null;
+  status: string;
+  location_city: string | null;
+  location_state: string | null;
+}
+
+const vehicleStatuses = ['available', 'inactive', 'maintenance', 'pending_review'];
+
+const vehicleStatusBadge = (status: string) => {
+  const map: Record<string, string> = {
+    available: 'bg-emerald-500/20 text-emerald-600 border-emerald-500/30',
+    inactive: 'bg-muted text-muted-foreground border-border',
+    maintenance: 'bg-amber-500/20 text-amber-600 border-amber-500/30',
+    pending_review: 'bg-sky-500/20 text-sky-600 border-sky-500/30',
+  };
+  return (
+    <Badge className={`${map[status] || 'bg-muted text-muted-foreground border-border'} whitespace-nowrap capitalize`}>
+      {status.replace('_', ' ')}
+    </Badge>
+  );
+};
+
 const fmtMoney = (cents: number) =>
   `$${(cents / 100).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
 
@@ -126,6 +152,8 @@ const AdminAgencyDetail = () => {
   const [agency, setAgency] = useState<Agency | null>(null);
   const [owner, setOwner] = useState<OwnerProfile | null>(null);
   const [vehicleCount, setVehicleCount] = useState<number>(0);
+  const [vehicles, setVehicles] = useState<VehicleRow[]>([]);
+  const [updatingVehicleId, setUpdatingVehicleId] = useState<string | null>(null);
   const [bookings, setBookings] = useState<BookingRow[]>([]);
   const [notes, setNotes] = useState<NoteRow[]>([]);
   const [newNote, setNewNote] = useState('');
@@ -168,17 +196,20 @@ const AdminAgencyDetail = () => {
           .maybeSingle();
         setOwner((prof as OwnerProfile) || null);
         if (prof?.id) {
-          const { count } = await supabase
+          const { data: vehicleData, count } = await supabase
             .from('vehicles')
-            .select('id', { count: 'exact', head: true })
+            .select('id,make,model,year,status,location_city,location_state', { count: 'exact' })
             .eq('profile_id', prof.id);
           setVehicleCount(count || 0);
+          setVehicles((vehicleData as unknown as VehicleRow[]) || []);
         } else {
           setVehicleCount(0);
+          setVehicles([]);
         }
       } else {
         setOwner(null);
         setVehicleCount(0);
+        setVehicles([]);
       }
     }
 
@@ -274,6 +305,24 @@ const AdminAgencyDetail = () => {
       description: 'Payment captured. Funds will land in the agency\u2019s Stripe balance and pay out in ~2 business days.',
     });
     loadAll();
+  };
+
+  const updateVehicleStatus = async (vehicleId: string, newStatus: string) => {
+    setUpdatingVehicleId(vehicleId);
+    const { error } = await supabase
+      .from('vehicles')
+      .update({ status: newStatus as any })
+      .eq('id', vehicleId);
+    setUpdatingVehicleId(null);
+    if (error) {
+      toast({ title: 'Update failed', description: error.message, variant: 'destructive' });
+      return;
+    }
+    setVehicles((prev) => prev.map((v) => (v.id === vehicleId ? { ...v, status: newStatus } : v)));
+    toast({
+      title: 'Vehicle updated',
+      description: `Status changed to ${newStatus.replace('_', ' ')} on behalf of the agency.`,
+    });
   };
 
   const filteredBookings = useMemo(() => {
@@ -509,6 +558,69 @@ const AdminAgencyDetail = () => {
                 </CardContent>
               </Card>
             </div>
+
+            {/* Vehicles Management */}
+            <Card className="mb-6">
+              <CardHeader>
+                <CardTitle className="text-lg flex items-center gap-2">
+                  <Car className="h-5 w-5" /> Vehicles
+                </CardTitle>
+                <p className="text-xs text-muted-foreground mt-1">
+                  Override vehicle availability on behalf of this agency. Changes take effect immediately.
+                </p>
+              </CardHeader>
+              <CardContent>
+                {vehicles.length === 0 ? (
+                  <div className="text-center py-8 text-muted-foreground text-sm">
+                    No vehicles found for this agency.
+                  </div>
+                ) : (
+                  <div className="overflow-x-auto">
+                    <Table>
+                      <TableHeader>
+                        <TableRow>
+                          <TableHead>Vehicle</TableHead>
+                          <TableHead>Location</TableHead>
+                          <TableHead>Current status</TableHead>
+                          <TableHead className="text-right">Set status</TableHead>
+                        </TableRow>
+                      </TableHeader>
+                      <TableBody>
+                        {vehicles.map((v) => (
+                          <TableRow key={v.id}>
+                            <TableCell className="font-medium">
+                              {`${v.year || ''} ${v.make || ''} ${v.model || ''}`.trim() || '—'}
+                            </TableCell>
+                            <TableCell className="text-sm text-muted-foreground">
+                              {[v.location_city, v.location_state].filter(Boolean).join(', ') || '—'}
+                            </TableCell>
+                            <TableCell>{vehicleStatusBadge(v.status)}</TableCell>
+                            <TableCell className="text-right">
+                              <Select
+                                value={v.status}
+                                onValueChange={(val) => updateVehicleStatus(v.id, val)}
+                                disabled={updatingVehicleId === v.id}
+                              >
+                                <SelectTrigger className="w-[180px] ml-auto">
+                                  <SelectValue />
+                                </SelectTrigger>
+                                <SelectContent>
+                                  {vehicleStatuses.map((s) => (
+                                    <SelectItem key={s} value={s} className="capitalize">
+                                      {s.replace('_', ' ')}
+                                    </SelectItem>
+                                  ))}
+                                </SelectContent>
+                              </Select>
+                            </TableCell>
+                          </TableRow>
+                        ))}
+                      </TableBody>
+                    </Table>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
 
             {/* Bookings Table */}
             <Card>
