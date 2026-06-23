@@ -1,9 +1,10 @@
-import { useEffect, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
-import { CreditCard, CheckCircle2, XCircle, Loader2 } from "lucide-react";
+import { CreditCard, CheckCircle2, XCircle, Loader2, ChevronDown, ChevronRight } from "lucide-react";
+import { BookingPaymentDetails } from "./BookingPaymentDetails";
 
 type Booking = {
   id: string;
@@ -19,8 +20,10 @@ type Booking = {
   booking_status: string;
   stripe_payment_intent_id: string | null;
   stripe_setup_intent_id: string | null;
+  stripe_charge_id: string | null;
   decline_reason: string | null;
   created_at: string;
+  updated_at: string;
 };
 
 const statusColor: Record<string, string> = {
@@ -34,6 +37,7 @@ export const BookingsSection = ({ agencyId }: { agencyId: string | null }) => {
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [loading, setLoading] = useState(true);
   const [busyId, setBusyId] = useState<string | null>(null);
+  const [expandedId, setExpandedId] = useState<string | null>(null);
 
   const load = async () => {
     if (!agencyId) return;
@@ -105,11 +109,28 @@ export const BookingsSection = ({ agencyId }: { agencyId: string | null }) => {
                 const canCapture = b.booking_status === "pending_agency" && b.payment_status === "requires_capture" && !!b.stripe_payment_intent_id;
                 const awaitingAuth = b.booking_status === "pending_agency" && b.payment_status === "scheduled";
                 const canDecline = b.booking_status === "pending_agency";
+                const hasPaymentDetails = b.payment_status === "succeeded" || !!b.stripe_charge_id;
+                const isExpanded = expandedId === b.id;
                 return (
-                  <tr key={b.id}>
+                  <Fragment key={b.id}>
+                  <tr>
                     <td className="px-4 py-3">
-                      <p className="font-medium">{b.renter_name}</p>
+                      <div className="flex items-start gap-2">
+                        {hasPaymentDetails && (
+                          <button
+                            type="button"
+                            onClick={() => setExpandedId(isExpanded ? null : b.id)}
+                            className="mt-0.5 text-muted-foreground hover:text-foreground"
+                            aria-label={isExpanded ? "Hide payment details" : "Show payment details"}
+                          >
+                            {isExpanded ? <ChevronDown className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />}
+                          </button>
+                        )}
+                        <div>
+                          <p className="font-medium">{b.renter_name}</p>
                       <p className="text-xs text-muted-foreground">{b.renter_email} · {b.renter_phone}</p>
+                        </div>
+                      </div>
                     </td>
                     <td className="px-4 py-3 text-xs">
                       {b.pickup_date}<br />to {b.dropoff_date}<br />
@@ -162,6 +183,21 @@ export const BookingsSection = ({ agencyId }: { agencyId: string | null }) => {
                       )}
                     </td>
                   </tr>
+                  {isExpanded && hasPaymentDetails && agencyId && (
+                    <tr>
+                      <td colSpan={5} className="p-0">
+                        <BookingPaymentDetails
+                          agencyId={agencyId}
+                          bookingPriceCents={b.total_amount_cents}
+                          platformFeeCents={b.platform_fee_cents}
+                          stripeChargeId={b.stripe_charge_id}
+                          capturedAt={b.updated_at}
+                          paymentStatus={b.payment_status}
+                        />
+                      </td>
+                    </tr>
+                  )}
+                  </Fragment>
                 );
               })}
             </tbody>
