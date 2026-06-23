@@ -56,9 +56,15 @@ export const BookingsSection = ({ agencyId }: { agencyId: string | null }) => {
   const approve = async (b: Booking) => {
     setBusyId(b.id);
     try {
-      const { error } = await supabase.functions.invoke("capture-booking-payment", { body: { booking_id: b.id } });
+      const { data, error } = await supabase.functions.invoke("capture-booking-payment", { body: { booking_id: b.id } });
       if (error) throw new Error(error.message);
-      toast({ title: "Booking confirmed", description: "Card captured successfully." });
+      const already = (data as { already_captured?: boolean; message?: string } | null)?.already_captured;
+      toast({
+        title: already ? "Payment already captured" : "Booking confirmed",
+        description: already
+          ? (data as { message?: string }).message ?? "Payment already captured and confirmed. Your payout is processing."
+          : "Card captured successfully.",
+      });
       load();
     } catch (e) {
       toast({ title: "Could not capture", description: e instanceof Error ? e.message : String(e), variant: "destructive" });
