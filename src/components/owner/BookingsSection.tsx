@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -112,8 +112,8 @@ export const BookingsSection = ({ agencyId }: { agencyId: string | null }) => {
                 const hasPaymentDetails = b.payment_status === "succeeded" || !!b.stripe_charge_id;
                 const isExpanded = expandedId === b.id;
                 return (
-                  <>
-                  <tr key={b.id}>
+                  <Fragment key={b.id}>
+                  <tr>
                     <td className="px-4 py-3">
                       <div className="flex items-start gap-2">
                         {hasPaymentDetails && (
@@ -184,7 +184,7 @@ export const BookingsSection = ({ agencyId }: { agencyId: string | null }) => {
                     </td>
                   </tr>
                   {isExpanded && hasPaymentDetails && agencyId && (
-                    <tr key={`${b.id}-details`}>
+                    <tr>
                       <td colSpan={5} className="p-0">
                         <BookingPaymentDetails
                           agencyId={agencyId}
@@ -197,7 +197,7 @@ export const BookingsSection = ({ agencyId }: { agencyId: string | null }) => {
                       </td>
                     </tr>
                   )}
-                  </>
+                  </Fragment>
                 );
               })}
             </tbody>
