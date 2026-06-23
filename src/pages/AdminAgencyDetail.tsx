@@ -39,6 +39,7 @@ interface Agency {
   subscription_status: string;
   is_founding_member: boolean;
   owner_user_id: string | null;
+  stripe_connect_account_id: string | null;
   stripe_connect_status: string | null;
   stripe_payouts_enabled: boolean | null;
   stripe_charges_enabled: boolean | null;
