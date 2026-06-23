@@ -307,6 +307,24 @@ const AdminAgencyDetail = () => {
     loadAll();
   };
 
+  const updateVehicleStatus = async (vehicleId: string, newStatus: string) => {
+    setUpdatingVehicleId(vehicleId);
+    const { error } = await supabase
+      .from('vehicles')
+      .update({ status: newStatus as any })
+      .eq('id', vehicleId);
+    setUpdatingVehicleId(null);
+    if (error) {
+      toast({ title: 'Update failed', description: error.message, variant: 'destructive' });
+      return;
+    }
+    setVehicles((prev) => prev.map((v) => (v.id === vehicleId ? { ...v, status: newStatus } : v)));
+    toast({
+      title: 'Vehicle updated',
+      description: `Status changed to ${newStatus.replace('_', ' ')} on behalf of the agency.`,
+    });
+  };
+
   const filteredBookings = useMemo(() => {
     return bookings.filter((b) => {
       if (statusFilter !== 'all' && b.booking_status !== statusFilter) return false;
