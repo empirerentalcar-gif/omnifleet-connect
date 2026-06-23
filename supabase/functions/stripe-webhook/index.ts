@@ -99,20 +99,13 @@ serve(async (req) => {
         }
         case "payment_intent.succeeded": {
           const pi = event.data.object as Stripe.PaymentIntent;
-          const bookingId = pi.metadata?.booking_id;
-          if (bookingId) {
-            await supabaseAdmin
-              .from("bookings")
-              .update({
-                payment_status: "succeeded",
-                booking_status: "approved",
-                stripe_charge_id:
-                  (pi as unknown as { latest_charge?: string }).latest_charge ?? null,
-                updated_at: new Date().toISOString(),
-              })
-              .eq("id", bookingId);
-            await sendRenterConfirmation(bookingId);
-          }
+          const bookingId = await reconcilePaymentIntent(supabaseAdmin, pi, event.type);
+          if (bookingId) await sendRenterConfirmation(bookingId);
+          break;
+        }
+        case "payment_intent.captured": {
+          const pi = event.data.object as Stripe.PaymentIntent;
+          await reconcilePaymentIntent(supabaseAdmin, pi, event.type);
           break;
         }
         case "payment_intent.amount_capturable_updated": {
