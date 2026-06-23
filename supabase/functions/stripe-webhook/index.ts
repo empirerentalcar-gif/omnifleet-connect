@@ -99,20 +99,13 @@ serve(async (req) => {
         }
         case "payment_intent.succeeded": {
           const pi = event.data.object as Stripe.PaymentIntent;
-          const bookingId = pi.metadata?.booking_id;
-          if (bookingId) {
-            await supabaseAdmin
-              .from("bookings")
-              .update({
-                payment_status: "succeeded",
-                booking_status: "approved",
-                stripe_charge_id:
-                  (pi as unknown as { latest_charge?: string }).latest_charge ?? null,
-                updated_at: new Date().toISOString(),
-              })
-              .eq("id", bookingId);
-            await sendRenterConfirmation(bookingId);
-          }
+          const bookingId = await reconcilePaymentIntent(supabaseAdmin, pi, event.type);
+          if (bookingId) await sendRenterConfirmation(bookingId);
+          break;
+        }
+        case "payment_intent.captured": {
+          const pi = event.data.object as Stripe.PaymentIntent;
+          await reconcilePaymentIntent(supabaseAdmin, pi, event.type);
           break;
         }
         case "payment_intent.amount_capturable_updated": {
@@ -330,4 +323,70 @@ async function sendRenterConfirmation(bookingId: string) {
   } catch (e) {
     console.error("[STRIPE-WEBHOOK] renter confirmation email failed", e);
   }
+}
+
+/**
+ * Reconcile a PaymentIntent (succeeded/captured) against the bookings table.
+ * Looks up the booking by stripe_payment_intent_id (canonical) and falls back
+ * to metadata.booking_id. Safe to run multiple times — idempotent UPDATE.
+ * Returns the booking_id when a row was matched, otherwise null.
+ */
+// deno-lint-ignore no-explicit-any
+async function reconcilePaymentIntent(
+  supabaseAdmin: any,
+  pi: Stripe.PaymentIntent,
+  eventType: string,
+): Promise<string | null> {
+  const piId = pi.id;
+  const latestCharge =
+    (pi as unknown as { latest_charge?: string | { id: string } }).latest_charge ?? null;
+  const chargeId =
+    typeof latestCharge === "string" ? latestCharge : latestCharge?.id ?? null;
+
+  // Primary lookup: by PI id
+  let { data: booking } = await supabaseAdmin
+    .from("bookings")
+    .select("id")
+    .eq("stripe_payment_intent_id", piId)
+    .maybeSingle();
+
+  // Fallback: metadata.booking_id (legacy / rows missing PI id)
+  if (!booking && pi.metadata?.booking_id) {
+    const res = await supabaseAdmin
+      .from("bookings")
+      .select("id")
+      .eq("id", pi.metadata.booking_id)
+      .maybeSingle();
+    booking = res.data;
+  }
+
+  if (!booking) {
+    console.log(
+      `[WEBHOOK-RECONCILIATION] Received ${eventType} for PI ${piId} but no matching booking in DB (may be test/old data)`,
+    );
+    return null;
+  }
+
+  const { error: updateErr } = await supabaseAdmin
+    .from("bookings")
+    .update({
+      payment_status: "succeeded",
+      booking_status: "approved",
+      stripe_charge_id: chargeId,
+      updated_at: new Date().toISOString(),
+    })
+    .eq("id", booking.id);
+
+  if (updateErr) {
+    console.error(
+      `[WEBHOOK-RECONCILIATION] Failed to update booking ${booking.id} from ${eventType}`,
+      updateErr,
+    );
+    throw new Error(`Booking reconcile failed: ${updateErr.message}`);
+  }
+
+  console.log(
+    `[WEBHOOK-RECONCILIATION] Booking ${booking.id} reconciled from Stripe webhook, charge ${chargeId ?? "null"}`,
+  );
+  return booking.id as string;
 }
