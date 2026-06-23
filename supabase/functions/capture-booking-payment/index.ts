@@ -50,7 +50,7 @@ serve(async (req) => {
       { auth: { persistSession: false } },
     );
 
-    // Verify caller owns the agency on this booking
+    // Verify caller owns the agency on this booking — OR is a platform admin.
     const { data: booking, error: bErr } = await supabaseAdmin
       .from("bookings")
       .select("id, agency_id, stripe_payment_intent_id, payment_status, booking_status")
@@ -64,9 +64,17 @@ serve(async (req) => {
       .select("id, owner_user_id")
       .eq("id", booking.agency_id)
       .maybeSingle();
-    if (!agency || agency.owner_user_id !== user.id) {
-      throw new Error("Not authorized for this booking");
+    if (!agency) throw new Error("Agency not found");
+    let authorized = agency.owner_user_id === user.id;
+    if (!authorized) {
+      const { data: isAdmin } = await supabaseAdmin.rpc("has_role", {
+        _user_id: user.id,
+        _role: "admin",
+      });
+      authorized = !!isAdmin;
+      if (authorized) log("Admin override approval", { admin: user.email, booking_id });
     }
+    if (!authorized) throw new Error("Not authorized for this booking");
 
     if (!booking.stripe_payment_intent_id) {
       throw new Error(

@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import { ArrowLeft, Search, Save, DollarSign, CreditCard, Car, FileText } from 'lucide-react';
+import { ArrowLeft, Search, Save, DollarSign, CreditCard, Car, FileText, KeyRound, CheckCircle2, Loader2 } from 'lucide-react';
 import { format } from 'date-fns';
 import { supabase } from '@/integrations/supabase/client';
 import { useAdmin } from '@/hooks/useAdmin';
@@ -67,6 +67,7 @@ interface BookingRow {
   payment_status: string;
   renter_name: string;
   created_at: string;
+  stripe_payment_intent_id: string | null;
   vehicle: { make: string | null; model: string | null; year: number | null } | null;
 }
 
@@ -133,6 +134,8 @@ const AdminAgencyDetail = () => {
   const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState<string>('all');
   const { user } = useAuth();
+  const [sendingReset, setSendingReset] = useState(false);
+  const [approvingId, setApprovingId] = useState<string | null>(null);
 
   const loadAll = async () => {
     if (!id) return;
@@ -142,7 +145,7 @@ const AdminAgencyDetail = () => {
       supabase.from('agencies').select('*').eq('id', id).maybeSingle(),
       supabase
         .from('bookings')
-        .select('id,pickup_date,dropoff_date,rental_days,total_amount_cents,platform_fee_cents,booking_status,payment_status,renter_name,created_at,vehicle:vehicles(make,model,year)')
+        .select('id,pickup_date,dropoff_date,rental_days,total_amount_cents,platform_fee_cents,booking_status,payment_status,renter_name,created_at,stripe_payment_intent_id,vehicle:vehicles(make,model,year)')
         .eq('agency_id', id)
         .order('created_at', { ascending: false }),
       supabase
@@ -223,6 +226,54 @@ const AdminAgencyDetail = () => {
       setNotes((data as NoteRow[]) || []);
     }
     setSavingNote(false);
+  };
+
+  const sendPasswordReset = async () => {
+    const email = agency?.email || owner?.contact_email;
+    if (!email) {
+      toast({ title: 'No email on file', description: 'This agency has no contact email to send a reset link to.', variant: 'destructive' });
+      return;
+    }
+    setSendingReset(true);
+    const { error } = await supabase.auth.resetPasswordForEmail(email, {
+      redirectTo: `${window.location.origin}/reset-password`,
+    });
+    setSendingReset(false);
+    if (error) {
+      toast({ title: 'Reset email failed', description: error.message, variant: 'destructive' });
+    } else {
+      toast({ title: 'Password reset sent', description: `A reset link has been emailed to ${email}.` });
+    }
+  };
+
+  const approveBooking = async (b: BookingRow) => {
+    if (b.booking_status !== 'pending_agency') return;
+    if (!b.stripe_payment_intent_id) {
+      toast({
+        title: 'Cannot approve yet',
+        description: 'The renter\u2019s card has not been authorized yet. Card authorization happens 7 days before pickup for advance bookings.',
+        variant: 'destructive',
+      });
+      return;
+    }
+    setApprovingId(b.id);
+    const { data, error } = await supabase.functions.invoke('capture-booking-payment', {
+      body: { booking_id: b.id },
+    });
+    setApprovingId(null);
+    if (error || (data as any)?.error) {
+      toast({
+        title: 'Approval failed',
+        description: (error as Error)?.message || (data as any)?.error || 'Unknown error',
+        variant: 'destructive',
+      });
+      return;
+    }
+    toast({
+      title: 'Booking approved',
+      description: 'Payment captured. Funds will land in the agency\u2019s Stripe balance and pay out in ~2 business days.',
+    });
+    loadAll();
   };
 
   const filteredBookings = useMemo(() => {
@@ -306,6 +357,20 @@ const AdminAgencyDetail = () => {
                       {owner?.contact_email && (
                         <div className="text-xs text-muted-foreground">{owner.contact_email}</div>
                       )}
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        className="mt-2 h-7 text-xs"
+                        onClick={sendPasswordReset}
+                        disabled={sendingReset || !(agency.email || owner?.contact_email)}
+                      >
+                        {sendingReset ? (
+                          <Loader2 className="h-3 w-3 mr-1 animate-spin" />
+                        ) : (
+                          <KeyRound className="h-3 w-3 mr-1" />
+                        )}
+                        Send password reset
+                      </Button>
                     </div>
                     <div>
                       <div className="text-muted-foreground">Subscription</div>
@@ -491,6 +556,7 @@ const AdminAgencyDetail = () => {
                           <TableHead>Dates</TableHead>
                           <TableHead className="text-right">Total</TableHead>
                           <TableHead>Status</TableHead>
+                        <TableHead className="text-right">Action</TableHead>
                         </TableRow>
                       </TableHeader>
                       <TableBody>
@@ -511,6 +577,30 @@ const AdminAgencyDetail = () => {
                               {fmtMoney(b.total_amount_cents)}
                             </TableCell>
                             <TableCell>{bookingStatusBadge(b.booking_status)}</TableCell>
+                          <TableCell className="text-right">
+                            {b.booking_status === 'pending_agency' ? (
+                              <Button
+                                size="sm"
+                                variant={b.stripe_payment_intent_id ? 'default' : 'outline'}
+                                onClick={() => approveBooking(b)}
+                                disabled={approvingId === b.id}
+                                title={
+                                  b.stripe_payment_intent_id
+                                    ? 'Capture the renter\u2019s authorized payment and release this booking for payout.'
+                                    : 'Card not yet authorized \u2014 authorization runs 7 days before pickup.'
+                                }
+                              >
+                                {approvingId === b.id ? (
+                                  <Loader2 className="h-3 w-3 mr-1 animate-spin" />
+                                ) : (
+                                  <CheckCircle2 className="h-3 w-3 mr-1" />
+                                )}
+                                {b.stripe_payment_intent_id ? 'Approve & capture' : 'Awaiting auth'}
+                              </Button>
+                            ) : (
+                              <span className="text-xs text-muted-foreground">—</span>
+                            )}
+                          </TableCell>
                           </TableRow>
                         ))}
                       </TableBody>
