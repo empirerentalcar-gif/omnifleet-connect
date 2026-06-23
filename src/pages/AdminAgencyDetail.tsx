@@ -561,6 +561,74 @@ const AdminAgencyDetail = () => {
 
             {/* Bookings Table */}
             <Card>
+              {/* placeholder */}
+            </Card>
+
+            {/* Vehicles Management */}
+            <Card className="mb-6">
+              <CardHeader>
+                <CardTitle className="text-lg flex items-center gap-2">
+                  <Car className="h-5 w-5" /> Vehicles
+                </CardTitle>
+                <p className="text-xs text-muted-foreground mt-1">
+                  Override vehicle availability on behalf of this agency. Changes take effect immediately.
+                </p>
+              </CardHeader>
+              <CardContent>
+                {vehicles.length === 0 ? (
+                  <div className="text-center py-8 text-muted-foreground text-sm">
+                    No vehicles found for this agency.
+                  </div>
+                ) : (
+                  <div className="overflow-x-auto">
+                    <Table>
+                      <TableHeader>
+                        <TableRow>
+                          <TableHead>Vehicle</TableHead>
+                          <TableHead>Location</TableHead>
+                          <TableHead>Current status</TableHead>
+                          <TableHead className="text-right">Set status</TableHead>
+                        </TableRow>
+                      </TableHeader>
+                      <TableBody>
+                        {vehicles.map((v) => (
+                          <TableRow key={v.id}>
+                            <TableCell className="font-medium">
+                              {`${v.year || ''} ${v.make || ''} ${v.model || ''}`.trim() || '—'}
+                            </TableCell>
+                            <TableCell className="text-sm text-muted-foreground">
+                              {[v.location_city, v.location_state].filter(Boolean).join(', ') || '—'}
+                            </TableCell>
+                            <TableCell>{vehicleStatusBadge(v.status)}</TableCell>
+                            <TableCell className="text-right">
+                              <Select
+                                value={v.status}
+                                onValueChange={(val) => updateVehicleStatus(v.id, val)}
+                                disabled={updatingVehicleId === v.id}
+                              >
+                                <SelectTrigger className="w-[180px] ml-auto">
+                                  <SelectValue />
+                                </SelectTrigger>
+                                <SelectContent>
+                                  {vehicleStatuses.map((s) => (
+                                    <SelectItem key={s} value={s} className="capitalize">
+                                      {s.replace('_', ' ')}
+                                    </SelectItem>
+                                  ))}
+                                </SelectContent>
+                              </Select>
+                            </TableCell>
+                          </TableRow>
+                        ))}
+                      </TableBody>
+                    </Table>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+
+            {/* Bookings Table */}
+            <Card>
               <CardHeader>
                 <CardTitle className="text-lg">Bookings</CardTitle>
                 <div className="flex flex-col sm:flex-row gap-3 mt-3">
