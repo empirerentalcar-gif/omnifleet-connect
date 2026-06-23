@@ -137,9 +137,8 @@ const AdminAgencyDetail = () => {
     if (!id) return;
     setLoading(true);
 
-    const [agencyRes, vehiclesRes, bookingsRes, notesRes] = await Promise.all([
+    const [agencyRes, bookingsRes, notesRes] = await Promise.all([
       supabase.from('agencies').select('*').eq('id', id).maybeSingle(),
-      supabase.from('vehicles').select('id', { count: 'exact', head: true }).eq('profile_id', id),
       supabase
         .from('bookings')
         .select('id,pickup_date,dropoff_date,rental_days,total_amount_cents,platform_fee_cents,booking_status,payment_status,renter_name,created_at,vehicle:vehicles(make,model,year)')
@@ -160,16 +159,25 @@ const AdminAgencyDetail = () => {
       if (ownerId) {
         const { data: prof } = await supabase
           .from('profiles')
-          .select('business_name,contact_email,contact_phone')
+          .select('id,business_name,contact_email,contact_phone')
           .eq('user_id', ownerId)
           .maybeSingle();
         setOwner((prof as OwnerProfile) || null);
+        if (prof?.id) {
+          const { count } = await supabase
+            .from('vehicles')
+            .select('id', { count: 'exact', head: true })
+            .eq('profile_id', prof.id);
+          setVehicleCount(count || 0);
+        } else {
+          setVehicleCount(0);
+        }
       } else {
         setOwner(null);
+        setVehicleCount(0);
       }
     }
 
-    setVehicleCount(vehiclesRes.count || 0);
     setBookings((bookingsRes.data as unknown as BookingRow[]) || []);
     setNotes((notesRes.data as NoteRow[]) || []);
     setLoading(false);
