@@ -214,6 +214,44 @@ export type Database = {
         }
         Relationships: []
       }
+      agency_agreements: {
+        Row: {
+          agency_id: string
+          agreed_at: string
+          agreement_text: string
+          created_at: string
+          id: string
+          ip_address: string | null
+          user_agent: string | null
+        }
+        Insert: {
+          agency_id: string
+          agreed_at?: string
+          agreement_text: string
+          created_at?: string
+          id?: string
+          ip_address?: string | null
+          user_agent?: string | null
+        }
+        Update: {
+          agency_id?: string
+          agreed_at?: string
+          agreement_text?: string
+          created_at?: string
+          id?: string
+          ip_address?: string | null
+          user_agent?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "agency_agreements_agency_id_fkey"
+            columns: ["agency_id"]
+            isOneToOne: false
+            referencedRelation: "agencies"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       agency_notes: {
         Row: {
           admin_email: string
