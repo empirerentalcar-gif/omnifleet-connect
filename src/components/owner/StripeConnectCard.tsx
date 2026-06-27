@@ -258,7 +258,7 @@ export function StripeConnectCard() {
             Refresh
           </Button>
           {!setupComplete && (
-            <Button onClick={startOnboarding} disabled={submitting || loading}>
+            <Button onClick={startOnboarding} disabled={submitting || loading || !morAccepted}>
               {submitting ? (
                 <Loader2 className="h-4 w-4 mr-2 animate-spin" />
               ) : (
@@ -269,6 +269,26 @@ export function StripeConnectCard() {
           )}
         </div>
       </div>
+      {!setupComplete && (
+        <div className="mt-5 pt-5 border-t border-white/10 flex items-start gap-3">
+          <Checkbox
+            id="mor-acknowledgement"
+            checked={morAccepted}
+            onCheckedChange={(v) => setMorAccepted(v === true)}
+            className="mt-0.5"
+          />
+          <label
+            htmlFor="mor-acknowledgement"
+            className="text-sm text-muted-foreground leading-relaxed cursor-pointer"
+          >
+            I agree that I am the Merchant of Record for all transactions and accept full responsibility for disputes and chargebacks as outlined in Zuvio's{" "}
+            <a href="/terms" target="_blank" rel="noopener noreferrer" className="text-primary underline">
+              Terms of Service
+            </a>
+            .
+          </label>
+        </div>
+      )}
     </div>
   );
 }
