@@ -754,6 +754,21 @@ const AdminAgencies = () => {
                                       No Owner
                                     </Badge>
                                   )}
+                                  {agency.tos_version_2026_06 ? (
+                                    <Badge
+                                      className="bg-emerald-500/15 text-emerald-600 border-emerald-500/30 text-xs whitespace-nowrap"
+                                      title="Updated Merchant of Record agreement on file"
+                                    >
+                                      Agreement On File
+                                    </Badge>
+                                  ) : (
+                                    <Badge
+                                      className="bg-yellow-500/15 text-yellow-600 border-yellow-500/40 text-xs whitespace-nowrap"
+                                      title="Awaiting acceptance of updated Merchant of Record agreement"
+                                    >
+                                      Pending Agreement
+                                    </Badge>
+                                  )}
                                 </div>
                                 <span className="text-xs text-muted-foreground">
                                   ({vehicleCounts[agency.id] ?? 0} vehicles)
