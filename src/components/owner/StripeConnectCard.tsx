@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Checkbox } from "@/components/ui/checkbox";
 import { useToast } from "@/hooks/use-toast";
 import { CheckCircle2, AlertCircle, ExternalLink, RefreshCw, Loader2, Banknote } from "lucide-react";
 
@@ -39,6 +40,7 @@ export function StripeConnectCard() {
   const [payout, setPayout] = useState<PayoutInfo | null>(null);
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
+  const [morAccepted, setMorAccepted] = useState(false);
 
   const refresh = async () => {
     setLoading(true);
@@ -86,6 +88,14 @@ export function StripeConnectCard() {
   }, []);
 
   const startOnboarding = async () => {
+    if (!morAccepted) {
+      toast({
+        title: "Agreement required",
+        description: "Please acknowledge the Merchant of Record terms before connecting Stripe.",
+        variant: "destructive",
+      });
+      return;
+    }
     setSubmitting(true);
     try {
       // Guard: if the agency already has charges enabled on Stripe, skip
