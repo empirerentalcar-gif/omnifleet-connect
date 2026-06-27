@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Checkbox } from "@/components/ui/checkbox";
 import { useToast } from "@/hooks/use-toast";
 import { CheckCircle2, AlertCircle, ExternalLink, RefreshCw, Loader2, Banknote } from "lucide-react";
 
@@ -39,6 +40,7 @@ export function StripeConnectCard() {
   const [payout, setPayout] = useState<PayoutInfo | null>(null);
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
+  const [morAccepted, setMorAccepted] = useState(false);
 
   const refresh = async () => {
     setLoading(true);
@@ -86,6 +88,14 @@ export function StripeConnectCard() {
   }, []);
 
   const startOnboarding = async () => {
+    if (!morAccepted) {
+      toast({
+        title: "Agreement required",
+        description: "Please acknowledge the Merchant of Record terms before connecting Stripe.",
+        variant: "destructive",
+      });
+      return;
+    }
     setSubmitting(true);
     try {
       // Guard: if the agency already has charges enabled on Stripe, skip
@@ -248,7 +258,7 @@ export function StripeConnectCard() {
             Refresh
           </Button>
           {!setupComplete && (
-            <Button onClick={startOnboarding} disabled={submitting || loading}>
+            <Button onClick={startOnboarding} disabled={submitting || loading || !morAccepted}>
               {submitting ? (
                 <Loader2 className="h-4 w-4 mr-2 animate-spin" />
               ) : (
@@ -259,6 +269,26 @@ export function StripeConnectCard() {
           )}
         </div>
       </div>
+      {!setupComplete && (
+        <div className="mt-5 pt-5 border-t border-white/10 flex items-start gap-3">
+          <Checkbox
+            id="mor-acknowledgement"
+            checked={morAccepted}
+            onCheckedChange={(v) => setMorAccepted(v === true)}
+            className="mt-0.5"
+          />
+          <label
+            htmlFor="mor-acknowledgement"
+            className="text-sm text-muted-foreground leading-relaxed cursor-pointer"
+          >
+            I agree that I am the Merchant of Record for all transactions and accept full responsibility for disputes and chargebacks as outlined in Zuvio's{" "}
+            <a href="/terms" target="_blank" rel="noopener noreferrer" className="text-primary underline">
+              Terms of Service
+            </a>
+            .
+          </label>
+        </div>
+      )}
     </div>
   );
 }

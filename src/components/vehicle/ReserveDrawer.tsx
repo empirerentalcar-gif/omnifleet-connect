@@ -263,6 +263,9 @@ const PaymentForm = ({ intent, onDone }: { intent: IntentInfo; onDone: () => voi
       <Button onClick={handlePay} disabled={!stripe || submitting} className="w-full" style={{ backgroundColor: "#2dd4bf", color: "#0d1b2e" }}>
         {submitting ? (<><Loader2 className="h-4 w-4 mr-2 animate-spin" />{t('reserveDrawer.processing')}</>) : intent.intent_type === "payment_intent" ? t('reserveDrawer.authorizeBtn') : t('reserveDrawer.saveBtn')}
       </Button>
+      <p className="text-xs text-gray-500">
+        Zuvio is a marketplace platform connecting independent car rental agencies with renters. By completing this booking, you acknowledge that your vehicle and rental agreement are provided directly by the independent hosting agency.
+      </p>
     </div>
   );
 };
