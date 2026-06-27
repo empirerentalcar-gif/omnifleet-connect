@@ -101,6 +101,7 @@ serve(async (req) => {
           payment_method: paymentMethod,
           customer: customer ?? undefined,
           application_fee_amount: b.platform_fee_cents,
+          on_behalf_of: agency.stripe_connect_account_id,
           transfer_data: { destination: agency.stripe_connect_account_id },
           receipt_email: b.renter_email,
           metadata: { booking_id: b.id, flow: "deferred_auth_executed" },

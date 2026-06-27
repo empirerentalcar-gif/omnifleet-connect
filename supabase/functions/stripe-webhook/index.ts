@@ -13,6 +13,9 @@ const log = (step: string, details?: unknown) => {
   console.log(`[STRIPE-WEBHOOK] ${step}${extra}`);
 };
 
+const DISPUTE_ALERT_EMAIL = "zuviollc@gmail.com";
+const DISPUTE_FROM_EMAIL = "Zuvio Alerts <team@zuvio.us>";
+
 /**
  * Stripe webhook receiver.
  * Handles subscription lifecycle (active/past_due/canceled) and booking
@@ -219,6 +222,26 @@ serve(async (req) => {
             .eq("stripe_connect_account_id", account.id);
           break;
         }
+        case "charge.dispute.created": {
+          const dispute = event.data.object as Stripe.Dispute;
+          await handleDisputeCreated(supabaseAdmin, dispute);
+          break;
+        }
+        case "charge.dispute.funds_withdrawn": {
+          const dispute = event.data.object as Stripe.Dispute;
+          await handleDisputeFundsWithdrawn(supabaseAdmin, dispute);
+          break;
+        }
+        case "charge.dispute.funds_reinstated": {
+          const dispute = event.data.object as Stripe.Dispute;
+          await handleDisputeFundsReinstated(supabaseAdmin, dispute);
+          break;
+        }
+        case "charge.dispute.closed": {
+          const dispute = event.data.object as Stripe.Dispute;
+          await handleDisputeClosed(supabaseAdmin, dispute);
+          break;
+        }
         default:
           log("Unhandled event type", { type: event.type });
       }
@@ -389,4 +412,200 @@ async function reconcilePaymentIntent(
     `[WEBHOOK-RECONCILIATION] Booking ${booking.id} reconciled from Stripe webhook, charge ${chargeId ?? "null"}`,
   );
   return booking.id as string;
+}
+
+/**
+ * Locate the booking + agency that owns a Stripe dispute.
+ * Looks up by charge id first, then PaymentIntent id.
+ */
+// deno-lint-ignore no-explicit-any
+async function findBookingForDispute(supabaseAdmin: any, dispute: Stripe.Dispute) {
+  const chargeId = typeof dispute.charge === "string" ? dispute.charge : dispute.charge?.id ?? null;
+  const piId = typeof dispute.payment_intent === "string"
+    ? dispute.payment_intent
+    : dispute.payment_intent?.id ?? null;
+
+  let booking: { id: string; agency_id: string | null } | null = null;
+  if (chargeId) {
+    const res = await supabaseAdmin
+      .from("bookings")
+      .select("id, agency_id")
+      .eq("stripe_charge_id", chargeId)
+      .maybeSingle();
+    booking = res.data ?? null;
+  }
+  if (!booking && piId) {
+    const res = await supabaseAdmin
+      .from("bookings")
+      .select("id, agency_id")
+      .eq("stripe_payment_intent_id", piId)
+      .maybeSingle();
+    booking = res.data ?? null;
+  }
+  return { booking, chargeId, piId };
+}
+
+async function sendDisputeAlertEmail(subject: string, html: string) {
+  const apiKey = Deno.env.get("RESEND_API_KEY");
+  if (!apiKey) {
+    console.error("[STRIPE-WEBHOOK] RESEND_API_KEY missing — cannot send dispute alert");
+    return;
+  }
+  try {
+    const res = await fetch("https://api.resend.com/emails", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${apiKey}`,
+      },
+      body: JSON.stringify({
+        from: DISPUTE_FROM_EMAIL,
+        to: [DISPUTE_ALERT_EMAIL],
+        subject,
+        html,
+      }),
+    });
+    if (!res.ok) {
+      console.error(
+        `[STRIPE-WEBHOOK] Dispute alert email failed: ${res.status} ${await res.text()}`,
+      );
+    }
+  } catch (e) {
+    console.error("[STRIPE-WEBHOOK] Dispute alert email error", e);
+  }
+}
+
+// deno-lint-ignore no-explicit-any
+async function handleDisputeCreated(supabaseAdmin: any, dispute: Stripe.Dispute) {
+  const { booking, chargeId, piId } = await findBookingForDispute(supabaseAdmin, dispute);
+  const amount = dispute.amount ?? 0;
+  const currency = (dispute.currency ?? "usd").toLowerCase();
+  const evidenceDue = dispute.evidence_details?.due_by
+    ? new Date(dispute.evidence_details.due_by * 1000).toISOString()
+    : null;
+
+  const { error } = await supabaseAdmin.from("disputes").upsert(
+    {
+      stripe_dispute_id: dispute.id,
+      stripe_charge_id: chargeId,
+      stripe_payment_intent_id: piId,
+      booking_id: booking?.id ?? null,
+      agency_id: booking?.agency_id ?? null,
+      amount_cents: amount,
+      currency,
+      status: dispute.status,
+      reason: dispute.reason ?? null,
+      evidence_due_by: evidenceDue,
+      raw: dispute as unknown as Record<string, unknown>,
+      opened_at: new Date((dispute.created ?? Math.floor(Date.now() / 1000)) * 1000).toISOString(),
+      updated_at: new Date().toISOString(),
+    },
+    { onConflict: "stripe_dispute_id" },
+  );
+  if (error) {
+    log("dispute insert failed", { id: dispute.id, msg: error.message });
+    throw new Error(`Dispute insert failed: ${error.message}`);
+  }
+
+  if (booking?.id) {
+    await supabaseAdmin
+      .from("bookings")
+      .update({
+        disputed: true,
+        dispute_status: dispute.status,
+        updated_at: new Date().toISOString(),
+      })
+      .eq("id", booking.id);
+  }
+
+  log("Dispute created", { id: dispute.id, bookingId: booking?.id ?? null, amount });
+
+  const amountUsd = (amount / 100).toFixed(2);
+  const html = `
+    <h2>Stripe Dispute Opened</h2>
+    <p><strong>Dispute ID:</strong> ${dispute.id}</p>
+    <p><strong>Amount:</strong> $${amountUsd} ${currency.toUpperCase()}</p>
+    <p><strong>Reason:</strong> ${dispute.reason ?? "unknown"}</p>
+    <p><strong>Status:</strong> ${dispute.status}</p>
+    <p><strong>Booking ID:</strong> ${booking?.id ?? "(not matched)"}</p>
+    <p><strong>Agency ID:</strong> ${booking?.agency_id ?? "(not matched)"}</p>
+    <p><strong>Charge:</strong> ${chargeId ?? "n/a"}</p>
+    <p><strong>PaymentIntent:</strong> ${piId ?? "n/a"}</p>
+    <p><strong>Evidence due by:</strong> ${evidenceDue ?? "n/a"}</p>
+  `;
+  await sendDisputeAlertEmail(
+    `[Zuvio] Dispute opened — $${amountUsd} (${dispute.reason ?? "unknown"})`,
+    html,
+  );
+}
+
+// deno-lint-ignore no-explicit-any
+async function handleDisputeFundsWithdrawn(supabaseAdmin: any, dispute: Stripe.Dispute) {
+  const { error } = await supabaseAdmin
+    .from("disputes")
+    .update({
+      funds_withdrawn: true,
+      funds_withdrawn_at: new Date().toISOString(),
+      status: dispute.status,
+      raw: dispute as unknown as Record<string, unknown>,
+      updated_at: new Date().toISOString(),
+    })
+    .eq("stripe_dispute_id", dispute.id);
+  if (error) throw new Error(`Dispute funds_withdrawn update failed: ${error.message}`);
+  log("Dispute funds withdrawn", { id: dispute.id });
+}
+
+// deno-lint-ignore no-explicit-any
+async function handleDisputeFundsReinstated(supabaseAdmin: any, dispute: Stripe.Dispute) {
+  const { error } = await supabaseAdmin
+    .from("disputes")
+    .update({
+      funds_withdrawn: false,
+      funds_reinstated_at: new Date().toISOString(),
+      status: dispute.status,
+      raw: dispute as unknown as Record<string, unknown>,
+      updated_at: new Date().toISOString(),
+    })
+    .eq("stripe_dispute_id", dispute.id);
+  if (error) throw new Error(`Dispute funds_reinstated update failed: ${error.message}`);
+  log("Dispute funds reinstated", { id: dispute.id });
+}
+
+// deno-lint-ignore no-explicit-any
+async function handleDisputeClosed(supabaseAdmin: any, dispute: Stripe.Dispute) {
+  const { booking } = await findBookingForDispute(supabaseAdmin, dispute);
+  const { error } = await supabaseAdmin
+    .from("disputes")
+    .update({
+      status: dispute.status,
+      outcome: dispute.status, // 'won' | 'lost' | 'warning_closed' etc.
+      closed_at: new Date().toISOString(),
+      raw: dispute as unknown as Record<string, unknown>,
+      updated_at: new Date().toISOString(),
+    })
+    .eq("stripe_dispute_id", dispute.id);
+  if (error) throw new Error(`Dispute closed update failed: ${error.message}`);
+
+  if (booking?.id) {
+    await supabaseAdmin
+      .from("bookings")
+      .update({
+        dispute_status: dispute.status,
+        // Keep `disputed = true` so the flag remains historically queryable,
+        // unless Stripe reports the dispute was won.
+        disputed: dispute.status === "won" ? false : true,
+        updated_at: new Date().toISOString(),
+      })
+      .eq("id", booking.id);
+  }
+
+  log("Dispute closed", { id: dispute.id, outcome: dispute.status });
+
+  await sendDisputeAlertEmail(
+    `[Zuvio] Dispute closed — ${dispute.status.toUpperCase()} (${dispute.id})`,
+    `<h2>Dispute Closed</h2>
+     <p><strong>Dispute ID:</strong> ${dispute.id}</p>
+     <p><strong>Final outcome:</strong> ${dispute.status}</p>
+     <p><strong>Booking ID:</strong> ${booking?.id ?? "(not matched)"}</p>`,
+  );
 }

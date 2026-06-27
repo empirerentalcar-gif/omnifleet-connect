@@ -144,6 +144,7 @@ serve(async (req) => {
         currency: "usd",
         capture_method: "manual",
         application_fee_amount: platformFeeCents,
+        on_behalf_of: agency.stripe_connect_account_id,
         transfer_data: { destination: agency.stripe_connect_account_id },
         receipt_email: renter_email,
         metadata: {

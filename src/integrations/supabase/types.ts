@@ -305,6 +305,8 @@ export type Database = {
           currency: string
           daily_rate_cents: number
           decline_reason: string | null
+          dispute_status: string | null
+          disputed: boolean
           dropoff_date: string
           id: string
           payment_method_id: string | null
@@ -331,6 +333,8 @@ export type Database = {
           currency?: string
           daily_rate_cents: number
           decline_reason?: string | null
+          dispute_status?: string | null
+          disputed?: boolean
           dropoff_date: string
           id?: string
           payment_method_id?: string | null
@@ -357,6 +361,8 @@ export type Database = {
           currency?: string
           daily_rate_cents?: number
           decline_reason?: string | null
+          dispute_status?: string | null
+          disputed?: boolean
           dropoff_date?: string
           id?: string
           payment_method_id?: string | null
@@ -402,6 +408,90 @@ export type Database = {
             columns: ["vehicle_id"]
             isOneToOne: false
             referencedRelation: "vehicles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      disputes: {
+        Row: {
+          agency_id: string | null
+          amount_cents: number
+          booking_id: string | null
+          closed_at: string | null
+          created_at: string
+          currency: string
+          evidence_due_by: string | null
+          funds_reinstated_at: string | null
+          funds_withdrawn: boolean
+          funds_withdrawn_at: string | null
+          id: string
+          opened_at: string
+          outcome: string | null
+          raw: Json | null
+          reason: string | null
+          status: string
+          stripe_charge_id: string | null
+          stripe_dispute_id: string
+          stripe_payment_intent_id: string | null
+          updated_at: string
+        }
+        Insert: {
+          agency_id?: string | null
+          amount_cents?: number
+          booking_id?: string | null
+          closed_at?: string | null
+          created_at?: string
+          currency?: string
+          evidence_due_by?: string | null
+          funds_reinstated_at?: string | null
+          funds_withdrawn?: boolean
+          funds_withdrawn_at?: string | null
+          id?: string
+          opened_at?: string
+          outcome?: string | null
+          raw?: Json | null
+          reason?: string | null
+          status: string
+          stripe_charge_id?: string | null
+          stripe_dispute_id: string
+          stripe_payment_intent_id?: string | null
+          updated_at?: string
+        }
+        Update: {
+          agency_id?: string | null
+          amount_cents?: number
+          booking_id?: string | null
+          closed_at?: string | null
+          created_at?: string
+          currency?: string
+          evidence_due_by?: string | null
+          funds_reinstated_at?: string | null
+          funds_withdrawn?: boolean
+          funds_withdrawn_at?: string | null
+          id?: string
+          opened_at?: string
+          outcome?: string | null
+          raw?: Json | null
+          reason?: string | null
+          status?: string
+          stripe_charge_id?: string | null
+          stripe_dispute_id?: string
+          stripe_payment_intent_id?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "disputes_agency_id_fkey"
+            columns: ["agency_id"]
+            isOneToOne: false
+            referencedRelation: "agencies"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "disputes_booking_id_fkey"
+            columns: ["booking_id"]
+            isOneToOne: false
+            referencedRelation: "bookings"
             referencedColumns: ["id"]
           },
         ]
