@@ -662,6 +662,12 @@ const OwnerDashboard = () => {
   return (
     <div className="min-h-screen bg-background">
       <SEO title="Owner Dashboard | ZUVIO" description="Manage your rental vehicles and reservation requests on ZUVIO." path="/dashboard" noindex />
+      {needsMorReAgreement && agencyId && (
+        <MorReAgreementModal
+          agencyId={agencyId}
+          onAccepted={() => setNeedsMorReAgreement(false)}
+        />
+      )}
 <main className="pt-6 sm:pt-8 pb-16 overflow-x-hidden">
         <div className="container mx-auto px-4 max-w-6xl">
           {/* Fees Setup Required Banner */}
