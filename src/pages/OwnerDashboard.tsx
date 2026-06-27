@@ -61,6 +61,7 @@ import {
 import { StripeConnectCard } from "@/components/owner/StripeConnectCard";
 import { SubscriptionCard } from "@/components/owner/SubscriptionCard";
 import { BookingsSection } from "@/components/owner/BookingsSection";
+import { MorReAgreementModal } from "@/components/owner/MorReAgreementModal";
 import { Sparkles } from "lucide-react";
 import {
   Collapsible,
@@ -173,6 +174,7 @@ const OwnerDashboard = () => {
     useState<VehicleOverrides>(emptyVehicleOverrides());
   const [showOverrideValidation, setShowOverrideValidation] = useState(false);
   const [feeSectionOpen, setFeeSectionOpen] = useState(false);
+  const [needsMorReAgreement, setNeedsMorReAgreement] = useState(false);
 
   useEffect(() => {
     if (authLoading) return;
@@ -204,13 +206,14 @@ const OwnerDashboard = () => {
       // Fetch trial info from agencies
       const { data: agencyData } = await supabase
         .from('agencies')
-        .select('id, subscription_status, trial_end_date, grace_period_end, is_founding_member, founding_member_number, payment_methods, payment_restrictions, fee_settings, tax_rate, custom_fees, fees_setup_complete')
+        .select('id, subscription_status, trial_end_date, grace_period_end, is_founding_member, founding_member_number, payment_methods, payment_restrictions, fee_settings, tax_rate, custom_fees, fees_setup_complete, tos_version_2026_06')
         .eq('owner_user_id', user.id)
         .single();
 
       if (agencyData) {
         // BookingsSection needs the agencies.id (not profiles.id)
         setAgencyId(agencyData.id);
+        setNeedsMorReAgreement(agencyData.tos_version_2026_06 !== true);
         setFeesSetupComplete(!!agencyData.fees_setup_complete);
         const pm = agencyData.payment_methods;
         const methods = Array.isArray(pm)
