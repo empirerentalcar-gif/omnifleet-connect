@@ -13,6 +13,9 @@ const log = (step: string, details?: unknown) => {
   console.log(`[STRIPE-WEBHOOK] ${step}${extra}`);
 };
 
+const DISPUTE_ALERT_EMAIL = "zuviollc@gmail.com";
+const DISPUTE_FROM_EMAIL = "Zuvio Alerts <team@zuvio.us>";
+
 /**
  * Stripe webhook receiver.
  * Handles subscription lifecycle (active/past_due/canceled) and booking
@@ -217,6 +220,26 @@ serve(async (req) => {
               updated_at: new Date().toISOString(),
             })
             .eq("stripe_connect_account_id", account.id);
+          break;
+        }
+        case "charge.dispute.created": {
+          const dispute = event.data.object as Stripe.Dispute;
+          await handleDisputeCreated(supabaseAdmin, dispute);
+          break;
+        }
+        case "charge.dispute.funds_withdrawn": {
+          const dispute = event.data.object as Stripe.Dispute;
+          await handleDisputeFundsWithdrawn(supabaseAdmin, dispute);
+          break;
+        }
+        case "charge.dispute.funds_reinstated": {
+          const dispute = event.data.object as Stripe.Dispute;
+          await handleDisputeFundsReinstated(supabaseAdmin, dispute);
+          break;
+        }
+        case "charge.dispute.closed": {
+          const dispute = event.data.object as Stripe.Dispute;
+          await handleDisputeClosed(supabaseAdmin, dispute);
           break;
         }
         default:
