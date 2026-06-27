@@ -90,6 +90,7 @@ interface Agency {
   is_founding_member: boolean;
   founding_member_number: number | null;
   subscription_status: string;
+  tos_version_2026_06: boolean;
 }
 
 interface AgencyNote {
@@ -391,6 +392,31 @@ const AdminAgencies = () => {
     if (!isAdmin) return;
     fetchAgencies();
     fetchProfiles();
+  }, [isAdmin]);
+
+  // Realtime: live-update the agreement badge as agencies accept the new TOS.
+  useEffect(() => {
+    if (!isAdmin) return;
+    const channel = supabase
+      .channel('admin-agencies-tos')
+      .on(
+        'postgres_changes',
+        { event: 'UPDATE', schema: 'public', table: 'agencies' },
+        (payload) => {
+          const updated = payload.new as Partial<Agency> & { id: string };
+          setAgencies((prev) =>
+            prev.map((a) =>
+              a.id === updated.id
+                ? { ...a, tos_version_2026_06: !!updated.tos_version_2026_06 }
+                : a,
+            ),
+          );
+        },
+      )
+      .subscribe();
+    return () => {
+      supabase.removeChannel(channel);
+    };
   }, [isAdmin]);
 
   const handleToggle = async (agency: Agency, field: 'approved' | 'active', value: boolean) => {
