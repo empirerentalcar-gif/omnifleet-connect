@@ -41,6 +41,40 @@ export function StripeConnectCard() {
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
   const [morAccepted, setMorAccepted] = useState(false);
+  const [recordingAgreement, setRecordingAgreement] = useState(false);
+
+  const handleMorToggle = async (checked: boolean) => {
+    if (!checked) {
+      // Once accepted and logged server-side, the acknowledgement cannot be unchecked.
+      return;
+    }
+    if (morAccepted || recordingAgreement) return;
+    setRecordingAgreement(true);
+    try {
+      const { data, error } = await supabase.functions.invoke("record-mor-agreement");
+      if (error || !data?.success) {
+        toast({
+          title: "Couldn't record agreement",
+          description: error?.message ?? "Please try again.",
+          variant: "destructive",
+        });
+        return;
+      }
+      setMorAccepted(true);
+      toast({
+        title: "Agreement recorded",
+        description: "Your Merchant of Record acceptance has been logged.",
+      });
+    } catch (err) {
+      toast({
+        title: "Couldn't record agreement",
+        description: err instanceof Error ? err.message : String(err),
+        variant: "destructive",
+      });
+    } finally {
+      setRecordingAgreement(false);
+    }
+  };
 
   const refresh = async () => {
     setLoading(true);
@@ -274,7 +308,8 @@ export function StripeConnectCard() {
           <Checkbox
             id="mor-acknowledgement"
             checked={morAccepted}
-            onCheckedChange={(v) => setMorAccepted(v === true)}
+            onCheckedChange={(v) => handleMorToggle(v === true)}
+            disabled={recordingAgreement || morAccepted}
             className="mt-0.5"
           />
           <label
@@ -286,6 +321,9 @@ export function StripeConnectCard() {
               Terms of Service
             </a>
             .
+            {recordingAgreement && (
+              <span className="ml-2 text-xs text-muted-foreground/80">Recording…</span>
+            )}
           </label>
         </div>
       )}
