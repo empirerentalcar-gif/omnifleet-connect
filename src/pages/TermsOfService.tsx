@@ -15,7 +15,7 @@ const TermsOfService = () => {
           </h1>
 
           <p className="text-muted-foreground mb-4">
-            Last updated: April 4, 2026
+            Last updated: June 27, 2026
           </p>
 
           <p className="text-muted-foreground mb-8">
@@ -80,6 +80,9 @@ const TermsOfService = () => {
                 <li>Agencies are solely responsible for the condition of their vehicles and the safety of renters during the rental period</li>
                 <li>Zuvio reserves the right to remove any agency listing that violates these Terms or that receives consistent unresolved complaints</li>
               </ul>
+              <p className="text-muted-foreground mt-3">
+                Agencies connecting a payment processing account to Zuvio acknowledge and agree that they act as the primary Merchant of Record for all digital transactions completed for their vehicles. As the Merchant of Record, the agency assumes 100% financial and legal responsibility for all renter disputes, bank chargebacks, fraudulent transactions, and associated processing or dispute fees. Zuvio reserves the right to withhold future transaction payouts, freeze pending platform transfers, or issue automated Stripe transfer reversals to fully recover funds from the agency's connected account in the event of an active or lost dispute.
+              </p>
             </section>
 
             <section>
@@ -102,7 +105,7 @@ const TermsOfService = () => {
                 6. Payment Terms
               </h2>
               <ul className="list-disc list-inside text-muted-foreground space-y-2">
-                <li>Some agencies on Zuvio accept online card payments processed securely through our payment processor. Zuvio does not store full card numbers</li>
+                <li>Online card payments are processed securely through Stripe Connect. When a renter pays online, the transaction settles directly with the independent agency providing the vehicle. Zuvio automatically extracts its platform fee during checkout, and the remaining funds are routed to the agency's connected account. Zuvio does not store full card numbers.</li>
                 <li>Some agencies accept cash — in those cases, payment is handled directly between the renter and the agency at the time of pickup</li>
                 <li>Agency payout schedules and platform fees are governed by the separate Agency Agreement entered into at the time of registration</li>
                 <li>Refund policies vary by agency. Renters should review the agency's cancellation and refund policy before booking. Zuvio is not responsible for issuing refunds on behalf of agencies</li>
