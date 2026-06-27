@@ -90,6 +90,7 @@ interface Agency {
   is_founding_member: boolean;
   founding_member_number: number | null;
   subscription_status: string;
+  tos_version_2026_06: boolean;
 }
 
 interface AgencyNote {
@@ -391,6 +392,31 @@ const AdminAgencies = () => {
     if (!isAdmin) return;
     fetchAgencies();
     fetchProfiles();
+  }, [isAdmin]);
+
+  // Realtime: live-update the agreement badge as agencies accept the new TOS.
+  useEffect(() => {
+    if (!isAdmin) return;
+    const channel = supabase
+      .channel('admin-agencies-tos')
+      .on(
+        'postgres_changes',
+        { event: 'UPDATE', schema: 'public', table: 'agencies' },
+        (payload) => {
+          const updated = payload.new as Partial<Agency> & { id: string };
+          setAgencies((prev) =>
+            prev.map((a) =>
+              a.id === updated.id
+                ? { ...a, tos_version_2026_06: !!updated.tos_version_2026_06 }
+                : a,
+            ),
+          );
+        },
+      )
+      .subscribe();
+    return () => {
+      supabase.removeChannel(channel);
+    };
   }, [isAdmin]);
 
   const handleToggle = async (agency: Agency, field: 'approved' | 'active', value: boolean) => {
@@ -726,6 +752,21 @@ const AdminAgencies = () => {
                                     >
                                       <AlertTriangle className="h-3 w-3" />
                                       No Owner
+                                    </Badge>
+                                  )}
+                                  {agency.tos_version_2026_06 ? (
+                                    <Badge
+                                      className="bg-emerald-500/15 text-emerald-600 border-emerald-500/30 text-xs whitespace-nowrap"
+                                      title="Updated Merchant of Record agreement on file"
+                                    >
+                                      Agreement On File
+                                    </Badge>
+                                  ) : (
+                                    <Badge
+                                      className="bg-yellow-500/15 text-yellow-600 border-yellow-500/40 text-xs whitespace-nowrap"
+                                      title="Awaiting acceptance of updated Merchant of Record agreement"
+                                    >
+                                      Pending Agreement
                                     </Badge>
                                   )}
                                 </div>

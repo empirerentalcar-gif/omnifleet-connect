@@ -125,6 +125,7 @@ export type Database = {
           subscription_current_period_end: string | null
           subscription_status: string
           tax_rate: number
+          tos_version_2026_06: boolean
           trial_end_date: string | null
           trial_start_date: string | null
           updated_at: string
@@ -166,6 +167,7 @@ export type Database = {
           subscription_current_period_end?: string | null
           subscription_status?: string
           tax_rate?: number
+          tos_version_2026_06?: boolean
           trial_end_date?: string | null
           trial_start_date?: string | null
           updated_at?: string
@@ -207,6 +209,7 @@ export type Database = {
           subscription_current_period_end?: string | null
           subscription_status?: string
           tax_rate?: number
+          tos_version_2026_06?: boolean
           trial_end_date?: string | null
           trial_start_date?: string | null
           updated_at?: string
