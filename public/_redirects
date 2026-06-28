@@ -1,4 +1,5 @@
 # 301 Permanent Redirects: old domain -> new domain (Google Search Console Change of Address)
+# All listed variations redirect in a single hop to https://gozuvio.com, preserving path and query.
 http://zuvio.us/*           https://gozuvio.com/:splat       301!
 https://zuvio.us/*          https://gozuvio.com/:splat       301!
 http://www.zuvio.us/*       https://gozuvio.com/:splat       301!
