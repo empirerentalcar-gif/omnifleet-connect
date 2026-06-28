@@ -7,6 +7,31 @@
   to = "/sitemap.xml"
   status = 200
 
+# 301 Permanent Redirects: old domain -> new domain (Google Search Console Change of Address)
+[[redirects]]
+  from = "https://zuvio.us/*"
+  to = "https://gozuvio.com/:splat"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "https://www.zuvio.us/*"
+  to = "https://gozuvio.com/:splat"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "http://zuvio.us/*"
+  to = "https://gozuvio.com/:splat"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "http://www.zuvio.us/*"
+  to = "https://gozuvio.com/:splat"
+  status = 301
+  force = true
+
 [[redirects]]
   from = "/*"
   to = "/index.html"
