@@ -290,13 +290,13 @@ const CityLanding = () => {
           '@type': 'WebPage',
           name: `Car Rentals in ${cityLabel}`,
           description: seoDescription,
-          url: `https://zuvio.us/city/${citySlug}`,
+          url: `https://gozuvio.com/city/${citySlug}`,
           breadcrumb: {
             '@type': 'BreadcrumbList',
             itemListElement: [
-              { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://zuvio.us/' },
-              { '@type': 'ListItem', position: 2, name: 'Cities', item: 'https://zuvio.us/cities' },
-              { '@type': 'ListItem', position: 3, name: `Car Rentals in ${cityLabel}`, item: `https://zuvio.us/city/${citySlug}` },
+              { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://gozuvio.com/' },
+              { '@type': 'ListItem', position: 2, name: 'Cities', item: 'https://gozuvio.com/cities' },
+              { '@type': 'ListItem', position: 3, name: `Car Rentals in ${cityLabel}`, item: `https://gozuvio.com/city/${citySlug}` },
             ],
           },
         }) }} />

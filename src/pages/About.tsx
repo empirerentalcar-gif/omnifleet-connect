@@ -25,8 +25,8 @@ const About = () => {
         "@context": "https://schema.org",
         "@type": "Organization",
         "name": "ZUVIO",
-        "url": "https://zuvio.us",
-        "logo": "https://zuvio.us/og-image.jpg",
+        "url": "https://gozuvio.com",
+        "logo": "https://gozuvio.com/og-image.jpg",
         "description": "Empowering independent car rental agencies and connecting them with customers who value local service and flexibility.",
         "email": "team@zuvio.us",
         "sameAs": []

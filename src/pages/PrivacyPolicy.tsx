@@ -19,7 +19,7 @@ const PrivacyPolicy = () => {
           </p>
 
           <p className="text-muted-foreground mb-8">
-            Zuvio ("we," "us," or "our") operates the website www.zuvio.us, an online marketplace that connects renters with independent car rental agencies. This Privacy Policy explains how we collect, use, share, and protect your information when you use our platform.
+            Zuvio ("we," "us," or "our") operates the website www.gozuvio.com, an online marketplace that connects renters with independent car rental agencies. This Privacy Policy explains how we collect, use, share, and protect your information when you use our platform.
           </p>
           <p className="text-muted-foreground mb-8">
             By using Zuvio, you agree to the collection and use of information in accordance with this policy.

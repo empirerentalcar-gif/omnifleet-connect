@@ -61,7 +61,7 @@ serve(async (req) => {
     const origin =
       req.headers.get("origin") ||
       Deno.env.get("PUBLIC_SITE_URL") ||
-      "https://zuvio.us";
+      "https://gozuvio.com";
 
     const portal = await stripe.billingPortal.sessions.create({
       customer: customerId,

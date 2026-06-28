@@ -127,7 +127,7 @@ const LasVegasLanding = () => {
             "@context": "https://schema.org",
             "@type": "WebPage",
             name: "Zuvio Las Vegas — Independent Car Rental Platform",
-            url: "https://zuvio.us/las-vegas",
+            url: "https://gozuvio.com/las-vegas",
             description:
               "Own rental cars in Las Vegas? Get direct booking requests, keep control of pricing, and grow your rental business with Zuvio.",
           }),

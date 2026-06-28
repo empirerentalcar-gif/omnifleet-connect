@@ -51,7 +51,7 @@ const Cities = () => {
           '@type': 'CollectionPage',
           name: 'Car Rentals by City',
           description: 'Browse car rental agencies in major cities across the United States.',
-          url: 'https://zuvio.us/cities',
+          url: 'https://gozuvio.com/cities',
         }) }} />
       </main>
     </div>

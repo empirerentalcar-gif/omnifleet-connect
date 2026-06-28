@@ -22,10 +22,10 @@ declare global {
   }
 }
 
-const DEFAULT_OG_IMAGE = "https://zuvio.us/og-image.png";
+const DEFAULT_OG_IMAGE = "https://gozuvio.com/og-image.png";
 
 const SEO = ({ title, description, path = "/", noindex = false, image, ready = true }: SEOProps) => {
-  const url = `https://zuvio.us${path}`;
+  const url = `https://gozuvio.com${path}`;
   const ogImage = image || DEFAULT_OG_IMAGE;
 
   useEffect(() => {

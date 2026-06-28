@@ -19,7 +19,7 @@ const TermsOfService = () => {
           </p>
 
           <p className="text-muted-foreground mb-8">
-            Welcome to Zuvio. Please read these Terms of Service carefully before using our platform. By accessing or using www.zuvio.us, you agree to be bound by these terms.
+            Welcome to Zuvio. Please read these Terms of Service carefully before using our platform. By accessing or using www.gozuvio.com, you agree to be bound by these terms.
           </p>
 
           <div className="prose prose-invert max-w-none space-y-8">

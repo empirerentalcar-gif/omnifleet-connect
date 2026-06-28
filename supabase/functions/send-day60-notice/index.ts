@@ -124,7 +124,7 @@ const buildEmailHtml = (agencyName: string) => `<!DOCTYPE html>
         <li>Only 5% commission per completed booking</li>
         <li>Listing goes live the moment you subscribe</li>
       </ul>
-      <a href="https://zuvio.us/dashboard" style="display:inline-block;background:#f97316;color:#ffffff;padding:14px 28px;border-radius:6px;text-decoration:none;font-weight:bold;font-size:16px;">REACTIVATE MY LISTING NOW</a>
+      <a href="https://gozuvio.com/dashboard" style="display:inline-block;background:#f97316;color:#ffffff;padding:14px 28px;border-radius:6px;text-decoration:none;font-weight:bold;font-size:16px;">REACTIVATE MY LISTING NOW</a>
       <p style="margin:12px 0 0;font-size:12px;color:#666;">You'll be redirected to your Owner Dashboard → Billing section</p>
     </div>
 

@@ -33,8 +33,8 @@ const ForAgencies = () => {
         "@type": "WebPage",
         "name": "For Agencies — ZUVIO",
         "description": "Grow your car rental business with Zuvio. Get direct booking requests, keep control of pricing, and increase revenue.",
-        "url": "https://zuvio.us/for-agencies",
-        "isPartOf": { "@type": "WebSite", "name": "ZUVIO", "url": "https://zuvio.us" }
+        "url": "https://gozuvio.com/for-agencies",
+        "isPartOf": { "@type": "WebSite", "name": "ZUVIO", "url": "https://gozuvio.com" }
       }) }} />
 {/* 1. HERO */}
       <section className="pt-28 md:pt-36 pb-16 md:pb-24 relative overflow-hidden">

@@ -125,7 +125,7 @@ const VehicleDetail = () => {
       price: Number(vehicle.daily_rate),
       priceCurrency: "USD",
       availability: "https://schema.org/InStock",
-      url: `https://zuvio.us/vehicles/${vehicle.id}`,
+      url: `https://gozuvio.com/vehicles/${vehicle.id}`,
       seller: {
         "@type": "Organization",
         name: vehicle.business_name ?? "Independent agency",

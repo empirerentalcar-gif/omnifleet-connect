@@ -167,7 +167,7 @@ const AgencyDetail = () => {
           "@type": "AutoRental",
           name: agency.name,
           description: agency.story,
-          url: `https://zuvio.us/agency/${id}`,
+          url: `https://gozuvio.com/agency/${id}`,
           image: agency.photos.length ? agency.photos : undefined,
           priceRange: `$${agency.startingPrice}+/day`,
           paymentAccepted: agency.cashAccepted ? "Cash, Credit Card" : "Credit Card",

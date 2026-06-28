@@ -13,18 +13,18 @@ const Blog = () => {
     name: "The Independent Lane by Zuvio",
     description:
       "Tips and insights for independent car rental agency owners. Grow your business, get more bookings, and stay ahead.",
-    url: "https://zuvio.us/blog",
+    url: "https://gozuvio.com/blog",
     publisher: {
       "@type": "Organization",
       name: "Zuvio",
-      url: "https://zuvio.us",
+      url: "https://gozuvio.com",
     },
     blogPost: blogPosts.map((p) => ({
       "@type": "BlogPosting",
       headline: p.title,
       description: p.metaDescription,
       datePublished: p.date,
-      url: `https://zuvio.us/blog/${p.slug}`,
+      url: `https://gozuvio.com/blog/${p.slug}`,
       author: { "@type": "Organization", name: "Zuvio" },
     })),
   };
@@ -34,10 +34,10 @@ const Blog = () => {
       <Helmet>
         <title>{t("blog.seoTitle")}</title>
         <meta name="description" content={t("blog.seoDescription")} />
-        <link rel="canonical" href="https://zuvio.us/blog" />
+        <link rel="canonical" href="https://gozuvio.com/blog" />
         <meta property="og:title" content={t("blog.seoTitle")} />
         <meta property="og:description" content={t("blog.seoDescription")} />
-        <meta property="og:url" content="https://zuvio.us/blog" />
+        <meta property="og:url" content="https://gozuvio.com/blog" />
         <script type="application/ld+json">{JSON.stringify(jsonLd)}</script>
       </Helmet>
 <main className="min-h-screen pt-8 md:pt-32">
