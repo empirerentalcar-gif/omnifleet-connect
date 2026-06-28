@@ -1,3 +1,9 @@
+# 301 Permanent Redirects: old domain -> new domain (Google Search Console Change of Address)
+http://zuvio.us/*           https://gozuvio.com/:splat       301!
+https://zuvio.us/*          https://gozuvio.com/:splat       301!
+http://www.zuvio.us/*       https://gozuvio.com/:splat       301!
+https://www.zuvio.us/*      https://gozuvio.com/:splat       301!
+
 /sitemap                /sitemap.xml               200
 
 # Static routes
