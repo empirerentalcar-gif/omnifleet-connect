@@ -120,23 +120,23 @@ const buildEmailHtml = (agencyName: string) => `<!DOCTYPE html>
     <div style="border:1px solid #e5e7eb;border-radius:8px;padding:16px;margin-bottom:12px;">
       <h4 style="margin:0 0 8px;color:#f97316;">1. Connect Your Stripe Account</h4>
       <p style="margin:0 0 12px;font-size:14px;">Link your bank account through Stripe Express so Zuvio can send your rental payouts directly. This is required before you can accept paid bookings.</p>
-      <a href="https://zuvio.us/dashboard" style="color:#f97316;font-weight:bold;text-decoration:none;">GO TO OWNER DASHBOARD →</a>
+      <a href="https://gozuvio.com/dashboard" style="color:#f97316;font-weight:bold;text-decoration:none;">GO TO OWNER DASHBOARD →</a>
     </div>
 
     <div style="border:1px solid #e5e7eb;border-radius:8px;padding:16px;margin-bottom:12px;">
       <h4 style="margin:0 0 8px;color:#f97316;">2. Upload Vehicle Photos</h4>
       <p style="margin:0 0 12px;font-size:14px;">Listings with photos get significantly more bookings than those without. Upload at least 3 photos per vehicle — exterior front, exterior rear, and interior. Takes less than 5 minutes.</p>
-      <a href="https://zuvio.us/dashboard" style="color:#f97316;font-weight:bold;text-decoration:none;">UPLOAD PHOTOS NOW →</a>
+      <a href="https://gozuvio.com/dashboard" style="color:#f97316;font-weight:bold;text-decoration:none;">UPLOAD PHOTOS NOW →</a>
     </div>
 
     <div style="border:1px solid #e5e7eb;border-radius:8px;padding:16px;margin-bottom:20px;">
       <h4 style="margin:0 0 8px;color:#f97316;">3. Set Your Daily Rates</h4>
       <p style="margin:0 0 12px;font-size:14px;">Make sure every vehicle has a daily rate set. Without a rate, renters can't complete a paid booking for your vehicle. Log into your dashboard and confirm each vehicle is priced and ready.</p>
-      <a href="https://zuvio.us/dashboard" style="color:#f97316;font-weight:bold;text-decoration:none;">REVIEW MY VEHICLES →</a>
+      <a href="https://gozuvio.com/dashboard" style="color:#f97316;font-weight:bold;text-decoration:none;">REVIEW MY VEHICLES →</a>
     </div>
 
     <div style="text-align:center;margin:28px 0;">
-      <a href="https://zuvio.us/dashboard" style="display:inline-block;background:#f97316;color:#ffffff;padding:14px 28px;border-radius:8px;text-decoration:none;font-weight:bold;font-size:16px;">COMPLETE MY SETUP NOW</a>
+      <a href="https://gozuvio.com/dashboard" style="display:inline-block;background:#f97316;color:#ffffff;padding:14px 28px;border-radius:8px;text-decoration:none;font-weight:bold;font-size:16px;">COMPLETE MY SETUP NOW</a>
     </div>
 
     <h3>What happens after your trial ends?</h3>

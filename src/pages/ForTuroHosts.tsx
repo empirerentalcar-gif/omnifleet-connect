@@ -24,7 +24,7 @@ const ForTuroHosts = () => {
         "@context": "https://schema.org",
         "@type": "WebPage",
         "name": "Zuvio for Turo Hosts",
-        "url": "https://zuvio.us/for-turo-hosts",
+        "url": "https://gozuvio.com/for-turo-hosts",
         "description": "Get more bookings outside of Turo. Keep control of pricing, build repeat customers, and grow your rental business with Zuvio."
       }) }} />
 <TuroHero />

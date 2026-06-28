@@ -24,11 +24,11 @@ const Index = () => {
         "@context": "https://schema.org",
         "@type": "WebSite",
         "name": "Zuvio",
-        "url": "https://zuvio.us",
+        "url": "https://gozuvio.com",
         "description": "Independent car rental platform for owners. List your rental cars and get direct booking requests.",
         "potentialAction": {
           "@type": "SearchAction",
-          "target": "https://zuvio.us/search?q={search_term_string}",
+          "target": "https://gozuvio.com/search?q={search_term_string}",
           "query-input": "required name=search_term_string"
         }
       }) }} />

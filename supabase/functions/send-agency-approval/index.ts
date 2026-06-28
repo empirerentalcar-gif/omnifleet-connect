@@ -80,8 +80,8 @@ Deno.serve(async (req) => {
       );
     }
 
-    const dashboardUrl = "https://zuvio.us/dashboard";
-    const siteUrl = "https://zuvio.us";
+    const dashboardUrl = "https://gozuvio.com/dashboard";
+    const siteUrl = "https://gozuvio.com";
     const subject = `🎉 Your Agency is Now Live on Zuvio!`;
     const html = `
       <div style="font-family:sans-serif;max-width:600px;margin:0 auto;padding:20px;background:#ffffff;">

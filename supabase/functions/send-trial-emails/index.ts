@@ -59,7 +59,7 @@ const foundingWelcomeEmail = (name: string, number: number) => `
     <li>Start receiving reservation requests from customers</li>
   </ol>
 
-  <p><a href="https://zuvio.us/dashboard" style="display:inline-block;background:#f97316;color:#fff;padding:14px 28px;border-radius:8px;text-decoration:none;font-weight:bold;font-size:16px;">Go to Your Dashboard →</a></p>
+  <p><a href="https://gozuvio.com/dashboard" style="display:inline-block;background:#f97316;color:#fff;padding:14px 28px;border-radius:8px;text-decoration:none;font-weight:bold;font-size:16px;">Go to Your Dashboard →</a></p>
   
   <p style="color: #666; font-size: 14px; margin-top: 30px;">Your trial ends in 60 days. We'll remind you before it expires.<br/>— The Zuvio Team</p>
 </div>`;
@@ -86,7 +86,7 @@ const standardWelcomeEmail = (name: string) => `
     <li>Respond quickly to reservation requests</li>
   </ol>
 
-  <p><a href="https://zuvio.us/dashboard" style="display:inline-block;background:#3b82f6;color:#fff;padding:14px 28px;border-radius:8px;text-decoration:none;font-weight:bold;font-size:16px;">Go to Your Dashboard →</a></p>
+  <p><a href="https://gozuvio.com/dashboard" style="display:inline-block;background:#3b82f6;color:#fff;padding:14px 28px;border-radius:8px;text-decoration:none;font-weight:bold;font-size:16px;">Go to Your Dashboard →</a></p>
   
   <p style="color: #666; font-size: 14px; margin-top: 30px;">Your trial ends in 30 days. We'll remind you before it expires.<br/>— The Zuvio Team</p>
 </div>`;
@@ -108,7 +108,7 @@ const trialEndingEmail = (name: string, daysLeft: number, isFounding: boolean, n
 
   <p><strong>Your pricing: ${isFounding ? `$25/month + 3% commission (Founding Member #${number} exclusive rate)` : '$49/month + 5% commission'}</strong></p>
   
-  <p><a href="https://zuvio.us/dashboard" style="display:inline-block;background:#f97316;color:#fff;padding:14px 28px;border-radius:8px;text-decoration:none;font-weight:bold;font-size:16px;">Subscribe Now →</a></p>
+  <p><a href="https://gozuvio.com/dashboard" style="display:inline-block;background:#f97316;color:#fff;padding:14px 28px;border-radius:8px;text-decoration:none;font-weight:bold;font-size:16px;">Subscribe Now →</a></p>
   
   <p style="color: #666; font-size: 14px; margin-top: 30px;">— The Zuvio Team</p>
 </div>`;
@@ -136,7 +136,7 @@ const trialEndedEmail = (name: string, isFounding: boolean, number: number | nul
     ${isFounding ? '<p style="margin: 4px 0 0; font-size: 14px; color: #666;">This exclusive rate is locked in forever as a Founding Member.</p>' : ''}
   </div>
 
-  <p><a href="https://zuvio.us/dashboard" style="display:inline-block;background:#f97316;color:#fff;padding:14px 28px;border-radius:8px;text-decoration:none;font-weight:bold;font-size:16px;">Subscribe & Go Live →</a></p>
+  <p><a href="https://gozuvio.com/dashboard" style="display:inline-block;background:#f97316;color:#fff;padding:14px 28px;border-radius:8px;text-decoration:none;font-weight:bold;font-size:16px;">Subscribe & Go Live →</a></p>
   
   <p style="color: #666; font-size: 14px; margin-top: 30px;">Questions? Reply to this email — we're here to help.<br/>— The Zuvio Team</p>
 </div>`;

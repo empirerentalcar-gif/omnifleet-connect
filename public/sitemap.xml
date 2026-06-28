@@ -1,214 +1,214 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://zuvio.us/</loc>
+    <loc>https://gozuvio.com/</loc>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://zuvio.us/search</loc>
+    <loc>https://gozuvio.com/search</loc>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://zuvio.us/cities</loc>
+    <loc>https://gozuvio.com/cities</loc>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://zuvio.us/about</loc>
+    <loc>https://gozuvio.com/about</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://zuvio.us/how-it-works</loc>
+    <loc>https://gozuvio.com/how-it-works</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://zuvio.us/for-agencies</loc>
+    <loc>https://gozuvio.com/for-agencies</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://zuvio.us/faq</loc>
+    <loc>https://gozuvio.com/faq</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://zuvio.us/pricing</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://zuvio.us/owner-benefits</loc>
+    <loc>https://gozuvio.com/pricing</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://zuvio.us/for-turo-hosts</loc>
+    <loc>https://gozuvio.com/owner-benefits</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://zuvio.us/las-vegas</loc>
+    <loc>https://gozuvio.com/for-turo-hosts</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://gozuvio.com/las-vegas</loc>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://zuvio.us/phoenix</loc>
+    <loc>https://gozuvio.com/phoenix</loc>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://zuvio.us/los-angeles</loc>
+    <loc>https://gozuvio.com/los-angeles</loc>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://zuvio.us/houston</loc>
+    <loc>https://gozuvio.com/houston</loc>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://zuvio.us/miami</loc>
+    <loc>https://gozuvio.com/miami</loc>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://zuvio.us/new-york</loc>
+    <loc>https://gozuvio.com/new-york</loc>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://zuvio.us/city/las-vegas</loc>
+    <loc>https://gozuvio.com/city/las-vegas</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://zuvio.us/city/los-angeles</loc>
+    <loc>https://gozuvio.com/city/los-angeles</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://zuvio.us/city/san-francisco</loc>
+    <loc>https://gozuvio.com/city/san-francisco</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://zuvio.us/city/san-diego</loc>
+    <loc>https://gozuvio.com/city/san-diego</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://zuvio.us/city/phoenix</loc>
+    <loc>https://gozuvio.com/city/phoenix</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://zuvio.us/city/scottsdale</loc>
+    <loc>https://gozuvio.com/city/scottsdale</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://zuvio.us/city/miami</loc>
+    <loc>https://gozuvio.com/city/miami</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://zuvio.us/city/orlando</loc>
+    <loc>https://gozuvio.com/city/orlando</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://zuvio.us/city/tampa</loc>
+    <loc>https://gozuvio.com/city/tampa</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://zuvio.us/city/fort-lauderdale</loc>
+    <loc>https://gozuvio.com/city/fort-lauderdale</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://zuvio.us/city/dallas</loc>
+    <loc>https://gozuvio.com/city/dallas</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://zuvio.us/city/houston</loc>
+    <loc>https://gozuvio.com/city/houston</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://zuvio.us/city/austin</loc>
+    <loc>https://gozuvio.com/city/austin</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://zuvio.us/city/san-antonio</loc>
+    <loc>https://gozuvio.com/city/san-antonio</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://zuvio.us/city/new-york-city</loc>
+    <loc>https://gozuvio.com/city/new-york-city</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://zuvio.us/city/reno</loc>
+    <loc>https://gozuvio.com/city/reno</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://zuvio.us/city/buffalo</loc>
+    <loc>https://gozuvio.com/city/buffalo</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://zuvio.us/privacy</loc>
+    <loc>https://gozuvio.com/privacy</loc>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
   </url>
   <url>
-    <loc>https://zuvio.us/terms</loc>
+    <loc>https://gozuvio.com/terms</loc>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
   </url>
   <url>
-    <loc>https://zuvio.us/signin</loc>
+    <loc>https://gozuvio.com/signin</loc>
     <changefreq>monthly</changefreq>
     <priority>0.4</priority>
   </url>
   <url>
-    <loc>https://zuvio.us/signup</loc>
+    <loc>https://gozuvio.com/signup</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://zuvio.us/blog</loc>
+    <loc>https://gozuvio.com/blog</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://zuvio.us/cancellation-policy</loc>
+    <loc>https://gozuvio.com/cancellation-policy</loc>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
   </url>
   <url>
-    <loc>https://zuvio.us/blog/best-gps-trackers-rental-fleet-2026</loc>
+    <loc>https://gozuvio.com/blog/best-gps-trackers-rental-fleet-2026</loc>
     <lastmod>2026-05-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://zuvio.us/blog/how-to-handle-insurance-independent-car-rental-business</loc>
+    <loc>https://gozuvio.com/blog/how-to-handle-insurance-independent-car-rental-business</loc>
     <lastmod>2026-05-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://zuvio.us/blog/peace-of-mind-on-every-mile-insurance-guide</loc>
+    <loc>https://gozuvio.com/blog/peace-of-mind-on-every-mile-insurance-guide</loc>
     <lastmod>2026-05-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>

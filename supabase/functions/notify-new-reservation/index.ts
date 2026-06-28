@@ -128,7 +128,7 @@ Deno.serve(async (req) => {
     ${notesRow}
   </table>
   <p style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;padding:12px;font-size:14px;">
-    📋 <strong>Next step:</strong> Log in to your <a href="https://zuvio.us/owner-dashboard" style="color:#10b981;">ZUVIO dashboard</a> to view and respond to this request.
+    📋 <strong>Next step:</strong> Log in to your <a href="https://gozuvio.com/owner-dashboard" style="color:#10b981;">ZUVIO dashboard</a> to view and respond to this request.
   </p>
   <p style="color:#888;font-size:12px;margin-top:24px;">— ZUVIO Team</p>
 </div>`;

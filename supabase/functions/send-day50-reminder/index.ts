@@ -114,24 +114,24 @@ const buildEmailHtml = (agencyName: string) => `<!DOCTYPE html>
     </div>
 
     <h3>Complete these steps before your trial ends:</h3>
-    <p>Log into your Owner Dashboard at <a href="https://zuvio.us/dashboard" style="color:#f97316;">zuvio.us/dashboard</a> to finish setup.</p>
+    <p>Log into your Owner Dashboard at <a href="https://gozuvio.com/dashboard" style="color:#f97316;">zuvio.us/dashboard</a> to finish setup.</p>
 
     <div style="border:1px solid #e5e7eb;border-radius:8px;padding:16px;margin-bottom:12px;">
       <h4 style="margin:0 0 8px;color:#f97316;">1. Connect Your Stripe Account</h4>
       <p style="margin:0 0 12px;font-size:14px;">Required to receive rental payouts. Without this, you cannot get paid.</p>
-      <a href="https://zuvio.us/dashboard" style="color:#f97316;font-weight:bold;text-decoration:none;">DO IT →</a>
+      <a href="https://gozuvio.com/dashboard" style="color:#f97316;font-weight:bold;text-decoration:none;">DO IT →</a>
     </div>
 
     <div style="border:1px solid #e5e7eb;border-radius:8px;padding:16px;margin-bottom:12px;">
       <h4 style="margin:0 0 8px;color:#f97316;">2. Upload Vehicle Photos</h4>
       <p style="margin:0 0 12px;font-size:14px;">At least 3 photos per vehicle. Listings with photos get significantly more bookings.</p>
-      <a href="https://zuvio.us/dashboard" style="color:#f97316;font-weight:bold;text-decoration:none;">DO IT →</a>
+      <a href="https://gozuvio.com/dashboard" style="color:#f97316;font-weight:bold;text-decoration:none;">DO IT →</a>
     </div>
 
     <div style="border:1px solid #e5e7eb;border-radius:8px;padding:16px;margin-bottom:20px;">
       <h4 style="margin:0 0 8px;color:#f97316;">3. Set Daily Rates on All Vehicles</h4>
       <p style="margin:0 0 12px;font-size:14px;">Every vehicle needs a daily rate so renters can book and pay instantly.</p>
-      <a href="https://zuvio.us/dashboard" style="color:#f97316;font-weight:bold;text-decoration:none;">DO IT →</a>
+      <a href="https://gozuvio.com/dashboard" style="color:#f97316;font-weight:bold;text-decoration:none;">DO IT →</a>
     </div>
 
     <div style="background:#fff8f0;border:2px solid #f97316;border-radius:8px;padding:20px;margin:24px 0;text-align:center;">
@@ -141,7 +141,7 @@ const buildEmailHtml = (agencyName: string) => `<!DOCTYPE html>
     </div>
 
     <div style="text-align:center;margin:28px 0;">
-      <a href="https://zuvio.us/dashboard" style="display:inline-block;background:#f97316;color:#ffffff;padding:14px 28px;border-radius:8px;text-decoration:none;font-weight:bold;font-size:16px;">FINISH MY SETUP NOW</a>
+      <a href="https://gozuvio.com/dashboard" style="display:inline-block;background:#f97316;color:#ffffff;padding:14px 28px;border-radius:8px;text-decoration:none;font-weight:bold;font-size:16px;">FINISH MY SETUP NOW</a>
     </div>
 
     <h3>Need help finishing setup?</h3>

@@ -14,7 +14,7 @@ const BlogPost = () => {
 
   if (!post) return <Navigate to="/blog" replace />;
 
-  const postUrl = `https://zuvio.us/blog/${post.slug}`;
+  const postUrl = `https://gozuvio.com/blog/${post.slug}`;
 
   const handleCopy = async () => {
     try {
@@ -32,9 +32,9 @@ const BlogPost = () => {
     headline: post.title,
     description: post.metaDescription,
     datePublished: post.date,
-    url: `https://zuvio.us/blog/${post.slug}`,
+    url: `https://gozuvio.com/blog/${post.slug}`,
     author: { "@type": "Organization", name: "Zuvio" },
-    publisher: { "@type": "Organization", name: "Zuvio", url: "https://zuvio.us" },
+    publisher: { "@type": "Organization", name: "Zuvio", url: "https://gozuvio.com" },
   };
 
   return (
@@ -42,10 +42,10 @@ const BlogPost = () => {
       <Helmet>
         <title>{post.title} | Zuvio Blog</title>
         <meta name="description" content={post.metaDescription} />
-        <link rel="canonical" href={`https://zuvio.us/blog/${post.slug}`} />
+        <link rel="canonical" href={`https://gozuvio.com/blog/${post.slug}`} />
         <meta property="og:title" content={`${post.title} | Zuvio Blog`} />
         <meta property="og:description" content={post.metaDescription} />
-        <meta property="og:url" content={`https://zuvio.us/blog/${post.slug}`} />
+        <meta property="og:url" content={`https://gozuvio.com/blog/${post.slug}`} />
         <script type="application/ld+json">{JSON.stringify(jsonLd)}</script>
       </Helmet>
 <main className="min-h-screen pt-8 md:pt-32 pb-20 md:pb-28">

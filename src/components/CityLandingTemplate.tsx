@@ -56,7 +56,7 @@ const CityLandingTemplate = ({ config }: { config: CityLandingConfig }) => {
             "@context": "https://schema.org",
             "@type": "WebPage",
             name: `Independent Car Rentals in ${cityName} | Zuvio`,
-            url: `https://zuvio.us/${slug}`,
+            url: `https://gozuvio.com/${slug}`,
             description: `Find independent car rentals in ${cityName}. Book direct from local agencies.`,
           }),
         }}
