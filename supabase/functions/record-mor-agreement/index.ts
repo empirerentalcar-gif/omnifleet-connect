@@ -108,6 +108,20 @@ Deno.serve(async (req) => {
       });
     }
 
+    // Flip the acceptance flag using service role (bypasses the
+    // prevent_owner_sensitive_agency_updates trigger that blocks owners).
+    const { error: flagErr } = await admin
+      .from("agencies")
+      .update({ tos_version_2026_06: true })
+      .eq("id", agency.id);
+    if (flagErr) {
+      console.error("[record-mor-agreement] Failed to set tos_version_2026_06", flagErr);
+      return new Response(
+        JSON.stringify({ error: "Failed to save acceptance flag" }),
+        { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } },
+      );
+    }
+
     const friendlyTime = new Date(inserted.agreed_at).toLocaleString("en-US", {
       timeZone: "UTC",
       dateStyle: "long",

@@ -28,18 +28,6 @@ export function MorReAgreementModal({ agencyId, onAccepted }: Props) {
         });
         return;
       }
-      const { error: updateError } = await supabase
-        .from("agencies")
-        .update({ tos_version_2026_06: true })
-        .eq("id", agencyId);
-      if (updateError) {
-        toast({
-          title: "Couldn't save acceptance",
-          description: updateError.message,
-          variant: "destructive",
-        });
-        return;
-      }
       toast({
         title: "Agreement recorded",
         description: "Thank you. You can continue using your dashboard.",
