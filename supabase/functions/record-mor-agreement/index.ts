@@ -116,8 +116,51 @@ Deno.serve(async (req) => {
       .eq("id", agency.id);
     if (flagErr) {
       console.error("[record-mor-agreement] Failed to set tos_version_2026_06", flagErr);
+      // Layer A: log silent failure + alert admin via Resend.
+      await admin.from("sensitive_update_failures").insert({
+        agency_id: agency.id,
+        field_name: "tos_version_2026_06",
+        source: "record-mor-agreement",
+        expected_value: "true",
+        actual_value: null,
+        error_message: flagErr.message ?? String(flagErr),
+      });
+      sendEmail(
+        ADMIN_EMAIL,
+        `⚠️ Silent sensitive-field update failure (record-mor-agreement)`,
+        `<p>Failed to flip <code>tos_version_2026_06</code> for agency <strong>${agency.agency_name}</strong> (${agency.id}).</p>
+         <p>Error: <code>${flagErr.message ?? String(flagErr)}</code></p>`,
+      );
       return new Response(
         JSON.stringify({ error: "Failed to save acceptance flag" }),
+        { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } },
+      );
+    }
+
+    // Layer A: verify the write actually landed by re-reading the row.
+    const { data: verifyRow, error: verifyErr } = await admin
+      .from("agencies")
+      .select("tos_version_2026_06")
+      .eq("id", agency.id)
+      .maybeSingle();
+    if (verifyErr || verifyRow?.tos_version_2026_06 !== true) {
+      console.error("[record-mor-agreement] Verification mismatch", { verifyErr, verifyRow });
+      await admin.from("sensitive_update_failures").insert({
+        agency_id: agency.id,
+        field_name: "tos_version_2026_06",
+        source: "record-mor-agreement",
+        expected_value: "true",
+        actual_value: verifyRow ? String(verifyRow.tos_version_2026_06) : null,
+        error_message: verifyErr?.message ?? "Re-read mismatch after update",
+      });
+      sendEmail(
+        ADMIN_EMAIL,
+        `⚠️ Silent sensitive-field update failure (record-mor-agreement)`,
+        `<p>Post-update verification failed for agency <strong>${agency.agency_name}</strong> (${agency.id}).</p>
+         <p>Expected <code>tos_version_2026_06=true</code>, got <code>${verifyRow ? String(verifyRow.tos_version_2026_06) : "null"}</code>.</p>`,
+      );
+      return new Response(
+        JSON.stringify({ error: "Acceptance flag did not persist" }),
         { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } },
       );
     }
