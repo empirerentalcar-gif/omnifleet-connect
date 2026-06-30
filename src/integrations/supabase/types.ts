@@ -799,6 +799,48 @@ export type Database = {
         }
         Relationships: []
       }
+      sensitive_update_failures: {
+        Row: {
+          actual_value: string | null
+          agency_id: string | null
+          created_at: string
+          error_message: string | null
+          expected_value: string | null
+          field_name: string
+          id: string
+          ip_address: string | null
+          source: string
+          user_agent: string | null
+          user_id: string | null
+        }
+        Insert: {
+          actual_value?: string | null
+          agency_id?: string | null
+          created_at?: string
+          error_message?: string | null
+          expected_value?: string | null
+          field_name: string
+          id?: string
+          ip_address?: string | null
+          source: string
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          actual_value?: string | null
+          agency_id?: string | null
+          created_at?: string
+          error_message?: string | null
+          expected_value?: string | null
+          field_name?: string
+          id?: string
+          ip_address?: string | null
+          source?: string
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       stripe_webhook_events: {
         Row: {
           event_type: string

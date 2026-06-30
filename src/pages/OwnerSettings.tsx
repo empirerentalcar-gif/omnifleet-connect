@@ -112,6 +112,23 @@ const OwnerSettings = () => {
 
     setSaving(false);
     if (error) {
+      // Client tripwire: if the trigger silently rejected a sensitive field,
+      // report it so admin gets an alert and a row is logged.
+      const msg = (error.message || "").toLowerCase();
+      if (msg.includes("not allowed to modify protected agency fields")) {
+        try {
+          await supabase.functions.invoke("report-sensitive-update-failure", {
+            body: {
+              agency_id: agencyId,
+              field_name: "agency_settings_update",
+              source: "OwnerSettings.handleSave",
+              error_message: error.message,
+            },
+          });
+        } catch (e) {
+          console.error("Failed to report sensitive update failure", e);
+        }
+      }
       toast({ title: "Save failed", description: error.message, variant: "destructive" });
       return;
     }
