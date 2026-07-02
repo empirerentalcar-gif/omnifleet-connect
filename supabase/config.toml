@@ -41,3 +41,6 @@ verify_jwt = false
 
 [functions.report-sensitive-update-failure]
 verify_jwt = false
+
+[functions.admin-password-reset]
+verify_jwt = false
