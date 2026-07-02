@@ -14,6 +14,8 @@ const checkIsAdmin = async (userId: string): Promise<boolean> => {
   return !!data;
 };
 
+const PASSWORD_RESET_REDIRECT_URL = 'https://gozuvio.com/reset-password';
+
 const SignIn = () => {
   const { t } = useTranslation();
   const signInSchema = z.object({
@@ -122,7 +124,7 @@ const SignIn = () => {
                 return;
               }
               const { error } = await supabase.auth.resetPasswordForEmail(email.trim(), {
-                redirectTo: `${window.location.origin}/reset-password`,
+                redirectTo: PASSWORD_RESET_REDIRECT_URL,
               });
               if (error) {
                 toast({ title: 'Error', description: error.message, variant: 'destructive' });
