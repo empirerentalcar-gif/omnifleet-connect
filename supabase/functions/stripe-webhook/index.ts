@@ -103,12 +103,16 @@ serve(async (req) => {
         case "payment_intent.succeeded": {
           const pi = event.data.object as Stripe.PaymentIntent;
           const bookingId = await reconcilePaymentIntent(supabaseAdmin, pi, event.type);
-          if (bookingId) await sendRenterConfirmation(bookingId);
+          if (bookingId) {
+            await sendRenterConfirmation(bookingId);
+            await sendBookingConfirmedNotification(bookingId);
+          }
           break;
         }
         case "payment_intent.captured": {
           const pi = event.data.object as Stripe.PaymentIntent;
-          await reconcilePaymentIntent(supabaseAdmin, pi, event.type);
+          const bookingId = await reconcilePaymentIntent(supabaseAdmin, pi, event.type);
+          if (bookingId) await sendBookingConfirmedNotification(bookingId);
           break;
         }
         case "payment_intent.amount_capturable_updated": {
@@ -345,6 +349,23 @@ async function sendRenterConfirmation(bookingId: string) {
     });
   } catch (e) {
     console.error("[STRIPE-WEBHOOK] renter confirmation email failed", e);
+  }
+}
+
+async function sendBookingConfirmedNotification(bookingId: string) {
+  try {
+    const supabaseUrl = Deno.env.get("SUPABASE_URL") ?? "";
+    const cronSecret = Deno.env.get("CRON_SECRET") ?? "";
+    await fetch(`${supabaseUrl}/functions/v1/send-booking-confirmation-email`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "x-cron-secret": cronSecret,
+      },
+      body: JSON.stringify({ booking_id: bookingId }),
+    });
+  } catch (e) {
+    console.error("[STRIPE-WEBHOOK] admin/agency booking-confirmed email failed", e);
   }
 }
 
