@@ -342,6 +342,7 @@ export type Database = {
           agency_id: string
           booking_status: string
           capture_method: string
+          confirmation_email_sent_at: string | null
           created_at: string
           currency: string
           daily_rate_cents: number
@@ -370,6 +371,7 @@ export type Database = {
           agency_id: string
           booking_status?: string
           capture_method?: string
+          confirmation_email_sent_at?: string | null
           created_at?: string
           currency?: string
           daily_rate_cents: number
@@ -398,6 +400,7 @@ export type Database = {
           agency_id?: string
           booking_status?: string
           capture_method?: string
+          confirmation_email_sent_at?: string | null
           created_at?: string
           currency?: string
           daily_rate_cents?: number
