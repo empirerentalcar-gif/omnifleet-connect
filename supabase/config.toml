@@ -42,3 +42,6 @@ verify_jwt = false
 [functions.report-sensitive-update-failure]
 verify_jwt = false
 
+
+[functions.process-email-queue]
+verify_jwt = true
