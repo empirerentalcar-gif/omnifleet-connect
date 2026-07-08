@@ -11,6 +11,10 @@ import { z } from 'zod';
 import SEO from '@/components/SEO';
 import { Crown, Check, X } from 'lucide-react';
 
+const US_STATES = [
+  'AL','AK','AZ','AR','CA','CO','CT','DE','FL','GA','HI','ID','IL','IN','IA','KS','KY','LA','ME','MD','MA','MI','MN','MS','MO','MT','NE','NV','NH','NJ','NM','NY','NC','ND','OH','OK','OR','PA','RI','SC','SD','TN','TX','UT','VT','VA','WA','WV','WI','WY','DC'
+];
+
 const checkPasswordRules = (pw: string) => ({
   length: pw.length >= 8,
   uppercase: /[A-Z]/.test(pw),
@@ -32,6 +36,18 @@ const SignUp = () => {
   const signUpSchema = z.object({
     registrationCode: z.string().trim().min(1, t('auth.signUp.errCodeReq')).max(100, t('auth.signUp.errCodeLong')),
     businessName: z.string().trim().min(1, t('auth.signUp.errBizReq')).max(200, t('auth.signUp.errBizLong')),
+    city: z.string().trim().min(1, t('auth.signUp.errCityReq')).max(100, t('auth.signUp.errCityReq')),
+    state: z
+      .string()
+      .trim()
+      .toUpperCase()
+      .refine((v) => US_STATES.includes(v), { message: t('auth.signUp.errStateReq') }),
+    phone: z
+      .string()
+      .trim()
+      .min(1, t('auth.signUp.errPhoneReq'))
+      .refine((v) => (v.match(/\d/g) || []).length >= 10, { message: t('auth.signUp.errPhoneFormat') })
+      .refine((v) => /^[0-9()\-\+\s\.]+$/.test(v), { message: t('auth.signUp.errPhoneFormat') }),
     email: z.string().trim().email(t('auth.signUp.errEmail')).max(255, t('auth.signUp.errEmailLong')),
     password: z
       .string()
@@ -46,6 +62,9 @@ const SignUp = () => {
   const [password, setPassword] = useState('');
   const [registrationCode, setRegistrationCode] = useState('');
   const [businessName, setBusinessName] = useState('');
+  const [city, setCity] = useState('');
+  const [stateVal, setStateVal] = useState('');
+  const [phone, setPhone] = useState('');
   const [loading, setLoading] = useState(false);
   const [foundingCount, setFoundingCount] = useState<number | null>(null);
   const { toast } = useToast();
@@ -63,7 +82,7 @@ const SignUp = () => {
     setLoading(true);
 
     // Validate inputs with Zod
-    const result = signUpSchema.safeParse({ registrationCode, businessName, email, password });
+    const result = signUpSchema.safeParse({ registrationCode, businessName, city, state: stateVal, phone, email, password });
     if (!result.success) {
       const passwordErrors = result.error.errors.filter((err) => err.path[0] === 'password');
       if (passwordErrors.length > 0) {
@@ -120,6 +139,9 @@ const SignUp = () => {
         emailRedirectTo: window.location.origin,
         data: {
           business_name: validated.businessName,
+          city: validated.city,
+          state: validated.state,
+          phone: validated.phone,
         },
       },
     });
