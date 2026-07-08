@@ -286,6 +286,56 @@ const SignUp = () => {
             />
           </div>
 
+          <div className="grid grid-cols-2 gap-3">
+            <div>
+              <label htmlFor="business-city" className="block text-sm font-medium text-foreground mb-1">
+                {t('auth.signUp.city')}
+              </label>
+              <Input
+                id="business-city"
+                type="text"
+                value={city}
+                onChange={(e) => setCity(e.target.value)}
+                required
+                maxLength={100}
+                placeholder={t('auth.signUp.cityPh')}
+              />
+            </div>
+            <div>
+              <label htmlFor="business-state" className="block text-sm font-medium text-foreground mb-1">
+                {t('auth.signUp.state')}
+              </label>
+              <select
+                id="business-state"
+                value={stateVal}
+                onChange={(e) => setStateVal(e.target.value)}
+                required
+                className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+              >
+                <option value="">{t('auth.signUp.statePh')}</option>
+                {US_STATES.map((s) => (
+                  <option key={s} value={s}>{s}</option>
+                ))}
+              </select>
+            </div>
+          </div>
+
+          <div>
+            <label htmlFor="business-phone" className="block text-sm font-medium text-foreground mb-1">
+              {t('auth.signUp.phone')}
+            </label>
+            <Input
+              id="business-phone"
+              type="tel"
+              value={phone}
+              onChange={(e) => setPhone(e.target.value)}
+              required
+              maxLength={30}
+              placeholder={t('auth.signUp.phonePh')}
+              autoComplete="tel"
+            />
+          </div>
+
           <div>
             <label htmlFor="email" className="block text-sm font-medium text-foreground mb-1">
               {t('auth.signUp.email')}
