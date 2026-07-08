@@ -222,7 +222,7 @@
         },
         {
           "q": "¿Cuáles son las tarifas?",
-          "a": "$79 al mes + 5% por reserva confirmada. Los miembros fundadores reciben 60 días gratis y su tarifa queda fija de por vida. Sin tarifas escondidas. Sin contratos largos. Cancela cuando quieras."
+          "a": "$79 al mes + 10% por reserva confirmada. Los miembros fundadores reciben 30 días gratis y su tarifa queda fija de por vida. Sin tarifas escondidas. Sin contratos largos. Cancela cuando quieras."
         },
         {
           "q": "¿Puedo publicar varios carros?",
@@ -260,7 +260,7 @@
         {
           "q": "\"¿Y si no me llegan reservas?\"",
           "a": [
-            "Por eso te damos **60 días sin riesgo.**",
+            "Por eso te damos **30 días sin riesgo.**",
             "Si no te trae valor a tu negocio, simplemente no sigues.",
             "No hay compromiso a largo plazo."
           ]
@@ -281,8 +281,8 @@
     "finalCta": {
       "title": "Empieza a convertir tus carros en",
       "titleAccent": "ingresos",
-      "pricing": "$79 al mes + 5% por reserva confirmada. 60 días gratis para miembros fundadores. Cupos limitados.",
-      "risk": "Pruébalo 60 días sin riesgo. Si no te trae valor, no sigues.",
+      "pricing": "$79 al mes + 10% por reserva confirmada. 30 días gratis para miembros fundadores. Cupos limitados.",
+      "risk": "Pruébalo 30 días sin riesgo. Si no te trae valor, no sigues.",
       "ctaPrimary": "Asegura mi tarifa de fundador",
       "ctaSecondary": "Empieza a recibir reservas"
     }
@@ -488,11 +488,11 @@
       "seoDescription": "Crea una cuenta en ZUVIO para publicar tu agencia independiente de renta de carros.",
       "title": "Crear cuenta",
       "founding": "Programa de Miembro Fundador",
-      "foundingSub": "60 días GRATIS + precios exclusivos fijos para siempre",
+      "foundingSub": "30 días GRATIS + precios exclusivos fijos para siempre",
       "spots": "Solo 25 cupos disponibles",
-      "afterTrial": "Después del trial: <strong>$79/mes + 5% por reserva confirmada</strong> (fijo para siempre)",
-      "afterTrialPlain": "Después del trial: <strong>$79/mes + 5% por reserva confirmada</strong>",
-      "startTrial": "Empieza tu <strong>trial GRATIS de 60 días</strong>",
+      "afterTrial": "Después del trial: <strong>$79/mes + 10% por reserva confirmada</strong> (fijo para siempre)",
+      "afterTrialPlain": "Después del trial: <strong>$79/mes + 10% por reserva confirmada</strong>",
+      "startTrial": "Empieza tu <strong>trial GRATIS de 30 días</strong>",
       "regCode": "Código de registro",
       "regCodePh": "Escribe tu código de registro",
       "businessName": "Nombre del negocio",
@@ -590,7 +590,7 @@
     "successTitle": "Solo ganamos cuando tu agencia gana",
     "successBody": "ZUVIO cobra un pequeño porcentaje solo cuando tú recibes reservas. Eso nos motiva a llevarte oportunidades de reserva reales y calificadas.",
     "successQuote": "Si tú no creces — nosotros no crecemos.",
-    "riskFree": "Pruébalo 60 días sin riesgo. Si no te trae valor, no sigues.",
+    "riskFree": "Pruébalo 30 días sin riesgo. Si no te trae valor, no sigues.",
     "noSetup": "Sin tarifas de setup",
     "noContracts": "Sin contratos",
     "cancelAny": "Cancela cuando quieras",
@@ -618,7 +618,7 @@
       },
       {
         "q": "¿Y si no veo resultados?",
-        "a": "Pruébalo 60 días sin riesgo. Si no te trae valor, no sigues. Sin contratos largos."
+        "a": "Pruébalo 30 días sin riesgo. Si no te trae valor, no sigues. Sin contratos largos."
       },
       {
         "q": "¿Cómo se diferencia esto de las grandes plataformas?",
@@ -674,7 +674,7 @@
     "agencies": [
       {
         "q": "¿Cuánto cuesta unirme a ZUVIO?",
-        "a": "ZUVIO ofrece un plan simple:\n\n• Plan Miembro Fundador: $79/mes + 5% por reserva confirmada\n• 60 días gratis para fundadores (limitado a las primeras 25 agencias)\n• Tu tarifa queda fija de por vida al unirte\n\nSin tarifas escondidas. Sin contratos largos. Cancela cuando quieras."
+        "a": "ZUVIO ofrece un plan simple:\n\n• Plan Miembro Fundador: $79/mes + 10% por reserva confirmada\n• 30 días gratis para fundadores (limitado a las primeras 25 agencias)\n• Tu tarifa queda fija de por vida al unirte\n\nSin tarifas escondidas. Sin contratos largos. Cancela cuando quieras."
       },
       {
         "q": "¿Qué necesito para empezar como agencia socia?",
@@ -704,7 +704,7 @@
       },
       {
         "q": "¿Cómo gana plata ZUVIO?",
-        "a": "ZUVIO cobra a las agencias $79/mes más 5% por reserva confirmada. Eso asegura que solo ganamos cuando nuestros socios ganan.\n\nPara quienes rentan, usar ZUVIO es totalmente gratis. Nunca cobramos tarifas a los clientes ni inflamos los precios."
+        "a": "ZUVIO cobra a las agencias $79/mes más 10% por reserva confirmada. Eso asegura que solo ganamos cuando nuestros socios ganan.\n\nPara quienes rentan, usar ZUVIO es totalmente gratis. Nunca cobramos tarifas a los clientes ni inflamos los precios."
       },
       {
         "q": "¿Mi información personal está segura?",
@@ -976,8 +976,8 @@
     "urgencyBody": "Estamos integrando un número limitado de agencias para asegurar fuerte visibilidad y rendimiento.",
     "finalTitle": "Empieza a recibir más reservas",
     "finalTitleAccent": "— a tu manera",
-    "finalPricing": "$79/mes + 5% por reserva confirmada. 60 días gratis para miembros fundadores. Cupos limitados.",
-    "finalRisk": "Pruébalo 60 días sin riesgo. Si no te trae valor, no sigues.",
+    "finalPricing": "$79/mes + 10% por reserva confirmada. 30 días gratis para miembros fundadores. Cupos limitados.",
+    "finalRisk": "Pruébalo 30 días sin riesgo. Si no te trae valor, no sigues.",
     "finalLock": "Asegura mi tarifa de fundador",
     "finalGet": "Recibe mis primeras reservas"
   },
@@ -1244,7 +1244,7 @@
       "booking": "reserva",
       "bookings": "reservas",
       "monthlyRevenue": "Ingreso mensual estimado",
-      "bookingFee": "Comisión de Zuvio por reserva (5%)",
+      "bookingFee": "Comisión de Zuvio por reserva (10%)",
       "subscriptionCost": "Costo de suscripción",
       "netIncome": "Tu ingreso adicional neto",
       "conversion": "🔥 Con apenas 1 o 2 reservas cubres tu costo mensual.",
@@ -1328,8 +1328,8 @@
     "finalCta": {
       "title": "Empieza a recibir más reservas",
       "titleAccent": "— bajo tus reglas",
-      "pricing": "$79/mes + 5% por reserva confirmada. 60 días gratis para miembros fundadores. Cupo limitado.",
-      "risk": "Pruébalo sin riesgo por 60 días. Si no te aporta valor, no sigues.",
+      "pricing": "$79/mes + 10% por reserva confirmada. 30 días gratis para miembros fundadores. Cupo limitado.",
+      "risk": "Pruébalo sin riesgo por 30 días. Si no te aporta valor, no sigues.",
       "lockRate": "Reservar mi tarifa fundadora",
       "getBookings": "Conseguir mis primeras reservas"
     }
