@@ -95,6 +95,7 @@ export type Database = {
           agency_name: string
           approved: boolean
           city: string | null
+          commission_rate_bps: number
           created_at: string
           custom_fees: Json
           day40_reminder_sent: boolean
@@ -137,6 +138,7 @@ export type Database = {
           agency_name: string
           approved?: boolean
           city?: string | null
+          commission_rate_bps?: number
           created_at?: string
           custom_fees?: Json
           day40_reminder_sent?: boolean
@@ -179,6 +181,7 @@ export type Database = {
           agency_name?: string
           approved?: boolean
           city?: string | null
+          commission_rate_bps?: number
           created_at?: string
           custom_fees?: Json
           day40_reminder_sent?: boolean
