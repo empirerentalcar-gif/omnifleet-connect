@@ -111,7 +111,9 @@ export const BookingPaymentDetails = ({
 
         {/* 2. Zuvio platform fee */}
         <div className="rounded-lg border border-border/60 bg-background/40 p-3">
-          <div className="text-xs text-muted-foreground mb-1">Zuvio's 5% commission</div>
+          <div className="text-xs text-muted-foreground mb-1">
+            Zuvio commission{bookingPriceCents > 0 ? ` (${((platformFeeCents / bookingPriceCents) * 100).toFixed(((platformFeeCents / bookingPriceCents) * 100) % 1 === 0 ? 0 : 1)}%)` : ''}
+          </div>
           <div className="text-base font-semibold text-muted-foreground">
             −{fmtMoney(platformFeeCents)}
           </div>
