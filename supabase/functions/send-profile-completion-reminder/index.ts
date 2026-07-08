@@ -7,7 +7,7 @@ const corsHeaders = {
 };
 
 const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY")!;
-const FROM_EMAIL = "Zuvio <noreply@notify.gozuvio.com>";
+const FROM_EMAIL = "Zuvio <team@zuvio.us>";
 
 function buildHtml(agencyName: string) {
   return `<div style="font-family: Arial, sans-serif; color:#0d1b2e; max-width:600px; line-height:1.6;">
