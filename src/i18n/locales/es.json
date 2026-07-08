@@ -489,7 +489,7 @@
       "title": "Crear cuenta",
       "founding": "Programa de Miembro Fundador",
       "foundingSub": "60 días GRATIS + precios exclusivos fijos para siempre",
-      "spots": "Solo 50 cupos disponibles",
+      "spots": "Solo 25 cupos disponibles",
       "afterTrial": "Después del trial: <strong>$79/mes + 5% por reserva confirmada</strong> (fijo para siempre)",
       "afterTrialPlain": "Después del trial: <strong>$79/mes + 5% por reserva confirmada</strong>",
       "startTrial": "Empieza tu <strong>trial GRATIS de 60 días</strong>",
@@ -664,7 +664,7 @@
     "agencies": [
       {
         "q": "¿Cuánto cuesta unirme a ZUVIO?",
-        "a": "ZUVIO ofrece un plan simple:\n\n• Plan Miembro Fundador: $79/mes + 5% por reserva confirmada\n• 60 días gratis para fundadores (limitado a las primeras 50 agencias)\n• Tu tarifa queda fija de por vida al unirte\n\nSin tarifas escondidas. Sin contratos largos. Cancela cuando quieras."
+        "a": "ZUVIO ofrece un plan simple:\n\n• Plan Miembro Fundador: $79/mes + 5% por reserva confirmada\n• 60 días gratis para fundadores (limitado a las primeras 25 agencias)\n• Tu tarifa queda fija de por vida al unirte\n\nSin tarifas escondidas. Sin contratos largos. Cancela cuando quieras."
       },
       {
         "q": "¿Qué necesito para empezar como agencia socia?",
@@ -1139,7 +1139,7 @@
     "shareLink": "Copiar enlace de este artículo",
     "ctaTitle": "¿Listo para crecer tu negocio de renta?",
     "ctaBody": "Únete a Zuvio como miembro fundador hoy.",
-    "ctaCode": "Usa el código <strong>FOUNDING50</strong> al registrarte — solo 50 cupos.",
+    "ctaCode": "Usa el código <strong>FOUNDING25</strong> al registrarte — solo 25 cupos.",
     "ctaBtn": "Sé miembro fundador"
   },
   "notFound": {

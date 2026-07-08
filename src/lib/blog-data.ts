@@ -100,7 +100,7 @@ export const blogPosts: BlogPost[] = [
 
 <h2>The Bottom Line</h2>
 <p>You need the right commercial policy, a solid rental agreement, and a broker who understands your business. Once your insurance is squared away, check out our post on <a href="/blog/fill-rental-calendar-without-ads">5 ways to get more bookings without spending on ads</a> and our guide to <a href="/blog/best-gps-trackers-rental-fleet-2026">GPS tracking to keep your fleet protected on the road</a>.</p>
-<p>If you're an independent agency looking for a booking platform that gets it, <a href="/for-agencies">Zuvio was built for exactly that</a>. The first 50 agencies get a 60-day free trial and locked-in pricing for life.</p>
+<p>If you're an independent agency looking for a booking platform that gets it, <a href="/for-agencies">Zuvio was built for exactly that</a>. The first 25 agencies get a 60-day free trial and locked-in pricing for life.</p>
 <p><em>This post is for informational purposes only and does not constitute legal or insurance advice. Always consult a licensed professional familiar with your state's laws.</em></p>
 `,
   },

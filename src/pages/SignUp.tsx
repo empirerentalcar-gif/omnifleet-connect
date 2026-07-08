@@ -205,7 +205,7 @@ const SignUp = () => {
       <div className="w-full max-w-md space-y-8">
         <div className="text-center">
           <h1 className="text-2xl font-bold text-foreground">{t('auth.signUp.title')}</h1>
-          {foundingCount !== null && foundingCount < 50 ? (
+          {foundingCount !== null && foundingCount < 25 ? (
             <div className="mt-3 space-y-2">
               <div className="flex items-center justify-center gap-2">
                 <Crown className="h-5 w-5 text-amber-500" />
