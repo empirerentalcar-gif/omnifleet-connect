@@ -31,7 +31,7 @@ export const PricingCard = ({ badgeText = "LIMITED — FIRST 25" }: PricingCardP
       <div className="mb-4">
         <span className="text-4xl font-bold text-foreground">$79</span>
         <span className="text-muted-foreground">/month</span>
-        <span className="block text-sm text-accent font-medium mt-1">+ 5% per confirmed booking</span>
+        <span className="block text-sm text-accent font-medium mt-1">+ 10% per confirmed booking</span>
       </div>
 
       {/* Micro-clarity */}
@@ -58,7 +58,7 @@ export const PricingCard = ({ badgeText = "LIMITED — FIRST 25" }: PricingCardP
 
       {/* Risk reversal */}
       <p className="text-xs text-muted-foreground text-center mt-3">
-        Try it risk-free for 60 days. If it doesn't bring value, you don't continue.
+        Try it risk-free for 30 days. If it doesn't bring value, you don't continue.
       </p>
 
       {/* Scarcity */}
