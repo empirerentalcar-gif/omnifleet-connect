@@ -14,7 +14,7 @@ interface PricingCardProps {
   badgeText?: string;
 }
 
-export const PricingCard = ({ badgeText = "LIMITED — FIRST 50" }: PricingCardProps) => {
+export const PricingCard = ({ badgeText = "LIMITED — FIRST 25" }: PricingCardProps) => {
   const navigate = useNavigate();
 
   return (
@@ -26,7 +26,7 @@ export const PricingCard = ({ badgeText = "LIMITED — FIRST 50" }: PricingCardP
       </div>
       <h3 className="text-xl font-bold mb-1">Founding Member Plan</h3>
       <p className="text-sm font-semibold text-accent mb-4">
-        Limited to First 50 Agencies — Early Members Lock This Rate for Life
+        Limited to First 25 Agencies — Early Members Lock This Rate for Life
       </p>
       <div className="mb-4">
         <span className="text-4xl font-bold text-foreground">$79</span>
