@@ -222,7 +222,7 @@
         },
         {
           "q": "What are the fees?",
-          "a": "$79/month + 5% per confirmed booking. Founding members get 60 days free and their rate locked for life. No hidden fees. No long-term contracts. Cancel anytime."
+          "a": "$79/month + 10% per confirmed booking. Founding members get 30 days free and their rate locked for life. No hidden fees. No long-term contracts. Cancel anytime."
         },
         {
           "q": "Can I list multiple vehicles?",
@@ -260,7 +260,7 @@
         {
           "q": "\"What if I don't get bookings?\"",
           "a": [
-            "That's why we offer **60 days risk-free.**",
+            "That's why we offer **30 days risk-free.**",
             "If it doesn't bring value to your business, you simply don't continue.",
             "There's no long-term commitment."
           ]
@@ -281,8 +281,8 @@
     "finalCta": {
       "title": "Start Turning Your Vehicles Into",
       "titleAccent": "Income",
-      "pricing": "$79/month + 5% per confirmed booking. 60 days free for founding members. Limited availability.",
-      "risk": "Try it risk-free for 60 days. If it doesn't bring value, you don't continue.",
+      "pricing": "$79/month + 10% per confirmed booking. 30 days free for founding members. Limited availability.",
+      "risk": "Try it risk-free for 30 days. If it doesn't bring value, you don't continue.",
       "ctaPrimary": "Lock My Founding Rate",
       "ctaSecondary": "Start Getting Booking Requests"
     }
@@ -488,11 +488,11 @@
       "seoDescription": "Create a ZUVIO account to list your independent car rental business.",
       "title": "Create Account",
       "founding": "Founding Member Program",
-      "foundingSub": "60 days FREE + exclusive pricing locked forever",
+      "foundingSub": "30 days FREE + exclusive pricing locked forever",
       "spots": "Only 25 spots available",
-      "afterTrial": "After trial: <strong>$79/month + 5% per confirmed booking</strong> (locked forever)",
-      "afterTrialPlain": "After trial: <strong>$79/month + 5% per confirmed booking</strong>",
-      "startTrial": "Start your <strong>60-day FREE trial</strong>",
+      "afterTrial": "After trial: <strong>$79/month + 10% per confirmed booking</strong> (locked forever)",
+      "afterTrialPlain": "After trial: <strong>$79/month + 10% per confirmed booking</strong>",
+      "startTrial": "Start your <strong>30-day FREE trial</strong>",
       "regCode": "Registration Code",
       "regCodePh": "Enter your registration code",
       "businessName": "Business Name",
@@ -590,7 +590,7 @@
     "successTitle": "We Only Succeed When Your Car Rental Agency Does",
     "successBody": "ZUVIO earns a small percentage only when you receive bookings. This ensures we are motivated to bring real, qualified reservation opportunities to your agency.",
     "successQuote": "If you don't grow — we don't grow.",
-    "riskFree": "Try it risk-free for 60 days. If it doesn't bring value, you don't continue.",
+    "riskFree": "Try it risk-free for 30 days. If it doesn't bring value, you don't continue.",
     "noSetup": "No Setup Fees",
     "noContracts": "No Contracts",
     "cancelAny": "Cancel Anytime",
@@ -618,7 +618,7 @@
       },
       {
         "q": "What if I don't see results?",
-        "a": "Try it risk-free for 60 days. If it doesn't bring value, you don't continue. No long-term contracts."
+        "a": "Try it risk-free for 30 days. If it doesn't bring value, you don't continue. No long-term contracts."
       },
       {
         "q": "How is this different from large corporate platforms?",
@@ -674,7 +674,7 @@
     "agencies": [
       {
         "q": "How much does it cost to join ZUVIO?",
-        "a": "ZUVIO offers one simple plan:\n\n• Founding Member Plan: $79/month + 5% per confirmed booking\n• 60 days free for founding members (limited to the first 25 agencies)\n• Your rate is locked for life once you join\n\nNo hidden fees. No long-term contracts. Cancel anytime. You keep full control of your business."
+        "a": "ZUVIO offers one simple plan:\n\n• Founding Member Plan: $79/month + 10% per confirmed booking\n• 30 days free for founding members (limited to the first 25 agencies)\n• Your rate is locked for life once you join\n\nNo hidden fees. No long-term contracts. Cancel anytime. You keep full control of your business."
       },
       {
         "q": "What do I need to get started as an agency partner?",
@@ -704,7 +704,7 @@
       },
       {
         "q": "How does ZUVIO make money?",
-        "a": "ZUVIO charges partner agencies $79/month plus a 5% fee on confirmed bookings. This ensures we only succeed when our partners succeed.\n\nFor renters, using ZUVIO is completely free. We never charge customers booking fees or mark up rental prices."
+        "a": "ZUVIO charges partner agencies $79/month plus a 10% fee on confirmed bookings. This ensures we only succeed when our partners succeed.\n\nFor renters, using ZUVIO is completely free. We never charge customers booking fees or mark up rental prices."
       },
       {
         "q": "Is my personal information secure?",
@@ -976,8 +976,8 @@
     "urgencyBody": "We are onboarding a limited number of agencies to ensure strong visibility and performance.",
     "finalTitle": "Start Getting More Bookings",
     "finalTitleAccent": "— On Your Terms",
-    "finalPricing": "$79/month + 5% per confirmed booking. 60 days free for founding members. Limited availability.",
-    "finalRisk": "Try it risk-free for 60 days. If it doesn't bring value, you don't continue.",
+    "finalPricing": "$79/month + 10% per confirmed booking. 30 days free for founding members. Limited availability.",
+    "finalRisk": "Try it risk-free for 30 days. If it doesn't bring value, you don't continue.",
     "finalLock": "Lock My Founding Rate",
     "finalGet": "Get My First Bookings"
   },
@@ -1244,7 +1244,7 @@
       "booking": "booking",
       "bookings": "bookings",
       "monthlyRevenue": "Estimated Monthly Revenue",
-      "bookingFee": "Zuvio Booking Fee (5%)",
+      "bookingFee": "Zuvio Booking Fee (10%)",
       "subscriptionCost": "Subscription Cost",
       "netIncome": "Your Net Additional Income",
       "conversion": "🔥 Even just 1–2 bookings can cover your monthly cost.",
@@ -1328,8 +1328,8 @@
     "finalCta": {
       "title": "Start Getting More Bookings",
       "titleAccent": "— On Your Terms",
-      "pricing": "$79/month + 5% per confirmed booking. 60 days free for founding members. Limited availability.",
-      "risk": "Try it risk-free for 60 days. If it doesn't bring value, you don't continue.",
+      "pricing": "$79/month + 10% per confirmed booking. 30 days free for founding members. Limited availability.",
+      "risk": "Try it risk-free for 30 days. If it doesn't bring value, you don't continue.",
       "lockRate": "Lock My Founding Rate",
       "getBookings": "Get My First Bookings"
     }

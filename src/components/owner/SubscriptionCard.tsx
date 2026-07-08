@@ -42,6 +42,7 @@ const daysFromNow = (iso: string | null): number | null => {
 export function SubscriptionCard() {
   const { toast } = useToast();
   const [status, setStatus] = useState<SubStatus | null>(null);
+  const [commissionPct, setCommissionPct] = useState<number>(5);
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
   const [openingPortal, setOpeningPortal] = useState(false);
@@ -63,6 +64,18 @@ export function SubscriptionCard() {
 
   useEffect(() => {
     refresh();
+    (async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return;
+      const { data } = await supabase
+        .from("agencies")
+        .select("commission_rate_bps")
+        .eq("owner_user_id", user.id)
+        .maybeSingle();
+      if (data?.commission_rate_bps != null) {
+        setCommissionPct(data.commission_rate_bps / 100);
+      }
+    })();
     const params = new URLSearchParams(window.location.search);
     if (params.get("subscription") === "success") {
       toast({
@@ -161,7 +174,7 @@ export function SubscriptionCard() {
           </div>
 
           <p className="text-sm text-muted-foreground">
-            $79/month + 5% per confirmed booking. Cancel anytime from the billing portal.
+            $79/month + {commissionPct}% per confirmed booking. Cancel anytime from the billing portal.
           </p>
 
           {/* Soft block / payment required banner */}

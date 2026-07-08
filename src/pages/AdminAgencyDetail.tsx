@@ -604,7 +604,11 @@ const AdminAgencyDetail = () => {
                 </CardHeader>
                 <CardContent>
                   <p className="text-2xl font-bold text-foreground">{fmtMoney(totals.platformFeeCents)}</p>
-                  <p className="text-xs text-muted-foreground mt-1">5% Zuvio cut</p>
+                  <p className="text-xs text-muted-foreground mt-1">
+                    {totals.totalValueCents > 0
+                      ? `${((totals.platformFeeCents / totals.totalValueCents) * 100).toFixed(1)}% avg Zuvio cut`
+                      : 'Zuvio cut'}
+                  </p>
                 </CardContent>
               </Card>
               <Card>

@@ -145,7 +145,9 @@ export const BookingsSection = ({ agencyId }: { agencyId: string | null }) => {
                     <td className="px-4 py-3">
                       <div className="text-sm">
                         <div>Renter paid: <span className="font-medium">${(b.total_amount_cents / 100).toFixed(2)}</span></div>
-                        <div className="text-xs text-muted-foreground">Zuvio fee (5%): −${(b.platform_fee_cents / 100).toFixed(2)}</div>
+                        <div className="text-xs text-muted-foreground">
+                          Zuvio fee ({b.total_amount_cents > 0 ? (b.platform_fee_cents / b.total_amount_cents * 100).toFixed(b.platform_fee_cents / b.total_amount_cents * 100 % 1 === 0 ? 0 : 1) : '0'}%): −${(b.platform_fee_cents / 100).toFixed(2)}
+                        </div>
                         <div className="text-xs font-semibold text-primary">Your earnings: ${((b.total_amount_cents - b.platform_fee_cents) / 100).toFixed(2)}</div>
                       </div>
                     </td>

@@ -156,7 +156,7 @@ const OwnerDashboard = () => {
   const [reservations, setReservations] = useState<Reservation[]>([]);
   const [vehicles, setVehicles] = useState<Vehicle[]>([]);
   const [loading, setLoading] = useState(true);
-  const [trialInfo, setTrialInfo] = useState<{ status: string; daysLeft: number | null; isFoundingMember: boolean; foundingNumber: number | null; graceDaysLeft: number | null } | null>(null);
+  const [trialInfo, setTrialInfo] = useState<{ status: string; daysLeft: number | null; isFoundingMember: boolean; foundingNumber: number | null; graceDaysLeft: number | null; commissionPct: number } | null>(null);
   const [updatingId, setUpdatingId] = useState<string | null>(null);
   const [statusFilter, setStatusFilter] = useState("all");
   const [dateFrom, setDateFrom] = useState<Date | undefined>(undefined);
@@ -206,7 +206,7 @@ const OwnerDashboard = () => {
       // Fetch trial info from agencies
       const { data: agencyData } = await supabase
         .from('agencies')
-        .select('id, subscription_status, trial_end_date, grace_period_end, is_founding_member, founding_member_number, payment_methods, payment_restrictions, fee_settings, tax_rate, custom_fees, fees_setup_complete, tos_version_2026_06')
+        .select('id, subscription_status, trial_end_date, grace_period_end, is_founding_member, founding_member_number, payment_methods, payment_restrictions, fee_settings, tax_rate, custom_fees, fees_setup_complete, tos_version_2026_06, commission_rate_bps')
         .eq('owner_user_id', user.id)
         .single();
 
@@ -247,6 +247,7 @@ const OwnerDashboard = () => {
           isFoundingMember: agencyData.is_founding_member || false,
           foundingNumber: agencyData.founding_member_number || null,
           graceDaysLeft,
+          commissionPct: (agencyData.commission_rate_bps ?? 500) / 100,
         });
       }
 
@@ -705,8 +706,8 @@ const OwnerDashboard = () => {
                   <p className="text-sm mt-1">Your vehicles are hidden from public search. Subscribe to make them visible again.</p>
                   <p className="text-sm mt-2 font-medium">
                     {trialInfo.isFoundingMember
-                      ? `Founding Member #${trialInfo.foundingNumber} pricing: $79/month + 5% per confirmed booking — locked in forever.`
-                      : 'Standard pricing: $79/month + 5% per confirmed booking.'}
+                      ? `Founding Member #${trialInfo.foundingNumber} pricing: $79/month + ${trialInfo.commissionPct}% per confirmed booking — locked in forever.`
+                      : `Standard pricing: $79/month + ${trialInfo.commissionPct}% per confirmed booking.`}
                   </p>
                 </div>
               ) : trialInfo.status === 'payment_required' ? (
@@ -722,12 +723,12 @@ const OwnerDashboard = () => {
               ) : (
                 <div>
                   <p className="font-bold">
-                    {trialInfo.daysLeft} days left in your {trialInfo.isFoundingMember ? '60-day founding member' : '60-day'} trial
+                    {trialInfo.daysLeft} days left in your{trialInfo.isFoundingMember ? ' founding member' : ''} trial
                   </p>
                   <p className="text-sm mt-1">
                     {trialInfo.isFoundingMember
-                      ? `As Founding Member #${trialInfo.foundingNumber}, subscribe to lock in $79/month + 5% per confirmed booking forever.`
-                      : 'Subscribe before your trial ends to keep your vehicles visible. $79/month + 5% per confirmed booking.'}
+                      ? `As Founding Member #${trialInfo.foundingNumber}, subscribe to lock in $79/month + ${trialInfo.commissionPct}% per confirmed booking forever.`
+                      : `Subscribe before your trial ends to keep your vehicles visible. $79/month + ${trialInfo.commissionPct}% per confirmed booking.`}
                   </p>
                 </div>
               )}

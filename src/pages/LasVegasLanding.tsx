@@ -363,7 +363,7 @@ const LasVegasLanding = () => {
                 <span className="text-foreground font-semibold text-lg">${monthlyRevenue.toLocaleString()}</span>
               </div>
               <div className="flex justify-between items-center">
-                <span className="text-muted-foreground">Zuvio Booking Fee (5%)</span>
+                <span className="text-muted-foreground">Zuvio Booking Fee (10%)</span>
                 <span className="text-muted-foreground">-${bookingFee.toFixed(0)}</span>
               </div>
               <div className="flex justify-between items-center">

@@ -8,7 +8,7 @@ const corsHeaders = {
     "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
 };
 
-const PLATFORM_FEE_BPS = 500; // 5%
+const DEFAULT_PLATFORM_FEE_BPS = 500; // fallback if agency row is missing rate (existing agencies grandfathered at 5%)
 
 const log = (step: string, details?: unknown) => {
   const extra = details ? ` - ${JSON.stringify(details)}` : "";
@@ -19,7 +19,9 @@ const log = (step: string, details?: unknown) => {
  * Creates a booking + Stripe authorization for a renter.
  * - pickup within 7 days: PaymentIntent with capture_method=manual (auth-only)
  * - pickup beyond 7 days: SetupIntent (saves card for later auth via cron)
- * Uses Stripe Connect destination charges with 5% application fee.
+ * Uses Stripe Connect destination charges with a per-agency application fee
+ * (agencies.commission_rate_bps). Existing agencies are grandfathered at 500 bps (5%);
+ * new signups default to 1000 bps (10%).
  */
 serve(async (req) => {
   if (req.method === "OPTIONS") {
@@ -87,7 +89,7 @@ serve(async (req) => {
 
     const { data: agency } = await supabaseAdmin
       .from("agencies")
-      .select("id, stripe_connect_account_id, stripe_charges_enabled, approved, active, subscription_status, grace_period_end")
+      .select("id, stripe_connect_account_id, stripe_charges_enabled, approved, active, subscription_status, grace_period_end, commission_rate_bps")
       .eq("owner_user_id", profile.user_id)
       .maybeSingle();
     if (!agency) throw new Error("Agency not found");
@@ -98,7 +100,11 @@ serve(async (req) => {
 
     const dailyRateCents = Math.round(Number(vehicle.daily_rate) * 100);
     const totalAmountCents = dailyRateCents * rentalDays;
-    const platformFeeCents = Math.round((totalAmountCents * PLATFORM_FEE_BPS) / 10000);
+    const commissionRateBps =
+      typeof (agency as { commission_rate_bps?: number }).commission_rate_bps === "number"
+        ? (agency as { commission_rate_bps: number }).commission_rate_bps
+        : DEFAULT_PLATFORM_FEE_BPS;
+    const platformFeeCents = Math.round((totalAmountCents * commissionRateBps) / 10000);
     if (totalAmountCents < 100) throw new Error("Total amount too small");
 
     const stripe = new Stripe(stripeKey, { apiVersion: "2025-08-27.basil" });
