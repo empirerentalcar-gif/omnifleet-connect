@@ -489,7 +489,7 @@
       "title": "Create Account",
       "founding": "Founding Member Program",
       "foundingSub": "60 days FREE + exclusive pricing locked forever",
-      "spots": "Only 50 spots available",
+      "spots": "Only 25 spots available",
       "afterTrial": "After trial: <strong>$79/month + 5% per confirmed booking</strong> (locked forever)",
       "afterTrialPlain": "After trial: <strong>$79/month + 5% per confirmed booking</strong>",
       "startTrial": "Start your <strong>60-day FREE trial</strong>",
@@ -664,7 +664,7 @@
     "agencies": [
       {
         "q": "How much does it cost to join ZUVIO?",
-        "a": "ZUVIO offers one simple plan:\n\n• Founding Member Plan: $79/month + 5% per confirmed booking\n• 60 days free for founding members (limited to the first 50 agencies)\n• Your rate is locked for life once you join\n\nNo hidden fees. No long-term contracts. Cancel anytime. You keep full control of your business."
+        "a": "ZUVIO offers one simple plan:\n\n• Founding Member Plan: $79/month + 5% per confirmed booking\n• 60 days free for founding members (limited to the first 25 agencies)\n• Your rate is locked for life once you join\n\nNo hidden fees. No long-term contracts. Cancel anytime. You keep full control of your business."
       },
       {
         "q": "What do I need to get started as an agency partner?",
@@ -1139,7 +1139,7 @@
     "shareLink": "Copy link to this article",
     "ctaTitle": "Ready to grow your rental business?",
     "ctaBody": "Join Zuvio as a Founding Member today.",
-    "ctaCode": "Use code <strong>FOUNDING50</strong> at signup — only 50 spots available.",
+    "ctaCode": "Use code <strong>FOUNDING25</strong> at signup — only 25 spots available.",
     "ctaBtn": "Become a Founding Member"
   },
   "notFound": {
