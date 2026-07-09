@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Switch } from "@/components/ui/switch";
 import { Input } from "@/components/ui/input";
+import { NumberInput } from "@/components/payment/NumberInput";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import {
@@ -322,19 +323,11 @@ export const VehiclePaymentOverrideForm = ({
         </div>
         {taxOverridden && (
           <div className="relative max-w-xs">
-            <Input
-              type="number"
-              inputMode="decimal"
+            <NumberInput
               min={0}
               max={MAX_TAX_RATE}
-              step="0.01"
               value={value.tax_rate ?? 0}
-              onChange={(e) =>
-                onChange({
-                  ...value,
-                  tax_rate: Math.max(0, Math.min(MAX_TAX_RATE, Number(e.target.value) || 0)),
-                })
-              }
+              onChange={(n) => onChange({ ...value, tax_rate: n })}
               onBlur={() => markTouched("tax")}
               className="pr-8"
             />
@@ -394,15 +387,11 @@ export const VehiclePaymentOverrideForm = ({
                             <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm text-muted-foreground">
                               $
                             </span>
-                            <Input
-                              {...moneyInputProps}
+                            <NumberInput
+                              min={0}
                               max={max}
                               value={state.amount}
-                              onChange={(e) =>
-                                updateFee(def.key, {
-                                  amount: Math.max(0, Math.min(max, Number(e.target.value) || 0)),
-                                })
-                              }
+                              onChange={(n) => updateFee(def.key, { amount: n })}
                               onBlur={() => markTouched(fieldKey)}
                               className="pl-7"
                             />
@@ -434,19 +423,12 @@ export const VehiclePaymentOverrideForm = ({
                             <Label className="text-xs text-muted-foreground mb-1 block">
                               Included miles per day
                             </Label>
-                            <Input
-                              type="number"
+                            <NumberInput
                               min={0}
                               max={MAX_FEE_AMOUNT}
+                              allowDecimals={false}
                               value={state.included_miles_per_day ?? 0}
-                              onChange={(e) =>
-                                updateFee(def.key, {
-                                  included_miles_per_day: Math.max(
-                                    0,
-                                    Math.min(MAX_FEE_AMOUNT, Number(e.target.value) || 0),
-                                  ),
-                                })
-                              }
+                              onChange={(n) => updateFee(def.key, { included_miles_per_day: n })}
                             />
                           </div>
                         )}
@@ -528,17 +510,11 @@ export const VehiclePaymentOverrideForm = ({
                       <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm text-muted-foreground">
                         $
                       </span>
-                      <Input
-                        {...moneyInputProps}
+                      <NumberInput
+                        min={0}
+                        max={MAX_FEE_AMOUNT}
                         value={cf.amount}
-                        onChange={(e) =>
-                          updateCustom(idx, {
-                            amount: Math.max(
-                              0,
-                              Math.min(MAX_FEE_AMOUNT, Number(e.target.value) || 0),
-                            ),
-                          })
-                        }
+                        onChange={(n) => updateCustom(idx, { amount: n })}
                         className="pl-7"
                       />
                     </div>

@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import { Plus, Trash2 } from "lucide-react";
+import { NumberInput } from "@/components/payment/NumberInput";
 import {
   PAYMENT_METHOD_OPTIONS,
   DEPOSIT_COLLECTION_OPTIONS,
@@ -183,17 +184,12 @@ export const PaymentSettingsForm = ({ value, onChange, showValidation }: Props) 
           </p>
         </div>
         <div className="relative max-w-xs">
-          <Input
+          <NumberInput
             id="tax_rate"
-            type="number"
-            inputMode="decimal"
             min={0}
             max={MAX_TAX_RATE}
-            step="0.01"
             value={value.tax_rate}
-            onChange={(e) =>
-              onChange({ ...value, tax_rate: Math.max(0, Math.min(MAX_TAX_RATE, Number(e.target.value) || 0)) })
-            }
+            onChange={(n) => onChange({ ...value, tax_rate: n })}
             onBlur={() => markTouched("tax_rate")}
             className="pr-8"
           />
@@ -246,18 +242,11 @@ export const PaymentSettingsForm = ({ value, onChange, showValidation }: Props) 
                         <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm text-muted-foreground">
                           $
                         </span>
-                        <Input
-                          {...moneyInputProps}
+                        <NumberInput
+                          min={0}
                           max={def.key === "security_deposit" ? MAX_DEPOSIT_AMOUNT : MAX_FEE_AMOUNT}
                           value={state.amount}
-                          onChange={(e) =>
-                            updateFee(def.key, {
-                              amount: Math.max(0, Math.min(
-                                def.key === "security_deposit" ? MAX_DEPOSIT_AMOUNT : MAX_FEE_AMOUNT,
-                                Number(e.target.value) || 0
-                              )),
-                            })
-                          }
+                          onChange={(n) => updateFee(def.key, { amount: n })}
                           onBlur={() => markTouched(fieldPrefix)}
                           className="pl-7"
                           aria-label={`${def.label} amount`}
@@ -287,14 +276,12 @@ export const PaymentSettingsForm = ({ value, onChange, showValidation }: Props) 
                       <div className="max-w-xs">
                         <Label className="text-xs text-muted-foreground mb-1 block">Included miles per day</Label>
                         <div className="relative">
-                          <Input
-                            {...intInputProps}
+                          <NumberInput
+                            min={0}
+                            max={MAX_FEE_AMOUNT}
+                            allowDecimals={false}
                             value={state.included_miles_per_day ?? 0}
-                            onChange={(e) =>
-                              updateFee(def.key, {
-                                included_miles_per_day: Math.max(0, Math.min(MAX_FEE_AMOUNT, Number(e.target.value) || 0)),
-                              })
-                            }
+                            onChange={(n) => updateFee(def.key, { included_miles_per_day: n })}
                             onBlur={() => markTouched(`${fieldPrefix}_miles`)}
                           />
                           <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-muted-foreground">
@@ -379,12 +366,11 @@ export const PaymentSettingsForm = ({ value, onChange, showValidation }: Props) 
                     <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm text-muted-foreground">
                       $
                     </span>
-                    <Input
-                      {...moneyInputProps}
+                    <NumberInput
+                      min={0}
+                      max={MAX_FEE_AMOUNT}
                       value={cf.amount}
-                      onChange={(e) =>
-                        updateCustom(idx, { amount: Math.max(0, Math.min(MAX_FEE_AMOUNT, Number(e.target.value) || 0)) })
-                      }
+                      onChange={(n) => updateCustom(idx, { amount: n })}
                       onBlur={() => markTouched(cfPrefix)}
                       className="pl-7"
                     />
