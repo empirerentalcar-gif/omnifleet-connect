@@ -53,7 +53,15 @@ serve(async (req) => {
 
     const cronSecret = Deno.env.get("CRON_SECRET") ?? "";
     const providedSecret = req.headers.get("x-cron-secret") ?? "";
-    const isCron = !!cronSecret && providedSecret === cronSecret;
+    const serviceRoleKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? "";
+    const authHeaderRaw = req.headers.get("Authorization") ?? "";
+    const bearer = authHeaderRaw.startsWith("Bearer ")
+      ? authHeaderRaw.slice(7)
+      : "";
+    const internalAuth = req.headers.get("x-internal-auth") === "cron";
+    const isCron =
+      (!!cronSecret && providedSecret === cronSecret) ||
+      (internalAuth && !!serviceRoleKey && bearer === serviceRoleKey);
 
     let manual = false;
     if (!isCron) {
