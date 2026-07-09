@@ -137,7 +137,9 @@ serve(async (req) => {
 
     const resendApiKey = Deno.env.get("RESEND_API_KEY");
     const adminEmail =
-      Deno.env.get("ADMIN_NOTIFICATION_EMAIL") || "silverpathseniorservices@gmail.com";
+      Deno.env.get("STUCK_REPORT_EMAIL") ||
+      Deno.env.get("ADMIN_NOTIFICATION_EMAIL") ||
+      "silverpathseniorservices@gmail.com";
     if (!resendApiKey) throw new Error("RESEND_API_KEY is not set");
 
     const subject =
