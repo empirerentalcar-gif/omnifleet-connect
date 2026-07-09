@@ -108,8 +108,18 @@ serve(async (req) => {
 
     log("stuck count", { count: stuck.length, manual, isCron });
 
-    // Weekly cron with zero stuck: skip sending to avoid inbox noise.
-    if (!manual && stuck.length === 0) {
+    // Weekly cron with zero stuck: skip sending to avoid inbox noise, unless
+    // the caller passes `{ "force": true }` (used for on-demand verification).
+    let force = false;
+    try {
+      if (req.headers.get("content-type")?.includes("application/json")) {
+        const body = await req.clone().json().catch(() => ({}));
+        force = !!body?.force;
+      }
+    } catch {
+      /* ignore */
+    }
+    if (!manual && !force && stuck.length === 0) {
       return new Response(
         JSON.stringify({ ok: true, count: 0, emailed: false, mode: "cron-skip" }),
         { headers: { ...corsHeaders, "Content-Type": "application/json" }, status: 200 },
