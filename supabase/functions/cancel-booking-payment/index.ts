@@ -57,7 +57,17 @@ serve(async (req) => {
       .select("id, owner_user_id")
       .eq("id", booking.agency_id)
       .maybeSingle();
-    if (!agency || agency.owner_user_id !== user.id) {
+    if (!agency) throw new Error("Agency not found");
+    let authorized = agency.owner_user_id === user.id;
+    if (!authorized) {
+      // Allow platform admins to decline on behalf of an agency.
+      const { data: isAdmin } = await supabaseAdmin.rpc("has_role", {
+        _user_id: user.id,
+        _role: "admin",
+      });
+      authorized = !!isAdmin;
+    }
+    if (!authorized) {
       throw new Error("Not authorized for this booking");
     }
 

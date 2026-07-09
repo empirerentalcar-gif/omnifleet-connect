@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import { ArrowLeft, Search, Save, DollarSign, CreditCard, Car, FileText, KeyRound, CheckCircle2, Loader2 } from 'lucide-react';
+import { ArrowLeft, Search, Save, DollarSign, CreditCard, Car, FileText, KeyRound, CheckCircle2, XCircle, Loader2 } from 'lucide-react';
 import { format } from 'date-fns';
 import { supabase } from '@/integrations/supabase/client';
 import { useAdmin } from '@/hooks/useAdmin';
@@ -175,6 +175,7 @@ const AdminAgencyDetail = () => {
   const { user } = useAuth();
   const [sendingReset, setSendingReset] = useState(false);
   const [approvingId, setApprovingId] = useState<string | null>(null);
+  const [decliningId, setDecliningId] = useState<string | null>(null);
 
   const loadAll = async () => {
     if (!id) return;
@@ -366,6 +367,31 @@ const AdminAgencyDetail = () => {
     toast({
       title: 'Booking approved',
       description: 'Payment captured. Funds will land in the agency\u2019s Stripe balance and pay out in ~2 business days.',
+    });
+    loadAll();
+  };
+
+  const declineBooking = async (b: BookingRow) => {
+    if (b.booking_status !== 'pending_agency') return;
+    const reason = window.prompt(
+      'Reason for declining on behalf of the agency (optional):',
+    ) ?? undefined;
+    setDecliningId(b.id);
+    const { data, error } = await supabase.functions.invoke('cancel-booking-payment', {
+      body: { booking_id: b.id, reason },
+    });
+    setDecliningId(null);
+    if (error || (data as any)?.error) {
+      toast({
+        title: 'Decline failed',
+        description: (error as Error)?.message || (data as any)?.error || 'Unknown error',
+        variant: 'destructive',
+      });
+      return;
+    }
+    toast({
+      title: 'Booking declined',
+      description: 'Authorization released and renter notified.',
     });
     loadAll();
   };
@@ -787,24 +813,40 @@ const AdminAgencyDetail = () => {
                             <TableCell>{bookingStatusBadge(b.booking_status)}</TableCell>
                           <TableCell className="text-right">
                             {b.booking_status === 'pending_agency' ? (
-                              <Button
-                                size="sm"
-                                variant={b.stripe_payment_intent_id ? 'default' : 'outline'}
-                                onClick={() => approveBooking(b)}
-                                disabled={approvingId === b.id}
-                                title={
-                                  b.stripe_payment_intent_id
-                                    ? 'Capture the renter\u2019s authorized payment and release this booking for payout.'
-                                    : 'Card not yet authorized \u2014 authorization runs 7 days before pickup.'
-                                }
-                              >
-                                {approvingId === b.id ? (
-                                  <Loader2 className="h-3 w-3 mr-1 animate-spin" />
-                                ) : (
-                                  <CheckCircle2 className="h-3 w-3 mr-1" />
-                                )}
-                                {b.stripe_payment_intent_id ? 'Approve & capture' : 'Awaiting auth'}
-                              </Button>
+                              <div className="flex justify-end gap-2">
+                                <Button
+                                  size="sm"
+                                  variant={b.stripe_payment_intent_id ? 'default' : 'outline'}
+                                  onClick={() => approveBooking(b)}
+                                  disabled={approvingId === b.id || decliningId === b.id || !b.stripe_payment_intent_id}
+                                  title={
+                                    b.stripe_payment_intent_id
+                                      ? 'Capture the renter\u2019s authorized payment and release this booking for payout.'
+                                      : 'Card not yet authorized \u2014 authorization runs 7 days before pickup.'
+                                  }
+                                >
+                                  {approvingId === b.id ? (
+                                    <Loader2 className="h-3 w-3 mr-1 animate-spin" />
+                                  ) : (
+                                    <CheckCircle2 className="h-3 w-3 mr-1" />
+                                  )}
+                                  {b.stripe_payment_intent_id ? 'Approve & capture' : 'Awaiting auth'}
+                                </Button>
+                                <Button
+                                  size="sm"
+                                  variant="destructive"
+                                  onClick={() => declineBooking(b)}
+                                  disabled={approvingId === b.id || decliningId === b.id}
+                                  title="Decline this booking on behalf of the agency and release any card authorization."
+                                >
+                                  {decliningId === b.id ? (
+                                    <Loader2 className="h-3 w-3 mr-1 animate-spin" />
+                                  ) : (
+                                    <XCircle className="h-3 w-3 mr-1" />
+                                  )}
+                                  Decline
+                                </Button>
+                              </div>
                             ) : (
                               <span className="text-xs text-muted-foreground">—</span>
                             )}
