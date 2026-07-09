@@ -65,6 +65,8 @@ serve(async (req) => {
       bearer_len: bearer.length,
       bearer_matches: !!cronSecret && bearer === cronSecret,
       has_x_cron: !!providedSecret,
+      x_cron_len: providedSecret.length,
+      all_header_names: Array.from(req.headers.keys()),
     });
     // Same convention as send-trial-emails: cron sends CRON_SECRET as Bearer token.
     const isCron =
