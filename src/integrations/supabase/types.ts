@@ -1287,6 +1287,10 @@ export type Database = {
         }
         Returns: undefined
       }
+      verify_stuck_report_secret: {
+        Args: { _provided: string }
+        Returns: boolean
+      }
     }
     Enums: {
       agency_subscription_status: "trial" | "active" | "expired" | "cancelled"
