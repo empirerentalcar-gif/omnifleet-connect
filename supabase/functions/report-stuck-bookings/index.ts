@@ -57,6 +57,15 @@ serve(async (req) => {
     const bearer = authHeaderRaw.startsWith("Bearer ")
       ? authHeaderRaw.slice(7)
       : "";
+    log("auth debug", {
+      has_cron_env: !!cronSecret,
+      cron_env_len: cronSecret.length,
+      has_auth_header: !!authHeaderRaw,
+      auth_header_len: authHeaderRaw.length,
+      bearer_len: bearer.length,
+      bearer_matches: !!cronSecret && bearer === cronSecret,
+      has_x_cron: !!providedSecret,
+    });
     // Same convention as send-trial-emails: cron sends CRON_SECRET as Bearer token.
     const isCron =
       !!cronSecret && (providedSecret === cronSecret || bearer === cronSecret);
