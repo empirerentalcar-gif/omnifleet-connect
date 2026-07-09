@@ -63,16 +63,14 @@ serve(async (req) => {
 
     let manual = false;
     if (!isCron) {
-      // Require admin caller.
-      const authHeader = req.headers.get("Authorization");
-      if (!authHeader) throw new Error("Not authorized");
+      // Require admin caller for manual runs.
+      if (!authHeaderRaw) throw new Error("Not authorized");
       const supabaseAuth = createClient(
         Deno.env.get("SUPABASE_URL") ?? "",
         Deno.env.get("SUPABASE_ANON_KEY") ?? "",
       );
-      const token = authHeader.replace("Bearer ", "");
       const { data: userData, error: userErr } =
-        await supabaseAuth.auth.getUser(token);
+        await supabaseAuth.auth.getUser(bearer);
       if (userErr || !userData.user) throw new Error("Not authenticated");
       const { data: isAdmin } = await supabaseAdmin.rpc("has_role", {
         _user_id: userData.user.id,
