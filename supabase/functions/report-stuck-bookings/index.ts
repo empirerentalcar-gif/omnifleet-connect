@@ -57,20 +57,19 @@ serve(async (req) => {
     const bearer = authHeaderRaw.startsWith("Bearer ")
       ? authHeaderRaw.slice(7)
       : "";
-    log("auth debug", {
-      has_cron_env: !!cronSecret,
-      cron_env_len: cronSecret.length,
-      has_auth_header: !!authHeaderRaw,
-      auth_header_len: authHeaderRaw.length,
-      bearer_len: bearer.length,
-      bearer_matches: !!cronSecret && bearer === cronSecret,
-      has_x_cron: !!providedSecret,
-      x_cron_len: providedSecret.length,
-      all_header_names: Array.from(req.headers.keys()),
-    });
-    // Same convention as send-trial-emails: cron sends CRON_SECRET as Bearer token.
-    const isCron =
-      !!cronSecret && (providedSecret === cronSecret || bearer === cronSecret);
+    // Cron sends the shared secret via `x-cron-secret`; we verify it against
+    // the vault entry `stuck_report_cron_secret` through a security-definer RPC.
+    // (Authorization header is stripped by the Supabase gateway when it isn't a JWT.)
+    let isCron = false;
+    if (providedSecret) {
+      const { data: ok } = await supabaseAdmin.rpc(
+        "verify_stuck_report_secret",
+        { _provided: providedSecret },
+      );
+      isCron = !!ok;
+    }
+    // Also accept the legacy env-var-based secret for manual curl testing.
+    if (!isCron && cronSecret && providedSecret === cronSecret) isCron = true;
 
     let manual = false;
     if (!isCron) {
