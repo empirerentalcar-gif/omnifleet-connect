@@ -374,6 +374,23 @@ async function sendBookingConfirmedNotification(bookingId: string) {
   }
 }
 
+async function sendPaymentFailedEmails(bookingId: string, failureMessage: string) {
+  try {
+    const supabaseUrl = Deno.env.get("SUPABASE_URL") ?? "";
+    const cronSecret = Deno.env.get("CRON_SECRET") ?? "";
+    await fetch(`${supabaseUrl}/functions/v1/send-renter-payment-failed`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "x-cron-secret": cronSecret,
+      },
+      body: JSON.stringify({ booking_id: bookingId, failure_message: failureMessage }),
+    });
+  } catch (e) {
+    console.error("[STRIPE-WEBHOOK] payment-failed email dispatch failed", e);
+  }
+}
+
 /**
  * Reconcile a PaymentIntent (succeeded/captured) against the bookings table.
  * Looks up the booking by stripe_payment_intent_id (canonical) and falls back
