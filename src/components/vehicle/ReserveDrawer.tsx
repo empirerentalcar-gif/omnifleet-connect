@@ -194,8 +194,6 @@ export const ReserveDrawer = ({
             options={{
               clientSecret: intent.client_secret,
               appearance: { theme: "night", variables: { colorPrimary: "#2dd4bf" } },
-              // Render wallets first (Apple Pay / Google Pay), card last.
-              paymentMethodOrder: ["apple_pay", "google_pay", "card"],
             }}
           >
             <PaymentForm
@@ -261,7 +259,7 @@ const PaymentForm = ({ intent, onDone }: { intent: IntentInfo; onDone: () => voi
             : t('reserveDrawer.saveNote')}
         </p>
       </div>
-      <PaymentElement />
+      <PaymentElement options={{ paymentMethodOrder: ["apple_pay", "google_pay", "card"] }} />
       <Button onClick={handlePay} disabled={!stripe || submitting} className="w-full" style={{ backgroundColor: "#2dd4bf", color: "#0d1b2e" }}>
         {submitting ? (<><Loader2 className="h-4 w-4 mr-2 animate-spin" />{t('reserveDrawer.processing')}</>) : intent.intent_type === "payment_intent" ? t('reserveDrawer.authorizeBtn') : t('reserveDrawer.saveBtn')}
       </Button>
