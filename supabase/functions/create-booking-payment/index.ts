@@ -149,6 +149,12 @@ serve(async (req) => {
         amount: totalAmountCents,
         currency: "usd",
         capture_method: "manual",
+        // Restrict to instant-confirmation methods only. Async/redirect methods
+        // (Cash App Pay, Klarna, Affirm) can leave bookings in an ambiguous
+        // "renter thinks they paid, platform doesn't know yet" state.
+        // Do NOT use automatic_payment_methods here — it would pull in whatever
+        // is enabled in the Stripe Dashboard.
+        payment_method_types: ["card", "apple_pay", "google_pay", "link"],
         application_fee_amount: platformFeeCents,
         on_behalf_of: agency.stripe_connect_account_id,
         transfer_data: { destination: agency.stripe_connect_account_id },
