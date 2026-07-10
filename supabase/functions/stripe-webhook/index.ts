@@ -141,6 +141,11 @@ serve(async (req) => {
                 updated_at: new Date().toISOString(),
               })
               .eq("id", bookingId);
+            // Notify renter + Zuvio ops (NOT the agency — intentional).
+            await sendPaymentFailedEmails(
+              bookingId,
+              pi.last_payment_error?.message?.slice(0, 500) ?? "Payment failed",
+            );
           }
           break;
         }
@@ -366,6 +371,23 @@ async function sendBookingConfirmedNotification(bookingId: string) {
     });
   } catch (e) {
     console.error("[STRIPE-WEBHOOK] admin/agency booking-confirmed email failed", e);
+  }
+}
+
+async function sendPaymentFailedEmails(bookingId: string, failureMessage: string) {
+  try {
+    const supabaseUrl = Deno.env.get("SUPABASE_URL") ?? "";
+    const cronSecret = Deno.env.get("CRON_SECRET") ?? "";
+    await fetch(`${supabaseUrl}/functions/v1/send-renter-payment-failed`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "x-cron-secret": cronSecret,
+      },
+      body: JSON.stringify({ booking_id: bookingId, failure_message: failureMessage }),
+    });
+  } catch (e) {
+    console.error("[STRIPE-WEBHOOK] payment-failed email dispatch failed", e);
   }
 }
 
