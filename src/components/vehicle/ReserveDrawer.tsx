@@ -194,6 +194,8 @@ export const ReserveDrawer = ({
             options={{
               clientSecret: intent.client_secret,
               appearance: { theme: "night", variables: { colorPrimary: "#2dd4bf" } },
+              // Render wallets first (Apple Pay / Google Pay), card last.
+              paymentMethodOrder: ["apple_pay", "google_pay", "card"],
             }}
           >
             <PaymentForm
