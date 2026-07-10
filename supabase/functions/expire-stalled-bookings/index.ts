@@ -98,15 +98,24 @@ serve(async (req) => {
 
     for (const b of bookings ?? []) {
       try {
-        // Safety: never cancel a booking that Stripe says was captured/succeeded.
+        // Safety: never cancel a booking that Stripe says has live money on it.
+        // With capture_method="manual", a successful renter authorization lands
+        // the PI in status="requires_capture" with amount_received=0 and
+        // amount_capturable>0 — treat any of these as "hands off" so we don't
+        // orphan a live authorization on a canceled booking.
         if (b.stripe_payment_intent_id) {
           try {
             const pi = await stripe.paymentIntents.retrieve(b.stripe_payment_intent_id);
-            if (pi.status === "succeeded" || (pi.amount_received ?? 0) > 0) {
-              results.push({ id: b.id, skipped: "pi_succeeded", pi_status: pi.status });
+            const liveStates = ["succeeded", "requires_capture", "processing"];
+            if (
+              liveStates.includes(pi.status) ||
+              (pi.amount_received ?? 0) > 0 ||
+              (pi.amount_capturable ?? 0) > 0
+            ) {
+              results.push({ id: b.id, skipped: "pi_live", pi_status: pi.status });
               continue;
             }
-            if (["requires_payment_method", "requires_action", "requires_confirmation", "processing"].includes(pi.status)) {
+            if (["requires_payment_method", "requires_action", "requires_confirmation"].includes(pi.status)) {
               try { await stripe.paymentIntents.cancel(b.stripe_payment_intent_id); }
               catch (e) { log("PI cancel failed (non-fatal)", { id: b.id, msg: (e as Error).message }); }
             }
