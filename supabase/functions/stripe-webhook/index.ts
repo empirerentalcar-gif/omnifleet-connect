@@ -141,6 +141,11 @@ serve(async (req) => {
                 updated_at: new Date().toISOString(),
               })
               .eq("id", bookingId);
+            // Notify renter + Zuvio ops (NOT the agency — intentional).
+            await sendPaymentFailedEmails(
+              bookingId,
+              pi.last_payment_error?.message?.slice(0, 500) ?? "Payment failed",
+            );
           }
           break;
         }
