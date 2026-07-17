@@ -140,6 +140,67 @@ serve(async (req) => {
     if (bookErr) throw new Error(`Booking insert failed: ${bookErr.message}`);
     log("Booking created", { bookingId: booking.id, useImmediateAuth });
 
+    // Fire-and-forget: notify the agency owner that a new booking request came in.
+    // This runs at initial submission (not payment success), so agencies see the
+    // lead even if the renter never completes payment authorization.
+    (async () => {
+      try {
+        const resendApiKey = Deno.env.get("RESEND_API_KEY");
+        if (!resendApiKey) {
+          log("AGENCY-NOTIFY skipped: no RESEND_API_KEY");
+          return;
+        }
+        const { data: agencyRow } = await supabaseAdmin
+          .from("agencies")
+          .select("agency_name, email")
+          .eq("id", agency.id)
+          .maybeSingle();
+        const emailRe = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
+        const to = (agencyRow?.email ?? "").trim();
+        if (!to || !emailRe.test(to)) {
+          log("AGENCY-NOTIFY skipped: invalid agency email", { agency_id: agency.id, to });
+          return;
+        }
+        const vehicleLabel = `${vehicle.make ?? ""} ${vehicle.model ?? ""}`.trim() || "Vehicle";
+        const subject = `New booking request — ${renter_name} / ${vehicleLabel}`;
+        const html = `<div style="font-family:Arial,sans-serif;max-width:640px;margin:0 auto;padding:24px;background:#0d1b2e;color:#fff;">
+  <h2 style="color:#2dd4bf;margin:0 0 12px;">🚗 New Booking Request</h2>
+  <p style="margin:0 0 16px;color:#c8d0dc;">A renter just submitted a booking request on Zuvio. Payment is being authorized — you'll get a second confirmation once the funds are held.</p>
+  <table style="width:100%;border-collapse:collapse;background:#132640;border-radius:8px;overflow:hidden;">
+    <tr><td style="padding:10px 12px;color:#9aa4b2;border-bottom:1px solid rgba(255,255,255,0.08);">Renter</td><td style="padding:10px 12px;font-weight:bold;border-bottom:1px solid rgba(255,255,255,0.08);">${renter_name}</td></tr>
+    <tr><td style="padding:10px 12px;color:#9aa4b2;border-bottom:1px solid rgba(255,255,255,0.08);">Renter phone</td><td style="padding:10px 12px;font-weight:bold;border-bottom:1px solid rgba(255,255,255,0.08);">${renter_phone}</td></tr>
+    <tr><td style="padding:10px 12px;color:#9aa4b2;border-bottom:1px solid rgba(255,255,255,0.08);">Renter email</td><td style="padding:10px 12px;font-weight:bold;border-bottom:1px solid rgba(255,255,255,0.08);">${renter_email}</td></tr>
+    <tr><td style="padding:10px 12px;color:#9aa4b2;border-bottom:1px solid rgba(255,255,255,0.08);">Vehicle</td><td style="padding:10px 12px;font-weight:bold;border-bottom:1px solid rgba(255,255,255,0.08);">${vehicleLabel}</td></tr>
+    <tr><td style="padding:10px 12px;color:#9aa4b2;border-bottom:1px solid rgba(255,255,255,0.08);">Pickup</td><td style="padding:10px 12px;font-weight:bold;border-bottom:1px solid rgba(255,255,255,0.08);">${pickup_date}</td></tr>
+    <tr><td style="padding:10px 12px;color:#9aa4b2;border-bottom:1px solid rgba(255,255,255,0.08);">Drop-off</td><td style="padding:10px 12px;font-weight:bold;border-bottom:1px solid rgba(255,255,255,0.08);">${dropoff_date}</td></tr>
+    <tr><td style="padding:10px 12px;color:#9aa4b2;">Duration</td><td style="padding:10px 12px;font-weight:bold;">${rentalDays} day${rentalDays === 1 ? "" : "s"}</td></tr>
+  </table>
+  <p style="margin:20px 0 8px;">
+    <a href="https://gozuvio.com/owner-dashboard" style="display:inline-block;background:#2dd4bf;color:#0d1b2e;padding:10px 18px;border-radius:6px;text-decoration:none;font-weight:bold;">Open owner dashboard</a>
+  </p>
+  <p style="font-size:12px;color:#7f8b9c;margin-top:20px;">Booking ID: ${booking.id}</p>
+</div>`;
+        const res = await fetch("https://api.resend.com/emails", {
+          method: "POST",
+          headers: { Authorization: `Bearer ${resendApiKey}`, "Content-Type": "application/json" },
+          body: JSON.stringify({
+            from: "Zuvio Bookings <noreply@notify.gozuvio.com>",
+            to: [to],
+            subject,
+            html,
+          }),
+        });
+        const data = await res.json().catch(() => ({}));
+        if (!res.ok) {
+          log("AGENCY-NOTIFY resend failed", { status: res.status, data, booking_id: booking.id, to });
+        } else {
+          log("AGENCY-NOTIFY sent", { booking_id: booking.id, to, resend_id: (data as { id?: string }).id });
+        }
+      } catch (e) {
+        log("AGENCY-NOTIFY error", { msg: (e as Error).message });
+      }
+    })();
+
     let clientSecret: string | null = null;
     let intentId: string | null = null;
     let intentType: "payment_intent" | "setup_intent";
