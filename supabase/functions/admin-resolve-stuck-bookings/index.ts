@@ -72,13 +72,21 @@ Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response("ok", { headers: corsHeaders });
 
   try {
+    const cronSecret = Deno.env.get("CRON_SECRET");
+    const provided = req.headers.get("x-cron-secret");
+    if (!cronSecret || provided !== cronSecret) {
+      return new Response(JSON.stringify({ error: "Unauthorized" }), {
+        status: 401,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
     const supabase = createClient(
       Deno.env.get("SUPABASE_URL")!,
       Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!,
       { auth: { persistSession: false } },
     );
     const stripe = new Stripe(Deno.env.get("STRIPE_SECRET_KEY")!, { apiVersion: "2025-08-27.basil" });
-    const cronSecret = Deno.env.get("CRON_SECRET")!;
     const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
 
     // PART 1: Decline 5 FLEXX bookings
