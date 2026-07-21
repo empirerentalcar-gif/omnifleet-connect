@@ -157,6 +157,7 @@ serve(async (req) => {
           .maybeSingle();
         const emailRe = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
         const to = (agencyRow?.email ?? "").trim();
+        const adminCc = "empirerentalcar@gmail.com";
         if (!to || !emailRe.test(to)) {
           log("AGENCY-NOTIFY skipped: invalid agency email", { agency_id: agency.id, to });
           return;
@@ -186,15 +187,16 @@ serve(async (req) => {
           body: JSON.stringify({
             from: "Zuvio Bookings <noreply@notify.gozuvio.com>",
             to: [to],
+            cc: [adminCc],
             subject,
             html,
           }),
         });
         const data = await res.json().catch(() => ({}));
         if (!res.ok) {
-          log("AGENCY-NOTIFY resend failed", { status: res.status, data, booking_id: booking.id, to });
+          log("AGENCY-NOTIFY resend failed", { status: res.status, data, booking_id: booking.id, to, cc: adminCc });
         } else {
-          log("AGENCY-NOTIFY sent", { booking_id: booking.id, to, resend_id: (data as { id?: string }).id });
+          log("AGENCY-NOTIFY sent", { booking_id: booking.id, to, cc: adminCc, resend_id: (data as { id?: string }).id });
         }
       } catch (e) {
         log("AGENCY-NOTIFY error", { msg: (e as Error).message });
