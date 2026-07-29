@@ -7,6 +7,7 @@ import { Helmet } from "react-helmet-async";
 import { SafeImage } from "@/components/SafeImage";
 import { Button } from "@/components/ui/button";
 import { ReserveDrawer } from "@/components/vehicle/ReserveDrawer";
+import { InquiryDrawer } from "@/components/vehicle/InquiryDrawer";
 import { Calendar, Car, Fuel, Gauge, MapPin, Users, Banknote, ArrowLeft } from "lucide-react";
 import { PublicVehiclePaymentSummary } from "@/components/payment/PublicVehiclePaymentSummary";
 import { effectiveSettingsFromPublicRow } from "@/lib/payment-settings";
@@ -28,6 +29,7 @@ type VehicleRow = {
   location_state: string | null;
   profile_id: string;
   business_name: string | null;
+  bookable: boolean | null;
   cash_accepted: boolean | null;
   agency_photos: string[] | null;
   owner_story: string | null;
@@ -52,6 +54,7 @@ const VehicleDetail = () => {
   const [vehicle, setVehicle] = useState<VehicleRow | null>(null);
   const [loading, setLoading] = useState(true);
   const [reserveOpen, setReserveOpen] = useState(false);
+  const [inquiryOpen, setInquiryOpen] = useState(false);
   const [activePhoto, setActivePhoto] = useState(0);
   const [isRented, setIsRented] = useState(false);
 
@@ -109,6 +112,9 @@ const VehicleDetail = () => {
   // Always merge agency defaults with vehicle overrides via the shared helper —
   // never read the raw columns directly on the public page.
   const paymentSettings = effectiveSettingsFromPublicRow(vehicle);
+  // Agencies that haven't finished Stripe onboarding can't take payments, so we
+  // show an honest inquiry form instead of a checkout that would fail.
+  const canBook = vehicle.bookable !== false;
 
   const productJsonLd = {
     "@context": "https://schema.org",
@@ -270,14 +276,23 @@ const VehicleDetail = () => {
                 <span className="text-white/50">{t('vehicle.perDay')}</span>
               </div>
               <p className="text-white/60 text-sm flex items-center gap-1.5"><Calendar className="h-4 w-4" /> {t('vehicle.authNote')}</p>
+              {!canBook && (
+                <p className="text-sm rounded-lg p-3" style={{ backgroundColor: "rgba(251,191,36,0.1)", border: "1px solid rgba(251,191,36,0.35)", color: "#fde68a" }}>
+                  This agency isn't set up for online payments yet. You can request this vehicle and they'll contact you to confirm availability and payment.
+                </p>
+              )}
               <PublicVehiclePaymentSummary
                 settings={paymentSettings}
                 pickupRequirements={vehicle.requirements}
               />
-              <Button onClick={() => setReserveOpen(true)} className="w-full text-base h-12 font-bold" style={{ backgroundColor: "#2dd4bf", color: "#0d1b2e" }}>
-                {t('vehicle.reserveBtn')}
+              <Button onClick={() => (canBook ? setReserveOpen(true) : setInquiryOpen(true))} className="w-full text-base h-12 font-bold" style={{ backgroundColor: "#2dd4bf", color: "#0d1b2e" }}>
+                {canBook ? t('vehicle.reserveBtn') : "Request this vehicle"}
               </Button>
-              <p className="text-white/50 text-xs">{t('vehicle.feeNote')}</p>
+              <p className="text-white/50 text-xs">
+                {canBook
+                  ? t('vehicle.feeNote')
+                  : "The agency will contact you to confirm availability and payment. No payment is collected here."}
+              </p>
             </div>
           </aside>
         </div>
@@ -290,6 +305,14 @@ const VehicleDetail = () => {
         vehicleLabel={label}
         dailyRate={Number(vehicle.daily_rate)}
         paymentSettings={paymentSettings}
+      />
+
+      <InquiryDrawer
+        open={inquiryOpen}
+        onOpenChange={setInquiryOpen}
+        vehicleId={vehicle.id}
+        vehicleLabel={label}
+        agencyName={vehicle.business_name}
       />
     </div>
   );

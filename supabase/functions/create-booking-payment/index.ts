@@ -138,7 +138,15 @@ serve(async (req) => {
       })
       .select("id")
       .single();
-    if (bookErr) throw new Error(`Booking insert failed: ${bookErr.message}`);
+    if (bookErr) {
+      // The prevent_double_booking_trigger blocks overlapping active bookings.
+      if (/no longer available for this vehicle/i.test(bookErr.message)) {
+        throw new Error(
+          "These dates are no longer available for this vehicle. Please choose different dates.",
+        );
+      }
+      throw new Error(`Booking insert failed: ${bookErr.message}`);
+    }
     log("Booking created", { bookingId: booking.id, useImmediateAuth });
 
     // Fire-and-forget: notify the agency owner that a new booking request came in.
