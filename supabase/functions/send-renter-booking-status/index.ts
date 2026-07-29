@@ -174,7 +174,7 @@ Deno.serve(async (req) => {
           body: JSON.stringify({
             from: "ZUVIO Alerts <team@zuvio.us>",
             to: ["zuviollc@gmail.com"],
-            subject: `Declined booking — ${agencyName} · ${vehicleLabel}`,
+            subject: `❌ Declined — ${agencyName} · ${vehicleLabel} (${(reason && reason.trim() ? reason.trim() : "No reason given").slice(0, 60)})`,
             html: alertHtml,
           }),
         });
