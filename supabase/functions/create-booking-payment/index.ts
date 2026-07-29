@@ -193,7 +193,15 @@ serve(async (req) => {
           return;
         }
         const vehicleLabel = `${vehicle.make ?? ""} ${vehicle.model ?? ""}`.trim() || "Vehicle";
-        const subject = `New booking request — ${renter_name} / ${vehicleLabel}`;
+        const agencyLabel = agencyRow?.agency_name ?? "Unknown agency";
+        const timeLabel = new Date().toLocaleString("en-US", {
+          timeZone: "America/New_York",
+          month: "short",
+          day: "numeric",
+          hour: "numeric",
+          minute: "2-digit",
+        });
+        const subject = `🆕 New booking — ${agencyLabel} · ${vehicleLabel} (${timeLabel} ET)`;
         const html = `<div style="font-family:Arial,sans-serif;max-width:640px;margin:0 auto;padding:24px;background:#0d1b2e;color:#fff;">
   <h2 style="color:#2dd4bf;margin:0 0 12px;">🚗 New Booking Request</h2>
   <p style="margin:0 0 16px;color:#c8d0dc;">A renter just submitted a booking request on Zuvio. Payment is being authorized — you'll get a second confirmation once the funds are held.</p>

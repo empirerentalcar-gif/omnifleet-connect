@@ -184,7 +184,7 @@ Deno.serve(async (req) => {
         body: JSON.stringify({
           from: "ZUVIO Alerts <team@zuvio.us>",
           to: [alertEmail],
-          subject: `Abandoned checkout — ${agency?.agency_name ?? "Unknown"} · ${vehicleLabel} (${ageHours}h)`,
+          subject: `🛒 Abandoned checkout — ${agency?.agency_name ?? "Unknown agency"} · ${vehicleLabel} (${ageHours}h)`,
           html,
         }),
       });
