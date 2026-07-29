@@ -191,6 +191,12 @@ const AdminDashboard = () => {
             <p className="text-xs sm:text-sm text-muted-foreground">Zuvio Admin Dashboard</p>
           </div>
           <div className="flex flex-wrap gap-2">
+            <Link to="/admin/renters" className="flex-1 sm:flex-none min-w-0">
+              <Button variant="outline" size="sm" className="w-full sm:w-auto">
+                <Users className="mr-2 h-4 w-4 shrink-0" />
+                <span className="truncate">Renters</span>
+              </Button>
+            </Link>
             <Link to="/admin/invite-codes" className="flex-1 sm:flex-none min-w-0">
               <Button variant="outline" size="sm" className="w-full sm:w-auto">
                 <KeyRound className="mr-2 h-4 w-4 shrink-0" />
