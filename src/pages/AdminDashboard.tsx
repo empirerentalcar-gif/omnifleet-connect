@@ -1,6 +1,6 @@
 import { useEffect, useState, useMemo } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Building2, CheckCircle, Clock, XCircle, ArrowRight, KeyRound, MapPin, Car, Crown, AlertTriangle, LogOut } from 'lucide-react';
+import { Building2, CheckCircle, Clock, XCircle, ArrowRight, KeyRound, MapPin, Car, Crown, AlertTriangle, LogOut, Users } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAdmin } from '@/hooks/useAdmin';
 import { useIdleSignOut } from '@/hooks/useIdleSignOut';
