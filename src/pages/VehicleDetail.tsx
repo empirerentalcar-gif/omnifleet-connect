@@ -54,6 +54,7 @@ const VehicleDetail = () => {
   const [vehicle, setVehicle] = useState<VehicleRow | null>(null);
   const [loading, setLoading] = useState(true);
   const [reserveOpen, setReserveOpen] = useState(false);
+  const [inquiryOpen, setInquiryOpen] = useState(false);
   const [activePhoto, setActivePhoto] = useState(0);
   const [isRented, setIsRented] = useState(false);
 
