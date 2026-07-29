@@ -3,12 +3,14 @@ import { useTranslation, Trans } from "react-i18next";
 import { CheckCircle, Phone, Mail, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import SEO from "@/components/SEO";
+import { PRIVATE_AGENCY_LABEL } from "@/lib/agency-privacy";
 
 const ReservationConfirmed = () => {
   const { t } = useTranslation();
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
-  const agencyName = searchParams.get("agency") || t('confirmed.defaultAgency');
+  // Identity stays hidden here — the request is not an approved booking yet.
+  const agencyName = PRIVATE_AGENCY_LABEL;
 
   return (
     <div className="min-h-screen bg-background">

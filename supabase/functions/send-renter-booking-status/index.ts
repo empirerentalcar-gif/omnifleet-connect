@@ -76,6 +76,15 @@ Deno.serve(async (req) => {
     const vehicleLabel = vehicle ? `${vehicle.year} ${vehicle.make} ${vehicle.model}` : "Your vehicle";
     const total = (booking.total_amount_cents / 100).toFixed(2);
 
+    // Agency identity is hidden from renters everywhere until a booking is
+    // approved (or paid). Only then do we reveal who they're renting from.
+    let revealAgency: { name: string; phone: string | null } | null = null;
+    if ((status === "approved" || status === "captured") && booking.agency_id) {
+      const { data: revealed } = await supabase
+        .from("agencies").select("agency_name, phone").eq("id", booking.agency_id).maybeSingle();
+      if (revealed?.agency_name) revealAgency = { name: revealed.agency_name, phone: revealed.phone ?? null };
+    }
+
     let heading = "";
     let intro = "";
     let notice = "";
@@ -108,6 +117,7 @@ Deno.serve(async (req) => {
       <p>Hi ${escapeHtml(booking.renter_name)},</p>
       <p>${escapeHtml(intro)}</p>
       <table style="width:100%;border-collapse:collapse;margin:16px 0;background:#132640;border-radius:8px;overflow:hidden;">
+        ${revealAgency ? `<tr><td style="padding:10px;border-bottom:1px solid rgba(255,255,255,0.1);color:#9aa4b2;">Agency</td><td style="padding:10px;border-bottom:1px solid rgba(255,255,255,0.1);font-weight:bold;">${escapeHtml(revealAgency.name)}${revealAgency.phone ? ` · ${escapeHtml(revealAgency.phone)}` : ""}</td></tr>` : ""}
         <tr><td style="padding:10px;border-bottom:1px solid rgba(255,255,255,0.1);color:#9aa4b2;">Vehicle</td><td style="padding:10px;border-bottom:1px solid rgba(255,255,255,0.1);font-weight:bold;">${escapeHtml(vehicleLabel)}</td></tr>
         <tr><td style="padding:10px;border-bottom:1px solid rgba(255,255,255,0.1);color:#9aa4b2;">Pickup</td><td style="padding:10px;border-bottom:1px solid rgba(255,255,255,0.1);font-weight:bold;">${escapeHtml(fmtDate(booking.pickup_date))}</td></tr>
         <tr><td style="padding:10px;border-bottom:1px solid rgba(255,255,255,0.1);color:#9aa4b2;">Drop-off</td><td style="padding:10px;border-bottom:1px solid rgba(255,255,255,0.1);font-weight:bold;">${escapeHtml(fmtDate(booking.dropoff_date))}</td></tr>

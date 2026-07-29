@@ -11,6 +11,7 @@ import { InquiryDrawer } from "@/components/vehicle/InquiryDrawer";
 import { Calendar, Car, Fuel, Gauge, MapPin, Users, Banknote, ArrowLeft } from "lucide-react";
 import { PublicVehiclePaymentSummary } from "@/components/payment/PublicVehiclePaymentSummary";
 import { effectiveSettingsFromPublicRow } from "@/lib/payment-settings";
+import { PRIVATE_AGENCY_LABEL } from "@/lib/agency-privacy";
 
 type VehicleRow = {
   id: string;
@@ -28,7 +29,6 @@ type VehicleRow = {
   location_city: string | null;
   location_state: string | null;
   profile_id: string;
-  business_name: string | null;
   bookable: boolean | null;
   cash_accepted: boolean | null;
   agency_photos: string[] | null;
@@ -122,7 +122,7 @@ const VehicleDetail = () => {
     name: label,
     description:
       vehicle.description ||
-      `Rent a ${label} from ${vehicle.business_name ?? "an independent agency"} on Zuvio.`,
+      `Rent a ${label} from a verified local agency on Zuvio.`,
     image: photos.length ? photos : undefined,
     brand: { "@type": "Brand", name: vehicle.make },
     category: vehicle.vehicle_type,
@@ -134,7 +134,7 @@ const VehicleDetail = () => {
       url: `https://gozuvio.com/vehicles/${vehicle.id}`,
       seller: {
         "@type": "Organization",
-        name: vehicle.business_name ?? "Independent agency",
+        name: PRIVATE_AGENCY_LABEL,
       },
       priceSpecification: {
         "@type": "UnitPriceSpecification",
@@ -149,7 +149,7 @@ const VehicleDetail = () => {
     <div className="min-h-screen" style={{ backgroundColor: "#0d1b2e" }}>
       <SEO
         title={t('vehicle.seoTitle', { label })}
-        description={t('vehicle.seoDescription', { label, agency: vehicle.business_name ?? t('vehicle.independentAgency') })}
+        description={t('vehicle.seoDescription', { label, agency: t('vehicle.independentAgency') })}
         path={`/vehicles/${vehicle.id}`}
         ready={!loading}
       />
@@ -246,7 +246,7 @@ const VehicleDetail = () => {
             ) : null}
 
             <section className="rounded-xl p-5" style={{ backgroundColor: "#132640", border: "1px solid rgba(255,255,255,0.08)" }}>
-              <h2 className="text-lg font-bold text-white mb-2">{vehicle.business_name ?? t('vehicle.independentAgency')}</h2>
+              <h2 className="text-lg font-bold text-white mb-2">{t('vehicle.independentAgency')}</h2>
               {vehicle.owner_story && (
                 <p className="text-white/70 text-sm whitespace-pre-line mb-3">{vehicle.owner_story}</p>
               )}
@@ -312,7 +312,7 @@ const VehicleDetail = () => {
         onOpenChange={setInquiryOpen}
         vehicleId={vehicle.id}
         vehicleLabel={label}
-        agencyName={vehicle.business_name}
+        agencyName={null}
       />
     </div>
   );
