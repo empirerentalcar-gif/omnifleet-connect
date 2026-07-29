@@ -116,10 +116,21 @@ serve(async (req) => {
           break;
         }
         case "payment_intent.amount_capturable_updated": {
-          // Manual-capture authorization succeeded — send the confirmation email
+          // Manual-capture authorization succeeded — this is the ONLY point at
+          // which a booking may move out of `awaiting_payment`.
           const pi = event.data.object as Stripe.PaymentIntent;
           const bookingId = pi.metadata?.booking_id;
-          if (bookingId) await sendRenterConfirmation(bookingId);
+          if (bookingId) {
+            await supabaseAdmin
+              .from("bookings")
+              .update({
+                payment_status: "requires_capture",
+                stripe_payment_intent_id: pi.id,
+                updated_at: new Date().toISOString(),
+              })
+              .eq("id", bookingId);
+            await sendRenterConfirmation(bookingId);
+          }
           break;
         }
         case "setup_intent.succeeded": {
