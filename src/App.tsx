@@ -35,6 +35,7 @@ const AdminAgenciesPage = lazy(() => import("./pages/AdminAgencies"));
 const AdminAgencyDetailPage = lazy(() => import("./pages/AdminAgencyDetail"));
 const AdminSetupPage = lazy(() => import("./pages/AdminSetup"));
 const AdminInviteCodesPage = lazy(() => import("./pages/AdminInviteCodes"));
+const AdminRentersPage = lazy(() => import("./pages/AdminRenters"));
 const CityLanding = lazy(() => import("./pages/CityLanding"));
 const Cities = lazy(() => import("./pages/Cities"));
 const ForTuroHosts = lazy(() => import("./pages/ForTuroHosts"));
@@ -89,6 +90,7 @@ const GlobalLayout = () => {
           <Route path="/admin/agencies/:id" element={<AdminAgencyDetailPage />} />
           <Route path="/admin/setup" element={<AdminSetupPage />} />
           <Route path="/admin/invite-codes" element={<AdminInviteCodesPage />} />
+          <Route path="/admin/renters" element={<AdminRentersPage />} />
           <Route path="/cities" element={<Cities />} />
           <Route path="/for-turo-hosts" element={<ForTuroHosts />} />
           <Route path="/las-vegas" element={<LasVegasLanding />} />

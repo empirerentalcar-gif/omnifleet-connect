@@ -1,6 +1,6 @@
 import { useEffect, useState, useMemo } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Building2, CheckCircle, Clock, XCircle, ArrowRight, KeyRound, MapPin, Car, Crown, AlertTriangle, LogOut } from 'lucide-react';
+import { Building2, CheckCircle, Clock, XCircle, ArrowRight, KeyRound, MapPin, Car, Crown, AlertTriangle, LogOut, Users } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAdmin } from '@/hooks/useAdmin';
 import { useIdleSignOut } from '@/hooks/useIdleSignOut';
@@ -191,6 +191,12 @@ const AdminDashboard = () => {
             <p className="text-xs sm:text-sm text-muted-foreground">Zuvio Admin Dashboard</p>
           </div>
           <div className="flex flex-wrap gap-2">
+            <Link to="/admin/renters" className="flex-1 sm:flex-none min-w-0">
+              <Button variant="outline" size="sm" className="w-full sm:w-auto">
+                <Users className="mr-2 h-4 w-4 shrink-0" />
+                <span className="truncate">Renters</span>
+              </Button>
+            </Link>
             <Link to="/admin/invite-codes" className="flex-1 sm:flex-none min-w-0">
               <Button variant="outline" size="sm" className="w-full sm:w-auto">
                 <KeyRound className="mr-2 h-4 w-4 shrink-0" />
