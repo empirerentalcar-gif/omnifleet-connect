@@ -1085,6 +1085,72 @@ export type Database = {
         }
         Relationships: []
       }
+      vehicle_inquiries: {
+        Row: {
+          agency_id: string | null
+          created_at: string
+          dropoff_date: string
+          id: string
+          message: string | null
+          notified_at: string | null
+          pickup_date: string
+          profile_id: string
+          renter_email: string
+          renter_name: string
+          renter_phone: string
+          status: string
+          updated_at: string
+          vehicle_id: string
+        }
+        Insert: {
+          agency_id?: string | null
+          created_at?: string
+          dropoff_date: string
+          id?: string
+          message?: string | null
+          notified_at?: string | null
+          pickup_date: string
+          profile_id: string
+          renter_email: string
+          renter_name: string
+          renter_phone: string
+          status?: string
+          updated_at?: string
+          vehicle_id: string
+        }
+        Update: {
+          agency_id?: string | null
+          created_at?: string
+          dropoff_date?: string
+          id?: string
+          message?: string | null
+          notified_at?: string | null
+          pickup_date?: string
+          profile_id?: string
+          renter_email?: string
+          renter_name?: string
+          renter_phone?: string
+          status?: string
+          updated_at?: string
+          vehicle_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "vehicle_inquiries_vehicle_id_fkey"
+            columns: ["vehicle_id"]
+            isOneToOne: false
+            referencedRelation: "available_vehicles_public"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "vehicle_inquiries_vehicle_id_fkey"
+            columns: ["vehicle_id"]
+            isOneToOne: false
+            referencedRelation: "vehicles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       vehicles: {
         Row: {
           created_at: string
@@ -1184,6 +1250,7 @@ export type Database = {
           agency_payment_restrictions: string | null
           agency_photos: string[] | null
           agency_tax_rate: number | null
+          bookable: boolean | null
           business_name: string | null
           cancellation_policy: string | null
           cash_accepted: boolean | null
@@ -1286,6 +1353,10 @@ export type Database = {
           source_queue: string
         }
         Returns: number
+      }
+      profile_can_accept_payments: {
+        Args: { _profile_id: string }
+        Returns: boolean
       }
       profile_exists: { Args: { _profile_id: string }; Returns: boolean }
       profile_has_approved_agency: {
