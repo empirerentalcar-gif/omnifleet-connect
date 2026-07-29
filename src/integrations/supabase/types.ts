@@ -1251,7 +1251,6 @@ export type Database = {
           agency_photos: string[] | null
           agency_tax_rate: number | null
           bookable: boolean | null
-          business_name: string | null
           cancellation_policy: string | null
           cash_accepted: boolean | null
           daily_rate: number | null
@@ -1326,7 +1325,6 @@ export type Database = {
       get_public_agencies: {
         Args: never
         Returns: {
-          agency_name: string
           city: string
           id: string
           state: string

@@ -7,11 +7,11 @@ import { Card, CardContent } from '@/components/ui/card';
 import { supabase } from '@/integrations/supabase/client';
 import { MAJOR_CITIES, citySlugToLabel, normalizeCity, FEATURED_CITY_SLUGS } from '@/lib/city-data';
 import { logVehicleFetchFailure, logVehicleFetchEmpty } from '@/lib/telemetry';
+import { PRIVATE_AGENCY_LABEL } from '@/lib/agency-privacy';
 
 /* ── types ── */
 type VehicleRow = {
   profile_id: string | null;
-  business_name: string | null;
   location_city: string | null;
   location_state: string | null;
   vehicle_type: string | null;
@@ -86,7 +86,8 @@ const CityLanding = () => {
           } else {
             agencyMap.set(v.profile_id, {
               profileId: v.profile_id,
-              name: v.business_name || 'Local Agency',
+              // Agency identity stays hidden from renters until a booking is approved.
+              name: PRIVATE_AGENCY_LABEL,
               city: v.location_city || cityMeta?.city || labelCity,
               state: v.location_state || cityMeta?.state || '',
               vehicleCount: 1,

@@ -9,6 +9,7 @@ import CitySelector from "@/components/CitySelector";
 import { logVehicleFetchFailure, logVehicleFetchEmpty } from "@/lib/telemetry";
 import { SafeImage } from "@/components/SafeImage";
 import { useTranslation } from "react-i18next";
+import { PRIVATE_AGENCY_LABEL } from "@/lib/agency-privacy";
 
 const vehicleTypes = ["All", "Sedan", "SUV", "Truck", "Van", "Compact", "Luxury"];
 
@@ -87,8 +88,8 @@ const SearchResults = () => {
       const list: VehicleCard[] = [];
       for (const v of rows as any[]) {
         if (!v.profile_id) continue;
-        const name = v.business_name || "Local Agency";
-        if (name.toLowerCase() === "admin" || name.toLowerCase() === "test") continue;
+        // Agency identity is hidden from renters until a booking is approved.
+        const name = PRIVATE_AGENCY_LABEL;
         list.push({
           id: v.id,
           profileId: v.profile_id,

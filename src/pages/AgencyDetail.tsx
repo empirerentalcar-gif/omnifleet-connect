@@ -7,6 +7,7 @@ import SEO from "@/components/SEO";
 import { Helmet } from "react-helmet-async";
 import { logVehicleFetchFailure, logVehicleFetchEmpty } from "@/lib/telemetry";
 import { SafeImage, PhotoFallback } from "@/components/SafeImage";
+import { PRIVATE_AGENCY_LABEL } from "@/lib/agency-privacy";
 
 interface AgencyData {
   name: string;
@@ -75,7 +76,8 @@ const AgencyDetail = () => {
 
       // Pull agency info from first vehicle row (all share same profile)
       const first = vehicles[0] as any;
-      const agencyName = first.business_name || "Local Rental Agency";
+      // Renters never see the agency's real name before a booking is approved.
+      const agencyName = PRIVATE_AGENCY_LABEL;
       const cashAccepted = first.cash_accepted || false;
       const ownerStory = first.owner_story || "We're a local, independent rental agency committed to providing reliable vehicles and honest service to our community.";
       const depositInfo = first.deposit_info || "$200 cash or card hold. Refunded upon vehicle return in good condition.";
