@@ -144,10 +144,10 @@ serve(async (req) => {
 
     const subject =
       stuck.length === 0
-        ? "⏳ Stuck bookings — none · all clear"
+        ? "⏳ Stuck booking — none · all clear"
         : stuck.length === 1
           ? `⏳ Stuck booking — ${stuck[0].agencies?.agency_name || "Unknown agency"} · ${stuck[0].renter_name} (${daysSince(stuck[0].created_at) * 24}h)`
-          : `⏳ Stuck bookings — ${stuck.length} across ${byAgency.size} agenc${byAgency.size === 1 ? "y" : "ies"}`;
+          : `⏳ Stuck booking — ${stuck.length} across ${byAgency.size} agenc${byAgency.size === 1 ? "y" : "ies"}`;
 
     let bodyHtml = `
       <div style="font-family:Arial,sans-serif;color:#111;max-width:720px;margin:0 auto;padding:16px;">

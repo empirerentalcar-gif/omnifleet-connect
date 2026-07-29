@@ -203,7 +203,7 @@ serve(async (req) => {
         });
         const subject = `🆕 New booking — ${agencyLabel} · ${vehicleLabel} (${timeLabel} ET)`;
         const html = `<div style="font-family:Arial,sans-serif;max-width:640px;margin:0 auto;padding:24px;background:#0d1b2e;color:#fff;">
-  <h2 style="color:#2dd4bf;margin:0 0 12px;">🚗 New Booking Request</h2>
+  <h2 style="color:#2dd4bf;margin:0 0 12px;">Booking request details</h2>
   <p style="margin:0 0 16px;color:#c8d0dc;">A renter just submitted a booking request on Zuvio. Payment is being authorized — you'll get a second confirmation once the funds are held.</p>
   <table style="width:100%;border-collapse:collapse;background:#132640;border-radius:8px;overflow:hidden;">
     <tr><td style="padding:10px 12px;color:#9aa4b2;border-bottom:1px solid rgba(255,255,255,0.08);">Renter</td><td style="padding:10px 12px;font-weight:bold;border-bottom:1px solid rgba(255,255,255,0.08);">${renter_name}</td></tr>

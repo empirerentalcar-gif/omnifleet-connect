@@ -91,8 +91,8 @@ Deno.serve(async (req) => {
         : "Vehicle";
 
       const header = toSend === "stuck_followup"
-        ? `ZUVIO REMINDER: still stuck after ${Math.floor(ageHours)}h`
-        : `ZUVIO ALERT: booking stuck ${Math.floor(ageHours)}h with no agency action`;
+        ? `ZUVIO: Stuck booking — still stuck after ${Math.floor(ageHours)}h`
+        : `ZUVIO: Stuck booking — ${Math.floor(ageHours)}h with no agency action`;
 
       const body = [
         header,
