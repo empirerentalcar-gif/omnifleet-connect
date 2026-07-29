@@ -1,6 +1,7 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import Stripe from "https://esm.sh/stripe@18.5.0?target=deno";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.45.0";
+import { sendOpsSms, fmtDay } from "../_shared/sms.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -144,6 +145,23 @@ serve(async (req) => {
     // This runs at initial submission (not payment success), so agencies see the
     // lead even if the renter never completes payment authorization.
     (async () => {
+      // Ops SMS: instant text to Zuvio with the full request details.
+      try {
+        const smsVehicle = `${vehicle.make ?? ""} ${vehicle.model ?? ""}`.trim() || "Vehicle";
+        const sent = await sendOpsSms([
+          "ZUVIO: New booking request",
+          `Customer: ${renter_name}`,
+          `Phone: ${renter_phone}`,
+          `Email: ${renter_email}`,
+          `Vehicle: ${smsVehicle}`,
+          `Pickup: ${fmtDay(pickup_date)}`,
+          `Return: ${fmtDay(dropoff_date)}`,
+          `Booking: ${booking.id.slice(0, 8)}`,
+        ].join("\n"));
+        log("AGENCY-NOTIFY sms", { booking_id: booking.id, recipients: sent });
+      } catch (e) {
+        log("AGENCY-NOTIFY sms error", { msg: (e as Error).message });
+      }
       try {
         const resendApiKey = Deno.env.get("RESEND_API_KEY");
         if (!resendApiKey) {
