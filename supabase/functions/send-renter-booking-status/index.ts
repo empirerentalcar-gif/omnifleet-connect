@@ -57,7 +57,7 @@ Deno.serve(async (req) => {
     const supabase = createClient(supabaseUrl, serviceRoleKey);
     const { data: booking, error } = await supabase
       .from("bookings")
-      .select("id, renter_name, renter_email, pickup_date, dropoff_date, rental_days, total_amount_cents, currency, vehicle_id")
+      .select("id, renter_name, renter_email, renter_phone, pickup_date, dropoff_date, rental_days, total_amount_cents, currency, vehicle_id, agency_id")
       .eq("id", booking_id)
       .maybeSingle();
     if (error || !booking) {
@@ -146,6 +146,44 @@ Deno.serve(async (req) => {
       });
     }
     console.log(`[RENTER-STATUS-EMAIL] Sent ${status} to ${booking.renter_email}`, resendData);
+
+    // Immediate internal alert on declines
+    if (status === "declined") {
+      try {
+        let agencyName = "Unknown agency";
+        if (booking.agency_id) {
+          const { data: agency } = await supabase
+            .from("agencies").select("name").eq("id", booking.agency_id).maybeSingle();
+          if (agency?.name) agencyName = agency.name;
+        }
+        const alertHtml = `<div style="font-family:sans-serif;max-width:600px;margin:0 auto;padding:20px;background:#0d1b2e;color:#fff;">
+          <h2 style="color:#f87171;margin-top:0;">❌ Booking Declined</h2>
+          <table style="width:100%;border-collapse:collapse;margin:16px 0;background:#132640;border-radius:8px;overflow:hidden;">
+            <tr><td style="padding:10px;color:#9aa4b2;">Agency</td><td style="padding:10px;font-weight:bold;">${escapeHtml(agencyName)}</td></tr>
+            <tr><td style="padding:10px;color:#9aa4b2;">Renter</td><td style="padding:10px;font-weight:bold;">${escapeHtml(booking.renter_name || "—")} &lt;${escapeHtml(booking.renter_email)}&gt;${booking.renter_phone ? ` · ${escapeHtml(booking.renter_phone)}` : ""}</td></tr>
+            <tr><td style="padding:10px;color:#9aa4b2;">Vehicle</td><td style="padding:10px;font-weight:bold;">${escapeHtml(vehicleLabel)}</td></tr>
+            <tr><td style="padding:10px;color:#9aa4b2;">Dates</td><td style="padding:10px;font-weight:bold;">${escapeHtml(fmtDate(booking.pickup_date))} → ${escapeHtml(fmtDate(booking.dropoff_date))}</td></tr>
+            <tr><td style="padding:10px;color:#9aa4b2;">Total</td><td style="padding:10px;font-weight:bold;">$${total} ${String(booking.currency || "usd").toUpperCase()}</td></tr>
+            <tr><td style="padding:10px;color:#9aa4b2;">Reason</td><td style="padding:10px;font-weight:bold;">${escapeHtml(reason && reason.trim() ? reason.trim() : "No reason provided")}</td></tr>
+          </table>
+          <p style="font-size:13px;color:#9aa4b2;">Booking ID: ${escapeHtml(booking.id)}</p>
+        </div>`;
+        const alertRes = await fetch("https://api.resend.com/emails", {
+          method: "POST",
+          headers: { Authorization: `Bearer ${resendApiKey}`, "Content-Type": "application/json" },
+          body: JSON.stringify({
+            from: "ZUVIO Alerts <team@zuvio.us>",
+            to: ["zuviollc@gmail.com"],
+            subject: `Declined booking — ${agencyName} · ${vehicleLabel}`,
+            html: alertHtml,
+          }),
+        });
+        if (!alertRes.ok) console.error("[RENTER-STATUS-EMAIL] Decline alert failed:", await alertRes.text());
+      } catch (alertErr) {
+        console.error("[RENTER-STATUS-EMAIL] Decline alert error:", alertErr);
+      }
+    }
+
     return new Response(JSON.stringify({ success: true, resend_id: resendData.id }), {
       status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
