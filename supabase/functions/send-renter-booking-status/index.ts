@@ -57,7 +57,7 @@ Deno.serve(async (req) => {
     const supabase = createClient(supabaseUrl, serviceRoleKey);
     const { data: booking, error } = await supabase
       .from("bookings")
-      .select("id, renter_name, renter_email, renter_phone, pickup_date, dropoff_date, rental_days, total_amount_cents, currency, vehicle_id, agency_id")
+      .select("id, renter_name, renter_email, renter_phone, pickup_date, dropoff_date, rental_days, total_amount_cents, currency, vehicle_id, agency_id, payment_status")
       .eq("id", booking_id)
       .maybeSingle();
     if (error || !booking) {
@@ -76,10 +76,12 @@ Deno.serve(async (req) => {
     const vehicleLabel = vehicle ? `${vehicle.year} ${vehicle.make} ${vehicle.model}` : "Your vehicle";
     const total = (booking.total_amount_cents / 100).toFixed(2);
 
-    // Agency identity is hidden from renters everywhere until a booking is
-    // approved (or paid). Only then do we reveal who they're renting from.
+    // Agency identity stays hidden until the payment is ACTUALLY captured.
+    // Approval alone is not enough — otherwise a renter could learn who the
+    // agency is and go around the platform before paying.
     let revealAgency: { name: string; phone: string | null } | null = null;
-    if ((status === "approved" || status === "captured") && booking.agency_id) {
+    const paymentCaptured = booking.payment_status === "captured";
+    if (status === "captured" && paymentCaptured && booking.agency_id) {
       const { data: revealed } = await supabase
         .from("agencies").select("agency_name, phone").eq("id", booking.agency_id).maybeSingle();
       if (revealed?.agency_name) revealAgency = { name: revealed.agency_name, phone: revealed.phone ?? null };
@@ -94,7 +96,7 @@ Deno.serve(async (req) => {
     if (status === "approved") {
       heading = "✅ Booking Approved";
       intro = `Great news — the agency confirmed your reservation for the ${vehicleLabel}.`;
-      notice = "Your card is authorized and will be charged on your pickup date. See you soon!";
+      notice = "Your card is authorized and will be charged on your pickup date. Once payment is captured we'll email you the agency's name and pickup contact details.";
       subject = `Booking approved — ${vehicleLabel}`;
     } else if (status === "captured") {
       heading = "💳 Payment Captured";
