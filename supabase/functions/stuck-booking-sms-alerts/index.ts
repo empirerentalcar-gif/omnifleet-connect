@@ -14,6 +14,14 @@ const log = (step: string, details?: unknown) =>
 // paid-or-authorized request and still hasn't approved or declined it.
 const STUCK_AFTER_HOURS = 2;
 const FOLLOWUP_AFTER_HOURS = 24;
+// A booking is an "abandoned checkout" once it has sat in awaiting_payment this
+// long with no Stripe PaymentIntent/SetupIntent/charge behind it at all.
+const ABANDONED_AFTER_HOURS = 2;
+
+function esc(text: unknown): string {
+  const map: Record<string, string> = { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#039;" };
+  return String(text ?? "").replace(/[&<>"']/g, (m) => map[m]);
+}
 
 /**
  * Hourly SMS alerting for stuck bookings.
