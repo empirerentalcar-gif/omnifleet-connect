@@ -134,7 +134,11 @@ serve(async (req) => {
         currency: "usd",
         capture_method: "manual",
         booking_status: "pending_agency",
-        payment_status: useImmediateAuth ? "requires_capture" : "scheduled",
+        // Never write a "confirmed-looking" payment status before Stripe has
+        // actually authorized. `awaiting_payment` is the pre-authorization
+        // state; the webhook promotes it to `requires_capture` only once
+        // Stripe reports a live authorization (amount_capturable_updated).
+        payment_status: useImmediateAuth ? "awaiting_payment" : "scheduled",
       })
       .select("id")
       .single();

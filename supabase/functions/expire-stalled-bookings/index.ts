@@ -72,7 +72,14 @@ serve(async (req) => {
     // captured, older than the threshold. `payment_status` in these values
     // means no successful auth/capture happened.
     const cutoff = new Date(Date.now() - olderThanHours * 3600 * 1000).toISOString();
-    const stalledPaymentStatuses = ["pending", "failed", "requires_payment_method", "requires_action", "processing"];
+    const stalledPaymentStatuses = [
+      "awaiting_payment",
+      "pending",
+      "failed",
+      "requires_payment_method",
+      "requires_action",
+      "processing",
+    ];
 
     let query = supabase
       .from("bookings")
@@ -92,11 +99,28 @@ serve(async (req) => {
 
     const { data: bookings, error } = await query;
     if (error) throw new Error(`Query failed: ${error.message}`);
+
+    // Safety net for legacy/orphaned rows: bookings that look authorized
+    // (`requires_capture`) but have no Stripe PaymentIntent at all. These can
+    // never be captured and must not sit around looking confirmed.
+    let candidates = bookings ?? [];
+    if (!body.booking_id) {
+      const { data: orphans } = await supabase
+        .from("bookings")
+        .select("id, renter_name, renter_email, pickup_date, dropoff_date, rental_days, total_amount_cents, currency, vehicle_id, agency_id, stripe_payment_intent_id, payment_status, booking_status, created_at")
+        .eq("booking_status", "pending_agency")
+        .eq("payment_status", "requires_capture")
+        .is("stripe_payment_intent_id", null)
+        .lt("created_at", cutoff)
+        .limit(50);
+      const seen = new Set(candidates.map((b) => b.id));
+      for (const o of orphans ?? []) if (!seen.has(o.id)) candidates.push(o);
+    }
     log("Candidates", { count: bookings?.length ?? 0, olderThanHours, force: !!body.force });
 
     const results: Array<Record<string, unknown>> = [];
 
-    for (const b of bookings ?? []) {
+    for (const b of candidates) {
       try {
         // Safety: never cancel a booking that Stripe says has live money on it.
         // With capture_method="manual", a successful renter authorization lands
