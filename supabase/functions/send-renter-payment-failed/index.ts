@@ -1,4 +1,5 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.45.0";
+import { sendOpsSms, fmtDay } from "../_shared/sms.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -78,6 +79,25 @@ Deno.serve(async (req) => {
     const reason = (failure_message || "Your card issuer declined the payment.").slice(0, 500);
 
     const retryUrl = `https://www.gozuvio.com/vehicles/${booking.vehicle_id}`;
+
+    // Ops SMS: instant text to Zuvio on payment failure (never to the agency).
+    try {
+      const smsCount = await sendOpsSms([
+        "ZUVIO: Payment FAILED on a booking",
+        `Customer: ${booking.renter_name}`,
+        `Phone: ${booking.renter_phone || "n/a"}`,
+        `Email: ${booking.renter_email || "n/a"}`,
+        `Vehicle: ${vehicleLabel}`,
+        `Pickup: ${fmtDay(booking.pickup_date)}`,
+        `Return: ${fmtDay(booking.dropoff_date)}`,
+        `Total: $${total}`,
+        `Reason: ${reason.slice(0, 120)}`,
+        `Booking: ${booking.id.slice(0, 8)}`,
+      ].join("\n"));
+      console.log("[PAYMENT-FAILED-EMAIL] ops sms", { recipients: smsCount });
+    } catch (e) {
+      console.error("[PAYMENT-FAILED-EMAIL] ops sms error", (e as Error).message);
+    }
 
     const resendApiKey = Deno.env.get("RESEND_API_KEY");
     if (!resendApiKey) {

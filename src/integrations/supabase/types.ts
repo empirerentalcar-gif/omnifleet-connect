@@ -340,6 +340,41 @@ export type Database = {
           },
         ]
       }
+      booking_alert_log: {
+        Row: {
+          alert_type: string
+          booking_id: string
+          channel: string
+          detail: string | null
+          id: string
+          sent_at: string
+        }
+        Insert: {
+          alert_type: string
+          booking_id: string
+          channel?: string
+          detail?: string | null
+          id?: string
+          sent_at?: string
+        }
+        Update: {
+          alert_type?: string
+          booking_id?: string
+          channel?: string
+          detail?: string | null
+          id?: string
+          sent_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "booking_alert_log_booking_id_fkey"
+            columns: ["booking_id"]
+            isOneToOne: false
+            referencedRelation: "bookings"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       bookings: {
         Row: {
           agency_id: string

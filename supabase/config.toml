@@ -51,6 +51,9 @@ verify_jwt = false
 [functions.report-stuck-bookings]
 verify_jwt = false
 
+[functions.stuck-booking-sms-alerts]
+verify_jwt = false
+
 
 [functions.process-email-queue]
 verify_jwt = true

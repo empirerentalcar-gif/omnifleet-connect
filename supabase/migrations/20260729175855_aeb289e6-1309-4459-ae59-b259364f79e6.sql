@@ -1,0 +1,1 @@
+GRANT SELECT ON public.booking_alert_log TO authenticated;
