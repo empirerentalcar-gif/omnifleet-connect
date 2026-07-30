@@ -15,7 +15,7 @@ const TermsOfService = () => {
           </h1>
 
           <p className="text-muted-foreground mb-4">
-            Last updated: June 27, 2026
+            Last updated: July 30, 2026 · Version 2026.07
           </p>
 
           <p className="text-muted-foreground mb-8">
@@ -87,7 +87,38 @@ const TermsOfService = () => {
 
             <section>
               <h2 className="font-display text-2xl font-bold text-foreground mb-4">
-                5. Rental Agreements
+                5. Non-Circumvention and Direct Booking Prohibition
+              </h2>
+              <p className="text-muted-foreground mb-3">
+                <strong className="text-foreground">5.1 Prohibition on Direct Solicitation.</strong> Agency shall not, directly or indirectly, solicit, encourage, or accept a rental booking from any renter who was introduced to Agency through the Zuvio platform ("Zuvio-Sourced Renter") outside of the Zuvio platform, for the duration of this Agreement and for a period of twelve (12) months following the renter's initial inquiry or booking through Zuvio, regardless of whether that specific booking was completed.
+              </p>
+              <p className="text-muted-foreground mb-3">
+                <strong className="text-foreground">5.2 Definition of Circumvention.</strong> Circumvention includes, but is not limited to:
+              </p>
+              <ul className="list-disc list-inside text-muted-foreground space-y-2">
+                <li>Providing a Zuvio-Sourced Renter with Agency's direct phone number, email, website, or any other contact or booking method for the purpose of completing a rental outside the Zuvio platform</li>
+                <li>Instructing, suggesting, or encouraging a renter to cancel or abandon a Zuvio booking in order to book directly with Agency</li>
+                <li>Offering a Zuvio-Sourced Renter a discount, incentive, or different terms conditioned on booking outside the platform</li>
+                <li>Any other act intended to divert a Zuvio-Sourced Renter's booking, payment, or business away from the Zuvio platform</li>
+              </ul>
+              <p className="text-muted-foreground mt-3 mb-3">
+                <strong className="text-foreground">5.3 Renter-Initiated Contact Exception.</strong> This clause does not prohibit Agency from providing normal customer service to a renter who independently locates Agency through means unrelated to Zuvio (e.g., a prior existing customer relationship, unrelated advertising, or general public search), provided Agency did not solicit or encourage that renter to bypass the platform in violation of Section 5.1.
+              </p>
+              <p className="text-muted-foreground mb-3">
+                <strong className="text-foreground">5.4 Consequences of Violation.</strong>
+              </p>
+              <ul className="list-disc list-inside text-muted-foreground space-y-2">
+                <li><strong className="text-foreground">First violation:</strong> Written notice and a requirement that Agency cease the conduct immediately. Zuvio may, at its discretion, apply a fee equal to Zuvio's standard commission rate on the estimated value of the diverted booking.</li>
+                <li><strong className="text-foreground">Second or subsequent violation:</strong> Zuvio may immediately suspend or terminate Agency's account and remove all Agency listings from the platform, without refund of any fees paid, and may pursue recovery of lost commission revenue reasonably attributable to the violation.</li>
+              </ul>
+              <p className="text-muted-foreground mt-3">
+                <strong className="text-foreground">5.5 Survival.</strong> This clause survives termination of this Agreement for the twelve (12) month period described in Section 5.1, applying to any Zuvio-Sourced Renter introduced to Agency prior to termination.
+              </p>
+            </section>
+
+            <section>
+              <h2 className="font-display text-2xl font-bold text-foreground mb-4">
+                6. Rental Agreements
               </h2>
               <p className="text-muted-foreground mb-3">
                 When a renter submits a reservation request through Zuvio, they are entering into a direct rental agreement with the independent agency. Zuvio is not a party to that agreement.
@@ -102,7 +133,7 @@ const TermsOfService = () => {
 
             <section>
               <h2 className="font-display text-2xl font-bold text-foreground mb-4">
-                6. Payment Terms
+                7. Payment Terms
               </h2>
               <ul className="list-disc list-inside text-muted-foreground space-y-2">
                 <li>Online card payments are processed securely through Stripe Connect. When a renter pays online, the transaction settles directly with the independent agency providing the vehicle. Zuvio automatically extracts its platform fee during checkout, and the remaining funds are routed to the agency's connected account. Zuvio does not store full card numbers. Zuvio reserves the right to introduce and charge a recurring monthly software subscription fee (including a $79/month tier) for platform and dashboard access, with specific pricing, billing cycles, and payment authorizations managed directly via the agency dashboard.</li>
@@ -114,7 +145,7 @@ const TermsOfService = () => {
 
             <section>
               <h2 className="font-display text-2xl font-bold text-foreground mb-4">
-                7. Prohibited Activities
+                8. Prohibited Activities
               </h2>
               <p className="text-muted-foreground mb-3">
                 You agree not to use Zuvio to:
@@ -135,7 +166,7 @@ const TermsOfService = () => {
 
             <section>
               <h2 className="font-display text-2xl font-bold text-foreground mb-4">
-                8. Intellectual Property
+                9. Intellectual Property
               </h2>
               <p className="text-muted-foreground mb-3">
                 All content on the Zuvio platform — including the Zuvio name, logo, design, text, graphics, and software — is the property of Zuvio and is protected by applicable intellectual property laws.
@@ -147,7 +178,7 @@ const TermsOfService = () => {
 
             <section>
               <h2 className="font-display text-2xl font-bold text-foreground mb-4">
-                9. Limitation of Liability
+                10. Limitation of Liability
               </h2>
               <p className="text-muted-foreground mb-3">
                 Zuvio provides its platform on an "as is" and "as available" basis. We make no warranties, express or implied, regarding the reliability, accuracy, or availability of the platform.
@@ -167,7 +198,7 @@ const TermsOfService = () => {
 
             <section>
               <h2 className="font-display text-2xl font-bold text-foreground mb-4">
-                10. Governing Law
+                11. Governing Law
               </h2>
               <p className="text-muted-foreground mb-3">
                 These Terms are governed by and construed in accordance with the laws of the State of Nevada, without regard to its conflict of law provisions. Any disputes arising from these Terms or your use of Zuvio shall be resolved in the state or federal courts located in Clark County, Nevada.
@@ -179,7 +210,7 @@ const TermsOfService = () => {
 
             <section>
               <h2 className="font-display text-2xl font-bold text-foreground mb-4">
-                11. Contact Information
+                12. Contact Information
               </h2>
               <p className="text-muted-foreground">
                 If you have any questions about these Terms of Service, please contact us:<br />
