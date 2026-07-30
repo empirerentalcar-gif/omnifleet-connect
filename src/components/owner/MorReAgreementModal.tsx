@@ -47,11 +47,14 @@ export function MorReAgreementModal({ agencyId, onAccepted }: Props) {
     >
       <div className="glass-card max-w-lg w-full rounded-2xl border border-white/10 bg-background p-8 shadow-2xl">
         <h2 id="mor-reagree-title" className="text-2xl font-bold mb-3">
-          Updated Payment Processing Terms
+          Updated Terms of Service (v2026.07)
         </h2>
         <p className="text-sm text-muted-foreground leading-relaxed mb-6">
-          We've updated our Payment Processing Terms. To continue managing your fleet and
-          receiving payouts on Zuvio, please review and accept our updated marketplace terms.
+          We've updated our Terms of Service. In addition to our Payment Processing terms,
+          the updated terms add <strong>Section 5 — Non-Circumvention and Direct Booking
+          Prohibition</strong>, which prohibits soliciting, accepting, or diverting bookings
+          from Zuvio-sourced renters outside the platform. To continue managing your fleet and
+          receiving payouts on Zuvio, please review and accept the updated terms.
         </p>
 
         <div className="flex items-start gap-3 p-4 rounded-lg border border-white/10 bg-muted/30 mb-6">
@@ -66,8 +69,10 @@ export function MorReAgreementModal({ agencyId, onAccepted }: Props) {
             htmlFor="mor-reagree"
             className="text-sm leading-relaxed cursor-pointer"
           >
-            I agree that I am the Merchant of Record for all transactions and accept
-            full responsibility for disputes and chargebacks as outlined in Zuvio's{" "}
+            I agree that I am the Merchant of Record for all transactions and accept full
+            responsibility for disputes and chargebacks, and I have read and accept the
+            updated Terms of Service including the Non-Circumvention and Direct Booking
+            Prohibition, as outlined in Zuvio's{" "}
             <a
               href="/terms"
               target="_blank"

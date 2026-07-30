@@ -7,7 +7,7 @@ const corsHeaders = {
 };
 
 const AGREEMENT_TEXT =
-  "I agree that I am the Merchant of Record for all transactions and accept full responsibility for disputes and chargebacks as outlined in Zuvio's Terms of Service.";
+  "I agree that I am the Merchant of Record for all transactions and accept full responsibility for disputes and chargebacks as outlined in Zuvio's Terms of Service. I have also read and accept the updated Terms of Service (v2026.07), including Section 5 — Non-Circumvention and Direct Booking Prohibition — and agree not to solicit, accept, or divert bookings from Zuvio-sourced renters outside the Zuvio platform.";
 
 const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY");
 const ADMIN_EMAIL = "zuviollc@gmail.com";
@@ -112,14 +112,14 @@ Deno.serve(async (req) => {
     // prevent_owner_sensitive_agency_updates trigger that blocks owners).
     const { error: flagErr } = await admin
       .from("agencies")
-      .update({ tos_version_2026_06: true })
+      .update({ tos_version_2026_06: true, tos_version_2026_07: true })
       .eq("id", agency.id);
     if (flagErr) {
       console.error("[record-mor-agreement] Failed to set tos_version_2026_06", flagErr);
       // Layer A: log silent failure + alert admin via Resend.
       await admin.from("sensitive_update_failures").insert({
         agency_id: agency.id,
-        field_name: "tos_version_2026_06",
+        field_name: "tos_version_2026_06,tos_version_2026_07",
         source: "record-mor-agreement",
         expected_value: "true",
         actual_value: null,
@@ -128,7 +128,7 @@ Deno.serve(async (req) => {
       sendEmail(
         ADMIN_EMAIL,
         `⚠️ Silent sensitive-field update failure (record-mor-agreement)`,
-        `<p>Failed to flip <code>tos_version_2026_06</code> for agency <strong>${agency.agency_name}</strong> (${agency.id}).</p>
+        `<p>Failed to flip TOS acceptance flags for agency <strong>${agency.agency_name}</strong> (${agency.id}).</p>
          <p>Error: <code>${flagErr.message ?? String(flagErr)}</code></p>`,
       );
       return new Response(
@@ -140,24 +140,30 @@ Deno.serve(async (req) => {
     // Layer A: verify the write actually landed by re-reading the row.
     const { data: verifyRow, error: verifyErr } = await admin
       .from("agencies")
-      .select("tos_version_2026_06")
+      .select("tos_version_2026_06, tos_version_2026_07")
       .eq("id", agency.id)
       .maybeSingle();
-    if (verifyErr || verifyRow?.tos_version_2026_06 !== true) {
+    if (
+      verifyErr ||
+      verifyRow?.tos_version_2026_06 !== true ||
+      verifyRow?.tos_version_2026_07 !== true
+    ) {
       console.error("[record-mor-agreement] Verification mismatch", { verifyErr, verifyRow });
       await admin.from("sensitive_update_failures").insert({
         agency_id: agency.id,
-        field_name: "tos_version_2026_06",
+        field_name: "tos_version_2026_06,tos_version_2026_07",
         source: "record-mor-agreement",
         expected_value: "true",
-        actual_value: verifyRow ? String(verifyRow.tos_version_2026_06) : null,
+        actual_value: verifyRow
+          ? `${String(verifyRow.tos_version_2026_06)},${String(verifyRow.tos_version_2026_07)}`
+          : null,
         error_message: verifyErr?.message ?? "Re-read mismatch after update",
       });
       sendEmail(
         ADMIN_EMAIL,
         `⚠️ Silent sensitive-field update failure (record-mor-agreement)`,
         `<p>Post-update verification failed for agency <strong>${agency.agency_name}</strong> (${agency.id}).</p>
-         <p>Expected <code>tos_version_2026_06=true</code>, got <code>${verifyRow ? String(verifyRow.tos_version_2026_06) : "null"}</code>.</p>`,
+         <p>Expected both TOS flags true, got <code>2026_06=${verifyRow ? String(verifyRow.tos_version_2026_06) : "null"}, 2026_07=${verifyRow ? String(verifyRow.tos_version_2026_07) : "null"}</code>.</p>`,
       );
       return new Response(
         JSON.stringify({ error: "Acceptance flag did not persist" }),

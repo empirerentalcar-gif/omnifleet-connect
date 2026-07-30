@@ -206,14 +206,16 @@ const OwnerDashboard = () => {
       // Fetch trial info from agencies
       const { data: agencyData } = await supabase
         .from('agencies')
-        .select('id, subscription_status, trial_end_date, grace_period_end, is_founding_member, founding_member_number, payment_methods, payment_restrictions, fee_settings, tax_rate, custom_fees, fees_setup_complete, tos_version_2026_06, commission_rate_bps')
+        .select('id, subscription_status, trial_end_date, grace_period_end, is_founding_member, founding_member_number, payment_methods, payment_restrictions, fee_settings, tax_rate, custom_fees, fees_setup_complete, tos_version_2026_06, tos_version_2026_07, commission_rate_bps')
         .eq('owner_user_id', user.id)
         .single();
 
       if (agencyData) {
         // BookingsSection needs the agencies.id (not profiles.id)
         setAgencyId(agencyData.id);
-        setNeedsMorReAgreement(agencyData.tos_version_2026_06 !== true);
+        setNeedsMorReAgreement(
+          agencyData.tos_version_2026_06 !== true || agencyData.tos_version_2026_07 !== true
+        );
         setFeesSetupComplete(!!agencyData.fees_setup_complete);
         const pm = agencyData.payment_methods;
         const methods = Array.isArray(pm)

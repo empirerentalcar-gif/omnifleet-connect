@@ -1,0 +1,1 @@
+ALTER TABLE public.agencies ADD COLUMN IF NOT EXISTS tos_version_2026_07 boolean NOT NULL DEFAULT false;
