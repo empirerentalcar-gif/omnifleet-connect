@@ -430,7 +430,7 @@ const AdminAgencyDetail = () => {
   );
 
   const totals = useMemo(() => {
-    const captured = bookings.filter((b) => b.payment_status === 'succeeded');
+    const captured = bookings.filter((b) => b.payment_status === 'captured');
     const totalValueCents = bookings.reduce((s, b) => s + (b.total_amount_cents || 0), 0);
     const platformFeeCents = bookings.reduce((s, b) => s + (b.platform_fee_cents || 0), 0);
     const capturedValueCents = captured.reduce((s, b) => s + (b.total_amount_cents || 0), 0);

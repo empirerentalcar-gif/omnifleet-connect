@@ -117,7 +117,7 @@ export const BookingsSection = ({ agencyId }: { agencyId: string | null }) => {
                   b.booking_status === "pending_agency" &&
                   (b.payment_status === "scheduled" || b.payment_status === "awaiting_payment");
                 const canDecline = b.booking_status === "pending_agency";
-                const hasPaymentDetails = b.payment_status === "succeeded" || !!b.stripe_charge_id;
+                const hasPaymentDetails = b.payment_status === "captured" || !!b.stripe_charge_id;
                 const isExpanded = expandedId === b.id;
                 return (
                   <Fragment key={b.id}>

@@ -447,7 +447,7 @@ async function reconcilePaymentIntent(
   const { error: updateErr } = await supabaseAdmin
     .from("bookings")
     .update({
-      payment_status: "succeeded",
+      payment_status: "captured",
       booking_status: "approved",
       stripe_charge_id: chargeId,
       updated_at: new Date().toISOString(),
