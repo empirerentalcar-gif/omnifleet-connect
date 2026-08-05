@@ -245,28 +245,63 @@ serve(async (req) => {
     let intentId: string | null = null;
     let intentType: "payment_intent" | "setup_intent";
 
+    // Release the date hold immediately when Stripe returns a DEFINITIVE error.
+    // Ambiguous outcomes (network/API/rate-limit) are left alone so the
+    // expire-stalled-bookings sweep can decide later.
+    const isDefinitiveStripeError = (e: unknown) => {
+      const type = (e as { type?: string } | null)?.type;
+      return (
+        type === "StripeCardError" ||
+        type === "StripeInvalidRequestError" ||
+        type === "card_error" ||
+        type === "invalid_request_error"
+      );
+    };
+    const releaseBookingHold = async (reason: string) => {
+      await supabaseAdmin
+        .from("bookings")
+        .update({
+          booking_status: "canceled",
+          payment_status: "failed",
+          decline_reason: reason.slice(0, 500),
+          updated_at: new Date().toISOString(),
+        })
+        .eq("id", booking.id);
+      log("Booking hold released after definitive Stripe failure", { bookingId: booking.id, reason });
+    };
+
     if (useImmediateAuth) {
-      const intent = await stripe.paymentIntents.create({
-        amount: totalAmountCents,
-        currency: "usd",
-        capture_method: "manual",
-        // Restrict to instant-confirmation methods only. Async/redirect methods
-        // (Cash App Pay, Klarna, Affirm) can leave bookings in an ambiguous
-        // "renter thinks they paid, platform doesn't know yet" state.
-        // Do NOT use automatic_payment_methods here — it would pull in whatever
-        // is enabled in the Stripe Dashboard.
-        payment_method_types: ["card", "apple_pay", "google_pay", "link"],
-        application_fee_amount: platformFeeCents,
-        on_behalf_of: agency.stripe_connect_account_id,
-        transfer_data: { destination: agency.stripe_connect_account_id },
-        receipt_email: renter_email,
-        metadata: {
-          booking_id: booking.id,
-          vehicle_id,
-          agency_id: agency.id,
-          flow: "immediate_auth",
-        },
-      });
+      let intent: Stripe.PaymentIntent;
+      try {
+        intent = await stripe.paymentIntents.create({
+          amount: totalAmountCents,
+          currency: "usd",
+          capture_method: "manual",
+          // Restrict to instant-confirmation methods only. Async/redirect methods
+          // (Cash App Pay, Klarna, Affirm) can leave bookings in an ambiguous
+          // "renter thinks they paid, platform doesn't know yet" state.
+          // Do NOT use automatic_payment_methods here — it would pull in whatever
+          // is enabled in the Stripe Dashboard.
+          // Apple Pay / Google Pay are wallets delivered THROUGH `card`; Stripe
+          // rejects them as explicit types alongside `on_behalf_of`.
+          payment_method_types: ["card", "link"],
+          application_fee_amount: platformFeeCents,
+          on_behalf_of: agency.stripe_connect_account_id,
+          transfer_data: { destination: agency.stripe_connect_account_id },
+          receipt_email: renter_email,
+          metadata: {
+            booking_id: booking.id,
+            vehicle_id,
+            agency_id: agency.id,
+            flow: "immediate_auth",
+          },
+        });
+      } catch (e) {
+        if (isDefinitiveStripeError(e)) {
+          await releaseBookingHold((e as Error).message ?? "Stripe rejected the payment request");
+        }
+        throw e;
+      }
       clientSecret = intent.client_secret;
       intentId = intent.id;
       intentType = "payment_intent";
@@ -275,17 +310,25 @@ serve(async (req) => {
         .update({ stripe_payment_intent_id: intent.id, updated_at: new Date().toISOString() })
         .eq("id", booking.id);
     } else {
-      const setupIntent = await stripe.setupIntents.create({
-        usage: "off_session",
-        payment_method_types: ["card"],
-        on_behalf_of: agency.stripe_connect_account_id,
-        metadata: {
-          booking_id: booking.id,
-          vehicle_id,
-          agency_id: agency.id,
-          flow: "deferred_auth",
-        },
-      });
+      let setupIntent: Stripe.SetupIntent;
+      try {
+        setupIntent = await stripe.setupIntents.create({
+          usage: "off_session",
+          payment_method_types: ["card"],
+          on_behalf_of: agency.stripe_connect_account_id,
+          metadata: {
+            booking_id: booking.id,
+            vehicle_id,
+            agency_id: agency.id,
+            flow: "deferred_auth",
+          },
+        });
+      } catch (e) {
+        if (isDefinitiveStripeError(e)) {
+          await releaseBookingHold((e as Error).message ?? "Stripe rejected the payment request");
+        }
+        throw e;
+      }
       clientSecret = setupIntent.client_secret;
       intentId = setupIntent.id;
       intentType = "setup_intent";

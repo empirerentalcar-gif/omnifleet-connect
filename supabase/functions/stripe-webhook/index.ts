@@ -143,15 +143,25 @@ serve(async (req) => {
           const pi = event.data.object as Stripe.PaymentIntent;
           const bookingId = pi.metadata?.booking_id;
           if (bookingId) {
-            await supabaseAdmin
-              .from("bookings")
-              .update({
-                payment_status: "failed",
-                decline_reason:
-                  pi.last_payment_error?.message?.slice(0, 500) ?? "Payment failed",
-                updated_at: new Date().toISOString(),
-              })
-              .eq("id", bookingId);
+            // Only DEFINITIVE failures release the date hold. Ambiguous outcomes
+            // (api_error / api_connection_error / processing_error) keep the
+            // booking pending so the expire-stalled-bookings sweep decides.
+            const errType = pi.last_payment_error?.type;
+            const errCode = pi.last_payment_error?.code;
+            const definitive =
+              (errType === "card_error" || errType === "invalid_request_error") &&
+              errCode !== "processing_error";
+            const update: Record<string, unknown> = {
+              payment_status: "failed",
+              decline_reason:
+                pi.last_payment_error?.message?.slice(0, 500) ?? "Payment failed",
+              updated_at: new Date().toISOString(),
+            };
+            if (definitive) {
+              // Frees the dates via prevent_double_booking so the renter can retry.
+              update.booking_status = "canceled";
+            }
+            await supabaseAdmin.from("bookings").update(update).eq("id", bookingId);
             // Notify renter + Zuvio ops (NOT the agency — intentional).
             await sendPaymentFailedEmails(
               bookingId,
