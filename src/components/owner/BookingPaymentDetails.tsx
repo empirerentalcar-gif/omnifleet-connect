@@ -8,7 +8,7 @@ type Props = {
   bookingPriceCents: number;
   platformFeeCents: number;
   stripeChargeId: string | null;
-  capturedAt: string | null; // bookings.updated_at when payment_status='succeeded'
+  capturedAt: string | null; // bookings.updated_at when payment_status='captured'
   paymentStatus: string;
 };
 
@@ -73,7 +73,7 @@ export const BookingPaymentDetails = ({
   }, [agencyId]);
 
   const payoutCents = Math.max(bookingPriceCents - platformFeeCents, 0);
-  const captured = paymentStatus === "succeeded" && !!capturedAt;
+  const captured = paymentStatus === "captured" && !!capturedAt;
   const expectedPayoutDate = captured && capturedAt
     ? fmtDate(addBusinessDays(new Date(capturedAt), 2))
     : null;

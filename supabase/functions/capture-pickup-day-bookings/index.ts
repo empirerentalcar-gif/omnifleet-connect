@@ -62,7 +62,7 @@ serve(async (req) => {
         await supabaseAdmin
           .from("bookings")
           .update({
-            payment_status: "succeeded",
+            payment_status: "captured",
             stripe_charge_id:
               (captured as unknown as { latest_charge?: string }).latest_charge ?? null,
             updated_at: new Date().toISOString(),
