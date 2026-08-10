@@ -408,6 +408,7 @@ const AdminAgencyDetail = () => {
   };
 
   const updateVehicleStatus = async (vehicleId: string, newStatus: string) => {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     setUpdatingVehicleId(vehicleId);
     const { error } = await supabase
       .from('vehicles')
