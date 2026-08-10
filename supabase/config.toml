@@ -63,3 +63,6 @@ verify_jwt = false
 
 [functions.admin-resolve-overlaps]
 verify_jwt = false
+
+[functions.admin-cancel-refund-booking]
+verify_jwt = true

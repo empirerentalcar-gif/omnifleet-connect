@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import { ArrowLeft, Search, Save, DollarSign, CreditCard, Car, FileText, KeyRound, CheckCircle2, XCircle, Loader2 } from 'lucide-react';
+import { ArrowLeft, Search, Save, DollarSign, CreditCard, Car, FileText, KeyRound, CheckCircle2, XCircle, Loader2, RotateCcw } from 'lucide-react';
 import { format } from 'date-fns';
 import { supabase } from '@/integrations/supabase/client';
 import { useAdmin } from '@/hooks/useAdmin';
@@ -12,6 +12,14 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Skeleton } from '@/components/ui/skeleton';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
 import {
   Select,
   SelectContent,
@@ -176,6 +184,9 @@ const AdminAgencyDetail = () => {
   const [sendingReset, setSendingReset] = useState(false);
   const [approvingId, setApprovingId] = useState<string | null>(null);
   const [decliningId, setDecliningId] = useState<string | null>(null);
+  const [refundTarget, setRefundTarget] = useState<BookingRow | null>(null);
+  const [refundReason, setRefundReason] = useState('');
+  const [refunding, setRefunding] = useState(false);
 
   const loadAll = async () => {
     if (!id) return;
@@ -393,6 +404,55 @@ const AdminAgencyDetail = () => {
       title: 'Booking declined',
       description: 'Authorization released and renter notified.',
     });
+    loadAll();
+  };
+
+  const isRefundEligible = (b: BookingRow) =>
+    b.payment_status === 'captured' &&
+    !['cancelled_refunded', 'refund_pending', 'canceled'].includes(b.booking_status);
+
+  const submitCancelRefund = async () => {
+    if (!refundTarget || refunding) return;
+    setRefunding(true);
+    const { data, error } = await supabase.functions.invoke('admin-cancel-refund-booking', {
+      body: { booking_id: refundTarget.id, reason: refundReason.trim() || undefined },
+    });
+    const payload = data as
+      | { ok?: boolean; refund_pending?: boolean; message?: string; error?: string }
+      | null;
+    if (error || payload?.error) {
+      let description = payload?.error || (error as Error)?.message || 'Unknown error';
+      if (error && !payload?.error) {
+        try {
+          const ctx = (error as unknown as { context?: { text?: () => Promise<string> } }).context;
+          const text = ctx?.text ? await ctx.text() : '';
+          const parsed = text ? (JSON.parse(text) as { error?: string }) : null;
+          if (parsed?.error) description = parsed.error;
+        } catch {
+          /* keep default message */
+        }
+      }
+      setRefunding(false);
+      toast({ title: 'Cancel & refund failed', description, variant: 'destructive' });
+      return;
+    }
+
+    setRefunding(false);
+    setRefundTarget(null);
+    setRefundReason('');
+    if (payload?.refund_pending) {
+      toast({
+        title: 'Refund pending — balance check needed',
+        description:
+          payload.message ||
+          'Stripe could not complete the refund yet. The booking is marked refund pending — check the platform and connected account balances in Stripe.',
+      });
+    } else {
+      toast({
+        title: 'Booking cancelled & refunded',
+        description: payload?.message || 'Full refund issued and the agency has been notified.',
+      });
+    }
     loadAll();
   };
 
@@ -847,6 +907,20 @@ const AdminAgencyDetail = () => {
                                   Decline
                                 </Button>
                               </div>
+                            ) : isRefundEligible(b) ? (
+                              <Button
+                                size="sm"
+                                variant="destructive"
+                                onClick={() => {
+                                  setRefundReason('');
+                                  setRefundTarget(b);
+                                }}
+                                disabled={refunding}
+                                title="Cancel this booking and issue a full refund to the renter."
+                              >
+                                <RotateCcw className="h-3 w-3 mr-1" />
+                                Cancel &amp; Refund
+                              </Button>
                             ) : (
                               <span className="text-xs text-muted-foreground">—</span>
                             )}
@@ -862,6 +936,78 @@ const AdminAgencyDetail = () => {
           </>
         )}
       </div>
+
+      <Dialog
+        open={!!refundTarget}
+        onOpenChange={(open) => {
+          if (!open && !refunding) {
+            setRefundTarget(null);
+            setRefundReason('');
+          }
+        }}
+      >
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Cancel &amp; refund this booking?</DialogTitle>
+            <DialogDescription>
+              This is irreversible and moves real money. The renter is refunded in full, the amount
+              is reversed from the agency&rsquo;s Stripe balance, and the dates become bookable again.
+            </DialogDescription>
+          </DialogHeader>
+          {refundTarget && (
+            <div className="space-y-3 text-sm">
+              <div className="rounded-md border border-border p-3 space-y-1">
+                <div>
+                  <span className="text-muted-foreground">Renter: </span>
+                  {refundTarget.renter_name}
+                </div>
+                <div>
+                  <span className="text-muted-foreground">Dates: </span>
+                  {format(new Date(refundTarget.pickup_date), 'MMM d')} →{' '}
+                  {format(new Date(refundTarget.dropoff_date), 'MMM d, yyyy')}
+                </div>
+                <div>
+                  <span className="text-muted-foreground">Refund amount: </span>
+                  <span className="font-semibold">{fmtMoney(refundTarget.total_amount_cents)}</span>
+                </div>
+              </div>
+              <div>
+                <label htmlFor="refund-reason" className="block mb-1 text-muted-foreground">
+                  Reason (optional)
+                </label>
+                <Textarea
+                  id="refund-reason"
+                  value={refundReason}
+                  onChange={(e) => setRefundReason(e.target.value)}
+                  maxLength={500}
+                  rows={3}
+                  placeholder="Shared with the agency in the cancellation email."
+                />
+              </div>
+            </div>
+          )}
+          <DialogFooter>
+            <Button
+              variant="outline"
+              onClick={() => {
+                setRefundTarget(null);
+                setRefundReason('');
+              }}
+              disabled={refunding}
+            >
+              Keep booking
+            </Button>
+            <Button variant="destructive" onClick={submitCancelRefund} disabled={refunding}>
+              {refunding ? (
+                <Loader2 className="h-4 w-4 mr-1 animate-spin" />
+              ) : (
+                <RotateCcw className="h-4 w-4 mr-1" />
+              )}
+              {refunding ? 'Refunding…' : 'Cancel & refund'}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </main>
   );
 };

@@ -382,6 +382,9 @@ export type Database = {
         Row: {
           agency_id: string
           booking_status: string
+          cancellation_reason: string | null
+          cancelled_at: string | null
+          cancelled_by: string | null
           capture_method: string
           confirmation_email_sent_at: string | null
           created_at: string
@@ -403,6 +406,7 @@ export type Database = {
           renter_phone: string
           stripe_charge_id: string | null
           stripe_payment_intent_id: string | null
+          stripe_refund_id: string | null
           stripe_setup_intent_id: string | null
           total_amount_cents: number
           updated_at: string
@@ -411,6 +415,9 @@ export type Database = {
         Insert: {
           agency_id: string
           booking_status?: string
+          cancellation_reason?: string | null
+          cancelled_at?: string | null
+          cancelled_by?: string | null
           capture_method?: string
           confirmation_email_sent_at?: string | null
           created_at?: string
@@ -432,6 +439,7 @@ export type Database = {
           renter_phone: string
           stripe_charge_id?: string | null
           stripe_payment_intent_id?: string | null
+          stripe_refund_id?: string | null
           stripe_setup_intent_id?: string | null
           total_amount_cents: number
           updated_at?: string
@@ -440,6 +448,9 @@ export type Database = {
         Update: {
           agency_id?: string
           booking_status?: string
+          cancellation_reason?: string | null
+          cancelled_at?: string | null
+          cancelled_by?: string | null
           capture_method?: string
           confirmation_email_sent_at?: string | null
           created_at?: string
@@ -461,6 +472,7 @@ export type Database = {
           renter_phone?: string
           stripe_charge_id?: string | null
           stripe_payment_intent_id?: string | null
+          stripe_refund_id?: string | null
           stripe_setup_intent_id?: string | null
           total_amount_cents?: number
           updated_at?: string
