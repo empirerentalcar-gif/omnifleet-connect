@@ -936,6 +936,78 @@ const AdminAgencyDetail = () => {
           </>
         )}
       </div>
+
+      <Dialog
+        open={!!refundTarget}
+        onOpenChange={(open) => {
+          if (!open && !refunding) {
+            setRefundTarget(null);
+            setRefundReason('');
+          }
+        }}
+      >
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Cancel &amp; refund this booking?</DialogTitle>
+            <DialogDescription>
+              This is irreversible and moves real money. The renter is refunded in full, the amount
+              is reversed from the agency&rsquo;s Stripe balance, and the dates become bookable again.
+            </DialogDescription>
+          </DialogHeader>
+          {refundTarget && (
+            <div className="space-y-3 text-sm">
+              <div className="rounded-md border border-border p-3 space-y-1">
+                <div>
+                  <span className="text-muted-foreground">Renter: </span>
+                  {refundTarget.renter_name}
+                </div>
+                <div>
+                  <span className="text-muted-foreground">Dates: </span>
+                  {format(new Date(refundTarget.pickup_date), 'MMM d')} →{' '}
+                  {format(new Date(refundTarget.dropoff_date), 'MMM d, yyyy')}
+                </div>
+                <div>
+                  <span className="text-muted-foreground">Refund amount: </span>
+                  <span className="font-semibold">{fmtMoney(refundTarget.total_amount_cents)}</span>
+                </div>
+              </div>
+              <div>
+                <label htmlFor="refund-reason" className="block mb-1 text-muted-foreground">
+                  Reason (optional)
+                </label>
+                <Textarea
+                  id="refund-reason"
+                  value={refundReason}
+                  onChange={(e) => setRefundReason(e.target.value)}
+                  maxLength={500}
+                  rows={3}
+                  placeholder="Shared with the agency in the cancellation email."
+                />
+              </div>
+            </div>
+          )}
+          <DialogFooter>
+            <Button
+              variant="outline"
+              onClick={() => {
+                setRefundTarget(null);
+                setRefundReason('');
+              }}
+              disabled={refunding}
+            >
+              Keep booking
+            </Button>
+            <Button variant="destructive" onClick={submitCancelRefund} disabled={refunding}>
+              {refunding ? (
+                <Loader2 className="h-4 w-4 mr-1 animate-spin" />
+              ) : (
+                <RotateCcw className="h-4 w-4 mr-1" />
+              )}
+              {refunding ? 'Refunding…' : 'Cancel & refund'}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </main>
   );
 };
