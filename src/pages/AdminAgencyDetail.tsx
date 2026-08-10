@@ -407,8 +407,56 @@ const AdminAgencyDetail = () => {
     loadAll();
   };
 
+  const isRefundEligible = (b: BookingRow) =>
+    b.payment_status === 'captured' &&
+    !['cancelled_refunded', 'refund_pending', 'canceled'].includes(b.booking_status);
+
+  const submitCancelRefund = async () => {
+    if (!refundTarget || refunding) return;
+    setRefunding(true);
+    const { data, error } = await supabase.functions.invoke('admin-cancel-refund-booking', {
+      body: { booking_id: refundTarget.id, reason: refundReason.trim() || undefined },
+    });
+    const payload = data as
+      | { ok?: boolean; refund_pending?: boolean; message?: string; error?: string }
+      | null;
+    if (error || payload?.error) {
+      let description = payload?.error || (error as Error)?.message || 'Unknown error';
+      if (error && !payload?.error) {
+        try {
+          const ctx = (error as unknown as { context?: { text?: () => Promise<string> } }).context;
+          const text = ctx?.text ? await ctx.text() : '';
+          const parsed = text ? (JSON.parse(text) as { error?: string }) : null;
+          if (parsed?.error) description = parsed.error;
+        } catch {
+          /* keep default message */
+        }
+      }
+      setRefunding(false);
+      toast({ title: 'Cancel & refund failed', description, variant: 'destructive' });
+      return;
+    }
+
+    setRefunding(false);
+    setRefundTarget(null);
+    setRefundReason('');
+    if (payload?.refund_pending) {
+      toast({
+        title: 'Refund pending — balance check needed',
+        description:
+          payload.message ||
+          'Stripe could not complete the refund yet. The booking is marked refund pending — check the platform and connected account balances in Stripe.',
+      });
+    } else {
+      toast({
+        title: 'Booking cancelled & refunded',
+        description: payload?.message || 'Full refund issued and the agency has been notified.',
+      });
+    }
+    loadAll();
+  };
+
   const updateVehicleStatus = async (vehicleId: string, newStatus: string) => {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     setUpdatingVehicleId(vehicleId);
     const { error } = await supabase
       .from('vehicles')
