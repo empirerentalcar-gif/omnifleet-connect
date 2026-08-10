@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import { ArrowLeft, Search, Save, DollarSign, CreditCard, Car, FileText, KeyRound, CheckCircle2, XCircle, Loader2 } from 'lucide-react';
+import { ArrowLeft, Search, Save, DollarSign, CreditCard, Car, FileText, KeyRound, CheckCircle2, XCircle, Loader2, RotateCcw } from 'lucide-react';
 import { format } from 'date-fns';
 import { supabase } from '@/integrations/supabase/client';
 import { useAdmin } from '@/hooks/useAdmin';
@@ -12,6 +12,14 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Skeleton } from '@/components/ui/skeleton';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
 import {
   Select,
   SelectContent,
@@ -176,6 +184,9 @@ const AdminAgencyDetail = () => {
   const [sendingReset, setSendingReset] = useState(false);
   const [approvingId, setApprovingId] = useState<string | null>(null);
   const [decliningId, setDecliningId] = useState<string | null>(null);
+  const [refundTarget, setRefundTarget] = useState<BookingRow | null>(null);
+  const [refundReason, setRefundReason] = useState('');
+  const [refunding, setRefunding] = useState(false);
 
   const loadAll = async () => {
     if (!id) return;
