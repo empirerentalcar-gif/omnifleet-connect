@@ -907,6 +907,20 @@ const AdminAgencyDetail = () => {
                                   Decline
                                 </Button>
                               </div>
+                            ) : isRefundEligible(b) ? (
+                              <Button
+                                size="sm"
+                                variant="destructive"
+                                onClick={() => {
+                                  setRefundReason('');
+                                  setRefundTarget(b);
+                                }}
+                                disabled={refunding}
+                                title="Cancel this booking and issue a full refund to the renter."
+                              >
+                                <RotateCcw className="h-3 w-3 mr-1" />
+                                Cancel &amp; Refund
+                              </Button>
                             ) : (
                               <span className="text-xs text-muted-foreground">—</span>
                             )}
